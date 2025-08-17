@@ -1,9 +1,9 @@
 import {Component, computed, contentChildren, inject, input} from '@angular/core';
-import {IsEmptyPipe, OverlayTrigger} from '@fibo-ui/components';
+import {IsEmptyPipe} from '@fibo-ui/cdk';
+import {OverlayTrigger} from '@fibo-ui/cdk';
 import {NgTemplateOutlet} from '@angular/common';
-import {FormFieldControl} from './form-field-control';
-import {FormFieldContent} from './form-field-content';
-import {FirstFormErrorPipe} from '../form-error/form-error-pipes';
+import {FormFieldControl, FirstFormErrorPipe} from '@fibo-ui/cdk';
+import {FormFieldContent} from '@fibo-ui/cdk';
 import {LucideAngularModule} from 'lucide-angular';
 
 
@@ -52,6 +52,7 @@ export class FormField<T> {
       if (this.inputs().length) {
         this.inputs()[0].element.nativeElement.focus();
       } else if (this.control()?.inputs().length) {
+        // @ts-ignore
         this.control()?.inputs()[0].element.nativeElement.focus();
       }
     }, 0);

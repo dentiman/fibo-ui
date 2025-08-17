@@ -1,5 +1,7 @@
 import {computed, contentChildren, Directive, ElementRef, inject, input, output} from '@angular/core';
-import {FormFieldContent, PrimitiveValueAccessor} from '@fibo-ui/components';
+import {PrimitiveValueAccessor} from '../../common/primitive-value-accessor';
+import {FormFieldContent} from './form-field-content';
+
 
 @Directive({
   hostDirectives: [

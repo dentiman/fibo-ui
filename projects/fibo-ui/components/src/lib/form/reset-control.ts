@@ -1,6 +1,6 @@
 import {Component, Input, output} from '@angular/core';
 import {AbstractControl, FormControl, NgControl} from '@angular/forms';
-import {IsEmptyPipe} from '@fibo-ui/components';
+import {IsEmptyPipe} from '@fibo-ui/cdk';
 import {AsyncPipe, NgTemplateOutlet} from '@angular/common';
 
 @Component({

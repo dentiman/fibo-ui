@@ -25,19 +25,16 @@ import {
   Validators
 } from '@angular/forms';
 import { Calendar } from './calendar/calendar';
+
 import {
-  CalendarDateRangeSelectionModel,
-  ControlStatus,
-  PrimitiveValueAccessor,
-  DataList, DateRange,
-  OverlayTrigger,
   Popover, OverlayTriggerClick
-} from '@fibo-ui/components';
-import {FormFieldOverlayTrigger} from '../form/form-field-overlay-trigger';
+} from '@fibo-ui/cdk';
+import {FormFieldOverlayTrigger} from '@fibo-ui/cdk';
 import {ResetControl} from '../form/reset-control';
 import {FormField} from '../form/form-field/form-field';
-import {FormFieldControl} from '../form/form-field/form-field-control';
-import {FormFieldContent} from '../form/form-field/form-field-content';
+import {FormFieldControl} from '@fibo-ui/cdk';
+import {FormFieldContent} from '@fibo-ui/cdk';
+import {CalendarDateRangeSelectionModel, DateRange} from './calendar/calendar-date-range-selection-model';
 
 @Component({
   selector: 'fibo-date-range-picker',

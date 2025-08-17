@@ -2,23 +2,24 @@
  * Public API Surface of components
  */
 
-// Common directives
-export * from './lib/common/auto-focus';
-export * from './lib/common/is-empty';
-export * from './lib/common/primitive-value-accessor';
-export * from './lib/form/control-status';
-export * from './lib/common/random-id';
-export * from './lib/common/data-active';
-export * from './lib/overlay/overlay-trigger';
+// Common directives moved to @fibo-ui/cdk
+// export * from './lib/common/auto-focus';
+// export * from './lib/common/is-empty';
+// export * from './lib/common/primitive-value-accessor';
+// export * from './lib/form/control-status';
+// export * from './lib/common/random-id';
+// export * from './lib/common/data-active';
+// Overlay trigger moved to @fibo-ui/cdk
+// export * from './lib/overlay/overlay-trigger';
 
-// Utility functions
-export * from './lib/utils/property.utils';
+// Utility functions moved to @fibo-ui/cdk
+// export * from './lib/utils/property.utils';
 
-// Data List components and models
-export * from './lib/data-list/option';
-export * from './lib/data-list/data-list';
-export * from './lib/data-list/data-list-item';
-export * from './lib/data-list/selection-models';
+// Data List components and models moved to @fibo-ui/cdk
+// export * from './lib/data-list/option';
+// export * from './lib/data-list/data-list';
+// export * from './lib/data-list/data-list-item';
+// export * from './lib/data-list/selection-models';
 // export * from './lib/data-list/overlay-data-list';
 
 // Loading Spin component
@@ -29,12 +30,10 @@ export * from './lib/overlay/dialog/dialog-trigger';
 export * from './lib/overlay/dialog/dialog-service';
 export * from './lib/overlay/dialog/dialog';
 
-export * from './lib/overlay/components/popover';
-
-
-// Overlay directives
-export * from './lib/overlay/overlay-position';
-export * from './lib/overlay/overlay-arrow';
+// Overlay components moved to @fibo-ui/cdk
+// export * from './lib/overlay/components/popover';
+// export * from './lib/overlay/overlay-position';
+// export * from './lib/overlay/overlay-arrow';
 
 export * from './lib/select/select'
 export * from './lib/select/multiple-select'
@@ -65,15 +64,15 @@ export * from './lib/datepicker/date-range-picker'
 
 // Form components and interfaces
 export * from './lib/form/reset-control';
-export * from './lib/form/form-field-overlay-trigger';
+// export * from './lib/form/form-field-overlay-trigger';
 export * from './lib/form/form-field/form-field';
-export * from './lib/form/form-field/form-field-content';
-export * from './lib/form/form-field/form-field-control';
+// export * from './lib/form/form-field/form-field-content';
+// export * from './lib/form/form-field/form-field-control';
 
-// Form Error Service and utilities
-export * from './lib/form/form-error/form-error-pipes';
-export * from './lib/form/form-error/form-error-service';
-export * from './lib/form/form-error/form-field-errors';
+// Form Error Service and utilities moved to @fibo-ui/cdk
+// export * from './lib/form/form-error/form-error-pipes';
+// export * from './lib/form/form-error/form-error-service';
+// export * from './lib/form/form-error/form-field-errors';
 
 export * from './lib/input/input';
 export * from "./lib/menu/menu-item.type";

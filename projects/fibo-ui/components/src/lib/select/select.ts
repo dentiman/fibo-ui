@@ -1,12 +1,11 @@
 import {Component, computed, inject, input, TemplateRef, viewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from "@angular/forms";
-import {DataList, Option, OverlayTriggerClick, Popover, SingleSelectionModel,} from '@fibo-ui/components';
+import {DataList, Option, OverlayTriggerClick, Popover, SingleSelectionModel,} from '@fibo-ui/cdk';
 
 import {FormField} from '../form/form-field/form-field';
-import {FormFieldControl} from '../form/form-field/form-field-control';
-import {FormFieldErrors} from '../form/form-error/form-field-errors';
-import {safeProp} from '../utils/property.utils';
+import {FormFieldControl, FormFieldErrors} from '@fibo-ui/cdk';
+import {safeProp} from '@fibo-ui/cdk';
 import {LucideAngularModule} from 'lucide-angular';
 
 @Component({

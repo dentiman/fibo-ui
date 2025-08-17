@@ -1,10 +1,8 @@
 import { Component, computed, inject, input, model, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {DataList} from '../../data-list/data-list';
+import {DataList, Option, SELECTION_MODEL} from '@fibo-ui/cdk';
 import {ActiveMonth} from './active-date.state';
-import {Option} from '../../data-list/option';
 import {parse} from 'date-fns';
-import {SELECTION_MODEL} from '../../data-list/selection-models';
 
 @Component({
   selector: 'fibo-calendar',

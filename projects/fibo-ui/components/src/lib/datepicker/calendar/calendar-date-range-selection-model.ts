@@ -7,7 +7,7 @@ import {
   effect, model, linkedSignal
 } from '@angular/core';
 import {parse, isValid, isEqual, isAfter, isBefore, format} from "date-fns";
-import {SELECTION_MODEL, SelectionModel} from '../../data-list/selection-models';
+import {SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
 
 export interface DateRange {
   startDate: string | null;

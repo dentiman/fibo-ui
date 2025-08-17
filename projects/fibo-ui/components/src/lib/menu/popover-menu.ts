@@ -1,10 +1,8 @@
 import {Component, computed, inject, input, output, TemplateRef, viewChildren} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Popover} from '../overlay/components/popover';
-import {DataList} from '../data-list/data-list';
-import {DataListItem} from '../data-list/data-list-item';
-import {PopoverSubmenuTrigger} from './popover-submenu-trigger';
+import {Popover, DataList, DataListItem} from '@fibo-ui/cdk';
 import {RouterLink} from '@angular/router';
+import {PopoverSubmenuTrigger} from './popover-submenu-trigger';
 import {MenuPanel} from './menu-panel';
 import {MenuItemType} from './menu-item.type';
 import {LucideAngularModule} from 'lucide-angular';

@@ -1,14 +1,14 @@
 import {Component, inject, input, TemplateRef, viewChild,} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from "@angular/forms";
-import {IsEmptyPipe, MultipleSelectionModel, OverlayTriggerClick, Popover} from '@fibo-ui/components';
-import {FormFieldOverlayTrigger} from '../form/form-field-overlay-trigger';
+import {IsEmptyPipe, MultipleSelectionModel, Popover,OverlayTriggerClick} from '@fibo-ui/cdk';
+import {FormFieldOverlayTrigger} from '@fibo-ui/cdk';
 import {Listbox} from '../data-list/listbox/listbox';
 import {FormField} from '../form/form-field/form-field';
-import {FormFieldControl} from '../form/form-field/form-field-control';
-import {safeProp} from '../utils/property.utils';
+import {FormFieldControl} from '@fibo-ui/cdk';
+import {safeProp} from '@fibo-ui/cdk';
 import {LucideAngularModule} from 'lucide-angular';
-import {FormFieldErrors} from '../form/form-error/form-field-errors';
+import {FormFieldErrors} from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-multiple-select',
@@ -16,14 +16,14 @@ import {FormFieldErrors} from '../form/form-error/form-field-errors';
   imports: [
     CommonModule,
     FormsModule,
-    Popover,
-    MultipleSelectionModel,
     IsEmptyPipe,
     Listbox,
     FormField,
     OverlayTriggerClick,
     LucideAngularModule,
     FormFieldErrors,
+    Popover,
+    MultipleSelectionModel,
   ],
   templateUrl: './multiple-select.html',
   hostDirectives: [

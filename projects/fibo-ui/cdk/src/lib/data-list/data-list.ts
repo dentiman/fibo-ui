@@ -18,7 +18,7 @@ let nextDataListId = 0;
   //   {
   //     provide: DATA_LIST,
   //     deps: [[new Optional(), new SkipSelf(), DATA_LIST], forwardRef(() => DataList)],
-  //     useFactory: (parent: DataList | null, self: DataList) => parent ?? self,
+  //     useExisting: DataList,
   //   },
   // ],
 })

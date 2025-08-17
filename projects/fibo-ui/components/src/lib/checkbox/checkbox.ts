@@ -1,6 +1,6 @@
 import {Component, inject, input} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PrimitiveValueAccessor} from '../common/primitive-value-accessor';
+import {PrimitiveValueAccessor} from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-checkbox',

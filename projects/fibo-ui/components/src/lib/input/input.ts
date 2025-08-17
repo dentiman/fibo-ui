@@ -1,7 +1,8 @@
 import {Component, inject} from '@angular/core';
-import {FormFieldControl} from '../form/form-field/form-field-control';
-import {FormField, FormFieldContent, OverlayTriggerClick} from '@fibo-ui/components';
+import {FormFieldControl} from '@fibo-ui/cdk';
+import {FormFieldContent} from '@fibo-ui/cdk';
 import {ReactiveFormsModule} from '@angular/forms';
+import {FormField} from '../form/form-field/form-field';
 
 @Component({
   selector: 'fibo-input',

@@ -1,6 +1,6 @@
 import {Component, computed, inject, input} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PrimitiveValueAccessor} from '../common/primitive-value-accessor';
+import {PrimitiveValueAccessor} from '@fibo-ui/cdk';
 import {LoadingSpin} from '../loading-spin/loading-spin';
 
 @Component({

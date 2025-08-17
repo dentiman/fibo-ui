@@ -3,14 +3,16 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from "@angular/forms";
 import {
   DataList,
-  FormField,
   FormFieldErrors,
   Option,
   OverlayTriggerClick,
   Popover,
   SingleSelectionModel,
   FormFieldControl
-} from '@fibo-ui/components';
+} from '@fibo-ui/cdk';
+import {FormField} from '@fibo-ui/components';
+
+
 
 export interface User {
   id: number;

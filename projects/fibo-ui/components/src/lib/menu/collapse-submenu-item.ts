@@ -1,6 +1,7 @@
 import {DestroyRef, Directive, inject, input, model, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {DataListItem, MenuItemType} from '@fibo-ui/components';
+import {DataListItem} from '@fibo-ui/cdk';
+import {MenuItemType} from './menu-item.type';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Directive({

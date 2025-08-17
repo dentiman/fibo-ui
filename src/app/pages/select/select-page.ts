@@ -3,9 +3,10 @@ import {CommonModule} from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {FormActionsComponent} from "../../common/form-actions";
 import {toSignal} from "@angular/core/rxjs-interop";
-import {FormFieldContent, Select} from '@fibo-ui/components';
+import {FormFieldContent} from '@fibo-ui/cdk';
 import {User, usersChoices} from "../../common/form-data-example";
 import {UserSelectComponent} from "./user-select";
+import {Select} from '@fibo-ui/components';
 
 @Component({
   selector: 'app-select-page',

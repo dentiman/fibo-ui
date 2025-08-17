@@ -1,6 +1,6 @@
 import {Directive, inject, input} from '@angular/core';
 import {PopoverMenu} from './popover-menu';
-import {DataListItem} from '../data-list/data-list-item';
+import {DataListItem} from '@fibo-ui/cdk';
 
 
 @Directive({

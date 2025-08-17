@@ -1,6 +1,6 @@
 import { Directive, ElementRef, effect, inject, input, output, signal } from '@angular/core';
-import {AutoFocus, MultipleSelect} from '@fibo-ui/components';
-import {FormFieldContent} from '../form/form-field/form-field-content';
+import {FormFieldContent} from '@fibo-ui/cdk';
+import {MultipleSelect} from './multiple-select';
 
 @Directive({
   selector: 'input[fiboMultipleSelectInput]',

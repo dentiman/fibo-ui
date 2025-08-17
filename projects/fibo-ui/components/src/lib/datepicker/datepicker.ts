@@ -2,11 +2,12 @@ import {Component, computed, ElementRef, inject, Input, input, model, output, si
 import { CommonModule } from '@angular/common';
 import {FormControl, FormsModule, NG_VALUE_ACCESSOR, NgControl, ReactiveFormsModule} from '@angular/forms';
 import { Calendar } from './calendar/calendar';
-import {DataList, OverlayTriggerClick, PrimitiveValueAccessor, Popover} from '@fibo-ui/components';
+import {DataList, OverlayTriggerClick, Popover} from '@fibo-ui/cdk';
+import {PrimitiveValueAccessor} from '@fibo-ui/cdk';
 import {CalendarDateSelectionModel} from './calendar/calendar-date-selection-model';
 import {FormField} from '../form/form-field/form-field';
-import {FormFieldControl} from '../form/form-field/form-field-control';
-import {FormFieldContent} from '../form/form-field/form-field-content';
+import {FormFieldControl} from '@fibo-ui/cdk';
+import {FormFieldContent} from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-datepicker',

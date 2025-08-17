@@ -1,5 +1,5 @@
 import {Directive, inject, OnDestroy, OnInit} from '@angular/core';
-import {DataListItem, OverlayTrigger} from '@fibo-ui/components';
+import {DataListItem, OverlayTrigger} from '@fibo-ui/cdk';
 import {MenuPanel} from './menu-panel';
 
 // @ts-ignore

@@ -14,4 +14,4 @@ export function safeProp<T>(
   }
 
   return fallback;
-} 
+}
