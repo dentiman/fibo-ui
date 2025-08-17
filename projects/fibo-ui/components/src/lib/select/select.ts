@@ -4,7 +4,7 @@ import {FormsModule} from "@angular/forms";
 import {DataList, Option, OverlayTriggerClick, Popover, SingleSelectionModel,} from '@fibo-ui/components';
 
 import {FormField} from '../form/form-field/form-field';
-import {FormFieldDirective} from '../form/form-field/form-field-directive';
+import {FormFieldControl} from '../form/form-field/form-field-control';
 import {FormFieldErrors} from '../form/form-error/form-field-errors';
 import {safeProp} from '../utils/property.utils';
 import {LucideAngularModule} from 'lucide-angular';
@@ -27,13 +27,13 @@ import {LucideAngularModule} from 'lucide-angular';
   templateUrl: './select.html',
   hostDirectives: [
     {
-      directive: FormFieldDirective,
+      directive: FormFieldControl,
       inputs: ['label', 'placeholder','fixedLabel'],
     }
   ],
 })
 export class Select<T = any>  {
-  formFieldControl = inject<FormFieldDirective<string|number|null>>(FormFieldDirective)
+  formFieldControl = inject<FormFieldControl<string|number|null>>(FormFieldControl)
   value =  this.formFieldControl.cva.value;
   disabled =  this.formFieldControl.cva.disabled
   items = input<T[]>([]);

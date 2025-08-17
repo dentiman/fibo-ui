@@ -9,7 +9,7 @@ import {
   OverlayTriggerClick,
   Popover,
   SingleSelectionModel,
-  FormFieldDirective
+  FormFieldControl
 } from '@fibo-ui/components';
 
 export interface User {
@@ -38,13 +38,13 @@ export interface User {
   templateUrl: './user-select.html',
   hostDirectives: [
     {
-      directive: FormFieldDirective,
+      directive: FormFieldControl,
       inputs: ['label', 'placeholder','fixedLabel'],
     }
   ],
 })
 export class UserSelectComponent {
-  formFieldControl = inject<FormFieldDirective<number|null>>(FormFieldDirective)
+  formFieldControl = inject<FormFieldControl<number|null>>(FormFieldControl)
   value = this.formFieldControl.cva.value;
   disabled = this.formFieldControl.cva.disabled
   users = input<User[]>([]);

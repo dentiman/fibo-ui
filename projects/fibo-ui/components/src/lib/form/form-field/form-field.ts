@@ -1,7 +1,7 @@
 import {Component, computed, contentChildren, inject, input} from '@angular/core';
 import {IsEmptyPipe, OverlayTrigger} from '@fibo-ui/components';
 import {NgTemplateOutlet} from '@angular/common';
-import {FormFieldDirective} from './form-field-directive';
+import {FormFieldControl} from './form-field-control';
 import {FormFieldContent} from './form-field-content';
 import {FirstFormErrorPipe} from '../form-error/form-error-pipes';
 import {LucideAngularModule} from 'lucide-angular';
@@ -38,7 +38,7 @@ import {LucideAngularModule} from 'lucide-angular';
 })
 
 export class FormField<T> {
-  control = input.required<FormFieldDirective<T>>()
+  control = input.required<FormFieldControl<T>>()
   prependIcon = input<string>()
   appendIcon = input<string>()
   cva = computed(() => this.control()?.cva)

@@ -13,7 +13,7 @@ import {FormFieldContent, PrimitiveValueAccessor} from '@fibo-ui/components';
     class: 'relative block w-full group',
   }
 })
-export class FormFieldDirective<T> {
+export class FormFieldControl<T> {
   element = inject(ElementRef)
 
   cva = inject<PrimitiveValueAccessor<T>>(PrimitiveValueAccessor);

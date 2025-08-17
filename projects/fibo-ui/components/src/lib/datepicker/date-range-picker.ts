@@ -36,7 +36,7 @@ import {
 import {FormFieldOverlayTrigger} from '../form/form-field-overlay-trigger';
 import {ResetControl} from '../form/reset-control';
 import {FormField} from '../form/form-field/form-field';
-import {FormFieldDirective} from '../form/form-field/form-field-directive';
+import {FormFieldControl} from '../form/form-field/form-field-control';
 import {FormFieldContent} from '../form/form-field/form-field-content';
 
 @Component({
@@ -57,14 +57,14 @@ import {FormFieldContent} from '../form/form-field/form-field-content';
   ],
   hostDirectives: [
     {
-      directive: FormFieldDirective,
+      directive: FormFieldControl,
       inputs: ['label', 'placeholder','fixedLabel'],
     }
   ],
   templateUrl: './date-range-picker.html',
 })
 export class DateRangePicker {
-  formFieldControl = inject(FormFieldDirective)
+  formFieldControl = inject(FormFieldControl)
   value = model<DateRange>({startDate: null, endDate: null});
   minDate = input<string|null>(null);
   maxDate = input<string|null>(null);

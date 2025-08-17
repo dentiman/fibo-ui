@@ -68,7 +68,7 @@ export * from './lib/form/reset-control';
 export * from './lib/form/form-field-overlay-trigger';
 export * from './lib/form/form-field/form-field';
 export * from './lib/form/form-field/form-field-content';
-export * from './lib/form/form-field/form-field-directive';
+export * from './lib/form/form-field/form-field-control';
 
 // Form Error Service and utilities
 export * from './lib/form/form-error/form-error-pipes';

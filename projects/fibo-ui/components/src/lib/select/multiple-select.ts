@@ -5,7 +5,7 @@ import {IsEmptyPipe, MultipleSelectionModel, OverlayTriggerClick, Popover} from 
 import {FormFieldOverlayTrigger} from '../form/form-field-overlay-trigger';
 import {Listbox} from '../data-list/listbox/listbox';
 import {FormField} from '../form/form-field/form-field';
-import {FormFieldDirective} from '../form/form-field/form-field-directive';
+import {FormFieldControl} from '../form/form-field/form-field-control';
 import {safeProp} from '../utils/property.utils';
 import {LucideAngularModule} from 'lucide-angular';
 import {FormFieldErrors} from '../form/form-error/form-field-errors';
@@ -28,13 +28,13 @@ import {FormFieldErrors} from '../form/form-error/form-field-errors';
   templateUrl: './multiple-select.html',
   hostDirectives: [
     {
-      directive: FormFieldDirective,
+      directive: FormFieldControl,
       inputs: ['label', 'placeholder','fixedLabel'],
     }
   ],
 })
 export class MultipleSelect<T> {
-  formFieldControl = inject<FormFieldDirective<(string|number)[]|null>>(FormFieldDirective)
+  formFieldControl = inject<FormFieldControl<(string|number)[]|null>>(FormFieldControl)
   value = this.formFieldControl.cva.value;
   disabled = this.formFieldControl.cva.disabled;
   items = input<T[]>([]);

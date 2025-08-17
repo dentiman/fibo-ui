@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {FormFieldDirective} from '../form/form-field/form-field-directive';
+import {FormFieldControl} from '../form/form-field/form-field-control';
 import {FormField, FormFieldContent, OverlayTriggerClick} from '@fibo-ui/components';
 import {ReactiveFormsModule} from '@angular/forms';
 
@@ -13,13 +13,13 @@ import {ReactiveFormsModule} from '@angular/forms';
   templateUrl: './input.html',
   hostDirectives: [
     {
-      directive: FormFieldDirective,
+      directive: FormFieldControl,
       inputs: ['label', 'placeholder','fixedLabel'],
     }
   ],
 })
 export class Input {
-  formFieldControl = inject<FormFieldDirective<string|number|null>>(FormFieldDirective)
+  formFieldControl = inject<FormFieldControl<string|number|null>>(FormFieldControl)
   value =  this.formFieldControl.cva.value;
 
   onInput(event: Event): void {
