@@ -4,7 +4,7 @@ import {MenuPanel} from './menu-panel';
 
 // @ts-ignore
 @Directive({
-  selector: '[suiSubmenuTrigger]',
+  selector: '[fiboSubmenuTrigger]',
   hostDirectives: [
     {
       directive: DataListItem,

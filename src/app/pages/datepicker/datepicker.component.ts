@@ -17,15 +17,15 @@ import {Calendar, Datepicker, DateRangePicker, MultipleSelect} from '@fibo-ui/co
   template: `
     <div class="w-70 relative  space-y-2">
       <span  class="block text-sm/6 font-medium text-gray-900">With placeholder</span>
-      <sui-datepicker [formControl]="date"></sui-datepicker>
+      <fibo-datepicker [formControl]="date"></fibo-datepicker>
 
 
       <span  class="block text-sm/6 font-medium text-gray-900 mt-2">Floating label</span>
-      <sui-datepicker [formControl]="date" [label]="'Start Date'"></sui-datepicker>
+      <fibo-datepicker [formControl]="date" [label]="'Start Date'"></fibo-datepicker>
 
 
-      <sui-date-range-picker [label]="'Conform Dates'" [(value)]="range"></sui-date-range-picker>
-      <sui-date-range-picker  [(value)]="range"></sui-date-range-picker>
+      <fibo-date-range-picker [label]="'Conform Dates'" [(value)]="range"></fibo-date-range-picker>
+      <fibo-date-range-picker  [(value)]="range"></fibo-date-range-picker>
     </div>
   `,
 })

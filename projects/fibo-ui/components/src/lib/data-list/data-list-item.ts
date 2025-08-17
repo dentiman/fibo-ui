@@ -3,7 +3,7 @@ import {DataList} from './data-list';
 
 
 @Directive({
-  selector: '[suiDataListItem]',
+  selector: '[fiboDataListItem]',
   exportAs: 'DataListItem',
   standalone: true,
   host: {

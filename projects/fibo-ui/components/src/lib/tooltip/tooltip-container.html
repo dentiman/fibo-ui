@@ -1,6 +1,6 @@
 @let tooltipRef = tooltipService.tooltipRef();
 @if (tooltipRef ) {
-  <div suiOverlayPosition
+  <div fiboOverlayPosition
        [referenceElement]="tooltipRef.referenceElement"
        (mouseleave)="tooltipService.close()"
        (mouseenter)="tooltipService.keepOpen()"

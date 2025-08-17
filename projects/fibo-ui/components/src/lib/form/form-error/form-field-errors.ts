@@ -2,7 +2,7 @@ import {Component, input} from '@angular/core';
 import {FormErrorPipe} from './form-error-pipes';
 
 @Component({
-  selector: 'sui-form-field-errors',
+  selector: 'fibo-form-field-errors',
   standalone: true,
   imports: [FormErrorPipe],
   template: `

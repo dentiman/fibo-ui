@@ -15,7 +15,7 @@ export interface DateRange {
 }
 
 @Directive({
-  selector: '[suiCalendarDateRangeSelectionModel]',
+  selector: '[fiboCalendarDateRangeSelectionModel]',
   standalone: true,
   providers: [
     {provide: SELECTION_MODEL, useExisting: CalendarDateRangeSelectionModel}
@@ -26,7 +26,7 @@ export class CalendarDateRangeSelectionModel implements SelectionModel<string> {
   readonly valueSignal = model<DateRange>({
     startDate: null,
     endDate: null
-  }, {alias: 'suiCalendarDateRangeSelectionModel'});
+  }, {alias: 'fiboCalendarDateRangeSelectionModel'});
 
   get value(): Signal<DateRange> {
     return this.valueSignal.asReadonly();

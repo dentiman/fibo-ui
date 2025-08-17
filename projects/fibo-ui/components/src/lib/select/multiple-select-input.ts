@@ -3,7 +3,7 @@ import {AutoFocus, MultipleSelect} from '@fibo-ui/components';
 import {FormFieldContent} from '../form/form-field/form-field-content';
 
 @Directive({
-  selector: 'input[suiMultipleSelectInput]',
+  selector: 'input[fiboMultipleSelectInput]',
   standalone: true,
   hostDirectives: [FormFieldContent],
   host: {

@@ -4,7 +4,7 @@ import {Popover} from './components/popover';
 
 
 @Directive({
-  selector: '[suiOverlayTrigger]',
+  selector: '[fiboOverlayTrigger]',
   exportAs: 'OverlayTrigger',
   standalone: true,
   host: {
@@ -50,7 +50,7 @@ export class OverlayTrigger  {
 }
 
 @Directive({
-  selector: '[suiOverlayTriggerClick]',
+  selector: '[fiboOverlayTriggerClick]',
   standalone: true,
   hostDirectives: [OverlayTrigger],
   host: {
@@ -64,7 +64,7 @@ export class OverlayTriggerClick  {
 }
 
 @Directive({
-  selector: '[suiOverlayTriggerToggle]',
+  selector: '[fiboOverlayTriggerToggle]',
   standalone: true,
   hostDirectives: [OverlayTrigger],
   host: {

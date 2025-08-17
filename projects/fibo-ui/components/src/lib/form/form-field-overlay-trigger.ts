@@ -4,7 +4,7 @@ import {OverlayTrigger} from '@fibo-ui/components';
 
 
 @Directive({
-  selector: '[suiFormFieldOverlayTrigger]',
+  selector: '[fiboFormFieldOverlayTrigger]',
   exportAs: 'FormFieldOverlayTrigger',
   standalone: true,
   host: {
@@ -16,7 +16,7 @@ import {OverlayTrigger} from '@fibo-ui/components';
 })
 export class FormFieldOverlayTrigger extends OverlayTrigger {
 
-  @Input({ required: true, alias: 'suiFormFieldOverlayTrigger' }) control!: NgControl|null;
+  @Input({ required: true, alias: 'fiboFormFieldOverlayTrigger' }) control!: NgControl|null;
 
   override open  () {
     if(!this.control?.disabled) {

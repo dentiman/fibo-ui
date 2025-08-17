@@ -4,7 +4,7 @@ import {DataListItem} from '../data-list/data-list-item';
 
 
 @Directive({
-  selector: '[suiMenuItem]',
+  selector: '[fiboMenuItem]',
   standalone: true,
   hostDirectives: [{
     directive: DataListItem,

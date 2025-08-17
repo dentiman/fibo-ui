@@ -15,13 +15,13 @@ import { ClickOutside } from 'ngxtension/click-outside';
 import { CommonModule } from '@angular/common';
 import {DialogService} from './dialog-service';
 @Component({
-  selector: 'sui-dialog',
+  selector: 'fibo-dialog',
   standalone: true,
   imports: [ClickOutside,  NgTemplateOutlet, CommonModule],
   templateUrl: './dialog.html',
 
 })
-export class SuiDialog {
+export class FiboDialog {
   state = inject(DialogService)
 
   isDrawerMode = computed(()=> !!this.state.config() && this.state.config()?.mode === 'drawer' );

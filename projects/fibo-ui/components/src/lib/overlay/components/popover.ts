@@ -8,7 +8,7 @@ import {OverlayTrigger} from '../overlay-trigger';
 import {DataList} from '../../data-list/data-list';
 
 @Directive({
-  selector: '[suiPopover]',
+  selector: '[fiboPopover]',
   standalone: true,
   hostDirectives: [
     {

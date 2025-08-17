@@ -2,10 +2,10 @@
 @let disabled = formFieldControl.cva.disabled();
 @let empty  = (values | isEmpty);
 
-<sui-form-field
+<fibo-form-field
   appendIcon="chevron-down"
   [control]="formFieldControl"
-  suiOverlayTriggerClick #trigger="OverlayTrigger">
+  fiboOverlayTriggerClick #trigger="OverlayTrigger">
   <span class="w-full flex flex-wrap gap-x-1  gap-y-1 "
         [class]="{
          '-ml-1.5': !empty,
@@ -38,11 +38,11 @@
         }
     <ng-content></ng-content>
   </span>
-</sui-form-field>
-<sui-form-field-errors [control]="formFieldControl" ></sui-form-field-errors>
+</fibo-form-field>
+<fibo-form-field-errors [control]="formFieldControl" ></fibo-form-field-errors>
 
 @if (trigger.isOpen() && items().length) {
-  <sui-listbox suiPopover
+  <fibo-listbox fiboPopover
                class="rounded-md bg-white shadow-md outline-1 outline-gray-300"
                [overlayTrigger]="trigger"
                [fullOverlayWidth]="true"
@@ -51,5 +51,5 @@
                [valueProp]="valueProp()"
                [labelProp]="labelProp()"
                [itemTemplate]="itemTemplate()"
-  ></sui-listbox>
+  ></fibo-listbox>
 }

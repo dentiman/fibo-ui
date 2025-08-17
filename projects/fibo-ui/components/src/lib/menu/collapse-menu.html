@@ -1,8 +1,8 @@
 @for (item of items(); track idx; let idx = $index) {
   @if (item.children) {
     <button [disabled]="!!item.disabled"
-            suiCollapseSubmenuItem [items]="item.children"
-            #collapseSubmenuItem="suiCollapseSubmenuItem"
+            fiboCollapseSubmenuItem [items]="item.children"
+            #collapseSubmenuItem="fiboCollapseSubmenuItem"
             class="menu-item w-full relative  group"
     >
       @for (item of levelItems(); track $index) {
@@ -26,7 +26,7 @@
     </button>
 
     @if (collapseSubmenuItem.expanded()) {
-      <sui-collapse-menu
+              <fibo-collapse-menu
         [level]="level()+1"
         [menuContent]="item.content"
         [items]="item.children"/>

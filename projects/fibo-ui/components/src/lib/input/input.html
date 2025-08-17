@@ -1,7 +1,7 @@
-<sui-form-field
+<fibo-form-field
   [control]="formFieldControl">
   <input
-    suiFormFieldContent
+    fiboFormFieldContent
     type="text"
     [value]="value()"
     (input)="onInput($event)"
@@ -10,4 +10,4 @@
     class="w-full appearance-none outline-none text-sm text-gray-800 placeholder:text-gray-400  focus:outline-0 "
     [placeholder]="formFieldControl.placeholder()"
   />
-</sui-form-field>
+</fibo-form-field>

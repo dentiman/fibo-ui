@@ -4,7 +4,7 @@ import {FormField, FormFieldContent, OverlayTriggerClick} from '@fibo-ui/compone
 import {ReactiveFormsModule} from '@angular/forms';
 
 @Component({
-  selector: 'sui-input',
+  selector: 'fibo-input',
   imports: [
     FormField,
     FormFieldContent,

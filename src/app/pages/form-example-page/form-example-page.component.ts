@@ -20,111 +20,111 @@ import {Datepicker, Input, MultipleSelect, Select} from '@fibo-ui/components';
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
         <!-- Username -->
-        <sui-input
+        <fibo-input
           formControlName="username"
           label="Username"
           placeholder="Enter username">
-        </sui-input>
+        </fibo-input>
 
         <!-- Email -->
-        <sui-input
+        <fibo-input
           formControlName="email"
           label="Email"
           placeholder="Enter email address"
           type="email">
-        </sui-input>
+        </fibo-input>
 
         <!-- Password -->
-        <sui-input
+        <fibo-input
           formControlName="password"
           label="Password"
           placeholder="Enter password"
           type="password">
-        </sui-input>
+        </fibo-input>
 
         <!-- Confirm Password -->
-        <sui-input
+        <fibo-input
           formControlName="confirmPassword"
           label="Confirm Password"
           placeholder="Confirm your password"
           type="password">
-        </sui-input>
+        </fibo-input>
 
         <!-- First Name -->
-        <sui-input
+        <fibo-input
           formControlName="firstName"
           label="First Name"
           placeholder="Enter first name">
-        </sui-input>
+        </fibo-input>
 
         <!-- Last Name -->
-        <sui-input
+        <fibo-input
           formControlName="lastName"
           fixedLabel="Last Name"
           placeholder="Enter last name">
-        </sui-input>
+        </fibo-input>
 
         <!-- Age -->
-        <sui-input
+        <fibo-input
           formControlName="age"
           label="Age"
           placeholder="Enter your age"
           type="number">
-        </sui-input>
+        </fibo-input>
 
         <!-- Phone -->
-        <sui-input
+        <fibo-input
           formControlName="phone"
           label="Phone Number"
           placeholder="Enter phone number"
           type="tel">
-        </sui-input>
+        </fibo-input>
 
         <!-- Website -->
-        <sui-input
+        <fibo-input
           formControlName="website"
           label="Website"
           placeholder="Enter website URL"
           type="url">
-        </sui-input>
+        </fibo-input>
 
         <!-- City -->
-        <sui-select
+        <fibo-select
           formControlName="city"
           fixedLabel="City"
           placeholder="Select city"
           [items]="cities">
-        </sui-select>
+        </fibo-select>
 
         <!-- Country -->
-        <sui-select
+        <fibo-select
           formControlName="country"
           fixedLabel="Country"
           placeholder="Select country"
           [items]="countries">
-        </sui-select>
+        </fibo-select>
 
         <!-- Skills -->
-        <sui-multiple-select
+        <fibo-multiple-select
           formControlName="skills"
           fixedLabel="Skills"
           placeholder="Select skills"
           [items]="skills">
-        </sui-multiple-select>
+        </fibo-multiple-select>
 
         <!-- Date of Birth -->
-        <sui-datepicker
+        <fibo-datepicker
           formControlName="dateOfBirth"
           fixedLabel="Date of Birth"
           placeholder="Select date of birth">
-        </sui-datepicker>
+        </fibo-datepicker>
 
         <!-- Hire Date -->
-        <sui-datepicker
+        <fibo-datepicker
           formControlName="hireDate"
           fixedLabel="Hire Date"
           placeholder="Select hire date">
-        </sui-datepicker>
+        </fibo-datepicker>
 
         <button
           type="submit"

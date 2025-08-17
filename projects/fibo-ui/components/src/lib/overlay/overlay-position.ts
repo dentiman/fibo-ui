@@ -40,7 +40,7 @@ export function fromResizeObserver(
 }
 
 @Directive({
-  selector: '[suiOverlayPosition]',
+  selector: '[fiboOverlayPosition]',
   exportAs: 'OverlayPosition',
   standalone: true,
   host: {

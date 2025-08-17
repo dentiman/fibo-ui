@@ -7,7 +7,7 @@ import {parse} from 'date-fns';
 import {SELECTION_MODEL} from '../../data-list/selection-models';
 
 @Component({
-  selector: 'sui-calendar',
+  selector: 'fibo-calendar',
   standalone: true,
   imports: [CommonModule,Option],
   hostDirectives: [

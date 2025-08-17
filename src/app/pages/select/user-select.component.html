@@ -1,7 +1,7 @@
-<sui-form-field
+<fibo-form-field
   [control]="formFieldControl"
   appendIcon="chevron-down"
-  suiOverlayTriggerClick #trigger="OverlayTrigger">
+  fiboOverlayTriggerClick #trigger="OverlayTrigger">
   <ng-content>
     @let user = selectedUser();
     @if(user) {
@@ -18,13 +18,13 @@
       </div>
     }
   </ng-content>
-</sui-form-field>
+</fibo-form-field>
 
-<sui-form-field-errors [control]="formFieldControl" ></sui-form-field-errors>
+<fibo-form-field-errors [control]="formFieldControl" ></fibo-form-field-errors>
 
 @if (trigger.isOpen()) {
-  <div suiPopover
-       suiDataList
+  <div fiboPopover
+       fiboDataList
        class="max-h-70 overflow-y-auto py-1 px-1 rounded-md bg-white shadow-md outline-1 outline-gray-300"
        [overlayTrigger]="trigger"
        [fullOverlayWidth]="true"

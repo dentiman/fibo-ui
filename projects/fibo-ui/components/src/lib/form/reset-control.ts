@@ -4,7 +4,7 @@ import {IsEmptyPipe} from '@fibo-ui/components';
 import {AsyncPipe, NgTemplateOutlet} from '@angular/common';
 
 @Component({
-  selector: 'sui-reset-control',
+  selector: 'fibo-reset-control',
   imports: [
     IsEmptyPipe,
     AsyncPipe,

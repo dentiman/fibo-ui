@@ -10,7 +10,7 @@ import {parse, isValid, isEqual} from "date-fns";
 import {SELECTION_MODEL, SelectionModel} from '../../data-list/selection-models';
 
 @Directive({
-  selector: '[suiCalendarDateSelectionModel]',
+  selector: '[fiboCalendarDateSelectionModel]',
   standalone: true,
   providers: [
     {provide: SELECTION_MODEL, useExisting: CalendarDateSelectionModel}
@@ -18,7 +18,7 @@ import {SELECTION_MODEL, SelectionModel} from '../../data-list/selection-models'
 })
 export class CalendarDateSelectionModel implements SelectionModel<string> {
   private readonly dateFormat = 'yyyy-MM-dd';
-  readonly valueSignal = model<string | null>(null, {alias: 'suiCalendarDateSelectionModel'});
+  readonly valueSignal = model<string | null>(null, {alias: 'fiboCalendarDateSelectionModel'});
 
   get value(): Signal<string | null> {
     return this.valueSignal.asReadonly();

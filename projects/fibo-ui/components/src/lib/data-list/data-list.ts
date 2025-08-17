@@ -7,7 +7,7 @@ export const DATA_LIST = new InjectionToken<DataList>('DataList');
 let nextDataListId = 0;
 
 @Directive({
-  selector: '[suiDataList]',
+  selector: '[fiboDataList]',
   exportAs: 'DataList',
   standalone: true,
   host: {

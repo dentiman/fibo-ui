@@ -4,7 +4,7 @@ import {PrimitiveValueAccessor} from '../common/primitive-value-accessor';
 import {LoadingSpin} from '../loading-spin/loading-spin';
 
 @Component({
-  selector: 'sui-switch,button[suiSwitch]',
+  selector: 'fibo-switch,button[fiboSwitch]',
   imports: [CommonModule, LoadingSpin],
   templateUrl: './switch.html',
   hostDirectives: [

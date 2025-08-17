@@ -4,8 +4,8 @@ import {DataListItem, MenuItemType} from '@fibo-ui/components';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Directive({
-  selector: '[suiCollapseSubmenuItem]',
-  exportAs: 'suiCollapseSubmenuItem',
+  selector: '[fiboCollapseSubmenuItem]',
+  exportAs: 'fiboCollapseSubmenuItem',
   hostDirectives: [
     {
       directive: DataListItem,

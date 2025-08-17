@@ -8,7 +8,7 @@ import {LucideAngularModule} from 'lucide-angular';
 
 
 @Component({
-  selector: 'sui-collapse-menu',
+  selector: 'fibo-collapse-menu',
   standalone: true,
   host: {
     'class': 'flex flex-col',

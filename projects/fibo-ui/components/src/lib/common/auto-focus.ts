@@ -1,6 +1,6 @@
 import {AfterContentInit, Directive, ElementRef, inject, OnInit} from '@angular/core';
 
-@Directive({selector: '[suiAutoFocus]'})
+@Directive({selector: '[fiboAutoFocus]'})
 export class AutoFocus implements AfterContentInit {
     element = inject(ElementRef<HTMLInputElement>).nativeElement;
 

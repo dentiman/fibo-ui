@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {PrimitiveValueAccessor} from '../common/primitive-value-accessor';
 
 @Component({
-  selector: 'sui-checkbox',
+  selector: 'fibo-checkbox',
   imports: [CommonModule],
   templateUrl: './checkbox.html',
   hostDirectives: [

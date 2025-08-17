@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { format, parse, isEqual, isAfter, isWithinInterval, isSameMonth, startOfDay, endOfDay } from 'date-fns';
 
 @Component({
-  selector: 'button[suiCalendarRangeCell]',
+  selector: 'button[fiboCalendarRangeCell]',
   standalone: true,
   imports: [CommonModule],
   template: `<div class="mx-auto flex h-5 w-5 items-center justify-center rounded-full "></div>`,

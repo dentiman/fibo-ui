@@ -1,6 +1,6 @@
 @for (item of items();  track idx ; let idx = $index) {
     @if (item.children || item.content) {
-      <button suiSubmenuTrigger [disabled]="!!item.disabled" #menuItemTrigger="OverlayTrigger"
+      <button fiboSubmenuTrigger [disabled]="!!item.disabled" #menuItemTrigger="OverlayTrigger"
               class="menu-item w-full  items-center  group"
       >
         @if (item?.icon) {
@@ -18,7 +18,7 @@
         ></lucide-icon>
       </button>
       @if (menuItemTrigger.isOpen()) {
-        <sui-menu (closeParent)="closeMenuWithParent()"
+        <fibo-menu (closeParent)="closeMenuWithParent()"
                   [overlayTrigger]="menuItemTrigger"
                   [offset]="1" placement="right-start"
                   [menuContent]="item.content"
@@ -26,12 +26,12 @@
       }
     } @else {
       @if(item.url) {
-        <a suiDataListItem [disabled]="!!item.disabled"  (itemTrigger)="closeMenuWithParent()" [routerLink]="item.url"
+        <a fiboDataListItem [disabled]="!!item.disabled"  (itemTrigger)="closeMenuWithParent()" [routerLink]="item.url"
            class="menu-item relative group">
            <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
         </a>
       } @else if(item.callback) {
-        <a suiDataListItem [disabled]="!!item.disabled" (itemTrigger)="item.callback(); closeMenuWithParent()" class="menu-item relative group">
+        <a fiboDataListItem [disabled]="!!item.disabled" (itemTrigger)="item.callback(); closeMenuWithParent()" class="menu-item relative group">
           <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
         </a>
       }

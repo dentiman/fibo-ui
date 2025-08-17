@@ -12,12 +12,12 @@ const DEFAULT_CONFIG = {
 } as const;
 
 @Component({
-  selector: 'sui-confirmation',
+  selector: 'fibo-confirmation',
   standalone: true,
   imports: [ClickOutside, NgTemplateOutlet, CommonModule],
   templateUrl: './confirmation.html',
 })
-export class SuiConfirmation {
+export class FiboConfirmation {
   confirmation = inject(ConfirmationService);
   defaultContent = viewChild.required<TemplateRef<unknown>>('defaultContent');
 

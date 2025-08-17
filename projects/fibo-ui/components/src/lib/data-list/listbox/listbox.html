@@ -5,9 +5,9 @@
     <a [Option]="getValue(item)" #option="Option"
        class="menu-item relative group">
       @if (isMultiple) {
-        <sui-checkbox
+        <fibo-checkbox
           [checked]="option.isSelected()">
-        </sui-checkbox>
+        </fibo-checkbox>
       }
       @if (itemTemplate(); as template) {
         <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: item, isSelected: option.isSelected() }"></ng-container>

@@ -2,26 +2,26 @@
 
     <div class="relative mt-2 w-[350px] space-y-2">
       <span  class="block text-sm/6 font-medium text-gray-900">With placeholder</span>
-      <sui-multiple-select [items]="users"  [formControl]="ctrl"  placeholder="Choose Cities"></sui-multiple-select>
+      <fibo-multiple-select [items]="users"  [formControl]="ctrl"  placeholder="Choose Cities"></fibo-multiple-select>
 
       <span  class="block text-sm/6 font-medium text-gray-900 mt-2">Floating label</span>
-      <sui-multiple-select [items]="users"  [label]="'Cities'"  [formControl]="ctrl" placeholder="Choose Cities"></sui-multiple-select>
+      <fibo-multiple-select [items]="users"  [label]="'Cities'"  [formControl]="ctrl" placeholder="Choose Cities"></fibo-multiple-select>
 
       <span  class="block text-sm/6 font-medium text-gray-900 mt-2">Fixed label</span>
-      <sui-multiple-select [items]="users"  fixedLabel="Cities" placeholder="Choose Cities"  [formControl]="ctrl"></sui-multiple-select>
+      <fibo-multiple-select [items]="users"  fixedLabel="Cities" placeholder="Choose Cities"  [formControl]="ctrl"></fibo-multiple-select>
 
       <span  class="block text-sm/6 font-medium text-gray-900 mt-2">Searchable + Label</span>
-      <sui-multiple-select [items]="users"  [label]="'City'" [formControl]="ctrl">
-        <input type="text" suiMultipleSelectInput  [placeholder]="'Choose City'" (valueChange)="onValueChange( $event)">
-      </sui-multiple-select>
+      <fibo-multiple-select [items]="users"  [label]="'City'" [formControl]="ctrl">
+        <input type="text" fiboMultipleSelectInput  [placeholder]="'Choose City'" (valueChange)="onValueChange( $event)">
+      </fibo-multiple-select>
 
       <span  class="block text-sm/6 font-medium text-gray-900 mt-2">Searchable</span>
-      <sui-multiple-select [items]="users"  [formControl]="ctrl">
-        <input type="text" suiMultipleSelectInput  [placeholder]="'Choose City'" (valueChange)="onValueChange( $event)">
-      </sui-multiple-select>
+      <fibo-multiple-select [items]="users"  [formControl]="ctrl">
+        <input type="text" fiboMultipleSelectInput  [placeholder]="'Choose City'" (valueChange)="onValueChange( $event)">
+      </fibo-multiple-select>
 
       <span  class="block text-sm/6 font-medium text-gray-900 mt-2">User Multiple Select with Custom Template</span>
-      <sui-multiple-select
+      <fibo-multiple-select
         [items]="users"
         [formControl]="ctrl"
         [label]="'Select Users'"
@@ -29,10 +29,10 @@
         [valueProp]="valueProp"
         [labelProp]="labelProp"
         [itemTemplate]="userTemplate">
-      </sui-multiple-select>
+      </fibo-multiple-select>
 
       <span  class="block text-sm/6 font-medium text-gray-900 mt-2">User Multiple Select with Search</span>
-      <sui-multiple-select
+      <fibo-multiple-select
         [items]="filteredItems()"
         [formControl]="ctrl"
         [label]="'Search Users'"
@@ -42,13 +42,13 @@
         [itemTemplate]="userTemplate">
         <input
           type="text"
-          suiMultipleSelectInput
+          fiboMultipleSelectInput
           [placeholder]="'Search users...'"
           (valueChange)="onValueChange( $event)">
-      </sui-multiple-select>
+      </fibo-multiple-select>
 
       <span  class="block text-sm/6 font-medium text-gray-900 mt-2">User Multiple Select with Custom Selected Template</span>
-      <sui-multiple-select
+      <fibo-multiple-select
         [items]="users"
         [formControl]="ctrl"
         [label]="'Select Users with Custom Display'"
@@ -57,7 +57,7 @@
         [labelProp]="labelProp"
         [itemTemplate]="userTemplate"
         [selectedItemTemplate]="selectedUserTemplate">
-      </sui-multiple-select>
+      </fibo-multiple-select>
     </div>
 
 </app-form-actions>

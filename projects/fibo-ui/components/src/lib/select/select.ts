@@ -10,7 +10,7 @@ import {safeProp} from '../utils/property.utils';
 import {LucideAngularModule} from 'lucide-angular';
 
 @Component({
-  selector: 'sui-select',
+  selector: 'fibo-select',
   standalone: true,
   imports: [
     CommonModule,

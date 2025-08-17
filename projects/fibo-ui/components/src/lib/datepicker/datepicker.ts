@@ -9,7 +9,7 @@ import {FormFieldDirective} from '../form/form-field/form-field-directive';
 import {FormFieldContent} from '../form/form-field/form-field-content';
 
 @Component({
-  selector: 'sui-datepicker',
+  selector: 'fibo-datepicker',
   standalone: true,
   imports: [
     CommonModule,

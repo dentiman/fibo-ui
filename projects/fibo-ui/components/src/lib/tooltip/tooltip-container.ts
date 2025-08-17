@@ -4,7 +4,7 @@ import {OverlayArrow, OverlayPosition} from '@fibo-ui/components';
 import {TooltipService} from './tooltip-service';
 import { CommonModule } from '@angular/common';
 @Component({
-  selector: 'sui-tooltip-container',
+  selector: 'fibo-tooltip-container',
   standalone: true,
   imports: [
     NgClass,

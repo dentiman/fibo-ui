@@ -5,7 +5,7 @@ import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
 import {debounceTime, filter} from 'rxjs';
 
 @Directive({
-  selector: '[suiMenuPanel]',
+  selector: '[fiboMenuPanel]',
   hostDirectives: [
     {
       directive: DataList,

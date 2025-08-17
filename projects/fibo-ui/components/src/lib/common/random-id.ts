@@ -1,7 +1,7 @@
 import {computed, Directive, input, model, Self} from '@angular/core';
 
 @Directive({
-  selector: '[suiRandomId]',
+  selector: '[fiboRandomId]',
   exportAs: 'RandomId',
   standalone: true,
   host: {

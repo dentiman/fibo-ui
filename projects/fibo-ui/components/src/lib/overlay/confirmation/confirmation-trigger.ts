@@ -4,7 +4,7 @@ import {DialogConfig} from '../overlay-state';
 
 @Directive({
   selector: '[confirm]',
-  exportAs: 'SuiConfirmationTrigger',
+  exportAs: 'FiboConfirmationTrigger',
   standalone: true,
   host: {
     '(click)': 'open()'
@@ -12,7 +12,7 @@ import {DialogConfig} from '../overlay-state';
 })
 export class ConfirmationTrigger {
   confirmation = inject(ConfirmationService);
-  content = input<ConfirmationContent|null>(null,{alias: 'suiConfirmationContent'});
+  content = input<ConfirmationContent|null>(null,{alias: 'fiboConfirmationContent'});
   confirm = output()
 
   open() {

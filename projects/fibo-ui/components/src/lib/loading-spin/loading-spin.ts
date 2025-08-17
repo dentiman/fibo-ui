@@ -2,7 +2,7 @@ import {Component, input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 @Component({
-  selector: 'sui-loading-spin',
+  selector: 'fibo-loading-spin',
   standalone: true,
   imports: [CommonModule],
   host: {

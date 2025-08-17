@@ -8,7 +8,7 @@ import {LucideAngularModule} from 'lucide-angular';
 
 
 @Component({
-  selector: 'sui-form-field',
+  selector: 'fibo-form-field',
   imports: [
     IsEmptyPipe,
     NgTemplateOutlet,

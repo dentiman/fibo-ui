@@ -4,8 +4,8 @@ import {DialogConfig} from '../overlay-state';
 
 
 @Directive({
-  selector: '[suiDialogTrigger]',
-  exportAs: 'SuiDialogTrigger',
+  selector: '[fiboDialogTrigger]',
+  exportAs: 'FiboDialogTrigger',
   standalone: true,
   host: {
     '(click)': 'open()'
@@ -13,8 +13,8 @@ import {DialogConfig} from '../overlay-state';
 })
 export class DialogTrigger {
   dialog = inject(DialogService);
-  content = input.required<TemplateRef<unknown>>({alias: 'suiDialogTrigger'});
-  config = input<DialogConfig|null>(null,{alias:'suiDialogConfig'});
+  content = input.required<TemplateRef<unknown>>({alias: 'fiboDialogTrigger'});
+  config = input<DialogConfig|null>(null,{alias:'fiboDialogConfig'});
 
   open() {
     this.dialog.open(this.content(),this.config())

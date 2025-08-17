@@ -8,36 +8,36 @@
       <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Basic States</h2>
 
       <div class="space-y-4">
-        <sui-checkbox
+        <fibo-checkbox
           [(checked)]="basicCheckbox"
           (checkedChange)="onCheckboxChange($event, 'Basic')">
           Default (Unchecked)
-        </sui-checkbox>
+        </fibo-checkbox>
 
-        <sui-checkbox
+        <fibo-checkbox
           [(checked)]="checkedCheckbox"
           (checkedChange)="onCheckboxChange($event, 'Checked')">
           Default (Checked)
-        </sui-checkbox>
+        </fibo-checkbox>
 
-        <sui-checkbox
+        <fibo-checkbox
           [(checked)]="disabledCheckbox"
           [disabled]="true">
           <span class="text-slate-700">Disabled (Unchecked)</span>
-        </sui-checkbox>
+        </fibo-checkbox>
 
-        <sui-checkbox
+        <fibo-checkbox
           [(checked)]="disabledCheckedCheckbox"
           [disabled]="true">
           <span class="text-slate-700">Disabled (Checked)</span>
-        </sui-checkbox>
+        </fibo-checkbox>
 
         <div class="flex items-center gap-2">
-          <sui-checkbox
+          <fibo-checkbox
             [(checked)]="loadingCheckbox"
             [isLoading]="true">
             Loading State
-          </sui-checkbox>
+          </fibo-checkbox>
           <button
             (click)="toggleLoading()"
             class="px-3 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded border text-slate-700">
@@ -61,34 +61,34 @@
       <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Indeterminate States</h2>
 
       <div class="space-y-4">
-        <sui-checkbox
+        <fibo-checkbox
           [indeterminate]="true"
           [(checked)]="indeterminateCheckbox"
           (checkedChange)="onCheckboxChange($event, 'Indeterminate')">
           Indeterminate (Unchecked)
-        </sui-checkbox>
+        </fibo-checkbox>
 
-        <sui-checkbox
+        <fibo-checkbox
           [indeterminate]="true"
           [(checked)]="indeterminateCheckedCheckbox"
           (checkedChange)="onCheckboxChange($event, 'Indeterminate Checked')">
           Indeterminate (Checked)
-        </sui-checkbox>
+        </fibo-checkbox>
 
-        <sui-checkbox
+        <fibo-checkbox
           [indeterminate]="true"
           [(checked)]="disabledIndeterminateCheckbox"
           [disabled]="true">
           <span class="text-slate-700">Disabled Indeterminate</span>
-        </sui-checkbox>
+        </fibo-checkbox>
 
         <div class="flex items-center gap-2">
-          <sui-checkbox
+          <fibo-checkbox
             [indeterminate]="dynamicIndeterminate()"
             [(checked)]="dynamicCheckbox"
             (checkedChange)="onCheckboxChange($event, 'Dynamic Indeterminate')">
             Dynamic Indeterminate
-          </sui-checkbox>
+          </fibo-checkbox>
           <button
             (click)="toggleDynamicIndeterminate()"
             class="px-3 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded border text-slate-700">
@@ -97,12 +97,12 @@
         </div>
 
         <div class="flex items-center gap-2">
-          <sui-checkbox
+          <fibo-checkbox
             [indeterminate]="isParentIndeterminate()"
             [(checked)]="parentCheckbox"
             (checkedChange)="onParentCheckboxChange($event)">
             Select All Items
-          </sui-checkbox>
+          </fibo-checkbox>
           <button
             (click)="resetParentCheckbox()"
             class="px-3 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded border text-slate-700">
@@ -111,21 +111,21 @@
         </div>
 
         <div class="ml-6 space-y-2">
-          <sui-checkbox
+          <fibo-checkbox
             [(checked)]="childCheckbox1"
             (checkedChange)="onChildCheckboxChange()">
             Item 1
-          </sui-checkbox>
-          <sui-checkbox
+          </fibo-checkbox>
+          <fibo-checkbox
             [(checked)]="childCheckbox2"
             (checkedChange)="onChildCheckboxChange()">
             Item 2
-          </sui-checkbox>
-          <sui-checkbox
+          </fibo-checkbox>
+          <fibo-checkbox
             [(checked)]="childCheckbox3"
             (checkedChange)="onChildCheckboxChange()">
             Item 3
-          </sui-checkbox>
+          </fibo-checkbox>
         </div>
       </div>
 
@@ -146,14 +146,14 @@
       <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Form Integration</h2>
 
       <form class="space-y-4">
-        <sui-checkbox [formControl]="formCheckbox" class="items-start">
+        <fibo-checkbox [formControl]="formCheckbox" class="items-start">
           <div>
             <div class="font-medium">I agree to the Terms of Service and Privacy Policy *</div>
             <p class="text-xs text-slate-500 mt-1">
               By checking this box, you acknowledge that you have read and agree to our terms.
             </p>
           </div>
-        </sui-checkbox>
+        </fibo-checkbox>
 
         <div [ngClass]="{'text-red-600': formCheckbox.invalid && formCheckbox.touched}"
              class="text-xs mt-1 ml-6">
@@ -182,7 +182,7 @@
       <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Notification Settings</h2>
 
       <div class="space-y-4 space-x-4">
-        <sui-checkbox
+        <fibo-checkbox
           [(checked)]="emailNotifications"
           (checkedChange)="onCheckboxChange($event, 'Email Notifications')"
           class="items-start">
@@ -190,9 +190,9 @@
             <div class="font-medium">Email Notifications</div>
             <p class="text-xs text-slate-500">Receive important updates via email</p>
           </div>
-        </sui-checkbox>
+        </fibo-checkbox>
 
-        <sui-checkbox
+        <fibo-checkbox
           [(checked)]="pushNotifications"
           (checkedChange)="onCheckboxChange($event, 'Push Notifications')"
           class="items-start">
@@ -200,9 +200,9 @@
             <div class="font-medium">Push Notifications</div>
             <p class="text-xs text-slate-500">Get notified on your device</p>
           </div>
-        </sui-checkbox>
+        </fibo-checkbox>
 
-        <sui-checkbox
+        <fibo-checkbox
           [(checked)]="marketingEmails"
           (checkedChange)="onCheckboxChange($event, 'Marketing Emails')"
           class="items-start">
@@ -210,9 +210,9 @@
             <div class="font-medium">Marketing Emails</div>
             <p class="text-xs text-slate-500">Receive promotional content and offers</p>
           </div>
-        </sui-checkbox>
+        </fibo-checkbox>
 
-        <sui-checkbox
+        <fibo-checkbox
           [(checked)]="twoFactorAuth"
           (checkedChange)="onCheckboxChange($event, 'Two-Factor Auth')"
           class="items-start">
@@ -220,7 +220,7 @@
             <div class="font-medium">Two-Factor Authentication</div>
             <p class="text-xs text-slate-500">Enhanced security for your account</p>
           </div>
-        </sui-checkbox>
+        </fibo-checkbox>
       </div>
 
       <div class="mt-4 p-3 bg-slate-50 rounded border">
@@ -241,51 +241,51 @@
       <div class="space-y-4">
         <div>
           <h3 class="text-sm font-medium text-slate-900 mb-2">Basic Usage with Inline Label</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;sui-checkbox [(checked)]="isChecked"&gt;
+          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox [(checked)]="isChecked"&gt;
   Accept terms
-&lt;/sui-checkbox&gt;</code></pre>
+&lt;/fibo-checkbox&gt;</code></pre>
         </div>
 
         <div>
           <h3 class="text-sm font-medium text-slate-900 mb-2">With Form Control</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;sui-checkbox [formControl]="checkboxControl"&gt;
+          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox [formControl]="checkboxControl"&gt;
   I agree to the terms
-&lt;/sui-checkbox&gt;</code></pre>
+&lt;/fibo-checkbox&gt;</code></pre>
         </div>
 
         <div>
           <h3 class="text-sm font-medium text-slate-900 mb-2">With Complex Content</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;sui-checkbox [(checked)]="value" class="items-start"&gt;
+          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox [(checked)]="value" class="items-start"&gt;
   &lt;div&gt;
     &lt;div class="font-medium"&gt;Title&lt;/div&gt;
     &lt;p class="text-xs text-slate-500"&gt;Description&lt;/p&gt;
   &lt;/div&gt;
-&lt;/sui-checkbox&gt;</code></pre>
+&lt;/fibo-checkbox&gt;</code></pre>
         </div>
 
         <div>
           <h3 class="text-sm font-medium text-slate-900 mb-2">With Loading State</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;sui-checkbox
+          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox
   [(checked)]="value"
   [isLoading]="loading"
   [disabled]="disabled"&gt;
   Loading checkbox
-&lt;/sui-checkbox&gt;</code></pre>
+&lt;/fibo-checkbox&gt;</code></pre>
         </div>
 
         <div>
           <h3 class="text-sm font-medium text-slate-900 mb-2">With Indeterminate State</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;sui-checkbox
+          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox
   [(checked)]="value"
   [indeterminate]="true"&gt;
   Indeterminate checkbox
-&lt;/sui-checkbox&gt;
+&lt;/fibo-checkbox&gt;
 
-&lt;sui-checkbox
+&lt;fibo-checkbox
   [(checked)]="value"
   [indeterminate]="isIndeterminate"&gt;
   Dynamic indeterminate
-&lt;/sui-checkbox&gt;</code></pre>
+&lt;/fibo-checkbox&gt;</code></pre>
         </div>
       </div>
 

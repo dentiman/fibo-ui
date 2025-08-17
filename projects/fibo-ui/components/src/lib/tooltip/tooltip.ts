@@ -4,7 +4,7 @@ import {Placement} from '@floating-ui/dom';
 
 
 @Directive({
-  selector: '[suiTooltip]',
+  selector: '[fiboTooltip]',
   standalone: true,
   host: {
     '(mouseenter)': 'open()',
@@ -17,7 +17,7 @@ export class Tooltip {
 
   tooltipService = inject(TooltipService)
 
-  content = input.required<string | TemplateRef<any>>({ alias: 'suiTooltip' });
+  content = input.required<string | TemplateRef<any>>({ alias: 'fiboTooltip' });
 
   placement = input<Placement>('top');
 

@@ -10,43 +10,43 @@
       <div class="space-y-4">
         <div class="flex items-center justify-between">
           <label class="text-sm font-medium text-slate-900">Default (Off)</label>
-          <sui-switch
+          <fibo-switch
             [(checked)]="basicSwitch"
             (checkedChange)="onSwitchChange($event, 'Basic')">
-          </sui-switch>
+          </fibo-switch>
         </div>
 
         <div class="flex items-center justify-between">
           <label class="text-sm font-medium text-slate-900">Default (On)</label>
-          <sui-switch
+          <fibo-switch
             [(checked)]="checkedSwitch"
             (checkedChange)="onSwitchChange($event, 'Checked')">
-          </sui-switch>
+          </fibo-switch>
         </div>
 
         <div class="flex items-center justify-between">
           <label class="text-sm font-medium text-slate-700">Disabled (Off)</label>
-          <sui-switch
+          <fibo-switch
             [(checked)]="disabledSwitch"
             [disabled]="true">
-          </sui-switch>
+          </fibo-switch>
         </div>
 
         <div class="flex items-center justify-between">
           <label class="text-sm font-medium text-slate-700">Disabled (On)</label>
-          <sui-switch
+          <fibo-switch
             [(checked)]="disabledCheckedSwitch"
             [disabled]="true">
-          </sui-switch>
+          </fibo-switch>
         </div>
 
         <div class="flex items-center justify-between">
           <label class="text-sm font-medium text-slate-900">Loading State</label>
           <div class="flex items-center gap-2">
-            <sui-switch
+            <fibo-switch
               [(checked)]="loadingSwitch"
               [isLoading]="true">
-            </sui-switch>
+            </fibo-switch>
             <button
               (click)="toggleLoading()"
               class="px-3 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded border text-slate-700">
@@ -75,7 +75,7 @@
           <label class="text-sm font-medium text-slate-900">
             Accept Terms & Conditions *
           </label>
-          <sui-switch [formControl]="formSwitch"></sui-switch>
+          <fibo-switch [formControl]="formSwitch"></fibo-switch>
         </div>
 
         <div [ngClass]="{'text-red-600': formSwitch.invalid && formSwitch.touched}"
@@ -110,10 +110,10 @@
             <label class="text-sm font-medium text-slate-900">Push Notifications</label>
             <p class="text-xs text-slate-500">Receive notifications on your device</p>
           </div>
-          <sui-switch
+          <fibo-switch
             [(checked)]="notifications"
             (checkedChange)="onSwitchChange($event, 'Notifications')">
-          </sui-switch>
+          </fibo-switch>
         </div>
 
         <div class="flex items-center justify-between">
@@ -121,10 +121,10 @@
             <label class="text-sm font-medium text-slate-900">Dark Mode</label>
             <p class="text-xs text-slate-500">Switch to dark theme</p>
           </div>
-          <sui-switch
+          <fibo-switch
             [(checked)]="darkMode"
             (checkedChange)="onSwitchChange($event, 'Dark Mode')">
-          </sui-switch>
+          </fibo-switch>
         </div>
 
         <div class="flex items-center justify-between">
@@ -132,10 +132,10 @@
             <label class="text-sm font-medium text-slate-900">Auto Save</label>
             <p class="text-xs text-slate-500">Automatically save your work</p>
           </div>
-          <sui-switch
+          <fibo-switch
             [(checked)]="autoSave"
             (checkedChange)="onSwitchChange($event, 'Auto Save')">
-          </sui-switch>
+          </fibo-switch>
         </div>
       </div>
 
@@ -156,21 +156,21 @@
       <div class="space-y-4">
         <div>
           <h3 class="text-sm font-medium text-slate-900 mb-2">Basic Usage</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;sui-switch [(checked)]="isEnabled"&gt;&lt;/sui-switch&gt;</code></pre>
+          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch [(checked)]="isEnabled"&gt;&lt;/fibo-switch&gt;</code></pre>
         </div>
 
         <div>
           <h3 class="text-sm font-medium text-slate-900 mb-2">With Form Control</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;sui-switch [formControl]="switchControl"&gt;&lt;/sui-switch&gt;</code></pre>
+          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch [formControl]="switchControl"&gt;&lt;/fibo-switch&gt;</code></pre>
         </div>
 
         <div>
           <h3 class="text-sm font-medium text-slate-900 mb-2">With Loading State</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;sui-switch
+          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch
   [(checked)]="value"
   [isLoading]="loading"
   [disabled]="disabled"&gt;
-&lt;/sui-switch&gt;</code></pre>
+&lt;/fibo-switch&gt;</code></pre>
         </div>
       </div>
 
@@ -200,11 +200,11 @@
           <label class="text-sm font-medium text-slate-900">Extra Small (xs)</label>
           <p class="text-xs text-slate-500">h-4 w-7 container, h-3 w-3 thumb</p>
         </div>
-        <sui-switch
+        <fibo-switch
           [size]="'xs'"
           [(checked)]="xsSwitch"
           (checkedChange)="onSwitchChange($event, 'XS')">
-        </sui-switch>
+        </fibo-switch>
       </div>
 
       <!-- Small -->
@@ -213,11 +213,11 @@
           <label class="text-sm font-medium text-slate-900">Small (sm)</label>
           <p class="text-xs text-slate-500">h-5 w-9 container, h-4 w-4 thumb</p>
         </div>
-        <sui-switch
+        <fibo-switch
           [size]="'sm'"
           [(checked)]="smSwitch"
           (checkedChange)="onSwitchChange($event, 'SM')">
-        </sui-switch>
+        </fibo-switch>
       </div>
 
       <!-- Base -->
@@ -226,11 +226,11 @@
           <label class="text-sm font-medium text-slate-900">Base (default)</label>
           <p class="text-xs text-slate-500">h-6 w-11 container, h-5 w-5 thumb</p>
         </div>
-        <sui-switch
+        <fibo-switch
           [size]="'base'"
           [(checked)]="baseSwitch"
           (checkedChange)="onSwitchChange($event, 'Base')">
-        </sui-switch>
+        </fibo-switch>
       </div>
 
       <!-- Large -->
@@ -239,11 +239,11 @@
           <label class="text-sm font-medium text-slate-900">Large (lg)</label>
           <p class="text-xs text-slate-500">h-7 w-14 container, h-6 w-6 thumb</p>
         </div>
-        <sui-switch
+        <fibo-switch
           [size]="'lg'"
           [(checked)]="lgSwitch"
           (checkedChange)="onSwitchChange($event, 'LG')">
-        </sui-switch>
+        </fibo-switch>
       </div>
 
       <!-- Extra Large -->
@@ -252,11 +252,11 @@
           <label class="text-sm font-medium text-slate-900">Extra Large (xl)</label>
           <p class="text-xs text-slate-500">h-8 w-16 container, h-7 w-7 thumb</p>
         </div>
-        <sui-switch
+        <fibo-switch
           [size]="'xl'"
           [(checked)]="xlSwitch"
           (checkedChange)="onSwitchChange($event, 'XL')">
-        </sui-switch>
+        </fibo-switch>
       </div>
     </div>
 
@@ -273,11 +273,11 @@
 
     <div class="mt-4">
       <h3 class="text-sm font-medium text-slate-900 mb-2">Usage:</h3>
-      <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;sui-switch [size]="'xs'" [(checked)]="value"&gt;&lt;/sui-switch&gt;
-&lt;sui-switch [size]="'sm'" [(checked)]="value"&gt;&lt;/sui-switch&gt;
-&lt;sui-switch [size]="'base'" [(checked)]="value"&gt;&lt;/sui-switch&gt;
-&lt;sui-switch [size]="'lg'" [(checked)]="value"&gt;&lt;/sui-switch&gt;
-&lt;sui-switch [size]="'xl'" [(checked)]="value"&gt;&lt;/sui-switch&gt;</code></pre>
+      <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch [size]="'xs'" [(checked)]="value"&gt;&lt;/fibo-switch&gt;
+&lt;fibo-switch [size]="'sm'" [(checked)]="value"&gt;&lt;/fibo-switch&gt;
+&lt;fibo-switch [size]="'base'" [(checked)]="value"&gt;&lt;/fibo-switch&gt;
+&lt;fibo-switch [size]="'lg'" [(checked)]="value"&gt;&lt;/fibo-switch&gt;
+&lt;fibo-switch [size]="'xl'" [(checked)]="value"&gt;&lt;/fibo-switch&gt;</code></pre>
     </div>
   </div>
 </div>

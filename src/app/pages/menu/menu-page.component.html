@@ -1,15 +1,15 @@
-<button class="spacy-button-primary mr-1" suiOverlayTriggerToggle #menu="OverlayTrigger">Open Custom menu</button>
+<button class="spacy-button-primary mr-1" fiboOverlayTriggerToggle #menu="OverlayTrigger">Open Custom menu</button>
 @if (menu.isOpen()) {
-  <sui-menu [overlayTrigger]="menu">
-    <a suiMenuItem [routerLink]="'/select'"> Select</a>
-    <a suiMenuItem [routerLink]="'/select-multiple'"> Select Multiple</a>
-  </sui-menu>
+      <fibo-menu [overlayTrigger]="menu">
+          <a fiboMenuItem [routerLink]="'/select'"> Select</a>
+      <a fiboMenuItem [routerLink]="'/select-multiple'"> Select Multiple</a>
+  </fibo-menu>
 }
 
-<button class="spacy-button-primary" suiOverlayTriggerToggle #menu3="OverlayTrigger">Open Complex Menu</button>
+<button class="spacy-button-primary" fiboOverlayTriggerToggle #menu3="OverlayTrigger">Open Complex Menu</button>
 @if (menu3.isOpen()) {
-  <sui-menu [overlayTrigger]="menu3" placement="bottom-start" [items]="items()">
-  </sui-menu>
+  <fibo-menu [overlayTrigger]="menu3" placement="bottom-start" [items]="items()">
+  </fibo-menu>
 }
 
 
@@ -21,4 +21,4 @@
   </svg>
 </ng-template>
 
-<sui-collapse-menu SingleSelectionModelHost suiDataList class="w-[350px]" [items]="items()"></sui-collapse-menu>
+<fibo-collapse-menu SingleSelectionModelHost fiboDataList class="w-[350px]" [items]="items()"></fibo-collapse-menu>

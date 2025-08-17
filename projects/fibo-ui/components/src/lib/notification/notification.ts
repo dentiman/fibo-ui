@@ -3,7 +3,7 @@ import {Notifier} from './notifier';
 import {CommonModule} from '@angular/common';
 import {NotificationConfig} from './notifier';
 @Component({
-  selector: 'sui-notification',
+  selector: 'fibo-notification',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './notification.html',

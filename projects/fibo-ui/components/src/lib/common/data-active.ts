@@ -3,7 +3,7 @@ import {outputFromObservable, toObservable} from "@angular/core/rxjs-interop";
 import {filter} from "rxjs";
 
 @Directive({
-  selector: '[suiDataActive],[suiDataActiveModel]',
+  selector: '[fiboDataActive],[fiboDataActiveModel]',
   exportAs: 'DataActive',
   standalone: true,
   host: {
@@ -11,7 +11,7 @@ import {filter} from "rxjs";
   }
 })
 export class DataActive {
-  active = model(false,{alias: 'suiDataActive'});
+  active = model(false,{alias: 'fiboDataActive'});
   toggle = () => this.active.set(!this.active());
 
   activate = () => this.active.set(true);

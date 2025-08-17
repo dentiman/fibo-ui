@@ -3,28 +3,28 @@
     <div class="relative mt-2 w-[350px] space-y-1">
 
       <span  class="block text-sm/6 font-medium text-gray-900">With placeholder</span>
-      <sui-select [items]="items()" [formControl]="ctrl" [placeholder]="'Select City'" ></sui-select>
+      <fibo-select [items]="items()" [formControl]="ctrl" [placeholder]="'Select City'" ></fibo-select>
 
       <span  class="block text-sm/6 font-medium text-gray-900 mt-2">Floating label</span>
-      <sui-select [items]="items()" [label]="'City'" [formControl]="ctrl" ></sui-select>
+              <fibo-select [items]="items()" [label]="'City'" [formControl]="ctrl" ></fibo-select>
 
       <span  class="block text-sm/6 font-medium text-gray-900 mt-2">Fixed Label</span>
-      <sui-select [items]="items()" [formControl]="ctrl" fixedLabel="City" [placeholder]="'Select City'" ></sui-select>
+              <fibo-select [items]="items()" [formControl]="ctrl" fixedLabel="City" [placeholder]="'Select City'" ></fibo-select>
 
       <span  class="block text-sm/6 font-medium text-gray-900 mt-2"> with searchable Input</span>
-      <sui-select [items]="filteredItems()" [value]="ctrl.value"  [label]="'City'" [formControl]="ctrl">
-          <input
-            suiFormFieldContent
+              <fibo-select [items]="filteredItems()" [value]="ctrl.value"  [label]="'City'" [formControl]="ctrl">
+                      <input
+              fiboFormFieldContent
             [formControl]="ctrl"
             [value]="ctrl.value"
             [placeholder]="'Choose City'"
             class="w-full text-gray-900 outline-hidden placeholder:text-gray-400 sm:text-sm peer"
             type="text"
           />
-      </sui-select>
+      </fibo-select>
 
       <span  class="block text-sm/6 font-medium text-gray-900 mt-2">User Select with Custom Template</span>
-      <sui-select
+      <fibo-select
         [items]="users"
         [formControl]="ctrl"
         [label]="'Select User'"
@@ -32,7 +32,7 @@
         [valueProp]="'value'"
         [labelProp]="'label'"
         [itemTemplate]="userTemplate">
-      </sui-select>
+      </fibo-select>
 
       <span  class="block text-sm/6 font-medium text-gray-900 mt-2">User Select Component (Local)</span>
       <app-user-select

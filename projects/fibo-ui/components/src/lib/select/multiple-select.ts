@@ -11,7 +11,7 @@ import {LucideAngularModule} from 'lucide-angular';
 import {FormFieldErrors} from '../form/form-error/form-field-errors';
 
 @Component({
-  selector: 'sui-multiple-select',
+  selector: 'fibo-multiple-select',
   standalone: true,
   imports: [
     CommonModule,

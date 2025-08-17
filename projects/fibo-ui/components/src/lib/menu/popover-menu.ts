@@ -11,7 +11,7 @@ import {LucideAngularModule} from 'lucide-angular';
 
 
 @Component({
-  selector: 'sui-menu',
+  selector: 'fibo-menu',
   standalone: true,
   hostDirectives: [
     MenuPanel,

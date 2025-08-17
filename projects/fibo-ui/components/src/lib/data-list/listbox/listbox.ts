@@ -5,7 +5,7 @@ import {Checkbox} from '../../checkbox/checkbox';
 import {safeProp} from '../../utils/property.utils';
 
 @Component({
-  selector: 'sui-listbox',
+  selector: 'fibo-listbox',
   imports: [
     CommonModule,
     Checkbox,
