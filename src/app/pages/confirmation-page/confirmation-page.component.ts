@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {ConfirmationTrigger} from '@spacy-ui/components';
+import {ConfirmationTrigger} from '@fibo-ui/components';
 
 @Component({
   selector: 'app-confirmation-page',

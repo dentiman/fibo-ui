@@ -52,7 +52,7 @@ export class Checkbox {
     }
   }
 
-  onKeydown(event: KeyboardEvent) {
+  onKeydown(event: Event) {
     event.preventDefault();
     this.onClick();
   }

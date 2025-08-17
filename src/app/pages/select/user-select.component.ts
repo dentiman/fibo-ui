@@ -8,11 +8,9 @@ import {
   Option,
   OverlayTriggerClick,
   Popover,
-  SingleSelectionModel
-} from '@spacy-ui/components';
-import {
+  SingleSelectionModel,
   FormFieldDirective
-} from '../../../../projects/spacy-ui/components/src/lib/form/form-field/form-field-directive';
+} from '@fibo-ui/components';
 
 export interface User {
   id: number;

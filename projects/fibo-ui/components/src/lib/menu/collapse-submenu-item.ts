@@ -1,6 +1,6 @@
 import {DestroyRef, Directive, inject, input, model, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {DataListItem, MenuItemType} from '@spacy-ui/components';
+import {DataListItem, MenuItemType} from '@fibo-ui/components';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Directive({

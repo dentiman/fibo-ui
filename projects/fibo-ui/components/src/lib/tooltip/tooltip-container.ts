@@ -1,6 +1,6 @@
 import { Component, computed, effect, ElementRef, inject, input, TemplateRef, viewChild } from '@angular/core';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import {OverlayArrow, OverlayPosition} from '@spacy-ui/components';
+import {OverlayArrow, OverlayPosition} from '@fibo-ui/components';
 import {TooltipService} from './tooltip-service';
 import { CommonModule } from '@angular/common';
 @Component({

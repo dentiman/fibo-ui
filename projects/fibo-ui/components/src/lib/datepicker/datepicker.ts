@@ -2,7 +2,7 @@ import {Component, computed, ElementRef, inject, Input, input, model, output, si
 import { CommonModule } from '@angular/common';
 import {FormControl, FormsModule, NG_VALUE_ACCESSOR, NgControl, ReactiveFormsModule} from '@angular/forms';
 import { Calendar } from './calendar/calendar';
-import {DataList, OverlayTriggerClick, PrimitiveValueAccessor, Popover} from '@spacy-ui/components';
+import {DataList, OverlayTriggerClick, PrimitiveValueAccessor, Popover} from '@fibo-ui/components';
 import {CalendarDateSelectionModel} from './calendar/calendar-date-selection-model';
 import {FormField} from '../form/form-field/form-field';
 import {FormFieldDirective} from '../form/form-field/form-field-directive';

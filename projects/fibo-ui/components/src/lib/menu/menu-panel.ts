@@ -1,5 +1,5 @@
 import {Directive, inject, signal} from '@angular/core';
-import {DataList} from '@spacy-ui/components';
+import {DataList} from '@fibo-ui/components';
 import {PopoverSubmenuTrigger} from './popover-submenu-trigger';
 import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
 import {debounceTime, filter} from 'rxjs';

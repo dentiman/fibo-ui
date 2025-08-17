@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {OverlayTrigger, SuiDialog, Popover, DialogTrigger} from '@spacy-ui/components';
+import {OverlayTrigger, SuiDialog, Popover, DialogTrigger} from '@fibo-ui/components';
 import {RouterLink} from '@angular/router';
 import {SelectPageComponent} from '../select/select-page.component';
 import {JsonPipe} from '@angular/common';

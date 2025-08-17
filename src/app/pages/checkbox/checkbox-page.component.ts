@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Checkbox } from '@spacy-ui/components';
+import { Checkbox } from '@fibo-ui/components';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -36,7 +36,7 @@ export class CheckboxPageComponent {
 
   // Form control
   formCheckbox = new FormControl(false, { validators: Validators.requiredTrue });
-  
+
   // Settings simulation
   emailNotifications = signal(true);
   pushNotifications = signal(false);
@@ -68,7 +68,7 @@ export class CheckboxPageComponent {
   onChildCheckboxChange() {
     const checkedCount = [this.childCheckbox1(), this.childCheckbox2(), this.childCheckbox3()]
       .filter(Boolean).length;
-    
+
     if (checkedCount === 0) {
       this.parentCheckbox.set(false);
     } else if (checkedCount === 3) {
@@ -92,4 +92,4 @@ export class CheckboxPageComponent {
     this.childCheckbox2.set(false);
     this.childCheckbox3.set(false);
   }
-} 
+}

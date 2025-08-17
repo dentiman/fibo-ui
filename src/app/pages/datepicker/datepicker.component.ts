@@ -1,7 +1,7 @@
 import {Component, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Calendar, Datepicker, DateRangePicker, MultipleSelect} from '@spacy-ui/components';
+import {Calendar, Datepicker, DateRangePicker, MultipleSelect} from '@fibo-ui/components';
 
 @Component({
   standalone: true,

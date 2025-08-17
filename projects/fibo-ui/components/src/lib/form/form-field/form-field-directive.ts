@@ -1,5 +1,5 @@
 import {computed, contentChildren, Directive, ElementRef, inject, input, output} from '@angular/core';
-import {FormFieldContent, PrimitiveValueAccessor} from '@spacy-ui/components';
+import {FormFieldContent, PrimitiveValueAccessor} from '@fibo-ui/components';
 
 @Directive({
   hostDirectives: [

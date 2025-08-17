@@ -123,7 +123,7 @@ export class DataList {
     return optionsArray[optionsArray.length - 1] || null;
   }
 
-  navigateNext(event: KeyboardEvent) {
+  navigateNext(event: any) {
     const targetIsInput = event.target instanceof HTMLInputElement;
     this.setActiveOption(this.findNextOption(this._activeOption()));
     event.preventDefault();
@@ -131,7 +131,7 @@ export class DataList {
     this._activeOption()?.element.scrollIntoView({block: 'nearest', behavior: 'smooth'})
   }
 
-  navigatePrev(event: KeyboardEvent) {
+  navigatePrev(event:Event) {
     const targetIsInput = event.target instanceof HTMLInputElement;
     this.setActiveOption(this.findPreviousOption(this._activeOption()));
     event.preventDefault();

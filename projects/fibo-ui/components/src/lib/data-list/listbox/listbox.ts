@@ -1,6 +1,6 @@
 import {Component, inject, input, TemplateRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {DataList, MultipleSelectionModel, Option, SELECTION_MODEL, SelectionModel} from '@spacy-ui/components';
+import {DataList, MultipleSelectionModel, Option, SELECTION_MODEL, SelectionModel} from '@fibo-ui/components';
 import {Checkbox} from '../../checkbox/checkbox';
 import {safeProp} from '../../utils/property.utils';
 
@@ -28,10 +28,10 @@ export class Listbox<T = any> {
   disabled = input(false);
   items = input<T[]>([]);
   itemTemplate = input<TemplateRef<any> | undefined>(undefined);
-  
+
   valueProp = input<keyof T>('value' as keyof T);
   labelProp = input<keyof T>('label' as keyof T);
-  
+
   get isMultiple() {
     return this.selectionModel instanceof MultipleSelectionModel;
   }

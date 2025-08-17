@@ -7,7 +7,7 @@ import {
   OverlayTriggerToggle,
   PopoverMenu,
   SingleSelectionModel
-} from '@spacy-ui/components';
+} from '@fibo-ui/components';
 import {RouterLink} from '@angular/router';
 
 @Component({

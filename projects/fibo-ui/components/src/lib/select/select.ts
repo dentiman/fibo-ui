@@ -1,7 +1,7 @@
 import {Component, computed, inject, input, TemplateRef, viewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from "@angular/forms";
-import {DataList, Option, OverlayTriggerClick, Popover, SingleSelectionModel,} from '@spacy-ui/components';
+import {DataList, Option, OverlayTriggerClick, Popover, SingleSelectionModel,} from '@fibo-ui/components';
 
 import {FormField} from '../form/form-field/form-field';
 import {FormFieldDirective} from '../form/form-field/form-field-directive';

@@ -1,5 +1,5 @@
 import {Component, computed, contentChildren, inject, input} from '@angular/core';
-import {IsEmptyPipe, OverlayTrigger} from '@spacy-ui/components';
+import {IsEmptyPipe, OverlayTrigger} from '@fibo-ui/components';
 import {NgTemplateOutlet} from '@angular/common';
 import {FormFieldDirective} from './form-field-directive';
 import {FormFieldContent} from './form-field-content';

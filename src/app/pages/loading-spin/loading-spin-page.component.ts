@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LoadingSpin } from '@spacy-ui/components';
+import { LoadingSpin } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-loading-spin',
@@ -9,4 +9,4 @@ import { LoadingSpin } from '@spacy-ui/components';
   templateUrl: './loading-spin-page.component.html',
 })
 export class LoadingSpinPageComponent {
-} 
+}

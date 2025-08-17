@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {FormFieldDirective} from '../form/form-field/form-field-directive';
-import {FormField, FormFieldContent, OverlayTriggerClick} from '@spacy-ui/components';
+import {FormField, FormFieldContent, OverlayTriggerClick} from '@fibo-ui/components';
 import {ReactiveFormsModule} from '@angular/forms';
 
 @Component({

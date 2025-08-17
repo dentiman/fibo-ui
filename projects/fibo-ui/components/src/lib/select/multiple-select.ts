@@ -1,7 +1,7 @@
 import {Component, inject, input, TemplateRef, viewChild,} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from "@angular/forms";
-import {IsEmptyPipe, MultipleSelectionModel, OverlayTriggerClick, Popover} from '@spacy-ui/components';
+import {IsEmptyPipe, MultipleSelectionModel, OverlayTriggerClick, Popover} from '@fibo-ui/components';
 import {FormFieldOverlayTrigger} from '../form/form-field-overlay-trigger';
 import {Listbox} from '../data-list/listbox/listbox';
 import {FormField} from '../form/form-field/form-field';

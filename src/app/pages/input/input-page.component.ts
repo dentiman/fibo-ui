@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {FormActionsComponent} from '../../common/form-actions.component';
-import {Input} from '@spacy-ui/components';
+import {Input} from '@fibo-ui/components';
 
 @Component({
   selector: 'app-input',

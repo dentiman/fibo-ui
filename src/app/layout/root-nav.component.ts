@@ -1,6 +1,6 @@
 import {Component, computed} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CollapseMenu, DataList, MenuItemType, SingleSelectionModel} from '@spacy-ui/components';
+import {CollapseMenu, DataList, MenuItemType, SingleSelectionModel} from '@fibo-ui/components';
 
 @Component({
   selector: 'app-root-nav',

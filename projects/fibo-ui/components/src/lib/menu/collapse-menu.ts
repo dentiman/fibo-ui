@@ -1,7 +1,7 @@
 import {Component, computed, DestroyRef, inject, input, OnInit, TemplateRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NavigationEnd, Router, RouterLink} from '@angular/router';
-import {MenuItemType, Option, SELECTION_MODEL, SelectionModel} from '@spacy-ui/components';
+import {MenuItemType, Option, SELECTION_MODEL, SelectionModel} from '@fibo-ui/components';
 import {CollapseSubmenuItem} from './collapse-submenu-item';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {LucideAngularModule} from 'lucide-angular';

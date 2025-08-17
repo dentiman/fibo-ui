@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {FormActionsComponent} from "../../common/form-actions.component";
 import {toSignal} from "@angular/core/rxjs-interop";
-import {FormFieldContent, Select} from '@spacy-ui/components';
+import {FormFieldContent, Select} from '@fibo-ui/components';
 import {User, usersChoices} from "../../common/form-data-example";
 import {UserSelectComponent} from "./user-select.component";
 

@@ -32,7 +32,7 @@ import {
   DataList, DateRange,
   OverlayTrigger,
   Popover, OverlayTriggerClick
-} from '@spacy-ui/components';
+} from '@fibo-ui/components';
 import {FormFieldOverlayTrigger} from '../form/form-field-overlay-trigger';
 import {ResetControl} from '../form/reset-control';
 import {FormField} from '../form/form-field/form-field';

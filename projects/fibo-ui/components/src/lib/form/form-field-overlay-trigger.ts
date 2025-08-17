@@ -1,6 +1,6 @@
 import {Directive, ElementRef, inject, Input, input, model, signal} from '@angular/core';
 import {AbstractControl, FormControl, NgControl} from '@angular/forms';
-import {OverlayTrigger} from '@spacy-ui/components';
+import {OverlayTrigger} from '@fibo-ui/components';
 
 
 @Directive({

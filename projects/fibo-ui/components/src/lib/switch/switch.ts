@@ -86,7 +86,7 @@ export class Switch {
     }
   }
 
-  onKeydown(event: KeyboardEvent) {
+  onKeydown(event: Event) {
     event.preventDefault();
     this.onClick();
   }

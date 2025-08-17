@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Switch } from '@spacy-ui/components';
+import { Switch } from '@fibo-ui/components';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -23,7 +23,7 @@ export class SwitchPageComponent {
 
   // Form control
   formSwitch = new FormControl(false, { validators: Validators.requiredTrue });
-  
+
   // Settings simulation
   notifications = signal(true);
   darkMode = signal(false);
@@ -43,4 +43,4 @@ export class SwitchPageComponent {
   onSwitchChange(value: boolean | null, type: string) {
     console.log(`${type} switch changed to:`, value);
   }
-} 
+}

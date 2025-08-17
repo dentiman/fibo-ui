@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {Tooltip} from '@spacy-ui/components';
+import {Tooltip} from '@fibo-ui/components';
 
 @Component({
   standalone: true,

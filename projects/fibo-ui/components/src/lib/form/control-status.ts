@@ -14,8 +14,8 @@ import { AbstractControlDirective, NgControl, Validators } from '@angular/forms'
     '[attr.aria-disabled]': 'isDisabled',
     '[attr.aria-required]': 'requiredState()',
     // for input
-    '[disabled]': 'isDisabled',
-    '[required]': 'requiredState()',
+    // '[disabled]': 'isDisabled',
+    // '[required]': 'requiredState()',
   }
 })
 export class ControlStatus {
@@ -77,8 +77,8 @@ export class ControlStatus {
     '[attr.aria-disabled]': 'isDisabled',
     '[attr.aria-required]': 'requiredState()',
     // for input
-    '[disabled]': 'isDisabled',
-    '[required]': 'requiredState()',
+    // '[disabled]': 'isDisabled',
+    // '[required]': 'requiredState()',
   }
 })
 export class ControlStatusFor {

@@ -4,7 +4,7 @@ import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angula
 import {User, usersChoices} from "../../common/form-data-example";
 import {FormActionsComponent} from "../../common/form-actions.component";
 import {toSignal} from "@angular/core/rxjs-interop";
-import {MultipleSelect, MultipleSelectInput} from '@spacy-ui/components';
+import {MultipleSelect, MultipleSelectInput} from '@fibo-ui/components';
 
 @Component({
   standalone: true,

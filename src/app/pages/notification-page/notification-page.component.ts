@@ -1,5 +1,5 @@
 import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
-import { Notifier } from '@spacy-ui/components';
+import { Notifier } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-notification-page',

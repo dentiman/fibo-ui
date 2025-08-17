@@ -1,1 +1,68 @@
 /* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #eff8ff;
+  --color-primary-100: #daefff;
+  --color-primary-200: #bde5ff;
+  --color-primary-300: #90d5ff;
+  --color-primary-400: #5cbdfe;
+  --color-primary-500: #369efb;
+  --color-primary-600: #1379f0;
+  --color-primary-700: #1868dd;
+  --color-primary-800: #1a55b3;
+  --color-primary-900: #1b498d;
+  --color-primary-950: #152e56;
+
+
+  /* ... */
+}
+
+
+.fan-form-control {
+  @apply min-h-10 cursor-default rounded-md bg-white text-left text-gray-900 sm:text-sm sm:leading-6
+
+  disabled:bg-gray-200  aria-disabled:bg-gray-200 data-error:outline-red-300
+    /*handle focus*/
+  outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-1 focus-within:-outline-offset-1 focus-within:outline-primary-500 aria-disabled:focus-within:bg-gray-200
+
+}
+
+.fan-form-control input:focus {
+  outline: none;
+}
+
+.spacy-button-primary {
+  @apply inline-flex items-center gap-x-1.5 rounded bg-primary-500 hover:bg-primary-600 px-3 py-2  text-white
+  focus-visible:outline  focus-visible:outline-offset-2 focus-visible:outline-primary-500
+  aria-disabled:opacity-50 cursor-pointer aria-disabled:cursor-not-allowed
+  disabled:opacity-50  disabled:cursor-not-allowed
+}
+
+.spacy-popover {
+  @apply absolute   z-20 origin-top-right
+}
+
+.calendar-cell {
+  @apply flex w-full items-center justify-center size-8
+  aria-disabled:bg-gray-100 aria-disabled:text-gray-400
+  aria-selected:bg-primary-500  aria-selected:text-white
+  aria-[selected=false]:data-[active=true]:bg-slate-200 aria-[selected=false]:data-[active=true]:rounded-md;
+}
+
+.menu-item {
+
+  @apply flex gap-x-1 px-2 py-0.5  text-sm leading-6 text-gray-700 cursor-pointer rounded-md
+  data-[active=true]:bg-gray-100
+  aria-expanded:bg-gray-100
+  focus-visible:data-[active=true]:bg-primary-50
+  data-[multiple=false]:aria-selected:bg-primary-500
+  data-[multiple=false]:aria-selected:text-white
+  aria-selected:aria-disabled:bg-primary-400
+  aria-disabled:bg-white
+  aria-disabled:data-[active=true]:bg-white
+  aria-disabled:text-gray-700/50
+  focus-visible:outline-1 focus-visible:-outline-offset-1 focus-visible:outline-primary-500 focus-visible:bg-primary-50 aria-disabled:focus-visible:bg-gray-200
+  ;
+}

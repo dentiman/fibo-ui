@@ -45,8 +45,8 @@ export function fromResizeObserver(
   standalone: true,
   host: {
     '[style.position]': '"absolute"',
-    '[style.left]': 'position() ? position().x+"px": ""',
-    '[style.top]': 'position() ? position().y+"px": ""',
+    '[style.left]': 'position() ? position()?.x+"px": ""',
+    '[style.top]': 'position() ? position()?.y+"px": ""',
     '[style.width]': 'width() ? width()+"px": ""',
     '[style.opacity]': 'position() ? "1": "0"',
   },

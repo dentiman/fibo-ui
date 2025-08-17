@@ -1,7 +1,8 @@
 import {Directive, inject, OnDestroy, OnInit} from '@angular/core';
-import {DataListItem, OverlayTrigger} from '@spacy-ui/components';
+import {DataListItem, OverlayTrigger} from '@fibo-ui/components';
 import {MenuPanel} from './menu-panel';
 
+// @ts-ignore
 @Directive({
   selector: '[suiSubmenuTrigger]',
   hostDirectives: [
@@ -14,6 +15,7 @@ import {MenuPanel} from './menu-panel';
   host: {
     '(keydown.enter)': 'overlayTrigger.open()',
     '(keydown.escape)': 'overlayTrigger.close()',
+
     '(keydown.arrowright)': 'overlayTrigger.popover()?.dataList?.navigateNext($event)',
     '(click)': 'overlayTrigger.open()'
   }

@@ -1,9 +1,9 @@
 import { Directive, ElementRef, effect, inject, input, output, signal } from '@angular/core';
-import {AutoFocus, MultipleSelect} from '@spacy-ui/components';
+import {AutoFocus, MultipleSelect} from '@fibo-ui/components';
 import {FormFieldContent} from '../form/form-field/form-field-content';
 
 @Directive({
-  selector: '[suiMultipleSelectInput]',
+  selector: 'input[suiMultipleSelectInput]',
   standalone: true,
   hostDirectives: [FormFieldContent],
   host: {
