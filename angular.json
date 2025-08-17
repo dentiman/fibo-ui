@@ -80,6 +80,58 @@
           }
         }
       }
+    },
+    "@fibo-ui/cdk": {
+      "projectType": "library",
+      "root": "projects/fibo-ui/cdk",
+      "sourceRoot": "projects/fibo-ui/cdk/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/fibo-ui/cdk/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/fibo-ui/cdk/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "tsConfig": "projects/fibo-ui/cdk/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "@fibo-ui/components": {
+      "projectType": "library",
+      "root": "projects/fibo-ui/components",
+      "sourceRoot": "projects/fibo-ui/components/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/fibo-ui/components/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/fibo-ui/components/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "tsConfig": "projects/fibo-ui/components/tsconfig.spec.json"
+          }
+        }
+      }
     }
   }
 }

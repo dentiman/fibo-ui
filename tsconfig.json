@@ -3,6 +3,14 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "@fibo-ui/cdk": [
+        "./projects/fibo-ui/cdk/src/public-api.ts"
+      ],
+      "@fibo-ui/components": [
+        "./projects/fibo-ui/components/src/public-api.ts"
+      ]
+    },
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -29,6 +37,18 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/fibo-ui/cdk/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/fibo-ui/cdk/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/fibo-ui/components/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/fibo-ui/components/tsconfig.spec.json"
     }
   ]
 }
