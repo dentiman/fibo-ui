@@ -35,7 +35,7 @@ export interface User {
     Option,
     FormFieldErrors,
   ],
-  templateUrl: './user-select.component.html',
+  templateUrl: './user-select.html',
   hostDirectives: [
     {
       directive: FormFieldDirective,

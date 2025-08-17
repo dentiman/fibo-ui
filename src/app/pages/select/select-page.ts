@@ -1,11 +1,11 @@
 import {Component, computed, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {FormActionsComponent} from "../../common/form-actions.component";
+import {FormActionsComponent} from "../../common/form-actions";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {FormFieldContent, Select} from '@fibo-ui/components';
 import {User, usersChoices} from "../../common/form-data-example";
-import {UserSelectComponent} from "./user-select.component";
+import {UserSelectComponent} from "./user-select";
 
 @Component({
   selector: 'app-select-page',
@@ -20,7 +20,7 @@ import {UserSelectComponent} from "./user-select.component";
     FormFieldContent,
 
   ],
-  templateUrl: './select-page.component.html',
+  templateUrl: './select-page.html',
 })
 export class SelectPageComponent {
   ctrl = new FormControl('1', { validators: Validators.required });

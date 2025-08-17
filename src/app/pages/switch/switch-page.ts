@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
     Switch,
     ReactiveFormsModule
   ],
-  templateUrl: './switch-page.component.html',
+  templateUrl: './switch-page.html',
 })
 export class SwitchPageComponent {
   // Basic switch states

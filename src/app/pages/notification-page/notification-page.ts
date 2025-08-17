@@ -3,7 +3,7 @@ import { Notifier } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-notification-page',
-  templateUrl: './notification-page.component.html'
+  templateUrl: './notification-page.html'
 })
 export class NotificationPageComponent {
   private notifier = inject(Notifier);

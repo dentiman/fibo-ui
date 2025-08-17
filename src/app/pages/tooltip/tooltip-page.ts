@@ -5,6 +5,6 @@ import {Tooltip} from '@fibo-ui/components';
 @Component({
   standalone: true,
   imports: [CommonModule, Tooltip],
-  templateUrl: './tooltip-page.component.html',
+  templateUrl: './tooltip-page.html',
 })
 export class TooltipPageComponent {}

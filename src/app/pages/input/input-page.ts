@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {FormActionsComponent} from '../../common/form-actions.component';
+import {FormActionsComponent} from '../../common/form-actions';
 import {Input} from '@fibo-ui/components';
 
 @Component({
@@ -10,7 +10,7 @@ import {Input} from '@fibo-ui/components';
     Input,
     ReactiveFormsModule
   ],
-  templateUrl: './input-page.component.html',
+  templateUrl: './input-page.html',
 })
 export class InputPageComponent {
   ctrl = new FormControl('Austin', { validators: Validators.required });

@@ -1,34 +1,14 @@
-import {Component, computed, viewChild} from '@angular/core';
-import {
-  CollapseMenu,
-  DataList,
-  MenuItem,
-  MenuItemType,
-  OverlayTriggerToggle,
-  PopoverMenu,
-  SingleSelectionModel
-} from '@fibo-ui/components';
-import {RouterLink} from '@angular/router';
+import {Component, computed} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {CollapseMenu, DataList, MenuItemType, SingleSelectionModel} from '@fibo-ui/components';
 
 @Component({
-  imports: [
-    RouterLink,
-    OverlayTriggerToggle,
-    PopoverMenu,
-    MenuItem,
-    CollapseMenu,
-    DataList,
-    SingleSelectionModel
-  ],
-  templateUrl: './menu-page.component.html',
-
+  selector: 'app-root-nav',
+  standalone: true,
+  imports: [CommonModule, CollapseMenu, DataList, SingleSelectionModel],
+  templateUrl: './root-nav.html'
 })
-export class MenuPageComponent {
-  folderIcon = viewChild('folderSvgIcon');
-
-  onTriggerClick() {
-    alert('Menu trigger clicked!');
-  }
+export class RootNavComponent {
 
   // @ts-ignore
   items = computed<MenuItemType[]>(() => {
@@ -37,11 +17,11 @@ export class MenuPageComponent {
       {
         label: 'Components',
         url: null,
-         icon: 'folder',
+        icon: 'folder',
         children: [
           {
             label: 'Select',
-             icon: 'folder',
+            icon: 'folder',
             children: [
               {
                 label: 'Single',
@@ -59,11 +39,11 @@ export class MenuPageComponent {
           },
           {
             label: 'Overlays',
-             icon: 'folder',
+            icon: 'folder',
             children: [
               {
                 label: 'Menu',
-                url: '/menu',
+                url: 'menu',
               },
               {
                 label: 'Dialog',
@@ -78,25 +58,22 @@ export class MenuPageComponent {
           {
             label: 'Notifications',
             url: '/notifications',
-            disabled: true
           },
           {
             label: 'Button',
             url: '/button',
-            disabled: true
           },
           {
             label: 'Checkbox',
             url: '/checkbox',
-            disabled: true
           },
           {
             label: 'Switch',
+            url: '/switch',
           },
           {
             label: 'Chip',
             url: '/chip',
-            disabled: true
           },
           {
             label: 'Input',
@@ -119,6 +96,10 @@ export class MenuPageComponent {
             url: '/tooltips',
           },
           {
+            label: 'Loading Spin',
+            url: '/loading-spin',
+          },
+          {
             label: 'Popup Playground',
             url: '/popup-playground',
           },
@@ -129,26 +110,21 @@ export class MenuPageComponent {
         ],
       },
       {
-        label: 'Alert on Click',
-        callback: this.onTriggerClick
-      },
-      {
         label: 'Input',
         url: '/input',
         children: [
           {
             label: 'Dropdown',
             url: '/dropdown',
-             icon: 'folder',
+            icon: 'folder',
           },
           {
             label: 'List',
             url: '/list',
-             icon: 'folder',
+            icon: 'folder',
           },
         ],
       },
     ];
   });
 }
-

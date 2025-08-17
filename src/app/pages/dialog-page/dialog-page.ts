@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {OverlayTrigger, FiboDialog, Popover, DialogTrigger} from '@fibo-ui/components';
 import {RouterLink} from '@angular/router';
-import {SelectPageComponent} from '../select/select-page.component';
+import {SelectPageComponent} from '../select/select-page';
 import {JsonPipe} from '@angular/common';
 
 @Component({
@@ -14,7 +14,7 @@ import {JsonPipe} from '@angular/common';
     JsonPipe,
     DialogTrigger
   ],
-  templateUrl: './dialog-page.component.html',
+  templateUrl: './dialog-page.html',
 
 })
 export class DialogPageComponent {

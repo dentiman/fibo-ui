@@ -4,7 +4,7 @@ import {ConfirmationTrigger} from '@fibo-ui/components';
 @Component({
   selector: 'app-confirmation-page',
   imports: [ConfirmationTrigger],
-  templateUrl: './confirmation-page.component.html',
+  templateUrl: './confirmation-page.html',
 })
 export class ConfirmationPageComponent {
 

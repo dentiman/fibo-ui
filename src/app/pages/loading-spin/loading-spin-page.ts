@@ -6,7 +6,7 @@ import { LoadingSpin } from '@fibo-ui/components';
   imports: [
     LoadingSpin
   ],
-  templateUrl: './loading-spin-page.component.html',
+  templateUrl: './loading-spin-page.html',
 })
 export class LoadingSpinPageComponent {
 }

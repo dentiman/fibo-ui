@@ -1,18 +1,18 @@
 import { Routes } from '@angular/router';
-import {AppLayoutComponent} from './layout/app-layout.component';
-import {SelectPageComponent} from './pages/select/select-page.component';
-import {TooltipPageComponent} from './pages/tooltip/tooltip-page.component';
-import {MultipleSelectPageComponent} from './pages/multiple/multiple-select-page.component';
-import {MenuPageComponent} from './pages/menu/menu-page.component';
-import {DialogPageComponent} from './pages/dialog-page/dialog-page.component';
-import {ConfirmationPageComponent} from './pages/confirmation-page/confirmation-page.component';
-import {NotificationPageComponent} from './pages/notification-page/notification-page.component';
-import {DatepickerPageComponent} from './pages/datepicker/datepicker.component';
-import {InputPageComponent} from './pages/input/input-page.component';
-import {FormExamplePageComponent} from './pages/form-example-page/form-example-page.component';
-import {SwitchPageComponent} from './pages/switch/switch-page.component';
-import {CheckboxPageComponent} from './pages/checkbox/checkbox-page.component';
-import {LoadingSpinPageComponent} from './pages/loading-spin/loading-spin-page.component';
+import {AppLayoutComponent} from './layout/app-layout';
+import {SelectPageComponent} from './pages/select/select-page';
+import {TooltipPageComponent} from './pages/tooltip/tooltip-page';
+import {MultipleSelectPageComponent} from './pages/multiple/multiple-select-page';
+import {MenuPageComponent} from './pages/menu/menu-page';
+import {DialogPageComponent} from './pages/dialog-page/dialog-page';
+import {ConfirmationPageComponent} from './pages/confirmation-page/confirmation-page';
+import {NotificationPageComponent} from './pages/notification-page/notification-page';
+import {DatepickerPageComponent} from './pages/datepicker/datepicker';
+import {InputPageComponent} from './pages/input/input-page';
+import {FormExamplePageComponent} from './pages/form-example-page/form-example-page';
+import {SwitchPageComponent} from './pages/switch/switch-page';
+import {CheckboxPageComponent} from './pages/checkbox/checkbox-page';
+import {LoadingSpinPageComponent} from './pages/loading-spin/loading-spin-page';
 
 export const routes: Routes = [
   {

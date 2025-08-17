@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
     Checkbox,
     ReactiveFormsModule
   ],
-  templateUrl: './checkbox-page.component.html',
+  templateUrl: './checkbox-page.html',
 })
 export class CheckboxPageComponent {
   // Basic checkbox states
