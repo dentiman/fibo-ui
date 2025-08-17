@@ -1,0 +1,25 @@
+<div class="
+  relative inline-flex items-center justify-center w-4 h-4 border-1 border-gray-300 rounded
+  transition-colors duration-200 ease-in-out flex-shrink-0
+  focus:outline-none focus-visible:ring-1 focus-visible:ring-primary-600 focus-visible:ring-offset-1
+  aria-checked:bg-primary-500 aria-checked:border-primary-600
+  hover:border-gray-400
+"
+[attr.aria-checked]="getAriaChecked()">
+
+  @if (indeterminate()) {
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="text-primary-700 size-4">
+      <path d="M3.75 7.25a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5Z" />
+    </svg>
+
+  }
+   @else if (checked()) {
+    <svg class="size-3.5 text-white absolute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  }
+</div>
+
+<span class="text-sm  text-slate-900 select-none">
+  <ng-content></ng-content>
+</span>

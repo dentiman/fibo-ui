@@ -1,0 +1,53 @@
+<sui-form-field
+  [control]="formFieldControl"
+  appendIcon="chevron-down"
+  suiOverlayTriggerClick #trigger="OverlayTrigger">
+  <ng-content>
+    @if(currentSelectedItem()) {
+      @if (itemTemplate(); as template) {
+        <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: currentSelectedItem() }"></ng-container>
+      } @else {
+        <span class="text-gray-700 truncate">
+         {{ getLabel(currentSelectedItem()!) }}
+        </span>
+      }
+    }
+  </ng-content>
+
+</sui-form-field>
+
+<sui-form-field-errors [control]="formFieldControl" ></sui-form-field-errors>
+
+@if (trigger.isOpen()) {
+  <div suiPopover
+       suiDataList
+       class=" py-1 px-1 rounded-md bg-white shadow-md outline-1 outline-gray-300"
+       [overlayTrigger]="trigger"
+       [fullOverlayWidth]="true"
+       [(SingleSelectionModel)]="value"
+       (optionTriggered)="trigger.close()"
+  >
+    <div class="flex px-2 space-x-2">
+      <lucide-icon name="search" size="16" class="text-gray-400 self-center"></lucide-icon>
+      <input
+        class="w-full  py-1 text-gray-900 outline-hidden placeholder:text-gray-400 text-sm"
+        placeholder="Search..."
+        type="text"
+      />
+    </div>
+    <div class="h-px bg-gray-200 my-1 mx-1"></div>
+    <div class="max-h-70 overflow-y-auto">
+      @for (item of items(); track getValue(item)) {
+        <a [Option]="getValue(item)"
+           class="menu-item relative group">
+          @if (itemTemplate(); as template) {
+            <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: item, isSelected: currentSelectedItem() && getValue(currentSelectedItem()!) === getValue(item) }"></ng-container>
+          } @else {
+            <span class="block truncate font-normal">{{ getLabel(item) }}</span>
+          }
+        </a>
+      }
+    </div>
+
+  </div>
+}

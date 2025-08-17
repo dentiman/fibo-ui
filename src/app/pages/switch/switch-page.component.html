@@ -1,0 +1,283 @@
+<div class="p-8 max-w-7xl mx-auto">
+  <h1 class="mb-8 text-slate-900 text-3xl font-semibold tracking-tight">Switch Component Examples</h1>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+
+    <!-- Basic States -->
+    <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
+      <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Basic States</h2>
+
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <label class="text-sm font-medium text-slate-900">Default (Off)</label>
+          <sui-switch
+            [(checked)]="basicSwitch"
+            (checkedChange)="onSwitchChange($event, 'Basic')">
+          </sui-switch>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <label class="text-sm font-medium text-slate-900">Default (On)</label>
+          <sui-switch
+            [(checked)]="checkedSwitch"
+            (checkedChange)="onSwitchChange($event, 'Checked')">
+          </sui-switch>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <label class="text-sm font-medium text-slate-700">Disabled (Off)</label>
+          <sui-switch
+            [(checked)]="disabledSwitch"
+            [disabled]="true">
+          </sui-switch>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <label class="text-sm font-medium text-slate-700">Disabled (On)</label>
+          <sui-switch
+            [(checked)]="disabledCheckedSwitch"
+            [disabled]="true">
+          </sui-switch>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <label class="text-sm font-medium text-slate-900">Loading State</label>
+          <div class="flex items-center gap-2">
+            <sui-switch
+              [(checked)]="loadingSwitch"
+              [isLoading]="true">
+            </sui-switch>
+            <button
+              (click)="toggleLoading()"
+              class="px-3 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded border text-slate-700">
+              Toggle
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 p-3 bg-slate-50 rounded border">
+        <p class="text-xs text-slate-600 mb-2">Current States:</p>
+        <ul class="text-xs text-slate-700 space-y-1">
+          <li>Basic: {{ basicSwitch() }}</li>
+          <li>Checked: {{ checkedSwitch() }}</li>
+          <li>Loading: {{ loadingSwitch() }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Form Integration -->
+    <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
+      <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Form Integration</h2>
+
+      <form class="space-y-4">
+        <div class="flex items-center justify-between">
+          <label class="text-sm font-medium text-slate-900">
+            Accept Terms & Conditions *
+          </label>
+          <sui-switch [formControl]="formSwitch"></sui-switch>
+        </div>
+
+        <div [ngClass]="{'text-red-600': formSwitch.invalid && formSwitch.touched}"
+             class="text-xs mt-1">
+          @if (formSwitch.invalid && formSwitch.touched) {
+            <span>You must accept the terms and conditions</span>
+          } @else {
+            <span class="text-slate-500">Please accept to continue</span>
+          }
+        </div>
+
+        <div class="pt-4 border-t border-slate-200">
+          <div class="bg-slate-50 border border-slate-200 rounded p-3">
+            <p class="text-xs text-slate-600 mb-1">Form Status:</p>
+            <p class="text-xs">
+              <strong>Valid:</strong> {{ formSwitch.valid }}<br>
+              <strong>Value:</strong> {{ formSwitch.value }}<br>
+              <strong>Touched:</strong> {{ formSwitch.touched }}
+            </p>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Settings Example -->
+    <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
+      <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Settings Panel Example</h2>
+
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <label class="text-sm font-medium text-slate-900">Push Notifications</label>
+            <p class="text-xs text-slate-500">Receive notifications on your device</p>
+          </div>
+          <sui-switch
+            [(checked)]="notifications"
+            (checkedChange)="onSwitchChange($event, 'Notifications')">
+          </sui-switch>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div>
+            <label class="text-sm font-medium text-slate-900">Dark Mode</label>
+            <p class="text-xs text-slate-500">Switch to dark theme</p>
+          </div>
+          <sui-switch
+            [(checked)]="darkMode"
+            (checkedChange)="onSwitchChange($event, 'Dark Mode')">
+          </sui-switch>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div>
+            <label class="text-sm font-medium text-slate-900">Auto Save</label>
+            <p class="text-xs text-slate-500">Automatically save your work</p>
+          </div>
+          <sui-switch
+            [(checked)]="autoSave"
+            (checkedChange)="onSwitchChange($event, 'Auto Save')">
+          </sui-switch>
+        </div>
+      </div>
+
+      <div class="mt-4 p-3 bg-slate-50 rounded border">
+        <p class="text-xs text-slate-600 mb-2">Your Settings:</p>
+        <ul class="text-xs text-slate-700 space-y-1">
+          <li>🔔 Notifications: {{ notifications() ? 'Enabled' : 'Disabled' }}</li>
+          <li>🌙 Dark Mode: {{ darkMode() ? 'On' : 'Off' }}</li>
+          <li>💾 Auto Save: {{ autoSave() ? 'On' : 'Off' }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Usage Instructions -->
+    <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
+      <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Usage</h2>
+
+      <div class="space-y-4">
+        <div>
+          <h3 class="text-sm font-medium text-slate-900 mb-2">Basic Usage</h3>
+          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;sui-switch [(checked)]="isEnabled"&gt;&lt;/sui-switch&gt;</code></pre>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-slate-900 mb-2">With Form Control</h3>
+          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;sui-switch [formControl]="switchControl"&gt;&lt;/sui-switch&gt;</code></pre>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-slate-900 mb-2">With Loading State</h3>
+          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;sui-switch
+  [(checked)]="value"
+  [isLoading]="loading"
+  [disabled]="disabled"&gt;
+&lt;/sui-switch&gt;</code></pre>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <h3 class="text-sm font-medium text-slate-900 mb-2">Features:</h3>
+        <ul class="text-xs text-slate-600 space-y-1 pl-4">
+          <li>• Two-way data binding with [(checked)]</li>
+          <li>• Angular Forms integration (FormControl, ngModel)</li>
+          <li>• Keyboard navigation (Space, Enter)</li>
+          <li>• Loading state indicator</li>
+          <li>• Disabled state support</li>
+          <li>• Full accessibility (ARIA attributes)</li>
+          <li>• Customizable styling</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Size Examples -->
+  <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm mb-8">
+    <h2 class="mb-6 text-slate-900 text-xl font-semibold tracking-tight">Size Variants</h2>
+
+    <div class="space-y-6">
+      <!-- Extra Small -->
+      <div class="flex items-center justify-between">
+        <div>
+          <label class="text-sm font-medium text-slate-900">Extra Small (xs)</label>
+          <p class="text-xs text-slate-500">h-4 w-7 container, h-3 w-3 thumb</p>
+        </div>
+        <sui-switch
+          [size]="'xs'"
+          [(checked)]="xsSwitch"
+          (checkedChange)="onSwitchChange($event, 'XS')">
+        </sui-switch>
+      </div>
+
+      <!-- Small -->
+      <div class="flex items-center justify-between">
+        <div>
+          <label class="text-sm font-medium text-slate-900">Small (sm)</label>
+          <p class="text-xs text-slate-500">h-5 w-9 container, h-4 w-4 thumb</p>
+        </div>
+        <sui-switch
+          [size]="'sm'"
+          [(checked)]="smSwitch"
+          (checkedChange)="onSwitchChange($event, 'SM')">
+        </sui-switch>
+      </div>
+
+      <!-- Base -->
+      <div class="flex items-center justify-between">
+        <div>
+          <label class="text-sm font-medium text-slate-900">Base (default)</label>
+          <p class="text-xs text-slate-500">h-6 w-11 container, h-5 w-5 thumb</p>
+        </div>
+        <sui-switch
+          [size]="'base'"
+          [(checked)]="baseSwitch"
+          (checkedChange)="onSwitchChange($event, 'Base')">
+        </sui-switch>
+      </div>
+
+      <!-- Large -->
+      <div class="flex items-center justify-between">
+        <div>
+          <label class="text-sm font-medium text-slate-900">Large (lg)</label>
+          <p class="text-xs text-slate-500">h-7 w-14 container, h-6 w-6 thumb</p>
+        </div>
+        <sui-switch
+          [size]="'lg'"
+          [(checked)]="lgSwitch"
+          (checkedChange)="onSwitchChange($event, 'LG')">
+        </sui-switch>
+      </div>
+
+      <!-- Extra Large -->
+      <div class="flex items-center justify-between">
+        <div>
+          <label class="text-sm font-medium text-slate-900">Extra Large (xl)</label>
+          <p class="text-xs text-slate-500">h-8 w-16 container, h-7 w-7 thumb</p>
+        </div>
+        <sui-switch
+          [size]="'xl'"
+          [(checked)]="xlSwitch"
+          (checkedChange)="onSwitchChange($event, 'XL')">
+        </sui-switch>
+      </div>
+    </div>
+
+    <div class="mt-6 p-3 bg-slate-50 rounded border">
+      <p class="text-xs text-slate-600 mb-2">Size Switch States:</p>
+      <ul class="text-xs text-slate-700 space-y-1">
+        <li>XS: {{ xsSwitch() }}</li>
+        <li>SM: {{ smSwitch() }}</li>
+        <li>Base: {{ baseSwitch() }}</li>
+        <li>LG: {{ lgSwitch() }}</li>
+        <li>XL: {{ xlSwitch() }}</li>
+      </ul>
+    </div>
+
+    <div class="mt-4">
+      <h3 class="text-sm font-medium text-slate-900 mb-2">Usage:</h3>
+      <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;sui-switch [size]="'xs'" [(checked)]="value"&gt;&lt;/sui-switch&gt;
+&lt;sui-switch [size]="'sm'" [(checked)]="value"&gt;&lt;/sui-switch&gt;
+&lt;sui-switch [size]="'base'" [(checked)]="value"&gt;&lt;/sui-switch&gt;
+&lt;sui-switch [size]="'lg'" [(checked)]="value"&gt;&lt;/sui-switch&gt;
+&lt;sui-switch [size]="'xl'" [(checked)]="value"&gt;&lt;/sui-switch&gt;</code></pre>
+    </div>
+  </div>
+</div>

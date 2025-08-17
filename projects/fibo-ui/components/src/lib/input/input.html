@@ -1,0 +1,13 @@
+<sui-form-field
+  [control]="formFieldControl">
+  <input
+    suiFormFieldContent
+    type="text"
+    [value]="value()"
+    (input)="onInput($event)"
+    (blur)="formFieldControl.cva.onTouched()"
+    [disabled]="formFieldControl.cva.disabled()"
+    class="w-full appearance-none outline-none text-sm text-gray-800 placeholder:text-gray-400  focus:outline-0 "
+    [placeholder]="formFieldControl.placeholder()"
+  />
+</sui-form-field>

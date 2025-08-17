@@ -1,0 +1,18 @@
+  @if (items().length === 0) {
+    <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
+  }
+  @for (item of items(); track getValue(item)) {
+    <a [Option]="getValue(item)" #option="Option"
+       class="menu-item relative group">
+      @if (isMultiple) {
+        <sui-checkbox
+          [checked]="option.isSelected()">
+        </sui-checkbox>
+      }
+      @if (itemTemplate(); as template) {
+        <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: item, isSelected: option.isSelected() }"></ng-container>
+      } @else {
+        <span class="block truncate font-normal">{{ getLabel(item) }}</span>
+      }
+    </a>
+  }

@@ -1,0 +1,52 @@
+<sui-form-field
+  [control]="formFieldControl"
+  appendIcon="chevron-down"
+  suiOverlayTriggerClick #trigger="OverlayTrigger">
+  <ng-content>
+    @let user = selectedUser();
+    @if(user) {
+      <div class="flex items-center gap-2">
+        <img
+          [src]="user.avatar"
+          [alt]="user.username"
+          class="w-6 h-6 rounded-full object-cover"
+        />
+        <div class="flex flex-col">
+          <span class="text-sm font-medium truncate text-gray-900 leading-none" >{{ user.username }}</span>
+          <span class="text-xs truncate text-gray-500 leading-none">{{ user.email }}</span>
+        </div>
+      </div>
+    }
+  </ng-content>
+</sui-form-field>
+
+<sui-form-field-errors [control]="formFieldControl" ></sui-form-field-errors>
+
+@if (trigger.isOpen()) {
+  <div suiPopover
+       suiDataList
+       class="max-h-70 overflow-y-auto py-1 px-1 rounded-md bg-white shadow-md outline-1 outline-gray-300"
+       [overlayTrigger]="trigger"
+       [fullOverlayWidth]="true"
+       [(SingleSelectionModel)]="value"
+       (optionTriggered)="trigger.close()"
+  >
+    @for (user of users(); track user.id) {
+      @let isSelected = user.id === selectedUser()?.id;
+      <a [Option]="user.id"
+         class="menu-item relative group">
+        <div class="flex items-center gap-3">
+          <img
+            [src]="user.avatar"
+            [alt]="user.username"
+            class="w-8 h-8 rounded-full object-cover"
+          />
+          <div class="flex flex-col min-w-0">
+            <span class="text-sm font-medium truncate" [class.text-white]="isSelected" [class.text-gray-900]="!isSelected">{{ user.username }}</span>
+            <span class="text-xs truncate" [class.text-primary-50]="isSelected" [class.text-gray-500]="!isSelected">{{ user.email }}</span>
+          </div>
+        </div>
+      </a>
+    }
+  </div>
+}

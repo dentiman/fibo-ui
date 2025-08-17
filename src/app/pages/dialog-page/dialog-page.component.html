@@ -1,0 +1,8 @@
+<button class="spacy-button-primary" [suiDialogTrigger]="content" >Open Dialog</button>
+<button class="ml-1 spacy-button-primary" [suiDialogTrigger]="content" [suiDialogConfig]="{ mode: 'drawer' }" >Open Drawer</button>
+
+
+<ng-template #content>
+  <app-select-page></app-select-page>
+</ng-template>
+

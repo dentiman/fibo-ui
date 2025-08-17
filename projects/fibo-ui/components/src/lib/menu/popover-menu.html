@@ -1,0 +1,43 @@
+@for (item of items();  track idx ; let idx = $index) {
+    @if (item.children || item.content) {
+      <button suiSubmenuTrigger [disabled]="!!item.disabled" #menuItemTrigger="OverlayTrigger"
+              class="menu-item w-full  items-center  group"
+      >
+        @if (item?.icon) {
+          <lucide-icon [name]="item.icon"  class="absolute self-center text-gray-400 mt-2 size-4"></lucide-icon>
+        }
+        <div
+          class="min-w-0 grow text-left"
+          [class.ml-6]="itemsHaveIcons()"
+
+        >{{ item.label }}</div>
+
+        <lucide-icon
+          name="chevron-right"
+          class="flex-none text-gray-400  group-data-active:text-gray-500 size-4 shrink-0"
+        ></lucide-icon>
+      </button>
+      @if (menuItemTrigger.isOpen()) {
+        <sui-menu (closeParent)="closeMenuWithParent()"
+                  [overlayTrigger]="menuItemTrigger"
+                  [offset]="1" placement="right-start"
+                  [menuContent]="item.content"
+                  [items]="item.children" />
+      }
+    } @else {
+      @if(item.url) {
+        <a suiDataListItem [disabled]="!!item.disabled"  (itemTrigger)="closeMenuWithParent()" [routerLink]="item.url"
+           class="menu-item relative group">
+           <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
+        </a>
+      } @else if(item.callback) {
+        <a suiDataListItem [disabled]="!!item.disabled" (itemTrigger)="item.callback(); closeMenuWithParent()" class="menu-item relative group">
+          <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
+        </a>
+      }
+    }
+}
+<ng-content></ng-content>
+@if(menuContent()) {
+  <ng-container [ngTemplateOutlet]="menuContent()"></ng-container>
+}

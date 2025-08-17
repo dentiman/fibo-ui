@@ -1,0 +1,55 @@
+@let values = value() || [];
+@let disabled = formFieldControl.cva.disabled();
+@let empty  = (values | isEmpty);
+
+<sui-form-field
+  appendIcon="chevron-down"
+  [control]="formFieldControl"
+  suiOverlayTriggerClick #trigger="OverlayTrigger">
+  <span class="w-full flex flex-wrap gap-x-1  gap-y-1 "
+        [class]="{
+         '-ml-1.5': !empty,
+         'mt-1': !empty && formFieldControl.label(),
+        }"
+  >
+        @for (value of values; track value) {
+                <button class=" break-words focus-visible:outline  focus-visible:outline-offset-1 focus-visible:outline-primary-600 flex items-center gap-1
+                rounded-md text-gray-600 bg-gray-300 px-1.5 py-0.5 ">
+                      <span class="truncate flex-1">
+                        @let item = selectedItem(value);
+                        @if(item) {
+                          @if (selectedItemTemplate(); as template) {
+                            <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
+                          } @else {
+                             <span class="text-sm font-medium ">{{ getLabel(item) }}</span>
+                          }
+                        }
+                      </span>
+
+                      @if (!disabled) {
+                        <button class="rounded-full  cursor-pointer flex-shrink-0"
+                                (click)="removeValue(value)"
+                                (keydown)="$event.stopPropagation()"
+                        >
+                           <lucide-icon name="x" size="14" class="text-gray-600/50 hover:text-gray-600"></lucide-icon>
+                          </button>
+                      }
+                </button>
+        }
+    <ng-content></ng-content>
+  </span>
+</sui-form-field>
+<sui-form-field-errors [control]="formFieldControl" ></sui-form-field-errors>
+
+@if (trigger.isOpen() && items().length) {
+  <sui-listbox suiPopover
+               class="rounded-md bg-white shadow-md outline-1 outline-gray-300"
+               [overlayTrigger]="trigger"
+               [fullOverlayWidth]="true"
+               [(MultipleSelectionModel)]="value"
+               [items]="items()"
+               [valueProp]="valueProp()"
+               [labelProp]="labelProp()"
+               [itemTemplate]="itemTemplate()"
+  ></sui-listbox>
+}

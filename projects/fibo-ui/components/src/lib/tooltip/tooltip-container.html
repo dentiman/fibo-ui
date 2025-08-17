@@ -1,0 +1,26 @@
+@let tooltipRef = tooltipService.tooltipRef();
+@if (tooltipRef ) {
+  <div suiOverlayPosition
+       [referenceElement]="tooltipRef.referenceElement"
+       (mouseleave)="tooltipService.close()"
+       (mouseenter)="tooltipService.keepOpen()"
+       class="absolute  z-10 rounded-md bg-white shadow-lg ring-1 ring-gray-300  focus:outline-none px-4 py-1 "
+  >
+
+    <div OverlayArrow
+         class="absolute w-3 h-3 bg-white border-gray-300 rotate-45
+                data-[placement=top]:border-r    data-[placement=top]:border-b
+                data-[placement=bottom]:border-l data-[placement=bottom]:border-t
+                data-[placement=right]:border-l  data-[placement=right]:border-b
+                data-[placement=left]:border-r   data-[placement=left]:border-t"
+    >
+    </div>
+    @if ( content() ) {
+      {{ tooltipRef.content }}
+    } @else if (templateRef()) {
+      <ng-container *ngTemplateOutlet="templateRef()"></ng-container>
+    }
+
+  </div>
+
+}

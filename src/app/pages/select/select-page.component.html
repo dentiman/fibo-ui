@@ -1,0 +1,64 @@
+<app-form-actions [ctrl]="ctrl">
+
+    <div class="relative mt-2 w-[350px] space-y-1">
+
+      <span  class="block text-sm/6 font-medium text-gray-900">With placeholder</span>
+      <sui-select [items]="items()" [formControl]="ctrl" [placeholder]="'Select City'" ></sui-select>
+
+      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">Floating label</span>
+      <sui-select [items]="items()" [label]="'City'" [formControl]="ctrl" ></sui-select>
+
+      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">Fixed Label</span>
+      <sui-select [items]="items()" [formControl]="ctrl" fixedLabel="City" [placeholder]="'Select City'" ></sui-select>
+
+      <span  class="block text-sm/6 font-medium text-gray-900 mt-2"> with searchable Input</span>
+      <sui-select [items]="filteredItems()" [value]="ctrl.value"  [label]="'City'" [formControl]="ctrl">
+          <input
+            suiFormFieldContent
+            [formControl]="ctrl"
+            [value]="ctrl.value"
+            [placeholder]="'Choose City'"
+            class="w-full text-gray-900 outline-hidden placeholder:text-gray-400 sm:text-sm peer"
+            type="text"
+          />
+      </sui-select>
+
+      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">User Select with Custom Template</span>
+      <sui-select
+        [items]="users"
+        [formControl]="ctrl"
+        [label]="'Select User'"
+        [placeholder]="'Choose a user'"
+        [valueProp]="'value'"
+        [labelProp]="'label'"
+        [itemTemplate]="userTemplate">
+      </sui-select>
+
+      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">User Select Component (Local)</span>
+      <app-user-select
+        [users]="users"
+        [formControl]="userCtrl"
+        [label]="'Select User'"
+        [placeholder]="'Choose a user'">
+      </app-user-select>
+
+      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">User Select Form Actions</span>
+      <app-form-actions [ctrl]="userCtrl"></app-form-actions>
+
+    </div>
+</app-form-actions>
+
+<!-- User Template -->
+<ng-template #userTemplate let-user let-isSelected="isSelected">
+  <div class="flex items-center gap-3">
+    <img
+      [src]="user.avatar"
+      [alt]="user.username"
+      class="w-8 h-8 rounded-full object-cover"
+    />
+    <div class="flex flex-col min-w-0">
+      <span class="text-sm font-medium truncate" [class.text-white]="isSelected" [class.text-gray-900]="!isSelected">{{ user.username }}</span>
+      <span class="text-xs truncate" [class.text-primary-50]="isSelected" [class.text-gray-500]="!isSelected">{{ user.email }}</span>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,65 @@
+@let formFieldControl = control();
+@let empty = formFieldControl.cva.value() | isEmpty;
+@let disabled = formFieldControl.cva.disabled();
+@let label = formFieldControl.label();
+@let hasInnerContent = !!inputs().length || !!formFieldControl.inputs().length;
+@let hasFixedLabel = !!control()?.fixedLabel();
+<div class="min-w-0 grow relative">
+
+  @if (label) {
+    <label class="text-gray-500 group-focus-within:text-primary-600 group-data-error:text-red-500 block"
+           [class.text-xs]="!empty || hasFixedLabel"
+           [class.group-focus-within:text-xs]="hasInnerContent"
+           [class.group-aria-expanded:text-xs]="hasInnerContent"
+    >
+      {{ label }}@if (formFieldControl.cva.isRequired()) {
+      <span>*</span>
+    }
+    </label>
+  }
+  @if (formFieldControl.placeholder() && empty && !hasInnerContent) {
+
+    @if (label && !hasFixedLabel) {
+
+    } @else {
+      <div class="text-gray-400">{{ formFieldControl.placeholder() }}!</div>
+    }
+
+  }
+  <div
+    [class.hidden]="(empty && !hasInnerContent && !hasFixedLabel) || (empty && label && !hasFixedLabel)"
+    [class.group-focus-within:block]="empty || hasInnerContent"
+    [class.group-aria-expanded:block]="hasInnerContent"
+    [class.block]="(hasInnerContent && label)"
+  >
+    <ng-content></ng-content>
+  </div>
+
+
+</div>
+@let displayReset = empty || disabled;
+@if (!displayReset && formFieldControl.cva.ngControl) {
+  <div>
+    <button
+      (click)="formFieldControl.cva.ngControl?.reset()"
+      type="button"
+      class="flex-none hidden group-hover:block rounded-full p-0.5 -mr-0.5 text-gray-400 hover:bg-gray-200"
+    >
+      <lucide-icon name="X" size="15" ></lucide-icon>
+    </button>
+    <div class="group-hover:hidden">
+      <ng-container [ngTemplateOutlet]="appendBlock"></ng-container>
+    </div>
+  </div>
+
+} @else {
+  <ng-container [ngTemplateOutlet]="appendBlock"></ng-container>
+}
+
+<ng-template #appendBlock>
+  <ng-content select=".append">
+    @if(appendIcon(); as appendIcon) {
+       <lucide-icon [name]="appendIcon" size="16" class="self-center justify-self-end text-gray-400"></lucide-icon>
+    }
+  </ng-content>
+</ng-template>

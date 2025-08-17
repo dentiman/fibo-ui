@@ -1,0 +1,24 @@
+import {Directive, ElementRef, inject, input, model, output, signal, TemplateRef} from '@angular/core';
+import {ConfirmationConfig, ConfirmationContent, ConfirmationService} from './confirmation-service';
+import {DialogConfig} from '../overlay-state';
+
+@Directive({
+  selector: '[confirm]',
+  exportAs: 'SuiConfirmationTrigger',
+  standalone: true,
+  host: {
+    '(click)': 'open()'
+  }
+})
+export class ConfirmationTrigger {
+  confirmation = inject(ConfirmationService);
+  content = input<ConfirmationContent|null>(null,{alias: 'suiConfirmationContent'});
+  confirm = output()
+
+  open() {
+    this.confirmation.open({
+      content: this.content(),
+      onConfirm: ()=> {this.confirm.emit()}
+    });
+  }
+}

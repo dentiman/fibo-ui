@@ -1,0 +1,59 @@
+import { Directive, ElementRef, effect, inject, input, output, signal } from '@angular/core';
+import {AutoFocus, MultipleSelect} from '@spacy-ui/components';
+import {FormFieldContent} from '../form/form-field/form-field-content';
+
+@Directive({
+  selector: '[suiMultipleSelectInput]',
+  standalone: true,
+  hostDirectives: [FormFieldContent],
+  host: {
+     class: 'flex-1 w-full min-w-30  outline-0  appearance-none  text-base text-gray-800 placeholder:text-gray-400 sm:text-sm/6',
+    '[placeholder]': 'placeholder()',
+    '(focusin)': 'select.trigger()?.open()',
+    '(keydown.backspace)': 'removeLastValue()',
+    '(input)': 'onInput($event)',
+    '[disabled]': 'select.disabled()'
+  }
+})
+export class MultipleSelectInput {
+
+  select = inject(MultipleSelect);
+
+  private readonly elementRef = inject(ElementRef);
+
+  placeholder = input<string>('');
+
+  valueChange = output<string>();
+
+  constructor() {
+
+    // this.select.control.valueChanges.subscribe(() => {
+    //   const inputElement = this.elementRef.nativeElement as HTMLInputElement;
+    //   inputElement.value = '';
+    //   this.valueChange.emit('');
+    // });
+
+    // effect(() => {
+    //  const  dataList =  this.select.dataList()
+    //   if(dataList) {
+    //     dataList.optionTriggered.subscribe(() => this.elementRef.nativeElement.focus())
+    //   }
+    // });
+  }
+
+  onInput(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.valueChange.emit(inputElement.value);
+  }
+
+  removeLastValue() {
+    const inputElement = this.elementRef.nativeElement as HTMLInputElement;
+    // Only remove last value if input is empty
+    if (!inputElement.value) {
+      const value = this.select.value();
+      if (Array.isArray(value) && value.length > 0) {
+        this.select.value.set(value.slice(0, -1));
+      }
+    }
+  }
+}
