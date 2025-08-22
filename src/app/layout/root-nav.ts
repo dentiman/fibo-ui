@@ -101,6 +101,10 @@ export class RootNavComponent {
             url: '/loading-spin',
           },
           {
+            label: 'Playground',
+            url: '/playground',
+          },
+          {
             label: 'Popup Playground',
             url: '/popup-playground',
           },

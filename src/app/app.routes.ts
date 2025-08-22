@@ -13,6 +13,7 @@ import {FormExamplePageComponent} from './pages/form-example-page/form-example-p
 import {SwitchPageComponent} from './pages/switch/switch-page';
 import {CheckboxPageComponent} from './pages/checkbox/checkbox-page';
 import {LoadingSpinPageComponent} from './pages/loading-spin/loading-spin-page';
+import {PlaygroundPageComponent} from './pages/playground-page/playground-page';
 
 export const routes: Routes = [
   {
@@ -70,6 +71,10 @@ export const routes: Routes = [
       {
         path: 'loading-spin',
         component: LoadingSpinPageComponent
+      },
+      {
+        path: 'playground',
+        component: PlaygroundPageComponent
       }
     ]
   }
