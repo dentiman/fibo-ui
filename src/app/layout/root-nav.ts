@@ -1,6 +1,6 @@
 import {Component, computed} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import { DataList, MenuItemType, SingleSelectionModel} from '@fibo-ui/cdk';
+import { DataList, SingleSelectionModel} from '@fibo-ui/cdk';
 import {CollapseMenu} from '@fibo-ui/components';
 
 @Component({

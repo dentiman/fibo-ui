@@ -1,13 +1,11 @@
 import {Component, computed, viewChild} from '@angular/core';
 import {
   DataList,
-  MenuItem,
-  MenuItemType,
   OverlayTriggerToggle,
   SingleSelectionModel
 } from '@fibo-ui/cdk';
 import {
-  CollapseMenu,
+  CollapseMenu, MenuItem,
   PopoverMenu,
 } from '@fibo-ui/components';
 import {RouterLink} from '@angular/router';

@@ -47,7 +47,17 @@
               "sourceMap": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "production",
+          "dependsOn": [
+            {
+              "target": "build",
+              "projects": "@fibo-ui/cdk"
+            },
+            {
+              "target": "build",
+              "projects": "@fibo-ui/components"
+            }
+          ]
         },
         "serve": {
           "builder": "@angular/build:dev-server",
@@ -115,6 +125,9 @@
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",
+          "options": {
+            "project": "projects/fibo-ui/components/ng-package.json"
+          },
           "configurations": {
             "production": {
               "tsConfig": "projects/fibo-ui/components/tsconfig.lib.prod.json"
@@ -123,7 +136,13 @@
               "tsConfig": "projects/fibo-ui/components/tsconfig.lib.json"
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "production",
+          "dependsOn": [
+            {
+              "target": "build",
+              "projects": "@fibo-ui/cdk"
+            }
+          ]
         },
         "test": {
           "builder": "@angular/build:karma",
