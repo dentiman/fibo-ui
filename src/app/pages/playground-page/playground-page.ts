@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="w-100">
       <ol >
-        <li></li>
+        <li class="bg-conic/decreasing from-violet-700 via-lime-300 to-violet-700" ></li>
         <li></li>
         <li></li>
         <li></li>
@@ -19,6 +19,9 @@ import { CommonModule } from '@angular/common';
       </ol>
     </div>
 
+    <div is="circle" class="size-18 rounded-full bg-radial-[at_50%_75%] from-sky-200 via-blue-400 to-indigo-900 to-90%"></div>
+
+
   `,
   styles: [`
     ol {
@@ -27,6 +30,7 @@ import { CommonModule } from '@angular/common';
       grid-template-columns: repeat(34, 1fr);
       grid-template-rows: repeat(21, 1fr);
       list-style: none;
+      background: transparent;
 
       li {
         aspect-ratio: 1 / 1;
@@ -37,7 +41,7 @@ import { CommonModule } from '@angular/common';
 
         &::after {
           aspect-ratio: 1 / 1;
-          background-color: rgba(255, 255, 255, .3);
+
           border-radius: 50%;
           content: '';
           display: block;
@@ -48,44 +52,72 @@ import { CommonModule } from '@angular/common';
         }
 
         &:nth-of-type(1) {
-          --bg: #e47a2c;
           --ga: 1 / 1 / 22 / 22;
           --tl: 50% 50%;
+
+          &::after {
+            background-image: linear-gradient(to right top, #f70606, #fa4c00, #fc6f00, #fc8d00, #fba700);
+          }
         }
         &:nth-of-type(2) {
-          --bg: #baccc0 ;
           --ga: 1 / 22 / 23 / 35;
           --tl: -50% 50%;
+
+          &::after {
+            background-image: linear-gradient(to right bottom, #fc6f00, #ff9300, #ffb600, #ffd900, #f7fb00);
+          }
+
         }
         &:nth-of-type(3) {
-          --bg: #6c958f;
           --ga: 14 / 27 / 22 / 35;
           --tl: -50% -50%;
+
+          &::after {
+            background-image: linear-gradient(to bottom, #ff9300, #e0a600, #b7b600, #82c400, #11cf03);
+          }
+
         }
         &:nth-of-type(4) {
-          --bg: #40363f;
           --ga: 17 / 22 / 22 / 27;
           --tl: 50% -50%;
+
+          &::after {
+            background-image: linear-gradient(to left, #11cf03, #00d560, #00d892, #00dab8, #01d9d2);
+          }
+
+
         }
         &:nth-of-type(5) {
-          --bg: #d7a26c;
           --ga: 14 / 22 / 17 / 25;
           --tl: 50% 50%;
+
+          &::after {
+            background-image: linear-gradient(to right top, #f70606, #fa4c00, #fc6f00, #fc8d00, #fba700);
+          }
         }
         &:nth-of-type(6) {
-          --bg: #ae4935;
           --ga: 14 / 25 / 17 / 27;
           --tl: -50% 50%;
+
+          &::after {
+            background-image: linear-gradient(to right top, #f70606, #fa4c00, #fc6f00, #fc8d00, #fba700);
+          }
         }
         &:nth-of-type(7) {
-          --bg: #e47a2c;
           --ga: 16 / 26 / 17 / 27;
           --tl: -50% -50%;
+
+          &::after {
+            background-image: linear-gradient(to right top, #f70606, #fa4c00, #fc6f00, #fc8d00, #fba700);
+          }
         }
         &:nth-of-type(8) {
-          --bg: #f7e6d4;
           --ga: 16 / 25 / 17 / 26;
           --tl: 50% -50%;
+
+          &::after {
+            background-image: linear-gradient(to right top, #f70606, #fa4c00, #fc6f00, #fc8d00, #fba700);
+          }
         }
       }
     }`]
