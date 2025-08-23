@@ -46,6 +46,7 @@ export * from './lib/tooltip/tooltip'
 export * from './lib/menu/popover-menu'
 export * from './lib/menu/collapse-menu'
 export * from './lib/menu/menu-item'
+export * from './lib/menu/side-menu'
 
 
 export * from './lib/overlay/confirmation/confirmation';

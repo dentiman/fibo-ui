@@ -14,6 +14,7 @@ import {SwitchPageComponent} from './pages/switch/switch-page';
 import {CheckboxPageComponent} from './pages/checkbox/checkbox-page';
 import {LoadingSpinPageComponent} from './pages/loading-spin/loading-spin-page';
 import {PlaygroundPageComponent} from './pages/playground-page/playground-page';
+import {SideMenuPage} from './pages/side-menu/side-menu-page';
 
 export const routes: Routes = [
   {
@@ -75,6 +76,10 @@ export const routes: Routes = [
       {
         path: 'playground',
         component: PlaygroundPageComponent
+      },
+      {
+        path: 'side-menu',
+        component: SideMenuPage
       }
     ]
   }

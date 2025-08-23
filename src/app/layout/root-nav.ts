@@ -1,12 +1,12 @@
 import {Component, computed} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import { DataList, SingleSelectionModel} from '@fibo-ui/cdk';
-import {CollapseMenu} from '@fibo-ui/components';
+import {CollapseMenu, SideMenu} from '@fibo-ui/components';
 
 @Component({
   selector: 'app-root-nav',
   standalone: true,
-  imports: [CommonModule, CollapseMenu, DataList, SingleSelectionModel],
+  imports: [CommonModule, CollapseMenu, DataList, SingleSelectionModel, SideMenu],
   templateUrl: './root-nav.html'
 })
 export class RootNavComponent {
@@ -18,7 +18,6 @@ export class RootNavComponent {
       {
         label: 'Components',
         url: null,
-        icon: 'folder',
         children: [
           {
             label: 'Select',
@@ -107,6 +106,10 @@ export class RootNavComponent {
           {
             label: 'Popup Playground',
             url: '/popup-playground',
+          },
+          {
+            label: 'Side Menu',
+            url: '/side-menu',
           },
           {
             label: 'Tabs',
