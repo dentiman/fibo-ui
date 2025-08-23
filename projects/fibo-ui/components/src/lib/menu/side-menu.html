@@ -31,7 +31,12 @@
 
     } @else {
       @if (item.url) {
-        <li class="relative flex gap-x-2 group cursor-pointer"
+        <li class="relative flex gap-x-2 group cursor-pointer
+
+          aria-selected:rounded-md
+          aria-selected:text-white
+
+"
             [Option]="item"
             [disabled]="!!item.disabled"
             [routerLink]="item.url"
@@ -61,8 +66,8 @@
           </div>
           <div class="flex-auto py-0.5 text-sm/5 text-gray-500
           group-data-[active=true]:text-gray-700
-          group-aria-selected:text-gray-700
-          group-aria-selected:font-bold
+          group-aria-selected:text-slate-600
+          group-aria-selected:font-semibold
 ">
             {{ item.label }}
           </div>
