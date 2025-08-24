@@ -7,14 +7,15 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {LucideAngularModule} from 'lucide-angular';
 import {CollapseMenu} from './collapse-menu';
 import {CollapseSubmenuItem} from './collapse-submenu-item';
+import {SideMenuChain} from './side-menu-chain';
 
 @Component({
   selector: 'fibo-side-menu',
   standalone: true,
   host: {
-    'class': 'flex flex-col ',
+    'class': 'flex flex-col',
   },
-  imports: [CommonModule, RouterLink, Option, LucideAngularModule, CollapseMenu, CollapseSubmenuItem],
+  imports: [CommonModule, RouterLink, Option, LucideAngularModule, CollapseMenu, CollapseSubmenuItem, SideMenuChain],
   templateUrl: './side-menu.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -24,7 +25,7 @@ export class SideMenu implements OnInit {
   items = input<MenuItemType[]>([]);
   menuContent = input<TemplateRef<any>>()
   level = input<number>(0);
-  levelItems = computed(() => Array(this.level()).fill(0));
+  collapsable =  input<boolean>(true);
   selectionModel = inject<SelectionModel<MenuItemType>>(SELECTION_MODEL, {optional: true})
 
   ngOnInit(): void {

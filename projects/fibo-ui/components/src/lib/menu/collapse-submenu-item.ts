@@ -14,7 +14,6 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
     },
   ],
   host: {
-    '(click)': "toggle()",
     '[attr.aria-expanded]': 'expanded() || null',
   }
 })

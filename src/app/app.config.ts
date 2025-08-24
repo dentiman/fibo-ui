@@ -13,10 +13,11 @@ import {
   Menu,
   Search,
   UserCheck,
-  X
+  X,
+  CirclePlus
 } from 'lucide-angular';
 
-const icons = { File, House, Menu, UserCheck, ChevronDown, X, Search,Folder ,ChevronRight};
+const icons = { File, House, Menu, UserCheck, ChevronDown, X, Search,Folder ,ChevronRight,CirclePlus };
 
 export const appConfig: ApplicationConfig = {
   providers: [

@@ -48,6 +48,7 @@ export class RootNavComponent {
               {
                 label: 'Dialog',
                 url: '/dialog',
+                disabled: true
               },
               {
                 label: 'Confirmation',
@@ -66,6 +67,7 @@ export class RootNavComponent {
           {
             label: 'Checkbox',
             url: '/checkbox',
+
           },
           {
             label: 'Switch',

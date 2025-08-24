@@ -1,95 +1,127 @@
-<ul role="list" class="space-y-2">
+<ul role="list" class="space-y-1">
   @let totalItems= items().length;
+  @let canCollapse = collapsable();
   @for (item of items(); track idx; let idx = $index) {
-    @if (item.children) {
 
+    @if(item.disabled) {
       <li class="relative flex gap-x-2">
-        <div class="absolute top-0  left-0 flex w-6 justify-center"
-             [class.-bottom-6]="$index!==totalItems-1"
+        <fibo-side-menu-chain
+          [index]="$index"
+          [isGroup]="true"
+          [totalItems]="totalItems"/>
 
-        >
-          <div class="w-px bg-gray-200"></div>
-        </div>
-        <div class="relative flex size-6 flex-none items-center justify-center ">
-          @if ($index===0) {
-            <div class="absolute top-0 left-0 w-full h-1/2 bg-white"></div>
-          }
-
-          <div class="z-1 size-1.5 rounded-full bg-gray-100 ring ring-gray-300"></div>
-        </div>
-        <div class="flex flex-col flex-auto py-0.5 text-sm/5 text-gray-500">
-            <span> {{ item.label }} </span>
-          <div class="-ml-2 mt-1">
-            <fibo-side-menu
-              [level]="level()+1"
-              [menuContent]="item.content"
-              [items]="item.children"/>
-          </div>
+        <div class="flex flex-col flex-auto py-0.5 text-sm/5 text-gray-400">
+          <span> {{ item.label }} </span>
         </div>
       </li>
+    } @else if (item.children) {
 
+      @if(canCollapse) {
+        <li class="relative flex gap-x-2"
+            fiboCollapseSubmenuItem [items]="item.children"
+            #collapseSubmenuItem="fiboCollapseSubmenuItem"
+            #dataListItem="DataListItem"
+        >
+          <fibo-side-menu-chain
+            (click)="collapseSubmenuItem.toggle()"
+            [index]="$index"
+            [isGroup]="true"
+            [isActive]="dataListItem.isActive()"
+            [collapsable]="true"
+            [collapsed]="collapseSubmenuItem.expanded()"
+            [totalItems]="totalItems"/>
+
+
+          <div class="flex flex-col flex-auto py-0.5">
+            <button  class="text-sm/5 text-gray-500 cursor-pointer text-left"
+               (click)="collapseSubmenuItem.toggle()">
+              {{ item.label }} !
+            </button>
+            @if(collapseSubmenuItem.expanded()) {
+              <div class="-ml-2 mt-1">
+                <fibo-side-menu
+                  [level]="level()+1"
+                  [collapsable]="canCollapse"
+                  [menuContent]="item.content"
+                  [items]="item.children"/>
+              </div>
+            }
+          </div>
+        </li>
+
+      } @else {
+        <!--  not clickable group   -->
+        <li class="relative flex gap-x-2">
+          <fibo-side-menu-chain
+            [index]="$index"
+            [isGroup]="true"
+            [collapsable]="canCollapse"
+            [totalItems]="totalItems"/>
+
+          <div class="flex flex-col flex-auto py-0.5 text-sm/5 text-gray-500">
+            <span> {{ item.label }} </span>
+            <div class="-ml-2 mt-1">
+              <fibo-side-menu
+                [level]="level()+1"
+                [collapsable]="false"
+                [menuContent]="item.content"
+                [items]="item.children"/>
+            </div>
+          </div>
+        </li>
+
+      }
 
     } @else {
       @if (item.url) {
-        <li class="relative flex gap-x-2 group cursor-pointer
-
-          aria-selected:rounded-md
-          aria-selected:text-white
-
-"
-            [Option]="item"
-            [disabled]="!!item.disabled"
-            [routerLink]="item.url"
-        >
-          <div class="absolute top-0  left-0 flex w-6 justify-center"
-              [class.-bottom-2]="$index!==totalItems-1"
-              [class.-bottom-0]="$index===totalItems-1"
+        <li>
+          <a class="relative flex gap-x-2 group cursor-pointer
+             aria-selected:rounded-md
+           aria-selected:text-white"
+             [Option]="item"
+             [routerLink]="item.url"
+             #dataListItem="DataListItem"
           >
-            <div class="w-px bg-gray-200"></div>
-          </div>
-          <div class="relative flex size-6 flex-none items-center justify-center"
-          >
-            @if ($index===0) {
-              <div class="absolute top-0 left-0 w-full h-1/2 bg-white"></div>
-            }
-            @if ($index===totalItems-1) {
-              <div class="absolute bottom-0 left-0 w-full h-1/2 bg-white"></div>
-            }
-            <div class="z-1 size-1.5 rounded-full
-            bg-gray-100 ring ring-gray-300
-            group-data-[active=true]:ring-gray-400
-            group-aria-selected:ring-primary-500
-            group-aria-selected:bg-primary-300
+            <fibo-side-menu-chain
+              [index]="$index"
+              [totalItems]="totalItems"
+              [isActive]="dataListItem.isActive()"
+            ></fibo-side-menu-chain>
 
-            "
-            ></div>
-          </div>
-          <div class="flex-auto py-0.5 text-sm/5 text-gray-500
+            <div class="flex-auto py-0.5 text-sm/5 text-gray-500
           group-data-[active=true]:text-gray-700
           group-aria-selected:text-slate-600
-          group-aria-selected:font-semibold
-">
-            {{ item.label }}
-          </div>
+          group-aria-selected:font-semibold">
+              {{ item.label }}
+            </div>
+          </a>
         </li>
-      } @else if (item.callback) {
-        <a
-          [Option]="item"
-          [disabled]="!!item.disabled" (itemTrigger)="item.callback();"
 
-          class="menu-item    group">
-          <div class="absolute top-0 -bottom-6 left-0 flex w-6 justify-center">
-            <div class="w-px bg-gray-200"></div>
-          </div>
-          <div class="relative flex size-6 flex-none items-center justify-center bg-white">
-            <div class="size-1.5 rounded-full bg-gray-100 ring ring-gray-300"></div>
-          </div>
-          <span>{{ item.label }} </span>
-        </a>
+      } @else if (item.callback) {
+        <li>
+          <button class="relative flex gap-x-2 group cursor-pointer text-left
+             aria-selected:rounded-md
+           aria-selected:text-white"
+          >
+            <fibo-side-menu-chain
+              [index]="$index"
+              [totalItems]="totalItems"
+            ></fibo-side-menu-chain>
+
+            <div class="flex-auto py-0.5 text-sm/5 text-gray-500
+          group-data-[active=true]:text-gray-700
+          group-aria-selected:text-slate-600
+          group-aria-selected:font-semibold">
+              {{ item.label }}
+            </div>
+          </button>
+        </li>
       }
     }
   }
 </ul>
+
+
 
 <ng-content></ng-content>
 @if (menuContent()) {
