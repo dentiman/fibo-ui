@@ -43,11 +43,15 @@
     <button
       (click)="formFieldControl.cva.ngControl?.reset()"
       type="button"
-      class="flex-none hidden group-hover:block rounded-full p-0.5 -mr-0.5 text-gray-400 hover:bg-gray-200"
+      class="flex-none
+            hidden
+            group-hover:block
+            group-focus-within:block
+            rounded-full p-0.5 -mr-0.5 text-gray-400 hover:bg-gray-200"
     >
       <lucide-icon name="X" size="15" ></lucide-icon>
     </button>
-    <div class="group-hover:hidden">
+    <div class="group-hover:hidden group-focus-within:hidden">
       <ng-container [ngTemplateOutlet]="appendBlock"></ng-container>
     </div>
   </div>
