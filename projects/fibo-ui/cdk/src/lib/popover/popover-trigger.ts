@@ -1,6 +1,6 @@
 import {Directive, ElementRef, inject, Input, input, model, signal} from '@angular/core';
 import {DataListItem} from '../data-list/data-list-item';
-import {Popover} from './components/popover';
+import {Popover} from './popover';
 
 
 @Directive({

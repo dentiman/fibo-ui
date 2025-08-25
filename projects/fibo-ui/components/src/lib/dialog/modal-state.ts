@@ -4,7 +4,7 @@ export type DialogConfig = {
   mode?: 'dialog'|'drawer'
 }
 
-export default class OverlayState {
+export default class ModalState {
 
   content = signal<TemplateRef<unknown>|null>(null);
 

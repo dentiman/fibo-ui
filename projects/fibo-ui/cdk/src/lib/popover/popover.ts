@@ -3,9 +3,9 @@ import {
   input, OnDestroy, OnInit,
 } from '@angular/core';
 import {ClickOutside} from 'ngxtension/click-outside';
-import {OverlayPosition} from '../overlay-position';
-import {OverlayTrigger} from '../overlay-trigger';
-import {DataList} from '../../data-list/data-list';
+import {OverlayPosition} from './overlay-position';
+import {OverlayTrigger} from './overlay-trigger';
+import {DataList} from '../data-list/data-list';
 
 @Directive({
   selector: '[fiboPopover]',
@@ -22,7 +22,7 @@ import {DataList} from '../../data-list/data-list';
   ],
 
   host: {
-    class: 'spacy-popover',
+    class: 'absolute z-20 origin-top-right',
     '(clickOutside)': 'clickOutsideHandle($event)',
     '(focusout)': 'onFocusOut($event)',
   },

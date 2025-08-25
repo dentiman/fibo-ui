@@ -1,10 +1,10 @@
 import {Injectable, TemplateRef} from '@angular/core';
-import OverlayState from '../overlay-state';
+import ModalState from '../modal-state';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DialogService extends OverlayState {
+export class DialogService extends ModalState {
 
 
 }

@@ -1,6 +1,6 @@
 import {Directive, ElementRef, inject, input, model, output, signal, TemplateRef} from '@angular/core';
 import {ConfirmationConfig, ConfirmationContent, ConfirmationService} from './confirmation-service';
-import {DialogConfig} from '../overlay-state';
+import {DialogConfig} from '../modal-state';
 
 @Directive({
   selector: '[confirm]',

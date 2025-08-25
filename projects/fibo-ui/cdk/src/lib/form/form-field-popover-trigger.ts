@@ -1,11 +1,11 @@
 import {Directive, ElementRef, inject, Input, input, model, signal} from '@angular/core';
 import {AbstractControl, FormControl, NgControl} from '@angular/forms';
-import {OverlayTrigger} from '../overlay/overlay-trigger';
+import {PopoverTrigger} from '../popover/popover-trigger';
 
 
 @Directive({
-  selector: '[fiboFormFieldOverlayTrigger]',
-  exportAs: 'FormFieldOverlayTrigger',
+  selector: '[fiboFormFieldPopoverTrigger]',
+  exportAs: 'FormFieldPopoverTrigger',
   standalone: true,
   host: {
     '[attr.aria-expanded]': 'isOpen() || null',
@@ -14,9 +14,9 @@ import {OverlayTrigger} from '../overlay/overlay-trigger';
     '(click)':"open()"
   }
 })
-export class FormFieldOverlayTrigger extends OverlayTrigger {
+export class FormFieldPopoverTrigger extends PopoverTrigger {
 
-  @Input({ required: true, alias: 'fiboFormFieldOverlayTrigger' }) control!: NgControl|null;
+  @Input({ required: true, alias: 'fiboFormFieldPopoverTrigger' }) control!: NgControl|null;
 
   override open  () {
     if(!this.control?.disabled) {
