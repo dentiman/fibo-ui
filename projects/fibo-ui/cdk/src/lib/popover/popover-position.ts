@@ -13,7 +13,7 @@ import {
   ComputePositionReturn,
   offset, Placement,
 } from '@floating-ui/dom';
-import { OverlayArrow} from './overlay-arrow';
+import { PopoverArrow} from './popover-arrow';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { injectResize } from 'ngxtension/resize';
 import {
@@ -23,7 +23,7 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import {OverlayTrigger} from './overlay-trigger';
+import {PopoverTrigger} from './popover-trigger';
 
 export function fromResizeObserver(
   element: Element
@@ -40,8 +40,8 @@ export function fromResizeObserver(
 }
 
 @Directive({
-  selector: '[fiboOverlayPosition]',
-  exportAs: 'OverlayPosition',
+  selector: '[fiboPopoverPosition]',
+  exportAs: 'PopoverPosition',
   standalone: true,
   host: {
     '[style.position]': '"absolute"',
@@ -51,16 +51,16 @@ export function fromResizeObserver(
     '[style.opacity]': 'position() ? "1": "0"',
   },
 })
-export class OverlayPosition {
+export class PopoverPosition {
   referenceElement = input<HTMLElement>()
-  overlayTrigger = input<OverlayTrigger>()
+  popoverTrigger = input<PopoverTrigger>()
 
   realReferenceElement = computed(()=>{
     if (this.referenceElement()) return this.referenceElement();
-    return this.overlayTrigger()?.element
+    return this.popoverTrigger()?.element
   })
 
-  fullOverlayWidth = input<boolean>(false)
+  fullPopoverWidth = input<boolean>(false)
   placement = model<Placement>('bottom');
   elementRef  = inject(ElementRef);
   offset = input<number>(5);
@@ -92,7 +92,7 @@ export class OverlayPosition {
     });
   }
 
-  arrow = contentChild(OverlayArrow);
+  arrow = contentChild(PopoverArrow);
 
   positionMiddleware = computed(() => {
     const middleware = [offset(this.offset()), flip()];
@@ -111,7 +111,7 @@ export class OverlayPosition {
 
   width = computed(() => {
     this.position();
-    return this.fullOverlayWidth()
+    return this.fullPopoverWidth()
       ? this.realReferenceElement()?.offsetWidth
       : undefined;
   });

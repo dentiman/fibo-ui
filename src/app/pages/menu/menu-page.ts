@@ -1,7 +1,7 @@
 import {Component, computed, viewChild} from '@angular/core';
 import {
   DataList,
-  OverlayTriggerToggle,
+  PopoverTriggerToggle,
   SingleSelectionModel
 } from '@fibo-ui/cdk';
 import {
@@ -13,7 +13,7 @@ import {RouterLink} from '@angular/router';
 @Component({
   imports: [
     RouterLink,
-    OverlayTriggerToggle,
+    PopoverTriggerToggle,
     PopoverMenu,
     MenuItem,
     CollapseMenu,
@@ -58,7 +58,7 @@ export class MenuPageComponent {
             ],
           },
           {
-            label: 'Overlays',
+            label: 'Popovers',
              icon: 'folder',
             children: [
               {

@@ -4,15 +4,15 @@ import {Popover} from './popover';
 
 
 @Directive({
-  selector: '[fiboOverlayTrigger]',
-  exportAs: 'OverlayTrigger',
+  selector: '[fiboPopoverTrigger]',
+  exportAs: 'PopoverTrigger',
   standalone: true,
   host: {
     '[attr.aria-expanded]': 'isOpen() || null',
     '(keydown)': 'onKeydown($event)',
   }
 })
-export class OverlayTrigger  {
+export class PopoverTrigger {
   isListItem = !!inject(DataListItem,{optional:true,self:true} );
   element = inject(ElementRef<HTMLElement>).nativeElement;
   isOpen = signal(false);
@@ -31,14 +31,14 @@ export class OverlayTrigger  {
   open  () {
     if(!this.isOpen()) {
       this.isOpen.set(true);
-    //  console.log('OverlayTrigger open');
+    //  console.log('PopoverTrigger open');
     }
 
   }
   close () {
     if(this.isOpen()) {
       this.isOpen.set(false);
-   //   console.log('OverlayTrigger close');
+   //   console.log('PopoverTrigger close');
     }
   }
 
@@ -50,28 +50,28 @@ export class OverlayTrigger  {
 }
 
 @Directive({
-  selector: '[fiboOverlayTriggerClick]',
+  selector: '[fiboPopoverTriggerClick]',
   standalone: true,
-  hostDirectives: [OverlayTrigger],
+  hostDirectives: [PopoverTrigger],
   host: {
-    '(keydown.enter)': 'overlayTrigger.open()',
-    '(keydown.escape)': 'overlayTrigger.close()',
-    '(click)': "overlayTrigger.open()"
+    '(keydown.enter)': 'popoverTrigger.open()',
+    '(keydown.escape)': 'popoverTrigger.close()',
+    '(click)': "popoverTrigger.open()"
   }
 })
-export class OverlayTriggerClick  {
-  overlayTrigger = inject(OverlayTrigger);
+export class PopoverTriggerClick  {
+  popoverTrigger = inject(PopoverTrigger);
 }
 
 @Directive({
-  selector: '[fiboOverlayTriggerToggle]',
+  selector: '[fiboPopoverTriggerToggle]',
   standalone: true,
-  hostDirectives: [OverlayTrigger],
+  hostDirectives: [PopoverTrigger],
   host: {
-    '(keydown.escape)': 'overlayTrigger.close()',
-    '(click)': "overlayTrigger.toggle()"
+    '(keydown.escape)': 'popoverTrigger.close()',
+    '(click)': "popoverTrigger.toggle()"
   }
 })
-export class OverlayTriggerToggle  {
-  overlayTrigger = inject(OverlayTrigger);
+export class PopoverTriggerToggle  {
+  popoverTrigger = inject(PopoverTrigger);
 }

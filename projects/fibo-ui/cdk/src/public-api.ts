@@ -16,7 +16,7 @@ export * from './lib/form/form-error/form-error-service';
 export * from './lib/form/form-field/form-field-control';
 export * from './lib/form/form-field/form-field-content';
 export * from './lib/form/control-status';
-export * from './lib/form/form-field-overlay-trigger';
+export * from './lib/form/form-field-popover-trigger';
 
 // Menu Components moved back to @fibo-ui/components
 // export * from './lib/menu/menu-panel';
@@ -33,8 +33,8 @@ export * from './lib/data-list/data-list-item';
 export * from './lib/data-list/option';
 export * from './lib/data-list/selection-models';
 
-// Overlay Directives
-export * from './lib/overlay/overlay-trigger';
-export * from './lib/overlay/overlay-position';
-export * from './lib/overlay/overlay-arrow';
-export * from './lib/overlay/components/popover';
+// Popover Directives
+export * from './lib/popover/popover-trigger';
+export * from './lib/popover/popover-position';
+export * from './lib/popover/popover-arrow';
+export * from './lib/popover/popover';

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {OverlayTrigger,  Popover} from '@fibo-ui/cdk';
+import {PopoverTrigger,  Popover} from '@fibo-ui/cdk';
 import { FiboDialog,  DialogTrigger} from '@fibo-ui/components';
 import {RouterLink} from '@angular/router';
 import {SelectPageComponent} from '../select/select-page';
@@ -7,7 +7,7 @@ import {JsonPipe} from '@angular/common';
 
 @Component({
   imports: [
-    OverlayTrigger,
+    PopoverTrigger,
     Popover,
     RouterLink,
     FiboDialog,

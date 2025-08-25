@@ -1,6 +1,6 @@
 import {Component, computed, contentChildren, inject, input} from '@angular/core';
 import {IsEmptyPipe} from '@fibo-ui/cdk';
-import {OverlayTrigger} from '@fibo-ui/cdk';
+import {PopoverTrigger} from '@fibo-ui/cdk';
 import {NgTemplateOutlet} from '@angular/common';
 import {FormFieldControl, FirstFormErrorPipe} from '@fibo-ui/cdk';
 import {FormFieldContent} from '@fibo-ui/cdk';
@@ -43,7 +43,7 @@ export class FormField<T> {
   appendIcon = input<string>()
   cva = computed(() => this.control()?.cva)
   inputs = contentChildren<FormFieldContent>(FormFieldContent)
-  overlay = inject(OverlayTrigger, {optional: true, self: true})
+  popover = inject(PopoverTrigger, {optional: true, self: true})
   showErrors = true;
 
   handleClick() {
@@ -63,7 +63,7 @@ export class FormField<T> {
     const controlElement = this.control().element.nativeElement;
     if (!relatedTarget || !controlElement.contains(relatedTarget)) {
 
-      this.overlay?.close();
+      this.popover?.close();
       this.control()?.cva.onTouched()
     }
   }

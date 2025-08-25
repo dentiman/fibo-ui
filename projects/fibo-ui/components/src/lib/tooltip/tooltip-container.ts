@@ -1,6 +1,6 @@
 import { Component, computed, effect, ElementRef, inject, input, TemplateRef, viewChild } from '@angular/core';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import {OverlayArrow, OverlayPosition} from '@fibo-ui/cdk';
+import {PopoverArrow, PopoverPosition} from '@fibo-ui/cdk';
 import {TooltipService} from './tooltip-service';
 import { CommonModule } from '@angular/common';
 @Component({
@@ -9,8 +9,8 @@ import { CommonModule } from '@angular/common';
   imports: [
     NgClass,
     NgTemplateOutlet,
-    OverlayPosition,
-    OverlayArrow,
+    PopoverPosition,
+    PopoverArrow,
     CommonModule
   ],
   templateUrl: './tooltip-container.html',

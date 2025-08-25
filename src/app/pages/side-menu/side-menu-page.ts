@@ -39,8 +39,8 @@ export class SideMenuPage {
       icon: 'folder'
     },
     {
-      label: 'Overlays',
-      url: '/overlays',
+      label: 'Popovers',
+      url: '/popovers',
       icon: 'folder'
     },
     {

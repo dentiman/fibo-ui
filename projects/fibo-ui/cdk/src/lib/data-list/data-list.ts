@@ -1,5 +1,5 @@
 import {Directive, effect, ElementRef, inject, InjectionToken, input, model, output, signal,} from '@angular/core';
-import {OverlayTrigger} from '../overlay/overlay-trigger';
+import {PopoverTrigger} from '../popover/popover-trigger';
 import {DataListItem} from './data-list-item';
 
 export const DATA_LIST = new InjectionToken<DataList>('DataList');
@@ -26,7 +26,7 @@ export class DataList {
   disabled = input(false);
   elementRef = inject(ElementRef<HTMLElement>)
 
-  overlayTrigger = input<OverlayTrigger>()
+  popoverTrigger = input<PopoverTrigger>()
 
   optionTriggered = output<Event>();
 
@@ -163,8 +163,8 @@ export class DataList {
         event.stopPropagation();
         break;
       case 'Escape':
-        this.overlayTrigger()?.element.focus();
-        this.overlayTrigger()?.close();
+        this.popoverTrigger()?.element.focus();
+        this.popoverTrigger()?.close();
         event.stopPropagation();
         break;
       default:

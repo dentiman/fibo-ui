@@ -16,24 +16,50 @@ export class RootNavComponent {
     return [
 
       {
+        label: 'CDK',
+        children: [
+          {
+            label: 'Popover',
+            url: '/popover',
+          },
+          {
+            label: 'Listbox',
+            url: '/listbox',
+          }
+        ]
+      },
+
+      {
         label: 'Components',
         url: null,
         children: [
           {
-            label: 'Select',
+            label: 'Form Fields',
             icon: 'folder',
             children: [
               {
-                label: 'Single',
+                label: 'Input',
+                url: '/input',
+              },
+              {
+                label: 'Single Select',
                 url: '/',
               },
               {
-                label: 'Multiple',
+                label: 'Multiple Select',
                 url: '/select-multiple',
               },
               {
-                label: 'Autocomplete',
-                url: '/au',
+                label: 'Datepicker',
+                url: '/datepicker',
+              },
+              {
+                label: 'Checkbox',
+                url: '/checkbox',
+              },
+              {
+                label: 'Switch',
+                url: '/switch',
               },
             ],
           },
@@ -48,11 +74,14 @@ export class RootNavComponent {
               {
                 label: 'Dialog',
                 url: '/dialog',
-                disabled: true
               },
               {
                 label: 'Confirmation',
                 url: '/confirmation',
+              },
+              {
+                label: 'Tooltips',
+                url: '/tooltips',
               },
             ],
           },
@@ -60,42 +89,10 @@ export class RootNavComponent {
             label: 'Notifications',
             url: '/notifications',
           },
-          {
-            label: 'Button',
-            url: '/button',
-          },
-          {
-            label: 'Checkbox',
-            url: '/checkbox',
 
-          },
-          {
-            label: 'Switch',
-            url: '/switch',
-          },
-          {
-            label: 'Chip',
-            url: '/chip',
-          },
-          {
-            label: 'Input',
-            url: '/input',
-          },
-          {
-            label: 'Datepicker',
-            url: '/datepicker',
-          },
           {
             label: 'Form Example',
             url: '/form-example',
-          },
-          {
-            label: 'Radio',
-            url: '/radio-box',
-          },
-          {
-            label: 'Tooltips',
-            url: '/tooltips',
           },
           {
             label: 'Loading Spin',
@@ -112,26 +109,6 @@ export class RootNavComponent {
           {
             label: 'Side Menu',
             url: '/side-menu',
-          },
-          {
-            label: 'Tabs',
-            url: '/tabs',
-          },
-        ],
-      },
-      {
-        label: 'Input',
-        url: '/input',
-        children: [
-          {
-            label: 'Dropdown',
-            url: '/dropdown',
-            icon: 'folder',
-          },
-          {
-            label: 'List',
-            url: '/list',
-            icon: 'folder',
           },
         ],
       },

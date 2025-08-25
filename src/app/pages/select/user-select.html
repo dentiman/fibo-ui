@@ -1,7 +1,7 @@
 <fibo-form-field
   [control]="formFieldControl"
   appendIcon="chevron-down"
-  fiboOverlayTriggerClick #trigger="OverlayTrigger">
+  fiboPopoverTriggerClick #trigger="PopoverTrigger">
   <ng-content>
     @let user = selectedUser();
     @if(user) {
@@ -26,8 +26,8 @@
   <div fiboPopover
        fiboDataList
        class="max-h-70 overflow-y-auto py-1 px-1 rounded-md bg-white shadow-md outline-1 outline-gray-300"
-       [overlayTrigger]="trigger"
-       [fullOverlayWidth]="true"
+       [popoverTrigger]="trigger"
+       [fullPopoverWidth]="true"
        [(SingleSelectionModel)]="value"
        (optionTriggered)="trigger.close()"
   >

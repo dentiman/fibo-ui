@@ -1,6 +1,6 @@
 @for (item of items();  track idx ; let idx = $index) {
     @if (item.children || item.content) {
-      <button fiboSubmenuTrigger [disabled]="!!item.disabled" #menuItemTrigger="OverlayTrigger"
+      <button fiboSubmenuTrigger [disabled]="!!item.disabled" #menuItemTrigger="PopoverTrigger"
               class="menu-item w-full  items-center  group"
       >
         @if (item?.icon) {
@@ -19,7 +19,7 @@
       </button>
       @if (menuItemTrigger.isOpen()) {
         <fibo-menu (closeParent)="closeMenuWithParent()"
-                  [overlayTrigger]="menuItemTrigger"
+                  [popoverTrigger]="menuItemTrigger"
                   [offset]="1" placement="right-start"
                   [menuContent]="item.content"
                   [items]="item.children" />

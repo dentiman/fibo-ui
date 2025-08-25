@@ -1,14 +1,14 @@
-<button class="spacy-button-primary mr-1" fiboOverlayTriggerToggle #menu="OverlayTrigger">Open Custom menu</button>
+<button class="spacy-button-primary mr-1" fiboPopoverTriggerToggle #menu="PopoverTrigger">Open Custom menu</button>
 @if (menu.isOpen()) {
-      <fibo-menu [overlayTrigger]="menu">
+      <fibo-menu [popoverTrigger]="menu">
           <a fiboMenuItem [routerLink]="'/select'"> Select</a>
       <a fiboMenuItem [routerLink]="'/select-multiple'"> Select Multiple</a>
   </fibo-menu>
 }
 
-<button class="spacy-button-primary" fiboOverlayTriggerToggle #menu3="OverlayTrigger">Open Complex Menu</button>
+<button class="spacy-button-primary" fiboPopoverTriggerToggle #menu3="PopoverTrigger">Open Complex Menu</button>
 @if (menu3.isOpen()) {
-  <fibo-menu [overlayTrigger]="menu3" placement="bottom-start" [items]="items()">
+  <fibo-menu [popoverTrigger]="menu3" placement="bottom-start" [items]="items()">
   </fibo-menu>
 }
 

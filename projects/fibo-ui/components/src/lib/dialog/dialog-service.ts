@@ -1,5 +1,5 @@
 import {Injectable, TemplateRef} from '@angular/core';
-import ModalState from '../modal-state';
+import ModalState from './modal-state';
 
 @Injectable({
   providedIn: 'root'

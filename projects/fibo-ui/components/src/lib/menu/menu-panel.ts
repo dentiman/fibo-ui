@@ -9,7 +9,7 @@ import {debounceTime, filter} from 'rxjs';
   hostDirectives: [
     {
       directive: DataList,
-      inputs: ['overlayTrigger']
+      inputs: ['popoverTrigger']
     }
   ]
 })
@@ -27,7 +27,7 @@ export class MenuPanel {
       this.popoverSubmenuItems()
         .filter(submenuItem => submenuItem.dataListItem !== activeItem)
         .forEach(item => {
-          item.overlayTrigger.close()
+          item.popoverTrigger.close()
         });
     })
 
@@ -41,10 +41,10 @@ export class MenuPanel {
       this.popoverSubmenuItems()
         .filter(submenuItem => submenuItem.dataListItem !== activeItem)
         .forEach(item => {
-          item.overlayTrigger.close()
+          item.popoverTrigger.close()
         });
       this.popoverSubmenuItems()
-        .find(submenuItem => submenuItem.dataListItem === activeItem)?.overlayTrigger.open()
+        .find(submenuItem => submenuItem.dataListItem === activeItem)?.popoverTrigger.open()
     })
   }
 

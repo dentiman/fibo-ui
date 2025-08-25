@@ -1,6 +1,6 @@
 import {Directive, ElementRef, inject, input, model, signal, TemplateRef} from '@angular/core';
 import {DialogService} from './dialog-service';
-import {DialogConfig} from '../modal-state';
+import {DialogConfig} from './modal-state';
 
 
 @Directive({

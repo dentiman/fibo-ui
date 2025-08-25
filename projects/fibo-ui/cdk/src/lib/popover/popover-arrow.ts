@@ -1,23 +1,23 @@
 import {computed, Directive, effect, ElementRef, inject, model,} from '@angular/core';
-import {OverlayPosition} from "./overlay-position";
+import {PopoverPosition} from "./popover-position";
 
 @Directive({
-  selector: '[OverlayArrow]',
+  selector: '[PopoverArrow]',
   standalone: true,
   host: {
     '[attr.data-placement]' : 'placement()',
     '[style]': 'style()',
   }
 })
-export class OverlayArrow {
+export class PopoverArrow {
   elementRef = inject(ElementRef<HTMLElement>);
 
-  overlayPosition = inject(OverlayPosition).position;
+  popoverPosition = inject(PopoverPosition).position;
 
-  placement = computed(() => { return this.overlayPosition()?.placement.split("-")[0] });
+  placement = computed(() => { return this.popoverPosition()?.placement.split("-")[0] });
 
   style = computed(() => {
-    const position = this.overlayPosition();
+    const position = this.popoverPosition();
     if(!position) return {};
       const side = position.placement.split("-")[0];
       const staticSide = {

@@ -3,8 +3,8 @@ import {
   input, OnDestroy, OnInit,
 } from '@angular/core';
 import {ClickOutside} from 'ngxtension/click-outside';
-import {OverlayPosition} from './overlay-position';
-import {OverlayTrigger} from './overlay-trigger';
+import {PopoverPosition} from './popover-position';
+import {PopoverTrigger} from './popover-trigger';
 import {DataList} from '../data-list/data-list';
 
 @Directive({
@@ -12,8 +12,8 @@ import {DataList} from '../data-list/data-list';
   standalone: true,
   hostDirectives: [
     {
-      directive:  OverlayPosition,
-      inputs: ['placement', 'fullOverlayWidth','overlayTrigger','referenceElement','offset']
+      directive:  PopoverPosition,
+      inputs: ['placement', 'fullPopoverWidth','popoverTrigger','referenceElement','offset']
     },
     {
       directive:  ClickOutside,
@@ -31,30 +31,30 @@ export class Popover implements OnInit, OnDestroy {
 
   element = inject(ElementRef);
   dataList = inject(DataList,{self:true,optional:true});
-  overlayTrigger = input.required<OverlayTrigger>()
+  popoverTrigger = input.required<PopoverTrigger>()
 
   close() {
-    this.overlayTrigger().close();
+    this.popoverTrigger().close();
   }
   clickOutsideHandle( event: Event ) {
-    if(!this.overlayTrigger().element.contains(event.target as Node)) {
-      this.overlayTrigger().close();
+    if(!this.popoverTrigger().element.contains(event.target as Node)) {
+      this.popoverTrigger().close();
     }
   }
   onFocusOut(event: FocusEvent) {
     const relatedTarget = event.relatedTarget as Node;
     if(!relatedTarget) return;
-    if (this.overlayTrigger().element.contains(relatedTarget) || this.element.nativeElement.contains(relatedTarget)) {
+    if (this.popoverTrigger().element.contains(relatedTarget) || this.element.nativeElement.contains(relatedTarget)) {
       return
 
     }
-    this.overlayTrigger().close();
+    this.popoverTrigger().close();
   }
   ngOnInit(): void {
-     this.overlayTrigger().popover.set(this);
+     this.popoverTrigger().popover.set(this);
   }
   ngOnDestroy(): void {
-    this.overlayTrigger().popover.set(null);
+    this.popoverTrigger().popover.set(null);
   }
 
 }

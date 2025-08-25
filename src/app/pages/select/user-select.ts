@@ -5,7 +5,7 @@ import {
   DataList,
   FormFieldErrors,
   Option,
-  OverlayTriggerClick,
+  PopoverTriggerClick,
   Popover,
   SingleSelectionModel,
   FormFieldControl
@@ -32,7 +32,7 @@ export interface User {
     Popover,
     SingleSelectionModel,
     FormField,
-    OverlayTriggerClick,
+    PopoverTriggerClick,
     DataList,
     Option,
     FormFieldErrors,

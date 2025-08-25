@@ -1,8 +1,8 @@
 import {Component, inject, input, TemplateRef, viewChild,} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from "@angular/forms";
-import {IsEmptyPipe, MultipleSelectionModel, Popover,OverlayTriggerClick} from '@fibo-ui/cdk';
-import {FormFieldOverlayTrigger} from '@fibo-ui/cdk';
+import {IsEmptyPipe, MultipleSelectionModel, Popover,PopoverTriggerClick} from '@fibo-ui/cdk';
+import {FormFieldPopoverTrigger} from '@fibo-ui/cdk';
 import {Listbox} from '../data-list/listbox/listbox';
 import {FormField} from '../form/form-field/form-field';
 import {FormFieldControl} from '@fibo-ui/cdk';
@@ -19,7 +19,7 @@ import {FormFieldErrors} from '@fibo-ui/cdk';
     IsEmptyPipe,
     Listbox,
     FormField,
-    OverlayTriggerClick,
+    PopoverTriggerClick,
     LucideAngularModule,
     FormFieldErrors,
     Popover,
@@ -49,7 +49,7 @@ export class MultipleSelect<T> {
     if(! currentValue) return;
     this.value.set( currentValue.filter((v: unknown) => v !== value));
   }
-  trigger = viewChild<FormFieldOverlayTrigger>('trigger')
+  trigger = viewChild<FormFieldPopoverTrigger>('trigger')
 
   selectedItem(value: string | number): T | undefined {
     return this.items().find(item => this.getValue(item) === value);

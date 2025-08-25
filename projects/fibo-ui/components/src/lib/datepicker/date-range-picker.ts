@@ -27,9 +27,9 @@ import {
 import { Calendar } from './calendar/calendar';
 
 import {
-  Popover, OverlayTriggerClick
+  Popover, PopoverTriggerClick
 } from '@fibo-ui/cdk';
-import {FormFieldOverlayTrigger} from '@fibo-ui/cdk';
+import {FormFieldPopoverTrigger} from '@fibo-ui/cdk';
 import {ResetControl} from '../form/reset-control';
 import {FormField} from '../form/form-field/form-field';
 import {FormFieldControl} from '@fibo-ui/cdk';
@@ -45,11 +45,11 @@ import {CalendarDateRangeSelectionModel, DateRange} from './calendar/calendar-da
     Popover,
     Calendar,
     CalendarDateRangeSelectionModel,
-    FormFieldOverlayTrigger,
+    FormFieldPopoverTrigger,
     ReactiveFormsModule,
     ResetControl,
     FormField,
-    OverlayTriggerClick,
+    PopoverTriggerClick,
     FormFieldContent
   ],
   hostDirectives: [

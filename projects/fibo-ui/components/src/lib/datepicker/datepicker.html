@@ -1,6 +1,6 @@
 <fibo-form-field
   [control]="formFieldControl"
-  fiboOverlayTriggerClick #trigger="OverlayTrigger">
+  fiboPopoverTriggerClick #trigger="PopoverTrigger">
   <input
     fiboFormFieldContent
     type="text"
@@ -18,7 +18,7 @@
 
 @if (trigger.isOpen()) {
     <fibo-calendar
-      fiboPopover [overlayTrigger]="trigger"
+      fiboPopover [popoverTrigger]="trigger"
       class="rounded-md bg-white shadow-md outline-1 outline-gray-300"
       #dataList="DataList"
       [(fiboCalendarDateSelectionModel)]="value"

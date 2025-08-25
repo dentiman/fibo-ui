@@ -1,5 +1,5 @@
 import {Directive, inject, OnDestroy, OnInit} from '@angular/core';
-import {DataListItem, OverlayTrigger} from '@fibo-ui/cdk';
+import {DataListItem, PopoverTrigger} from '@fibo-ui/cdk';
 import {MenuPanel} from './menu-panel';
 
 // @ts-ignore
@@ -10,19 +10,19 @@ import {MenuPanel} from './menu-panel';
       directive: DataListItem,
       inputs: ['disabled']
     },
-    OverlayTrigger,
+    PopoverTrigger,
   ],
   host: {
-    '(keydown.enter)': 'overlayTrigger.open()',
-    '(keydown.escape)': 'overlayTrigger.close()',
+    '(keydown.enter)': 'popoverTrigger.open()',
+    '(keydown.escape)': 'popoverTrigger.close()',
 
-    '(keydown.arrowright)': 'overlayTrigger.popover()?.dataList?.navigateNext($event)',
-    '(click)': 'overlayTrigger.open()'
+    '(keydown.arrowright)': 'popoverTrigger.popover()?.dataList?.navigateNext($event)',
+    '(click)': 'popoverTrigger.open()'
   }
 })
 export class PopoverSubmenuTrigger implements OnInit, OnDestroy {
 
-  overlayTrigger = inject(OverlayTrigger);
+  popoverTrigger = inject(PopoverTrigger);
   dataListItem = inject(DataListItem);
   menuPanel = inject(MenuPanel);
 

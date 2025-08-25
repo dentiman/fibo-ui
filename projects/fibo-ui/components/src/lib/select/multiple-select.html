@@ -5,7 +5,7 @@
 <fibo-form-field
   appendIcon="chevron-down"
   [control]="formFieldControl"
-  fiboOverlayTriggerClick #trigger="OverlayTrigger">
+  fiboPopoverTriggerClick #trigger="PopoverTrigger">
   <span class="w-full flex flex-wrap gap-x-1  gap-y-1 "
         [class]="{
          '-ml-1.5': !empty,
@@ -44,8 +44,8 @@
 @if (trigger.isOpen() && items().length) {
   <fibo-listbox fiboPopover
                class="rounded-md bg-white shadow-md outline-1 outline-gray-300"
-               [overlayTrigger]="trigger"
-               [fullOverlayWidth]="true"
+               [popoverTrigger]="trigger"
+               [fullPopoverWidth]="true"
                [(MultipleSelectionModel)]="value"
                [items]="items()"
                [valueProp]="valueProp()"
