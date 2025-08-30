@@ -15,6 +15,7 @@ import {CheckboxPageComponent} from './pages/checkbox/checkbox-page';
 import {LoadingSpinPageComponent} from './pages/loading-spin/loading-spin-page';
 import {PlaygroundPageComponent} from './pages/playground-page/playground-page';
 import {SideMenuPage} from './pages/side-menu/side-menu-page';
+import {ThemeDemoComponent} from './pages/theme-demo/theme-demo';
 
 export const routes: Routes = [
   {
@@ -80,6 +81,10 @@ export const routes: Routes = [
       {
         path: 'side-menu',
         component: SideMenuPage
+      },
+      {
+        path: 'theme-demo',
+        component: ThemeDemoComponent
       }
     ]
   }

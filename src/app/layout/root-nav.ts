@@ -110,6 +110,10 @@ export class RootNavComponent {
             label: 'Side Menu',
             url: '/side-menu',
           },
+          {
+            label: 'Theme Demo',
+            url: '/theme-demo',
+          },
         ],
       },
     ];
