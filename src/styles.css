@@ -55,7 +55,8 @@
 
 .menu-item {
 
-  @apply flex gap-x-1 px-2 py-0.5  text-sm leading-6 text-gray-700 cursor-pointer rounded-md
+  @apply
+  flex gap-x-1 px-2 py-0.5  text-sm leading-6 text-gray-700 cursor-pointer rounded-md
   data-[active=true]:bg-gray-100
   aria-expanded:bg-gray-100
   focus-visible:data-[active=true]:bg-primary-50

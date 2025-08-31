@@ -6,9 +6,9 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div [class.-bottom-0]="index() === totalItems() - 1 && !isGroup()"
-         [class.-bottom-6]="index() !== totalItems() - 1"
-         class="absolute top-0  left-0 flex w-6 justify-center"
+    <div
+
+         class="absolute top-0  left-0 flex w-6 justify-center h-full"
     >
       <div class="w-px bg-gray-200"></div>
     </div>
@@ -27,13 +27,6 @@ import { CommonModule } from '@angular/common';
         </div>
       }
 
-      <!--  hide chain line on top or bottom depend in item index    -->
-      @if (index() === 0) {
-        <div class="absolute top-0 left-0 w-full h-1/2 bg-white"></div>
-      }
-      @if (index() === totalItems() - 1) {
-        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-white"></div>
-      }
 
       <div [class]="{
            'cursor-pointer': collapsable(),
