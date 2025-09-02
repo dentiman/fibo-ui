@@ -16,16 +16,12 @@ import {LucideAngularModule} from 'lucide-angular';
     LucideAngularModule,
   ],
   templateUrl: './form-field.html',
+  styles: `
+
+  `,
   host: {
     '[tabindex]': 'control().cva.disabled()?"-1":"0"',
-    class: `
-     px-3 flex items-center space-x-1 group py-2
-     min-h-10 cursor-default rounded-md bg-white text-left text-gray-900 sm:text-sm sm:leading-6
-
-  disabled:bg-gray-200  aria-disabled:bg-gray-200 data-error:outline-red-300
-
-  outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-1 focus-within:-outline-offset-1 focus-within:outline-primary-600 aria-disabled:focus-within:bg-gray-200
-     `,
+     class: 'fibo-card fibo-form-field group flex items-center space-x-1 text-left',
     '[class.min-h-14]': '!!control().label()',
     '[style.pointer-events]': 'cva()?.disabled() ? "none" : "auto"',
     '[attr.aria-disabled]': 'cva()?.disabled()',

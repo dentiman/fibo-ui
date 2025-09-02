@@ -13,21 +13,20 @@
         }"
   >
         @for (value of values; track value) {
-                <button class=" break-words focus-visible:outline  focus-visible:outline-offset-1 focus-visible:outline-primary-600 flex items-center gap-1
-                rounded-md text-gray-600 bg-gray-300 px-1.5 py-0.5 ">
+                <button class="break-words focus-visible:outline flex items-center gap-1 fibo-btn-chip">
                       <span class="truncate flex-1">
                         @let item = selectedItem(value);
                         @if(item) {
                           @if (selectedItemTemplate(); as template) {
                             <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
                           } @else {
-                             <span class="text-sm font-medium ">{{ getLabel(item) }}</span>
+                             <span class="text-sm">{{ getLabel(item) }}</span>
                           }
                         }
                       </span>
 
                       @if (!disabled) {
-                        <button class="rounded-full  cursor-pointer flex-shrink-0"
+                        <button class="rounded-full cursor-pointer flex-shrink-0"
                                 (click)="removeValue(value)"
                                 (keydown)="$event.stopPropagation()"
                         >
@@ -43,7 +42,7 @@
 
 @if (trigger.isOpen() && items().length) {
   <fibo-listbox fiboPopover
-               class="rounded-md bg-white shadow-md outline-1 outline-gray-300"
+               class="fibo-popover rounded-md max-h-70 overflow-y-auto"
                [popoverTrigger]="trigger"
                [fullPopoverWidth]="true"
                [(MultipleSelectionModel)]="value"

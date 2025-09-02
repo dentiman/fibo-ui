@@ -17,29 +17,121 @@
   --color-primary-900: #1b498d;
   --color-primary-950: #152e56;
 
+  /* Pure gray scale - clear neutral colors */
+  --color-gray-50: #f8f9fa;
+  --color-gray-100: #f1f3f4;
+  --color-gray-200: #e8eaed;
+  --color-gray-300: #dadce0;
+  --color-gray-400: #bdc1c6;
+  --color-gray-500: #9aa0a6;
+  --color-gray-600: #80868b;
+  --color-gray-700: #474850;
+  --color-gray-800: #3f4244;
+  --color-gray-900: #2a2d30;
+  --color-gray-950: #1e1f22;
 
-  /* ... */
+
+}
+
+/* styles.css */
+.fibo-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.fibo-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 4px;
 }
 
 
-.fan-form-control {
-  @apply min-h-10 cursor-default rounded-md bg-white text-left text-gray-900 sm:text-sm sm:leading-6
+.fibo-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: 4px;
+}
 
-  disabled:bg-gray-200  aria-disabled:bg-gray-200 data-error:outline-red-300
-    /*handle focus*/
-  outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-1 focus-within:-outline-offset-1 focus-within:outline-primary-500 aria-disabled:focus-within:bg-gray-200
+.dark .fibo-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-gray-800);
+  border-radius: 4px;
+  opacity: 50%;
+}
+
+.dark .fibo-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-700);
+}
+
+
+.fibo-button-icon {
+  @apply
+  text-gray-400 dark:text-gray-500
+  hover:bg-gray-200 dark:hover:bg-gray-800
+}
+
+.fibo-text-secondary {
+  color: var(--color-gray-300);
+}
+.dark .fibo-text-secondary {
+  color: var(--color-gray-700);
+}
+
+.fibo-card-bg-secondary {
+  background-color: var(--color-gray-300);
+}
+
+.dark .fibo-card-bg-secondary {
+  background-color: var(--color-gray-800);
+}
+
+
+.fibo-modal-backdrop {
+  @apply
+  backdrop-blur-md  backdrop-saturate-150 bg-white/65 dark:bg-black/65
+}
+
+.fibo-card {
+  @apply
+  bg-white dark:bg-gray-900
+  outline-gray-300 dark:outline-gray-800  outline-1 -outline-offset-1
 
 }
 
-.fan-form-control input:focus {
-  outline: none;
+/*.fibo-card .fibo-card {*/
+/*  @apply*/
+/*  bg-white dark:bg-gray-800*/
+/*  outline-gray-300 dark:outline-gray-700  outline-1 -outline-offset-1*/
+/*}*/
+
+
+.fibo-modal {
+   @apply
+   shadow-md
+   bg-white dark:bg-gray-950
+   outline-gray-300 dark:outline-gray-800  outline-1 -outline-offset-1
+
+ }
+
+.fibo-popover {
+  @apply
+  shadow-lg dark:shadow-gray-950
+  dark:border-1 dark:border-gray-800
+  bg-white dark:bg-gray-900
+  outline-gray-300 dark:outline-gray-950
+  outline-1
+}
+
+
+
+.fibo-form-field-label {
+  @apply
+  text-gray-500 dark:text-gray-500
+  group-focus-within:text-primary-600 dark:group-focus-within:text-primary-400/80
+  group-data-error:text-red-500 dark:group-data-error:text-red-400
 }
 
 .spacy-button-primary {
-  @apply inline-flex items-center gap-x-1.5 rounded bg-primary-500 hover:bg-primary-600 px-3 py-2  text-white
-  focus-visible:outline  focus-visible:outline-offset-2 focus-visible:outline-primary-500
+  @apply inline-flex items-center gap-x-1.5 rounded bg-primary-500 dark:bg-primary-600 hover:bg-primary-600 dark:hover:bg-primary-700 px-3 py-2 text-white
+  focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary-500 dark:focus-visible:outline-primary-400
   aria-disabled:opacity-50 cursor-pointer aria-disabled:cursor-not-allowed
-  disabled:opacity-50  disabled:cursor-not-allowed
+  disabled:opacity-50 disabled:cursor-not-allowed
 }
 
 .spacy-popover {
@@ -48,24 +140,87 @@
 
 .calendar-cell {
   @apply flex w-full items-center justify-center size-8
-  aria-disabled:bg-gray-100 aria-disabled:text-gray-400
-  aria-selected:bg-primary-500  aria-selected:text-white
-  aria-[selected=false]:data-[active=true]:bg-slate-200 aria-[selected=false]:data-[active=true]:rounded-md;
+  aria-disabled:bg-gray-100 dark:aria-disabled:bg-gray-700 aria-disabled:text-gray-400 dark:aria-disabled:text-gray-500
+  aria-selected:bg-primary-500 dark:aria-selected:bg-primary-600 aria-selected:text-white
+  aria-[selected=false]:data-[active=true]:bg-slate-200 dark:aria-[selected=false]:data-[active=true]:bg-slate-600 aria-[selected=false]:data-[active=true]:rounded-md;
 }
+
+/* custom input, select*/
+.fibo-form-field {
+  @apply
+  px-3   py-2
+  min-h-10 cursor-default rounded-md
+
+  bg-white dark:bg-gray-900 dark:data-error:bg-red-300/5
+  aria-disabled:bg-gray-200 dark:aria-disabled:bg-gray-700
+
+  text-gray-900 dark:text-gray-400
+
+  sm:text-sm sm:leading-6
+
+  data-error:outline-red-300 dark:data-error:outline-red-500/20
+
+  outline-1 -outline-offset-1
+  outline-gray-300 dark:outline-gray-800
+
+  focus-within:outline-1
+  focus-within:-outline-offset-1
+  focus-within:outline-primary-600  dark:focus-within:outline-primary-600/30
+
+  aria-disabled:focus-within:bg-gray-200 dark:aria-disabled:focus-within:bg-gray-700
+}
+
 
 .menu-item {
 
   @apply
-  flex gap-x-1 px-2 py-0.5  text-sm leading-6 text-gray-700 cursor-pointer rounded-md
+  flex gap-x-1 px-2 py-0.5 text-sm leading-6  cursor-pointer rounded-md
+  text-gray-700 dark:text-gray-300
+
   data-[active=true]:bg-gray-100
+  dark:data-[active=true]:bg-primary-500/10
+
   aria-expanded:bg-gray-100
+  dark:aria-expanded:bg-gray-700
+
   focus-visible:data-[active=true]:bg-primary-50
+  dark:focus-visible:data-[active=true]:bg-primary-900/20
+
   data-[multiple=false]:aria-selected:bg-primary-500
+  dark:data-[multiple=false]:aria-selected:bg-primary-600
+
   data-[multiple=false]:aria-selected:text-white
   aria-selected:aria-disabled:bg-primary-400
+  dark:aria-selected:aria-disabled:bg-primary-500
+
   aria-disabled:bg-white
+  dark:aria-disabled:bg-gray-800
+
   aria-disabled:data-[active=true]:bg-white
-  aria-disabled:text-gray-700/50
-  focus-visible:outline-1 focus-visible:-outline-offset-1 focus-visible:outline-primary-500 focus-visible:bg-primary-50 aria-disabled:focus-visible:bg-gray-200
+  dark:aria-disabled:data-[active=true]:bg-gray-800
+
+  aria-disabled:text-gray-700/50 dark:aria-disabled:text-gray-400/50
+  focus-visible:outline-1 focus-visible:-outline-offset-1
+  focus-visible:outline-primary-500 dark:focus-visible:outline-primary-600/60
+  focus-visible:bg-primary-50 dark:focus-visible:bg-primary-900/20
+  aria-disabled:focus-visible:bg-gray-200 dark:aria-disabled:focus-visible:bg-gray-700
   ;
+}
+
+.fibo-checkbox {
+  @apply
+  border-1
+  focus-visible:ring-primary-600 dark:focus-visible:ring-primary-600
+  aria-checked:bg-primary-500 dark:aria-checked:bg-primary-600
+  aria-checked:border-primary-600  dark:aria-checked:border-0
+  border-gray-300 dark:border-gray-700
+  /*dark:group-hover:border-gray-600*/
+}
+
+.fibo-btn-chip {
+  @apply
+  rounded-md  px-1.5 py-[2[x]]
+  text-gray-600  dark:text-gray-400
+  bg-gray-300 dark:bg-gray-800
+  focus-visible:outline-offset-1 focus-visible:outline-primary-600
 }

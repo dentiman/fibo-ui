@@ -7,7 +7,7 @@ import {MultipleSelect} from './multiple-select';
   standalone: true,
   hostDirectives: [FormFieldContent],
   host: {
-     class: 'flex-1 w-full min-w-30  outline-0  appearance-none  text-base text-gray-800 placeholder:text-gray-400 sm:text-sm/6',
+     class: 'flex-1 w-full min-w-30 outline-0  appearance-none ',
     '[placeholder]': 'placeholder()',
     '(focusin)': 'select.trigger()?.open()',
     '(keydown.backspace)': 'removeLastValue()',

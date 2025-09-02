@@ -10,8 +10,9 @@ import { ThemeService, Theme } from '../theme.service';
     <div class="flex items-center gap-2">
       <button
         type="button"
-        class="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300"
         [class.bg-gray-100]="theme() === 'light'"
+        [class.dark:bg-gray-800]="theme() === 'light'"
         (click)="setTheme('light')"
         title="Light theme"
       >
@@ -22,8 +23,9 @@ import { ThemeService, Theme } from '../theme.service';
       
       <button
         type="button"
-        class="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300"
         [class.bg-gray-100]="theme() === 'dark'"
+        [class.dark:bg-gray-800]="theme() === 'dark'"
         (click)="setTheme('dark')"
         title="Dark theme"
       >
@@ -34,8 +36,9 @@ import { ThemeService, Theme } from '../theme.service';
       
       <button
         type="button"
-        class="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300"
         [class.bg-gray-100]="theme() === 'system'"
+        [class.dark:bg-gray-800]="theme() === 'system'"
         (click)="setTheme('system')"
         title="System theme"
       >

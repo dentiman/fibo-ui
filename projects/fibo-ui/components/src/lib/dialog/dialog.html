@@ -1,7 +1,7 @@
 @if (state.isOpen()) {
   <div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     @if (state.isVisible()) {
-      <div  class="fixed inset-0 bg-gray-500/75 transition-opacity"></div>
+      <div  class="fixed inset-0 fibo-modal-backdrop transition-opacity"></div>
     }
 
     @if (isDrawerMode()) {
@@ -10,10 +10,8 @@
           <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
             @if (state.isVisible()) {
               <div (clickOutside)="state.close()"  class="pointer-events-auto w-screen max-w-md">
-                <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
-                  <div class="relative flex-1 px-4 sm:px-6">
+                <div class="flex h-full fibo-scrollbar flex-col overflow-y-scroll  fibo-modal py-6 ">
                     <ng-container *ngTemplateOutlet="state.content()"></ng-container>
-                  </div>
                 </div>
               </div>
             }
@@ -22,10 +20,10 @@
       </div>
     } @else {
       <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <div class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0">
           @if (state.isVisible()) {
             <div (clickOutside)="state.close()"
-                 class="relative rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl">
+                 class="relative rounded-lg  fibo-modal">
               <ng-container *ngTemplateOutlet="state.content()"></ng-container>
             </div>
           }
@@ -33,6 +31,4 @@
       </div>
     }
   </div>
-
-
 }

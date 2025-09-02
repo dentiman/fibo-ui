@@ -12,8 +12,8 @@
           class="w-6 h-6 rounded-full object-cover"
         />
         <div class="flex flex-col">
-          <span class="text-sm font-medium truncate text-gray-900 leading-none" >{{ user.username }}</span>
-          <span class="text-xs truncate text-gray-500 leading-none">{{ user.email }}</span>
+          <span class="text-sm font-medium truncate text-gray-900 dark:text-gray-100 leading-none" >{{ user.username }}</span>
+          <span class="text-xs truncate text-gray-500 dark:text-gray-500 leading-none">{{ user.email }}</span>
         </div>
       </div>
     }
@@ -25,7 +25,7 @@
 @if (trigger.isOpen()) {
   <div fiboPopover
        fiboDataList
-       class="max-h-70 overflow-y-auto py-1 px-1 rounded-md bg-white shadow-md outline-1 outline-gray-300"
+       class="fibo-popover max-h-70 overflow-y-auto py-1 px-1 rounded-md"
        [popoverTrigger]="trigger"
        [fullPopoverWidth]="true"
        [(SingleSelectionModel)]="value"
@@ -42,8 +42,14 @@
             class="w-8 h-8 rounded-full object-cover"
           />
           <div class="flex flex-col min-w-0">
-            <span class="text-sm font-medium truncate" [class.text-white]="isSelected" [class.text-gray-900]="!isSelected">{{ user.username }}</span>
-            <span class="text-xs truncate" [class.text-primary-50]="isSelected" [class.text-gray-500]="!isSelected">{{ user.email }}</span>
+            <span class="text-sm font-medium truncate"
+                  [class.text-white]="isSelected"
+                  [class.text-gray-900]="!isSelected"
+                  [class.dark:text-gray-100]="!isSelected">{{ user.username }}</span>
+            <span class="text-xs truncate"
+                  [class.text-primary-50]="isSelected"
+                  [class.text-gray-500]="!isSelected"
+                  [class.dark:text-gray-500]="!isSelected">{{ user.email }}</span>
           </div>
         </div>
       </a>
