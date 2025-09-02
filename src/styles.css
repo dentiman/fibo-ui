@@ -50,13 +50,12 @@
 }
 
 .dark .fibo-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--color-gray-800);
+  background: rgb(255 255 255 / 0.1);
   border-radius: 4px;
-  opacity: 50%;
 }
 
 .dark .fibo-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-700);
+  background: rgb(255 255 255 / 0.2);
 }
 
 
@@ -112,7 +111,7 @@
 .fibo-popover {
   @apply
   shadow-lg dark:shadow-gray-950
-  dark:border-1 dark:border-gray-800
+  dark:border-1 dark:border-white/10
   bg-white dark:bg-gray-900
   outline-gray-300 dark:outline-gray-950
   outline-1
@@ -151,7 +150,9 @@
   px-3   py-2
   min-h-10 cursor-default rounded-md
 
-  bg-white dark:bg-gray-900 dark:data-error:bg-red-300/5
+  bg-white dark:bg-gray-900
+  dark:data-error:bg-red-300/5
+
   aria-disabled:bg-gray-200 dark:aria-disabled:bg-gray-700
 
   text-gray-900 dark:text-gray-400
@@ -161,7 +162,7 @@
   data-error:outline-red-300 dark:data-error:outline-red-500/20
 
   outline-1 -outline-offset-1
-  outline-gray-300 dark:outline-gray-800
+  outline-gray-300 dark:outline-white/10
 
   focus-within:outline-1
   focus-within:-outline-offset-1
@@ -178,7 +179,7 @@
   text-gray-700 dark:text-gray-300
 
   data-[active=true]:bg-gray-100
-  dark:data-[active=true]:bg-primary-500/10
+  dark:data-[active=true]:bg-white/10
 
   aria-expanded:bg-gray-100
   dark:aria-expanded:bg-gray-700
@@ -211,9 +212,10 @@
   @apply
   border-1
   focus-visible:ring-primary-600 dark:focus-visible:ring-primary-600
+  dark:bg-black/10
   aria-checked:bg-primary-500 dark:aria-checked:bg-primary-600
   aria-checked:border-primary-600  dark:aria-checked:border-0
-  border-gray-300 dark:border-gray-700
+  border-gray-300 dark:border-white/15
   /*dark:group-hover:border-gray-600*/
 }
 
