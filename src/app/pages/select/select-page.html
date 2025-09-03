@@ -1,32 +1,41 @@
-<app-form-actions [ctrl]="ctrl">
+<app-form-actions [ctrl]="form">
 
     <div class=" px-4 w-[450px] space-y-1">
 
-      <span  class="block text-sm/6 font-medium text-gray-900">With placeholder</span>
-      <fibo-select [items]="items()" [formControl]="ctrl" [placeholder]="'Select City'" ></fibo-select>
+      <!-- Disable/Enable Form Button -->
+      <div class="mb-4">
+        <button
+          type="button"
+          (click)="toggleFormDisabled()">
+          {{ form.disabled ? 'Enable Form' : 'Disable Form' }}
+        </button>
+      </div>
 
-      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">Floating label</span>
-              <fibo-select [items]="items()" [label]="'City'" [formControl]="ctrl" ></fibo-select>
+      <span  class="block mt-2">With placeholder</span>
+      <fibo-select [items]="items()" [formControl]="placeholderCtrl" [placeholder]="'Select User'" ></fibo-select>
 
-      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">Fixed Label</span>
-              <fibo-select [items]="items()" [formControl]="ctrl" fixedLabel="City" [placeholder]="'Select City'" ></fibo-select>
+      <span  class="block mt-2">Floating label</span>
+              <fibo-select [items]="items()" [label]="'User'" [formControl]="floatingLabelCtrl" ></fibo-select>
 
-      <span  class="block text-sm/6 font-medium text-gray-900 mt-2"> with searchable Input</span>
-              <fibo-select [items]="filteredItems()" [value]="ctrl.value"  [label]="'City'" [formControl]="ctrl">
+      <span  class="block mt-2">Fixed Label</span>
+              <fibo-select [items]="items()" [formControl]="fixedLabelCtrl" fixedLabel="Customer" [placeholder]="'Select Customer'" ></fibo-select>
+
+      <span  class="block mt-2"> with searchable Input</span>
+              <fibo-select [items]="filteredItems()" [value]="searchableCtrl.value"  [label]="'User'" [formControl]="searchableCtrl">
                       <input
               fiboFormFieldContent
-            [formControl]="ctrl"
-            [value]="ctrl.value"
-            [placeholder]="'Choose City'"
+            [formControl]="searchableCtrl"
+            [value]="searchableCtrl.value"
+            [placeholder]="'Choose User'"
             class="w-full text-gray-900 outline-hidden placeholder:text-gray-400 sm:text-sm peer"
             type="text"
           />
       </fibo-select>
 
-      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">User Select with Custom Template</span>
+      <span  class="block mt-2">User Select with Custom Template</span>
       <fibo-select
         [items]="users"
-        [formControl]="ctrl"
+        [formControl]="customTemplateCtrl"
         [label]="'Select User'"
         [placeholder]="'Choose a user'"
         [valueProp]="'value'"
@@ -34,16 +43,16 @@
         [itemTemplate]="userTemplate">
       </fibo-select>
 
-      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">User Select Component (Local)</span>
+      <span  class="block mt-2">User Select Component (Local)</span>
       <app-user-select
         [users]="users"
-        [formControl]="userCtrl"
+        [formControl]="userSelectCtrl"
         [label]="'Select User'"
         [placeholder]="'Choose a user'">
       </app-user-select>
 
-      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">User Select Form Actions</span>
-      <app-form-actions [ctrl]="userCtrl"></app-form-actions>
+      <span  class="block mt-2">User Select Form Actions</span>
+      <app-form-actions [ctrl]="userSelectCtrl"></app-form-actions>
 
     </div>
 </app-form-actions>

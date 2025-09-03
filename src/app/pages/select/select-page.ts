@@ -1,6 +1,6 @@
 import {Component, computed, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {FormActionsComponent} from "../../common/form-actions";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {FormFieldContent} from '@fibo-ui/cdk';
@@ -24,17 +24,29 @@ import {Select} from '@fibo-ui/components';
   templateUrl: './select-page.html',
 })
 export class SelectPageComponent {
-  ctrl = new FormControl('1', { validators: Validators.required });
-  userCtrl = new FormControl(1, { validators: Validators.required });
+  // Create a form group with individual controls for each field
+  form = new FormGroup({
+    placeholderField: new FormControl(null, { validators: Validators.required }),
+    floatingLabelField: new FormControl('2', { validators: Validators.required }),
+    fixedLabelField: new FormControl('3', { validators: Validators.required }),
+    searchableField: new FormControl('4', { validators: Validators.required }),
+    customTemplateField: new FormControl('5', { validators: Validators.required }),
+    userSelectField: new FormControl(6, { validators: Validators.required })
+  });
+
+  // Individual form controls for easy access
+  placeholderCtrl = this.form.get('placeholderField') as FormControl;
+  floatingLabelCtrl = this.form.get('floatingLabelField') as FormControl;
+  fixedLabelCtrl = this.form.get('fixedLabelField') as FormControl;
+  searchableCtrl = this.form.get('searchableField') as FormControl;
+  customTemplateCtrl = this.form.get('customTemplateField') as FormControl;
+  userSelectCtrl = this.form.get('userSelectField') as FormControl;
 
   searchText = signal('');
 
   valueModel = signal<number|null>(1);
 
-  value = toSignal(this.ctrl.valueChanges);
-  userValue = toSignal(this.userCtrl.valueChanges);
-
-  // Use shared user data
+  // Use shared user data for all fields
   users = usersChoices;
 
   items = signal(this.users);
@@ -51,4 +63,13 @@ export class SelectPageComponent {
   // Properties for the generic select
   valueProp: keyof User = 'id';
   labelProp: keyof User = 'username';
+
+  // Method to disable/enable the entire form
+  toggleFormDisabled() {
+    if (this.form.disabled) {
+      this.form.enable();
+    } else {
+      this.form.disable();
+    }
+  }
 }

@@ -21,7 +21,7 @@ import {LucideAngularModule} from 'lucide-angular';
   `,
   host: {
     '[tabindex]': 'control().cva.disabled()?"-1":"0"',
-     class: 'fibo-card fibo-form-field group flex items-center space-x-1 text-left',
+     class: 'fibo-form-field group flex items-center space-x-1 text-left px-3 py-2 min-h-10 cursor-default rounded-md',
     '[class.min-h-14]': '!!control().label()',
     '[style.pointer-events]': 'cva()?.disabled() ? "none" : "auto"',
     '[attr.aria-disabled]': 'cva()?.disabled()',

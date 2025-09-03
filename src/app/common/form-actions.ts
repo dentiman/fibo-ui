@@ -1,6 +1,6 @@
 import {Component, input} from '@angular/core';
 import {AsyncPipe, JsonPipe} from "@angular/common";
-import {FormControl} from "@angular/forms";
+import {AbstractControl, FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-form-actions',
@@ -25,9 +25,10 @@ export class FormActionsComponent {
   setDisabled() {
     this.ctrl().disable();
   }
+  
   setEnabled() {
     this.ctrl().enable();
   }
 
-  ctrl = input.required<FormControl>();
+  ctrl = input.required<AbstractControl>();
 }
