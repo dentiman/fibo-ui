@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
 
@@ -9,6 +10,7 @@
    CUSTOM THEME CONFIGURATION
    ======================================== */
 @theme {
+  --font-roboto: "Roboto", sans-serif;
   /* ========================================
      SEMANTIC COLOR TOKENS
      ======================================== */
@@ -167,15 +169,23 @@
 
   --color-background: oklch(1 0 0);
   --color-foreground: oklch(0.145 0 0);
-  --color-card: oklch(1 0 0);
-  --color-card-foreground: oklch(0.145 0 0);
+
+  /* for lite */
+  --color-background-secondary: oklch(1 0 0);
+  --color-foreground-secondary: oklch(0.145 0 0);
+  /* for lite */
+  --color-background-th: oklch(35% 2% 265deg);
+
 
 }
 
 @theme inline  {
 
 
-
+  --color-primary: oklch(0.205 0 0);
+  --color-primary-foreground: oklch(0.985 0 0);
+  --color-secondary: oklch(0.97 0 0);
+  --color-secondary-foreground: oklch(0.205 0 0);
 
   /* Form Field Variables - Light Theme */
   --color-form-field-bg: oklch(1 0 0);
@@ -194,6 +204,9 @@
   --color-form-field-label-text-error: oklch(0.62 0.192 20);
   --color-form-field-label-text-disabled: var(--color-text-disabled);
 
+  /* Form Field Placeholder Variables - Light Theme */
+  --color-form-field-placeholder: var(--color-text-disabled);
+
   /* Popover Variables - Light Theme */
   --color-popover-bg: oklch(1 0 0);
   --color-popover-outline: var(--color-border-primary);
@@ -211,7 +224,7 @@
   --color-checkbox-border: var(--color-border-primary);
   --color-checkbox-border-focus: oklch(0.52 0.192 240);
   --color-checkbox-bg-checked:  var(--color-blue-500);
-  --color-checkbox-border-checked: oklch(0.45 0.154 240);
+  --color-checkbox-border-checked: transparent ;
   --color-checkbox-bg-disabled: oklch(0.95 0 0);
   --color-checkbox-border-disabled: oklch(0.80 0 0);
   --color-checkbox-icon: oklch(0.98 0 0);
@@ -228,10 +241,7 @@
   --color-datalist-item-text-selected: oklch(0.98 0 0);
   --color-datalist-item-bg-selected-disabled: var(--color-blue-500);
 
-  --color-primary: oklch(0.205 0 0);
-  --color-primary-foreground: oklch(0.985 0 0);
-  --color-secondary: oklch(0.97 0 0);
-  --color-secondary-foreground: oklch(0.205 0 0);
+
 
 
 }
@@ -240,6 +250,14 @@
    DARK THEME CSS VARIABLES
    ======================================== */
 [data-theme="dark"] {
+
+  --color-background: oklch(24% 2% 268deg);
+  --color-foreground: var(--color-white);
+
+  --color-background-secondary: oklch(30% 2% 253deg);
+  --color-foreground-secondary: var(--color-white);
+
+  /*oklch(35% 2% 265deg)*/
 
   --color-primary: oklch(0.205 0 0);
   --color-primary-foreground: oklch(0.985 0 0);
@@ -283,6 +301,9 @@
   --color-form-field-label-text-error: var(--color-red-400);
   --color-form-field-label-text-disabled: var(--color-text-disabled);
 
+  /* Form Field Placeholder Variables - Dark Theme */
+  --color-form-field-placeholder: var(--color-text-disabled);
+
   /* Popover Variables - Dark Theme */
   --color-popover-bg: oklch(30% 2% 253deg);
   --color-popover-outline: var(--color-border-primary);
@@ -317,11 +338,6 @@
   --color-datalist-item-text-selected: oklch(0.98 0 0);
   --color-datalist-item-bg-selected-disabled:  --alpha(var(--color-foreground) / 5%);
 
-  --color-background: oklch(24% 2% 268deg);
-  --color-foreground: var(--color-white);
-
-  --color-card: oklch(30% 2% 253deg);
-  --color-card-foreground: oklch(0.68 0.02 268deg);
 
 
 
@@ -355,7 +371,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-roboto;
 
   }
 
@@ -511,7 +527,7 @@
 
 
   .from-field-placeholder {
-    color: var(--color-form-field-label-text);
+    color: var(--color-form-field-placeholder);
     transition: color 200ms;
   }
 
