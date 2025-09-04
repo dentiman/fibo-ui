@@ -26,18 +26,18 @@
   --color-primary-950: oklch(24.00% 2.00% 268.00deg);
 
 
+  --color-shark-50:  oklch(0.9733 0.0288 26.34);
+  --color-shark-100: oklch(0.9249 0.0259 20.28);
+  --color-shark-200: oklch(0.8567 0.0187 19.63);
+  --color-shark-300: oklch(0.7578 0.0082 49.19);
+  --color-shark-400: oklch(0.6174 0.0068 316.59);
+  --color-shark-500: oklch(0.5246 0.0069 285.82);
+  --color-shark-600: oklch(0.4785 0.0040 281.66);
+  --color-shark-700: oklch(0.4239 0.0014 246.83);
+  --color-shark-800: oklch(0.3872 0.0041 358.77);
+  --color-shark-900: oklch(0.3535 0.0089 355.47);
+  --color-shark-950: oklch(0.2687 0.0020 67.48);
 
-  --color-shark-50: oklch(97.31% 0.00% 0.00deg);
-  --color-shark-100: oklch(92.80% 0.00% 0.00deg);
-  --color-shark-200: oklch(86.07% 0.00% 0.00deg);
-  --color-shark-300: oklch(75.72% 0.00% 0.00deg);
-  --color-shark-400: oklch(62.68% 0.00% 0.00deg);
-  --color-shark-500: oklch(53.48% 0.00% 0.00deg);
-  --color-shark-600: oklch(47.84% 0.00% 0.00deg);
-  --color-shark-700: oklch(42.76% 0.00% 0.00deg);
-  --color-shark-800: oklch(0.348 0 89.876);
-  --color-shark-900: oklch(0.309 0 89.876);
-  --color-shark-950: oklch(24.78% 0.00% 0.00deg);
 
 
 
@@ -134,7 +134,7 @@
   --color-surface-700: oklch(0.65 0 0);   /* #404040 - Active states */
   --color-surface-800: oklch(0.60 0 0);   /* #262626 - Borders */
   --color-surface-900: oklch(0.55 0 0);   /* #171717 - Dividers */
-  --color-surface-950: oklch(0.50 0 0);   /* #0A0A0A - Highlights */
+  --color-surface-950: oklch(0.50 0 0);   /* #0A0A0A - Highlights  --color-text-disabled */
 
   /* Text Colors */
   --color-text-primary: oklch(0.12 0 0);    /* #1E1E1E - Primary text */
@@ -180,35 +180,35 @@
   /* Form Field Variables - Light Theme */
   --color-form-field-bg: oklch(1 0 0);
   --color-form-field-text: oklch(0.145 0 0);
-  --color-form-field-outline: oklch(0.85 0 0);
-  --color-form-field-outline-focus: oklch(0.52 0.192 240);
+  --color-form-field-outline: var(--color-border-primary);
+  --color-form-field-outline-focus: var(--color-blue-500);
   --color-form-field-bg-error: oklch(0.98 0.008 20);
   --color-form-field-outline-error: oklch(0.62 0.192 20);
   --color-form-field-bg-disabled: oklch(0.95 0 0);
-  --color-form-field-text-disabled: oklch(0.60 0 0);
+  --color-form-field-text-disabled: var(--color-text-disabled);
   --color-form-field-outline-disabled: oklch(0.80 0 0);
 
   /* Form Field Label Variables - Light Theme */
   --color-form-field-label-text: oklch(0.30 0 0);
-  --color-form-field-label-text-focus: oklch(0.71 0.11 240);
+  --color-form-field-label-text-focus: var(--color-blue-500);
   --color-form-field-label-text-error: oklch(0.62 0.192 20);
-  --color-form-field-label-text-disabled: oklch(0.60 0 0);
+  --color-form-field-label-text-disabled: var(--color-text-disabled);
 
   /* Popover Variables - Light Theme */
   --color-popover-bg: oklch(1 0 0);
-  --color-popover-outline: oklch(0.85 0 0);
+  --color-popover-outline: var(--color-border-primary);
 
   /* Modal Variables - Light Theme */
   --color-modal-bg: oklch(1 0 0);
-  --color-modal-outline: oklch(0.85 0 0);
+  --color-modal-outline: var(--color-border-primary);
 
   /* Card Variables - Light Theme */
   --color-card-bg: oklch(1 0 0);
-  --color-card-outline: oklch(0.85 0 0);
+  --color-card-outline: var(--color-border-primary);
 
   /* Checkbox Variables - Light Theme */
   --color-checkbox-bg: oklch(1 0 0);
-  --color-checkbox-border: oklch(0.85 0 0);
+  --color-checkbox-border: var(--color-border-primary);
   --color-checkbox-border-focus: oklch(0.52 0.192 240);
   --color-checkbox-bg-checked:  var(--color-blue-500);
   --color-checkbox-border-checked: oklch(0.45 0.154 240);
@@ -216,14 +216,14 @@
   --color-checkbox-border-disabled: oklch(0.80 0 0);
   --color-checkbox-icon: oklch(0.98 0 0);
   --color-checkbox-label-text: oklch(0.12 0 0);
-  --color-checkbox-label-disabled: oklch(0.60 0 0);
+  --color-checkbox-label-disabled: var(--color-text-disabled);
 
   /* DataList Item Variables - Light Theme */
   --color-datalist-item-bg: transparent;
   --color-datalist-item-text: oklch(0.12 0 0);
   --color-datalist-item-bg-active: --alpha(var(--color-foreground) / 5%);
   --color-datalist-item-bg-disabled: transparent;
-  --color-datalist-item-text-disabled: oklch(0.60 0 0);
+  --color-datalist-item-text-disabled: var(--color-text-disabled);
   --color-datalist-item-bg-selected:  var(--color-blue-500);
   --color-datalist-item-text-selected: oklch(0.98 0 0);
   --color-datalist-item-bg-selected-disabled: var(--color-blue-500);
@@ -233,14 +233,6 @@
   --color-secondary: oklch(0.97 0 0);
   --color-secondary-foreground: oklch(0.205 0 0);
 
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
 
 }
 
@@ -249,53 +241,78 @@
    ======================================== */
 [data-theme="dark"] {
 
+  --color-primary: oklch(0.205 0 0);
+  --color-primary-foreground: oklch(0.985 0 0);
+  --color-secondary: oklch(0.97 0 0);
+  --color-secondary-foreground: oklch(0.205 0 0);
+
+  --color-text-primary: oklch(0.92 0 0);    /* #E8E8E8 - Primary text */
+  --color-text-secondary: oklch(0.751 0 89.876);  /* #C7C7C7 - Secondary text */
+  --color-text-tertiary: oklch(0.617 0 89.876);    /* #A6A6A6 - Tertiary text */
+  --color-text-disabled: var(--color-text-disabled);    /* #858585 - Disabled text */
+  --color-text-inverse: oklch(0.92 0 0);     /* #1E1E1E - Text on colored backgrounds */
+
+
+  --color-border-primary: oklch(0.348 0 89.876);   /* #3C3F41 - Primary borders */
+  --color-border-secondary: oklch(0.30 0 0); /* #4C4C4C - Secondary borders */
+  --color-border-tertiary: hsl(223deg 5% 37%);
+  --color-border-disabled: oklch(0.42 0 0);   /* #6C6C6C - Disabled borders */
+
+  /* Override shadows for dark theme */
+  --shadow-xs: var(--shadow-dark-xs);
+  --shadow-sm: var(--shadow-dark-sm);
+  --shadow-md: var(--shadow-dark-md);
+  --shadow-lg: var(--shadow-dark-lg);
+  --shadow-xl: var(--shadow-dark-xl);
+  --shadow-2xl: var(--shadow-dark-2xl);
+
   /* Form Field Variables - Dark Theme */
   --color-form-field-bg: oklch(30% 2% 253deg);
   --color-form-field-text: var(--color-text-primary);
-  --color-form-field-outline: oklch(0.348 0 89.876);
+  --color-form-field-outline: var(--color-border-primary);
   --color-form-field-outline-focus:var(--color-primary-600);
   --color-form-field-bg-error: oklch(0.267 0.019 7.232);
   --color-form-field-outline-error: oklch(0.502 0.093 15.483);
   --color-form-field-bg-disabled: oklch(24% 2% 268deg);
-  --color-form-field-text-disabled: oklch(0.50 0 0);
+  --color-form-field-text-disabled: var(--color-text-disabled);
   --color-form-field-outline-disabled: oklch(0.20 0 0);
 
   /* Form Field Label Variables - Dark Theme */
   --color-form-field-label-text: oklch(0.751 0 89.876);
   --color-form-field-label-text-focus: oklch(0.71 0.11 240);
-  --color-form-field-label-text-error: var(--color-error-500);
-  --color-form-field-label-text-disabled: oklch(0.50 0 0);
+  --color-form-field-label-text-error: var(--color-red-400);
+  --color-form-field-label-text-disabled: var(--color-text-disabled);
 
   /* Popover Variables - Dark Theme */
   --color-popover-bg: oklch(30% 2% 253deg);
-  --color-popover-outline: oklch(0.348 0 89.876);
+  --color-popover-outline: var(--color-border-primary);
 
   /* Modal Variables - Dark Theme */
   --color-modal-bg: oklch(30% 2% 253deg);
-  --color-modal-outline: oklch(0.348 0 89.876);
+  --color-modal-outline: var(--color-border-primary);
 
   /* Card Variables - Dark Theme */
   --color-card-bg: oklch(30% 2% 253deg);
-  --color-card-outline: oklch(0.348 0 89.876);
+  --color-card-outline: var(--color-border-primary);
 
   /* Checkbox Variables - Dark Theme */
-  --color-checkbox-bg: oklch(0.32 0.02 268deg);
-  --color-checkbox-border: oklch(0.348 0 89.876);
-  --color-checkbox-border-focus: oklch(0.52 0.192 240);
-  --color-checkbox-bg-checked: oklch(0.52 0.192 240);
-  --color-checkbox-border-checked: oklch(0.45 0.154 240);
+  --color-checkbox-bg: transparent;
+  --color-checkbox-border: var(--color-border-tertiary);
+  --color-checkbox-border-focus: var(--color-blue-500);
+  --color-checkbox-bg-checked:  var(--color-blue-500);
+  --color-checkbox-border-checked: transparent;
   --color-checkbox-bg-disabled: oklch(0.28 0.02 268deg);
   --color-checkbox-border-disabled: oklch(0.20 0 0);
   --color-checkbox-icon: oklch(0.98 0 0);
   --color-checkbox-label-text: var(--color-text-secondary);
-  --color-checkbox-label-disabled: oklch(0.50 0 0);
+  --color-checkbox-label-disabled: var(--color-text-disabled);
 
   /* DataList Item Variables - Dark Theme */
   --color-datalist-item-bg: transparent;
   --color-datalist-item-text: oklch(0.92 0 0);
   --color-datalist-item-bg-active: --alpha(var(--color-foreground) / 5%);
   --color-datalist-item-bg-disabled: transparent;
-  --color-datalist-item-text-disabled: oklch(0.50 0 0);
+  --color-datalist-item-text-disabled: var(--color-text-disabled);
   --color-datalist-item-bg-selected:  var(--color-primary-700);
   --color-datalist-item-text-selected: oklch(0.98 0 0);
   --color-datalist-item-bg-selected-disabled:  --alpha(var(--color-foreground) / 5%);
@@ -310,10 +327,7 @@
 
 
 
-  --color-primary: oklch(0.205 0 0);
-  --color-primary-foreground: oklch(0.985 0 0);
-  --color-secondary: oklch(0.97 0 0);
-  --color-secondary-foreground: oklch(0.205 0 0);
+
 
   /* Override surface colors for lighter dark theme */
   --color-surface-50: oklch(24% 2% 268deg);   /* #454545 - Very dark background */
@@ -328,26 +342,7 @@
   --color-surface-900: oklch(0.64 0.02 268deg);  /* #A8A8A8 - Dividers */
   --color-surface-950: oklch(0.68 0.02 268deg);  /* #B3B3B3 - Highlights */
 
-  /* Override text colors for WebStorm dark theme */
-  --color-text-primary: oklch(0.92 0 0);    /* #E8E8E8 - Primary text */
-  --color-text-secondary: oklch(0.751 0 89.876);  /* #C7C7C7 - Secondary text */
-  --color-text-tertiary: oklch(0.617 0 89.876);    /* #A6A6A6 - Tertiary text */
-  --color-text-disabled: oklch(0.50 0 0);    /* #858585 - Disabled text */
-  --color-text-inverse: oklch(0.92 0 0);     /* #1E1E1E - Text on colored backgrounds */
 
-
-  --color-border-primary: oklch(0.24 0 0);   /* #3C3F41 - Primary borders */
-  --color-border-secondary: oklch(0.30 0 0); /* #4C4C4C - Secondary borders */
-  --color-border-tertiary: oklch(0.36 0 0);   /* #5C5C5C - Tertiary borders */
-  --color-border-disabled: oklch(0.42 0 0);   /* #6C6C6C - Disabled borders */
-
-  /* Override shadows for dark theme */
-  --shadow-xs: var(--shadow-dark-xs);
-  --shadow-sm: var(--shadow-dark-sm);
-  --shadow-md: var(--shadow-dark-md);
-  --shadow-lg: var(--shadow-dark-lg);
-  --shadow-xl: var(--shadow-dark-xl);
-  --shadow-2xl: var(--shadow-dark-2xl);
 
 
 }
@@ -361,7 +356,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+
   }
 
   /* Базовые стили для HTML элементов */
@@ -618,13 +613,13 @@
   .fibo-btn-chip {
     border-radius: 0.375rem;
     padding: 0.125rem 0.375rem;
-    color: var(--color-text-secondary);
-    background-color: var(--color-surface-200);
+    color: var(--color-text-primary);
+    background-color:  --alpha(var(--color-foreground) / 10%);
     transition: all 200ms;
   }
 
   .fibo-btn-chip:focus-visible {
-    outline: 2px solid var(--color-primary-600);
+    outline: 1px solid var(--color-primary-600);
     outline-offset: 1px;
   }
 
