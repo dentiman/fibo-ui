@@ -58,6 +58,10 @@ export class RootNavComponent {
                 url: '/checkbox',
               },
               {
+                label: 'Listbox',
+                url: '/listbox',
+              },
+              {
                 label: 'Switch',
                 url: '/switch',
               },

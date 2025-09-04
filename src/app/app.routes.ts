@@ -16,6 +16,7 @@ import {LoadingSpinPageComponent} from './pages/loading-spin/loading-spin-page';
 import {PlaygroundPageComponent} from './pages/playground-page/playground-page';
 import {SideMenuPage} from './pages/side-menu/side-menu-page';
 import {ThemeDemoComponent} from './pages/theme-demo/theme-demo';
+import {ListboxPageComponent} from './pages/listbox/listbox-page';
 
 export const routes: Routes = [
   {
@@ -85,6 +86,10 @@ export const routes: Routes = [
       {
         path: 'theme-demo',
         component: ThemeDemoComponent
+      },
+      {
+        path: 'listbox',
+        component: ListboxPageComponent
       }
     ]
   }

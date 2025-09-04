@@ -165,19 +165,17 @@
   --shadow-dark-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
   --shadow-dark-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
 
-}
-
-@theme  {
-
   --color-background: oklch(1 0 0);
   --color-foreground: oklch(0.145 0 0);
   --color-card: oklch(1 0 0);
   --color-card-foreground: oklch(0.145 0 0);
 
+}
 
-  --color-popover: oklch(1 0 0);
+@theme inline  {
 
-  --color-popover-foreground: oklch(0.145 0 0);
+
+
 
   /* Form Field Variables - Light Theme */
   --color-form-field-bg: oklch(1 0 0);
@@ -203,6 +201,32 @@
   /* Modal Variables - Light Theme */
   --color-modal-bg: oklch(1 0 0);
   --color-modal-outline: oklch(0.85 0 0);
+
+  /* Card Variables - Light Theme */
+  --color-card-bg: oklch(1 0 0);
+  --color-card-outline: oklch(0.85 0 0);
+
+  /* Checkbox Variables - Light Theme */
+  --color-checkbox-bg: oklch(1 0 0);
+  --color-checkbox-border: oklch(0.85 0 0);
+  --color-checkbox-border-focus: oklch(0.52 0.192 240);
+  --color-checkbox-bg-checked:  var(--color-blue-500);
+  --color-checkbox-border-checked: oklch(0.45 0.154 240);
+  --color-checkbox-bg-disabled: oklch(0.95 0 0);
+  --color-checkbox-border-disabled: oklch(0.80 0 0);
+  --color-checkbox-icon: oklch(0.98 0 0);
+  --color-checkbox-label-text: oklch(0.12 0 0);
+  --color-checkbox-label-disabled: oklch(0.60 0 0);
+
+  /* DataList Item Variables - Light Theme */
+  --color-datalist-item-bg: transparent;
+  --color-datalist-item-text: oklch(0.12 0 0);
+  --color-datalist-item-bg-active: --alpha(var(--color-foreground) / 5%);
+  --color-datalist-item-bg-disabled: transparent;
+  --color-datalist-item-text-disabled: oklch(0.60 0 0);
+  --color-datalist-item-bg-selected:  var(--color-blue-500);
+  --color-datalist-item-text-selected: oklch(0.98 0 0);
+  --color-datalist-item-bg-selected-disabled: var(--color-blue-500);
 
   --color-primary: oklch(0.205 0 0);
   --color-primary-foreground: oklch(0.985 0 0);
@@ -250,14 +274,37 @@
   --color-modal-bg: oklch(30% 2% 253deg);
   --color-modal-outline: oklch(0.348 0 89.876);
 
+  /* Card Variables - Dark Theme */
+  --color-card-bg: oklch(30% 2% 253deg);
+  --color-card-outline: oklch(0.348 0 89.876);
+
+  /* Checkbox Variables - Dark Theme */
+  --color-checkbox-bg: oklch(0.32 0.02 268deg);
+  --color-checkbox-border: oklch(0.348 0 89.876);
+  --color-checkbox-border-focus: oklch(0.52 0.192 240);
+  --color-checkbox-bg-checked: oklch(0.52 0.192 240);
+  --color-checkbox-border-checked: oklch(0.45 0.154 240);
+  --color-checkbox-bg-disabled: oklch(0.28 0.02 268deg);
+  --color-checkbox-border-disabled: oklch(0.20 0 0);
+  --color-checkbox-icon: oklch(0.98 0 0);
+  --color-checkbox-label-text: var(--color-text-secondary);
+  --color-checkbox-label-disabled: oklch(0.50 0 0);
+
+  /* DataList Item Variables - Dark Theme */
+  --color-datalist-item-bg: transparent;
+  --color-datalist-item-text: oklch(0.92 0 0);
+  --color-datalist-item-bg-active: --alpha(var(--color-foreground) / 5%);
+  --color-datalist-item-bg-disabled: transparent;
+  --color-datalist-item-text-disabled: oklch(0.50 0 0);
+  --color-datalist-item-bg-selected:  var(--color-primary-700);
+  --color-datalist-item-text-selected: oklch(0.98 0 0);
+  --color-datalist-item-bg-selected-disabled:  --alpha(var(--color-foreground) / 5%);
+
   --color-background: oklch(24% 2% 268deg);
   --color-foreground: var(--color-white);
 
   --color-card: oklch(30% 2% 253deg);
   --color-card-foreground: oklch(0.68 0.02 268deg);
-
-  --color-popover: oklch(30% 2% 253deg);
-  --color-popover-foreground:oklch(0.68 0.02 268deg);
 
 
 
@@ -412,8 +459,15 @@
     transition: all 200ms;
   }
 
+  .fibo-card {
+    background-color: var(--color-card-bg);
+    outline: 1px solid var(--color-card-outline);
+    outline-offset: -1px;
+    transition: all 200ms;
+  }
 
-  /* Form field label */
+
+    /* Form field label */
   .fibo-form-field-label {
     color: var(--color-form-field-label-text);
     transition: color 200ms;
@@ -483,18 +537,39 @@
 
   /* Checkbox */
   .fibo-checkbox {
-    border: 1px solid var(--color-border-primary);
-    background-color: var(--color-surface-100);
+    border: 1px solid var(--color-checkbox-border);
+    background-color: var(--color-checkbox-bg);
     transition: all 200ms;
   }
 
   .fibo-checkbox:focus-visible {
-    box-shadow: 0 0 0 2px var(--color-primary-600);
+    border-color: var(--color-checkbox-border-focus);
+    box-shadow: 0 0 0 2px var(--color-checkbox-border-focus);
   }
 
   .fibo-checkbox[aria-checked="true"] {
-    background-color: var(--color-primary-500);
-    border-color: var(--color-primary-600);
+    background-color: var(--color-checkbox-bg-checked);
+    border-color: var(--color-checkbox-border-checked);
+  }
+
+  .fibo-checkbox[aria-disabled="true"] {
+    background-color: var(--color-checkbox-bg-disabled);
+    border-color: var(--color-checkbox-border-disabled);
+    cursor: not-allowed;
+  }
+
+  .fibo-checkbox-icon {
+    color: var(--color-checkbox-icon);
+    transition: color 200ms;
+  }
+
+  .fibo-checkbox-label {
+    color: var(--color-checkbox-label-text);
+    transition: color 200ms;
+  }
+
+  .fibo-checkbox[aria-disabled="true"] .fibo-checkbox-label {
+    color: var(--color-checkbox-label-disabled);
   }
 
   /* ========================================
@@ -557,8 +632,8 @@
      NAVIGATION COMPONENTS
      ======================================== */
 
-  /* Menu item */
-  .menu-item {
+  /* DataList item */
+  .datalist-item {
     display: flex;
     gap: 0.25rem;
     padding: 0.125rem 0.5rem;
@@ -566,29 +641,36 @@
     line-height: 1.5rem;
     cursor: pointer;
     border-radius: 0.375rem;
-    color: var(--color-text-primary);
+    background-color: var(--color-datalist-item-bg);
+    color: var(--color-datalist-item-text);
+    transition: all 200ms;
   }
 
-  .menu-item[data-active="true"] {
-    background-color: color-mix(in srgb, var(--color-foreground) 10%, transparent);
+  .datalist-item[data-active="true"] {
+    background-color: var(--color-datalist-item-bg-active);
   }
 
-  .menu-item[aria-disabled="true"] {
-    background-color: var(--color-surface-100);
-    color: var(--color-text-disabled);
+  .datalist-item[aria-disabled="true"] {
+    background-color: var(--color-datalist-item-bg-disabled);
+    color: var(--color-datalist-item-text-disabled);
   }
 
-  .menu-item[data-multiple="false"][aria-selected="true"] {
-    background-color: var(--color-primary-500);
-    color: var(--color-text-inverse);
+  .datalist-item[data-multiple="false"][aria-selected="true"] {
+    background-color: var(--color-datalist-item-bg-selected);
+    color: var(--color-datalist-item-text-selected);
   }
 
-  .menu-item[aria-selected="true"][aria-disabled="true"] {
-    background-color: var(--color-primary-400);
+  .datalist-item[aria-selected="true"][aria-disabled="true"] {
+    background-color: var(--color-datalist-item-bg-selected);
+    color: var(--color-datalist-item-text-selected);
+  }
+  .datalist-item[aria-selected="true"][data-active="true"][aria-disabled="true"] {
+    background-color: var(--color-datalist-item-bg-selected);
+    color: var(--color-datalist-item-text-selected);
   }
 
-  .menu-item[aria-disabled="true"][data-active="true"] {
-    background-color: var(--color-surface-100);
+  .datalist-item[aria-disabled="true"][data-active="true"] {
+    background-color: var(--color-datalist-item-bg-disabled);
   }
 
   /* ========================================

@@ -34,7 +34,7 @@
     @for (user of users(); track user.id) {
       @let isSelected = user.id === selectedUser()?.id;
       <a [Option]="user.id"
-         class="menu-item relative group">
+         class="datalist-item relative group">
         <div class="flex items-center gap-3">
           <img
             [src]="user.avatar"
