@@ -97,7 +97,7 @@
   --form-field-label-text: var(--color-gray-500);
   --form-field-label-text-focus: var(--color-blue-500);
   --form-field-label-text-error: oklch(0.62 0.192 20);
-  --form-field-label-text-disabled: var(--color-white);
+  --form-field-label-text-disabled: var(--color-gray-500);
 
   /* Form Field Placeholder Variables - Light Theme */
   --form-field-placeholder: var(--text-disabled);
@@ -148,7 +148,7 @@
   --text-primary: oklch(0.92 0 0);
   --text-secondary: var(--color-neutral-400);
   --text-tertiary: oklch(0.617 0 89.876);
-  --text-disabled:  hsl(223deg 5% 37%);
+  --text-disabled:  var(--color-neutral-400);
   --text-inverse: oklch(0.92 0 0);
 
 
@@ -181,7 +181,7 @@
   --form-field-outline-focus:var(--color-primary-600);
   --form-field-bg-error: oklch(0.267 0.019 7.232);
   --form-field-outline-error: oklch(0.502 0.093 15.483);
-  --form-field-bg-disabled: oklch(24% 2% 268deg);
+  --form-field-bg-disabled: --alpha(var(--color-foreground) / 5%);;
   --form-field-text-disabled: var(--color-neutral-600);
   --form-field-outline-disabled: oklch(0.20 0 0);
 
@@ -189,7 +189,7 @@
   --form-field-label-text: var(--color-neutral-400);;
   --form-field-label-text-focus: oklch(0.71 0.11 240);
   --form-field-label-text-error: var(--color-red-400);
-  --form-field-label-text-disabled: var(--color-neutral-600);
+  --form-field-label-text-disabled: var(--color-neutral-500);
 
   /* Form Field Placeholder Variables - Dark Theme */
   --form-field-placeholder: var(--color-neutral-400);
