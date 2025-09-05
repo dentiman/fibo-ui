@@ -78,6 +78,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
         </div>
       </div>
 
+\n
       <!-- Gray Colors -->
       <div class="p-6 rounded-lg fibo-card ">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Gray Colors</h3>
@@ -124,6 +125,110 @@ import { ChangeDetectionStrategy } from '@angular/core';
           </div>
           <div class="text-center">
             <div class="w-12 h-12 bg-gray-950 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">950</span>
+          </div>
+        </div>
+      </div>
+
+\n
+      <!-- Zinc Colors -->
+      <div class="p-6 rounded-lg fibo-card">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Zinc Colors</h3>
+        <div class="grid grid-cols-11 gap-2">
+          <div class="text-center">
+            <div class="w-12 h-12 bg-zinc-50 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">50</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-zinc-100 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">100</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-zinc-200 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">200</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-zinc-300 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">300</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-zinc-400 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">400</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-zinc-500 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">500</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-zinc-600 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">600</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-zinc-700 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">700</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-zinc-800 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">800</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-zinc-900 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">900</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-zinc-950 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">950</span>
+          </div>
+        </div>
+      </div>
+
+\n
+      <!-- Neutral Colors -->
+      <div class="p-6 rounded-lg fibo-card">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Neutral Colors</h3>
+        <div class="grid grid-cols-11 gap-2">
+          <div class="text-center">
+            <div class="w-12 h-12 bg-neutral-50 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">50</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-neutral-100 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">100</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-neutral-200 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">200</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-neutral-300 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">300</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-neutral-400 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">400</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-neutral-500 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">500</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-neutral-600 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">600</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-neutral-700 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">700</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-neutral-800 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">800</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-neutral-900 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
+            <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">900</span>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 bg-neutral-950 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
             <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">950</span>
           </div>
         </div>

@@ -1,11 +1,11 @@
 <div class="p-8 max-w-7xl mx-auto">
-  <h1 class="mb-8 text-slate-900 text-3xl font-semibold tracking-tight">Checkbox Component Examples</h1>
+  <h1 class="mb-8  text-3xl font-semibold tracking-tight">Checkbox Component Examples</h1>
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
 
     <!-- Basic States -->
     <div class="fibo-card rounded-lg p-6 shadow-sm">
-      <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Basic States</h2>
+      <h2 class="mb-4  text-xl font-semibold tracking-tight">Basic States</h2>
 
       <div class="space-y-4">
         <fibo-checkbox
@@ -23,13 +23,13 @@
         <fibo-checkbox
           [(checked)]="disabledCheckbox"
           [disabled]="true">
-          <span class="text-slate-700">Disabled (Unchecked)</span>
+      Disabled (Unchecked)
         </fibo-checkbox>
 
         <fibo-checkbox
           [(checked)]="disabledCheckedCheckbox"
           [disabled]="true">
-          <span class="text-slate-700">Disabled (Checked)</span>
+       Disabled (Checked)
         </fibo-checkbox>
 
         <div class="flex items-center gap-2">
@@ -58,7 +58,7 @@
 
     <!-- Indeterminate States -->
     <div class=" fibo-card rounded-lg p-6 shadow-sm">
-      <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Indeterminate States</h2>
+      <h2 class="mb-4  text-xl font-semibold tracking-tight">Indeterminate States</h2>
 
       <div class="space-y-4">
         <fibo-checkbox
@@ -143,7 +143,7 @@
 
     <!-- Form Integration -->
     <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
-      <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Form Integration</h2>
+      <h2 class="mb-4  text-xl font-semibold tracking-tight">Form Integration</h2>
 
       <form class="space-y-4">
         <fibo-checkbox [formControl]="formCheckbox" class="items-start">
@@ -179,7 +179,7 @@
 
     <!-- Settings Example -->
     <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
-      <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Notification Settings</h2>
+      <h2 class="mb-4  text-xl font-semibold tracking-tight">Notification Settings</h2>
 
       <div class="space-y-4 space-x-4">
         <fibo-checkbox
@@ -236,25 +236,25 @@
 
     <!-- Usage Instructions -->
     <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
-      <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Usage</h2>
+      <h2 class="mb-4  text-xl font-semibold tracking-tight">Usage</h2>
 
       <div class="space-y-4">
         <div>
-          <h3 class="text-sm font-medium text-slate-900 mb-2">Basic Usage with Inline Label</h3>
+          <h3 class="text-sm font-medium  mb-2">Basic Usage with Inline Label</h3>
           <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox [(checked)]="isChecked"&gt;
   Accept terms
 &lt;/fibo-checkbox&gt;</code></pre>
         </div>
 
         <div>
-          <h3 class="text-sm font-medium text-slate-900 mb-2">With Form Control</h3>
+          <h3 class="text-sm font-medium  mb-2">With Form Control</h3>
           <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox [formControl]="checkboxControl"&gt;
   I agree to the terms
 &lt;/fibo-checkbox&gt;</code></pre>
         </div>
 
         <div>
-          <h3 class="text-sm font-medium text-slate-900 mb-2">With Complex Content</h3>
+          <h3 class="text-sm font-medium  mb-2">With Complex Content</h3>
           <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox [(checked)]="value" class="items-start"&gt;
   &lt;div&gt;
     &lt;div class="font-medium"&gt;Title&lt;/div&gt;
@@ -264,7 +264,7 @@
         </div>
 
         <div>
-          <h3 class="text-sm font-medium text-slate-900 mb-2">With Loading State</h3>
+          <h3 class="text-sm font-medium  mb-2">With Loading State</h3>
           <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox
   [(checked)]="value"
   [isLoading]="loading"
@@ -274,7 +274,7 @@
         </div>
 
         <div>
-          <h3 class="text-sm font-medium text-slate-900 mb-2">With Indeterminate State</h3>
+          <h3 class="text-sm font-medium  mb-2">With Indeterminate State</h3>
           <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox
   [(checked)]="value"
   [indeterminate]="true"&gt;
@@ -290,7 +290,7 @@
       </div>
 
       <div class="mt-6">
-        <h3 class="text-sm font-medium text-slate-900 mb-2">Features:</h3>
+        <h3 class="text-sm font-medium  mb-2">Features:</h3>
         <ul class="text-xs text-slate-600 space-y-1 pl-4">
           <li>• Inline label support with content projection</li>
           <li>• Two-way data binding with [(checked)]</li>
