@@ -13,24 +13,24 @@
         }"
   >
         @for (value of values; track value) {
-                <button class="break-words focus-visible:outline flex items-center gap-1 fibo-btn-chip">
+                <button class="break-words focus-visible:outline flex items-center gap-1 fibo-btn-chip rounded-md px-1.5 py-1 ">
                       <span class="truncate flex-1">
                         @let item = selectedItem(value);
                         @if(item) {
                           @if (selectedItemTemplate(); as template) {
                             <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
                           } @else {
-                             <span class="text-sm">{{ getLabel(item) }}</span>
+                             <span class="text-xs font-medium flex items-center justify-center leading-none">{{ getLabel(item) }}</span>
                           }
                         }
                       </span>
 
                       @if (!disabled) {
-                        <button class="rounded-full cursor-pointer flex-shrink-0"
+                        <button class="rounded-full cursor-pointer flex-shrink-0 fibo-button-icon"
                                 (click)="removeValue(value)"
                                 (keydown)="$event.stopPropagation()"
                         >
-                           <lucide-icon name="x" size="14" class="text-gray-600/50 hover:text-gray-600"></lucide-icon>
+                           <lucide-icon name="x" size="14" class=" "></lucide-icon>
                           </button>
                       }
                 </button>

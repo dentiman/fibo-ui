@@ -1,26 +1,26 @@
 <app-form-actions [ctrl]="ctrl">
 
     <div class="relative mt-2 w-[350px] space-y-2">
-      <span  class="block text-sm/6 font-medium text-gray-900">With placeholder</span>
+      <span  class="block text-sm/6 font-medium ">With placeholder</span>
       <fibo-multiple-select [items]="users"  [formControl]="ctrl"  placeholder="Choose Cities"></fibo-multiple-select>
 
-      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">Floating label</span>
+      <span  class="block text-sm/6 font-medium  mt-2">Floating label</span>
       <fibo-multiple-select [items]="users"  [label]="'Cities'"  [formControl]="ctrl" placeholder="Choose Cities"></fibo-multiple-select>
 
-      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">Fixed label</span>
+      <span  class="block text-sm/6 font-medium  mt-2">Fixed label</span>
       <fibo-multiple-select [items]="users"  fixedLabel="Cities" placeholder="Choose Cities"  [formControl]="ctrl"></fibo-multiple-select>
 
-      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">Searchable + Label</span>
+      <span  class="block text-sm/6 font-medium  mt-2">Searchable + Label</span>
       <fibo-multiple-select [items]="users"  [label]="'City'" [formControl]="ctrl">
         <input type="text" fiboMultipleSelectInput  [placeholder]="'Choose City'" (valueChange)="onValueChange( $event)">
       </fibo-multiple-select>
 
-      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">Searchable</span>
+      <span  class="block text-sm/6 font-medium  mt-2">Searchable</span>
       <fibo-multiple-select [items]="users"  [formControl]="ctrl">
         <input type="text" fiboMultipleSelectInput  [placeholder]="'Choose City'" (valueChange)="onValueChange( $event)">
       </fibo-multiple-select>
 
-      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">User Multiple Select with Custom Template</span>
+      <span  class="block text-sm/6 font-medium  mt-2">User Multiple Select with Custom Template</span>
       <fibo-multiple-select
         [items]="users"
         [formControl]="ctrl"
@@ -31,7 +31,7 @@
         [itemTemplate]="userTemplate">
       </fibo-multiple-select>
 
-      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">User Multiple Select with Search</span>
+      <span  class="block text-sm/6 font-medium  mt-2">User Multiple Select with Search</span>
       <fibo-multiple-select
         [items]="filteredItems()"
         [formControl]="ctrl"
@@ -43,11 +43,10 @@
         <input
           type="text"
           fiboMultipleSelectInput
-          [placeholder]="'Search users...'"
           (valueChange)="onValueChange( $event)">
       </fibo-multiple-select>
 
-      <span  class="block text-sm/6 font-medium text-gray-900 mt-2">User Multiple Select with Custom Selected Template</span>
+      <span  class="block text-sm/6 font-medium  mt-2">User Multiple Select with Custom Selected Template</span>
       <fibo-multiple-select
         [items]="users"
         [formControl]="ctrl"
@@ -71,8 +70,8 @@
       class="w-8 h-8 rounded-full object-cover"
     />
     <div class="flex flex-col min-w-0">
-      <span class="text-sm font-medium truncate text-gray-900 dark:text-gray-100">{{ user.username }}</span>
-      <span class="text-xs truncate text-gray-500 dark:text-gray-600">{{ user.email }}</span>
+      <span class="text-sm font-medium truncate  ">{{ user.username }}</span>
+      <span class="text-xs truncate text-tertiary">{{ user.email }}</span>
     </div>
   </div>
 </ng-template>
@@ -85,6 +84,6 @@
       [alt]="user.username"
       class="size-5 rounded-full object-cover"
     />
-    <span class="text-xs font-medium text-gray-900 dark:text-gray-100">{{ user.username }}</span>
+    <span class="text-xs font-medium text-primary">{{ user.username }}</span>
   </div>
 </ng-template>

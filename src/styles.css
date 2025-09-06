@@ -71,8 +71,8 @@
 
   /* Text Colors lite */
   --text-primary: oklch(0.12 0 0);
-  --text-secondary: var(--color-gray-500);
-  --text-tertiary: oklch(0.45 0 0);
+  --text-secondary: var(--color-neutral-500);
+  --text-tertiary:  var(--color-neutral-400);
   --text-disabled: oklch(0.60 0 0);
   --text-inverse: oklch(0.98 0 0);
 
@@ -101,6 +101,10 @@
 
   /* Form Field Placeholder Variables - Light Theme */
   --form-field-placeholder: var(--text-disabled);
+
+  /* Input Variables - Light Theme */
+  --input-text: var(--text-primary);
+  --input-text-disabled: var(--text-disabled);
 
   /* Popover Variables - Light Theme */
   --popover-bg: oklch(1 0 0);
@@ -192,7 +196,11 @@
   --form-field-label-text-disabled: var(--color-neutral-500);
 
   /* Form Field Placeholder Variables - Dark Theme */
-  --form-field-placeholder: var(--color-neutral-400);
+  --form-field-placeholder: var(--color-neutral-500);
+
+  /* Input Variables - Dark Theme */
+  --input-text: var(--text-primary);
+  --input-text-disabled: var(--text-disabled);
 
   /* Popover Variables - Dark Theme */
   --popover-bg: oklch(30% 2% 253deg);
@@ -407,6 +415,31 @@
     color: var(--form-field-label-text-disabled);
   }
 
+  /* Input */
+  .fibo-input {
+    color: var(--input-text);
+    transition: color 200ms;
+  }
+
+  .fibo-input::placeholder {
+    color: var(--form-field-placeholder);
+    transition: color 200ms;
+  }
+
+
+
+  .group[data-error="true"] .fibo-input::placeholder {
+    color: var(--form-field-label-text-error);
+  }
+
+  .group[aria-disabled="true"] .fibo-input, .fibo-input[aria-disabled="true"]  {
+    color: var(--input-text-disabled);
+  }
+
+  .group[aria-disabled="true"] .fibo-input::placeholder, .fibo-input[aria-disabled="true"]::placeholder {
+    color: var(--form-field-label-text-disabled);
+  }
+
 
 
 
@@ -491,8 +524,6 @@
 
   /* Button chip */
   .fibo-btn-chip {
-    border-radius: 0.375rem;
-    padding: 0.125rem 0.375rem;
     color: var(--text-primary);
     background-color:  --alpha(var(--color-foreground) / 10%);
     transition: all 200ms;

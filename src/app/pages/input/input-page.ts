@@ -13,5 +13,5 @@ import {Input} from '@fibo-ui/components';
   templateUrl: './input-page.html',
 })
 export class InputPageComponent {
-  ctrl = new FormControl('Austin', { validators: Validators.required });
+  ctrl = new FormControl('Austin');
 }
