@@ -1,6 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
-/* You can add global styles to this file, and also import other style files */
-@import "tailwindcss";
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "./button.css" layer(components);
 
 /* Custom dark mode variant using data attribute for better control */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
@@ -16,18 +19,31 @@
      ======================================== */
 
 
-  --color-primary-50: oklch(95.00% 0.80% 240.00deg);
-  --color-primary-100: oklch(90.22% 2.84% 240.00deg);
-  --color-primary-200: oklch(80.67% 6.93% 240.00deg);
-  --color-primary-300: oklch(71.11% 11.02% 240.00deg);
-  --color-primary-400: oklch(61.56% 15.16% 240.00deg);
-  --color-primary-500: oklch(52.00% 19.20% 240.00deg);
-  --color-primary-600: oklch(45.78% 15.38% 246.22deg);
-  --color-primary-700: oklch(39.56% 11.56% 252.44deg);
-  --color-primary-800: oklch(33.33% 7.73% 258.67deg);
-  --color-primary-900: oklch(27.11% 3.91% 264.89deg);
-  --color-primary-950: oklch(24.00% 2.00% 268.00deg);
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+  --color-primary-950: #172554;
 
+
+
+  --color-primary-dark-50: oklch(95.00% 0.80% 240.00deg);
+  --color-primary-dark-100: oklch(90.22% 2.84% 240.00deg);
+  --color-primary-dark-200: oklch(80.67% 6.93% 240.00deg);
+  --color-primary-dark-300: oklch(71.11% 11.02% 240.00deg);
+  --color-primary-dark-400: oklch(61.56% 15.16% 240.00deg);
+  --color-primary-dark-500: oklch(52.00% 19.20% 240.00deg);
+  --color-primary-dark-600: oklch(45.78% 15.38% 246.22deg);
+  --color-primary-dark-700: oklch(39.56% 11.56% 252.44deg);
+  --color-primary-dark-800: oklch(33.33% 7.73% 258.67deg);
+  --color-primary-dark-900: oklch(27.11% 3.91% 264.89deg);
+  --color-primary-dark-950: oklch(24.00% 2.00% 268.00deg);
 
 
   --background: oklch(1 0 0);
@@ -136,7 +152,7 @@
   --datalist-item-bg-active: --alpha(var(--color-foreground) / 5%);
   --datalist-item-bg-disabled: transparent;
   --datalist-item-text-disabled: var(--foreground-secondary);
-  --datalist-item-bg-selected:  var(--color-blue-500);
+  --datalist-item-bg-selected:  var(--color-primary-500);
   --datalist-item-text-selected: oklch(0.98 0 0);
   --datalist-item-bg-selected-disabled: var(--color-blue-500);
 
@@ -178,7 +194,7 @@
   --form-field-bg: oklch(30% 2% 253deg);
   --form-field-text: var(--foreground);
   --form-field-outline: var(--border-primary);
-  --form-field-outline-focus:var(--color-primary-600);
+  --form-field-outline-focus:var(--color-primary-500);
   --form-field-bg-error: oklch(0.267 0.019 7.232);
   --form-field-outline-error: oklch(0.502 0.093 15.483);
   --form-field-bg-disabled: --alpha(var(--color-foreground) / 5%);;
@@ -227,7 +243,7 @@
   --datalist-item-bg-active: --alpha(var(--color-foreground) / 5%);
   --datalist-item-bg-disabled: transparent;
   --datalist-item-text-disabled: var(--foreground-secondary);
-  --datalist-item-bg-selected:  var(--color-primary-700);
+  --datalist-item-bg-selected:  var(--color-primary-500);
   --datalist-item-text-selected: oklch(0.98 0 0);
   --datalist-item-bg-selected-disabled:  --alpha(var(--color-foreground) / 5%);
 
@@ -295,17 +311,6 @@
   }
 
 }
-
-
-
-@layer utilities {
-
-
-
-
-}
-
-
 
 
 @layer components {
@@ -464,47 +469,12 @@
 
 
 
-  /* ========================================
-     INTERACTIVE COMPONENTS
-     ======================================== */
 
-  /* Button icon styles */
-  .fibo-button-icon {
-    color: var(--foreground-secondary);
-    transition: background-color 200ms;
-  }
 
-  .fibo-button-icon:hover {
-    background-color: --alpha(var(--color-foreground) / 10%);;
-  }
 
-  /* Primary button */
-  .spacy-button-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    border-radius: 0.375rem;
-    background-color: var(--color-primary-500);
-    padding: 0.5rem 0.75rem;
-    color: var(--foreground-inverse);
-    transition: all 200ms;
-    cursor: pointer;
-  }
 
-  .spacy-button-primary:hover {
-    background-color: var(--color-primary-600);
-  }
 
-  .spacy-button-primary:focus-visible {
-    outline: 2px solid var(--color-primary-500);
-    outline-offset: 2px;
-  }
 
-  .spacy-button-primary:disabled,
-  .spacy-button-primary[aria-disabled="true"] {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
 
   /* Button chip */
   .fibo-btn-chip {

@@ -128,7 +128,7 @@ import {Datepicker, Input, MultipleSelect, Select} from '@fibo-ui/components';
 
         <button
           type="submit"
-          class="spacy-button-primary"
+          class="btn-primary"
           [disabled]="!form.valid">
           Submit
         </button>

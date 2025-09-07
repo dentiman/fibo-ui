@@ -1,4 +1,4 @@
-<button class="spacy-button-primary mr-1" fiboPopoverTriggerToggle #menu="PopoverTrigger">Open Custom menu</button>
+<button class="btn mr-1" fiboPopoverTriggerToggle #menu="PopoverTrigger">Open Custom menu</button>
 @if (menu.isOpen()) {
       <fibo-menu [popoverTrigger]="menu">
           <a fiboMenuItem [routerLink]="'/select'"> Select</a>
@@ -6,7 +6,7 @@
   </fibo-menu>
 }
 
-<button class="spacy-button-primary" fiboPopoverTriggerToggle #menu3="PopoverTrigger">Open Complex Menu</button>
+<button class="btn btn-primary" fiboPopoverTriggerToggle #menu3="PopoverTrigger">Open Complex Menu</button>
 @if (menu3.isOpen()) {
   <fibo-menu [popoverTrigger]="menu3" placement="bottom-start" [items]="items()">
   </fibo-menu>
@@ -21,4 +21,3 @@
   </svg>
 </ng-template>
 
-<fibo-collapse-menu SingleSelectionModelHost fiboDataList class="w-[350px]" [items]="items()"></fibo-collapse-menu>
