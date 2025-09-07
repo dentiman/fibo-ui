@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
   standalone: true,
   imports: [CommonModule, ThemeToggleComponent],
   template: `
-    <div class="max-w-6xl mx-auto p-6 space-y-8">
+    <div class="max-w-6xl mx-auto p-6 space-y-2">
       <div class="text-center">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           Color Palette Demo
@@ -76,6 +76,75 @@ import { ChangeDetectionStrategy } from '@angular/core';
             <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">950</span>
           </div>
         </div>
+
+        <!-- Border Examples -->
+        <div class="mt-4">
+          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Border Examples</h4>
+          <div class="grid grid-cols-11 gap-2">
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-primary-50 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">50</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-primary-100 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">100</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-primary-200 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">200</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-primary-300 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">300</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-primary-400 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">400</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-primary-500 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">500</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-primary-600 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">600</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-primary-700 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">700</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-primary-800 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">800</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-primary-900 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">900</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-primary-950 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">950</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Text Examples -->
+        <div class="mt-6 space-y-4">
+          <h4 class="text-md font-medium text-gray-700 dark:text-gray-300">Text Examples</h4>
+          <div class="space-y-2">
+            <p class="text-sm text-primary-50">Text with primary-50 color</p>
+            <p class="text-sm text-primary-100">Text with primary-100 color</p>
+            <p class="text-sm text-primary-200">Text with primary-200 color</p>
+            <p class="text-sm text-primary-300">Text with primary-300 color</p>
+            <p class="text-sm text-primary-400">Text with primary-400 color</p>
+            <p class="text-sm text-primary-500">Text with primary-500 color</p>
+            <p class="text-sm text-primary-600">Text with primary-600 color</p>
+            <p class="text-sm text-primary-700">Text with primary-700 color</p>
+            <p class="text-sm text-primary-800">Text with primary-800 color</p>
+            <p class="text-sm text-primary-900">Text with primary-900 color</p>
+            <p class="text-sm text-primary-950">Text with primary-950 color</p>
+          </div>
+        </div>
       </div>
 
 \n
@@ -126,6 +195,75 @@ import { ChangeDetectionStrategy } from '@angular/core';
           <div class="text-center">
             <div class="w-12 h-12 bg-gray-950 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
             <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">950</span>
+          </div>
+        </div>
+
+        <!-- Border Examples -->
+        <div class="mt-4">
+          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Border Examples</h4>
+          <div class="grid grid-cols-11 gap-2">
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-gray-50 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">50</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-gray-100 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">100</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-gray-200 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">200</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-gray-300 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">300</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-gray-400 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">400</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-gray-500 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">500</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-gray-600 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">600</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-gray-700 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">700</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-gray-800 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">800</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-gray-900 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">900</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-gray-950 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">950</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Text Examples -->
+        <div class="mt-6 space-y-4">
+          <h4 class="text-md font-medium text-gray-700 dark:text-gray-300">Text Examples</h4>
+          <div class="space-y-2">
+            <p class="text-sm text-gray-50">Text with gray-50 color</p>
+            <p class="text-sm text-gray-100">Text with gray-100 color</p>
+            <p class="text-sm text-gray-200">Text with gray-200 color</p>
+            <p class="text-sm text-gray-300">Text with gray-300 color</p>
+            <p class="text-sm text-gray-400">Text with gray-400 color</p>
+            <p class="text-sm text-gray-500">Text with gray-500 color</p>
+            <p class="text-sm text-gray-600">Text with gray-600 color</p>
+            <p class="text-sm text-gray-700">Text with gray-700 color</p>
+            <p class="text-sm text-gray-800">Text with gray-800 color</p>
+            <p class="text-sm text-gray-900">Text with gray-900 color</p>
+            <p class="text-sm text-gray-950">Text with gray-950 color</p>
           </div>
         </div>
       </div>
@@ -180,6 +318,75 @@ import { ChangeDetectionStrategy } from '@angular/core';
             <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">950</span>
           </div>
         </div>
+
+        <!-- Border Examples -->
+        <div class="mt-4">
+          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Border Examples</h4>
+          <div class="grid grid-cols-11 gap-2">
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-zinc-50 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">50</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-zinc-100 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">100</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-zinc-200 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">200</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-zinc-300 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">300</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-zinc-400 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">400</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-zinc-500 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">500</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-zinc-600 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">600</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-zinc-700 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">700</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-zinc-800 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">800</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-zinc-900 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">900</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-zinc-950 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">950</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Text Examples -->
+        <div class="mt-6 space-y-4">
+          <h4 class="text-md font-medium text-gray-700 dark:text-gray-300">Text Examples</h4>
+          <div class="space-y-2">
+            <p class="text-sm text-zinc-50">Text with zinc-50 color</p>
+            <p class="text-sm text-zinc-100">Text with zinc-100 color</p>
+            <p class="text-sm text-zinc-200">Text with zinc-200 color</p>
+            <p class="text-sm text-zinc-300">Text with zinc-300 color</p>
+            <p class="text-sm text-zinc-400">Text with zinc-400 color</p>
+            <p class="text-sm text-zinc-500">Text with zinc-500 color</p>
+            <p class="text-sm text-zinc-600">Text with zinc-600 color</p>
+            <p class="text-sm text-zinc-700">Text with zinc-700 color</p>
+            <p class="text-sm text-zinc-800">Text with zinc-800 color</p>
+            <p class="text-sm text-zinc-900">Text with zinc-900 color</p>
+            <p class="text-sm text-zinc-950">Text with zinc-950 color</p>
+          </div>
+        </div>
       </div>
 
 \n
@@ -230,6 +437,75 @@ import { ChangeDetectionStrategy } from '@angular/core';
           <div class="text-center">
             <div class="w-12 h-12 bg-neutral-950 rounded outline -outline-offset-1 outline-black/10 mb-1 mx-auto"></div>
             <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">950</span>
+          </div>
+        </div>
+
+        <!-- Border Examples -->
+        <div class="mt-4">
+          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Border Examples</h4>
+          <div class="grid grid-cols-11 gap-2">
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-neutral-50 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">50</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-neutral-100 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">100</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-neutral-200 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">200</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-neutral-300 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">300</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-neutral-400 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">400</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-neutral-500 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">500</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-neutral-600 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">600</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-neutral-700 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">700</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-neutral-800 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">800</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-neutral-900 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">900</span>
+            </div>
+            <div class="text-center">
+              <div class="w-12 h-12 bg-transparent border border-neutral-950 rounded mb-1 mx-auto"></div>
+              <span class="text-xs text-gray-600 dark:text-gray-400 font-mono">950</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Text Examples -->
+        <div class="mt-6 space-y-4">
+          <h4 class="text-md font-medium text-gray-700 dark:text-gray-300">Text Examples</h4>
+          <div class="space-y-2">
+            <p class="text-sm text-neutral-50">Text with neutral-50 color</p>
+            <p class="text-sm text-neutral-100">Text with neutral-100 color</p>
+            <p class="text-sm text-neutral-200">Text with neutral-200 color</p>
+            <p class="text-sm text-neutral-300">Text with neutral-300 color</p>
+            <p class="text-sm text-neutral-400">Text with neutral-400 color</p>
+            <p class="text-sm text-neutral-500">Text with neutral-500 color</p>
+            <p class="text-sm text-neutral-600">Text with neutral-600 color</p>
+            <p class="text-sm text-neutral-700">Text with neutral-700 color</p>
+            <p class="text-sm text-neutral-800">Text with neutral-800 color</p>
+            <p class="text-sm text-neutral-900">Text with neutral-900 color</p>
+            <p class="text-sm text-neutral-950">Text with neutral-950 color</p>
           </div>
         </div>
       </div>

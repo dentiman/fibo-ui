@@ -26,6 +26,7 @@ export class SideMenu implements OnInit {
   menuContent = input<TemplateRef<any>>()
   level = input<number>(0);
   collapsable =  input<boolean>(true);
+  removeChainFromLevel = input<number|null>(null);
   selectionModel = inject<SelectionModel<MenuItemType>>(SELECTION_MODEL, {optional: true})
 
   ngOnInit(): void {

@@ -30,14 +30,21 @@
 
 
 
+  --background: oklch(1 0 0);
+  --background-secondary: oklch(1 0 0);  /* for lite */
+  --background-tertiary:  oklch(1 0 0);
 
+  --foreground: oklch(0.145 0 0);
+  --foreground-secondary: var(--color-gray-500);
+  --foreground-tertiary:  var(--color-gray-400);
+  --foreground-inverse: oklch(0.98 0 0);
 
 
   /* Border Colors */
-  --color-border-primary: oklch(0.85 0 0);
-  --color-border-secondary: oklch(0.80 0 0);
-  --color-border-tertiary: oklch(0.75 0 0);
-  --color-border-disabled: oklch(0.70 0 0);
+  --border-primary: var(--color-gray-300);
+  /*--color-border-secondary: oklch(0.80 0 0);*/
+  /*--color-border-tertiary: oklch(0.75 0 0);*/
+  /*--color-border-disabled: oklch(0.70 0 0);*/
 
   /* Shadow Tokens */
   --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -55,72 +62,66 @@
   --shadow-dark-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
   --shadow-dark-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
 
-  --color-background: oklch(1 0 0);
-  --color-foreground: oklch(0.145 0 0);
-
-  /* for lite */
-  --color-background-secondary: oklch(1 0 0);
-  --color-foreground-secondary: oklch(0.145 0 0);
-  /* for lite */
-  --color-background-th: oklch(35% 2% 265deg);
 
 
 }
 
 @theme inline  {
 
-  /* Text Colors lite */
-  --text-primary: oklch(0.12 0 0);
-  --text-secondary: var(--color-neutral-500);
-  --text-tertiary:  var(--color-neutral-400);
-  --text-disabled: oklch(0.60 0 0);
-  --text-inverse: oklch(0.98 0 0);
+  --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
+  --color-background-tertiary:  var(--background-tertiary);
 
+  --color-foreground: var(--foreground);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-foreground-tertiary: var(--foreground-tertiary);
+  --color-foreground-inverse: var(--foreground-inverse);
 
-  --color-primary: oklch(0.205 0 0);
-  --color-primary-foreground: oklch(0.985 0 0);
-  --color-secondary: oklch(0.97 0 0);
-  --color-secondary-foreground: oklch(0.205 0 0);
+  --color-primary: var(--color-blue-500);
+  --color-primary-foreground: white;
+
+  --color-border-primary: var(--border-primary);
+
 
   /* Form Field Variables - Light Theme */
   --form-field-bg: oklch(1 0 0);
   --form-field-text: oklch(0.145 0 0);
-  --form-field-outline: var(--color-border-primary);
+  --form-field-outline: var(--color-gray-300);
   --form-field-outline-focus: var(--color-blue-500);
   --form-field-bg-error: oklch(0.98 0.008 20);
   --form-field-outline-error: oklch(0.62 0.192 20);
   --form-field-bg-disabled: oklch(0.95 0 0);
-  --form-field-text-disabled: var(--text-disabled);
+  --form-field-text-disabled: var(--foreground-secondary);
   --form-field-outline-disabled: oklch(0.80 0 0);
 
   /* Form Field Label Variables - Light Theme */
-  --form-field-label-text: var(--color-gray-500);
+
   --form-field-label-text-focus: var(--color-blue-500);
   --form-field-label-text-error: oklch(0.62 0.192 20);
-  --form-field-label-text-disabled: var(--color-gray-500);
-
-  /* Form Field Placeholder Variables - Light Theme */
-  --form-field-placeholder: var(--text-disabled);
+  --form-field-label-text: var(--foreground-secondary);
+  --form-field-label-text-disabled: var(--foreground-tertiary);
+  --form-field-placeholder: var(--foreground-tertiary);
 
   /* Input Variables - Light Theme */
-  --input-text: var(--text-primary);
-  --input-text-disabled: var(--text-disabled);
+  --input-text: black;
+  --input-text-disabled: var(--foreground-tertiary);
 
   /* Popover Variables - Light Theme */
   --popover-bg: oklch(1 0 0);
-  --popover-outline: var(--color-border-primary);
+  --popover-outline: var(--border-primary);
 
   /* Modal Variables - Light Theme */
   --modal-bg: oklch(1 0 0);
-  --modal-outline: var(--color-border-primary);
+  --modal-outline: var(--border-primary);
 
   /* Card Variables - Light Theme */
   --card-bg: oklch(1 0 0);
-  --card-outline: var(--color-border-primary);
+  --card-outline: var(--border-primary);
+
 
   /* Checkbox Variables - Light Theme */
   --checkbox-bg: oklch(1 0 0);
-  --checkbox-border: var(--color-border-primary);
+  --checkbox-border: var(--border-primary);
   --checkbox-border-focus: oklch(0.52 0.192 240);
   --checkbox-bg-checked:  var(--color-blue-500);
   --checkbox-border-checked: transparent ;
@@ -134,7 +135,7 @@
   --datalist-item-text: oklch(0.12 0 0);
   --datalist-item-bg-active: --alpha(var(--color-foreground) / 5%);
   --datalist-item-bg-disabled: transparent;
-  --datalist-item-text-disabled: var(--text-disabled);
+  --datalist-item-text-disabled: var(--foreground-secondary);
   --datalist-item-bg-selected:  var(--color-blue-500);
   --datalist-item-text-selected: oklch(0.98 0 0);
   --datalist-item-bg-selected-disabled: var(--color-blue-500);
@@ -149,26 +150,21 @@
    ======================================== */
 [data-theme="dark"] {
 
-  --text-primary: oklch(0.92 0 0);
-  --text-secondary: var(--color-neutral-400);
-  --text-tertiary: oklch(0.617 0 89.876);
-  --text-disabled:  var(--color-neutral-400);
-  --text-inverse: oklch(0.92 0 0);
+  --background: oklch(24% 2% 268deg);
+  --background-secondary: oklch(30% 2% 253deg);
+  --background-tertiary: oklch(35% 2% 265deg);
+
+  /*text, icons colors*/
+  --foreground: var(--color-neutral-50);
+  --foreground-secondary:  var(--color-neutral-400);
+  --foreground-tertiary: var(--color-neutral-500);
+  --foreground-inverse: oklch(0.92 0 0);
 
 
-  --color-background: oklch(24% 2% 268deg);
-  --color-foreground: var(--color-white);
-
-  --color-background-secondary: oklch(30% 2% 253deg);
-  --color-foreground-secondary: var(--color-white);
-
-  /*oklch(35% 2% 265deg)*/
-
-
-  --color-border-primary: oklch(0.348 0 89.876);
-  --color-border-secondary: oklch(0.30 0 0);
-  --color-border-tertiary: hsl(223deg 5% 37%);
-  --color-border-disabled: oklch(0.42 0 0);
+  --border-primary: oklch(0.348 0 89.876);
+  /*--color-border-secondary: oklch(0.30 0 0);*/
+  /*--color-border-tertiary: hsl(223deg 5% 37%);*/
+  /*--color-border-disabled: oklch(0.42 0 0);*/
 
   /* Override shadows for dark theme */
   --shadow-xs: var(--shadow-dark-xs);
@@ -180,8 +176,8 @@
 
   /* Form Field Variables - Dark Theme */
   --form-field-bg: oklch(30% 2% 253deg);
-  --form-field-text: var(--text-primary);
-  --form-field-outline: var(--color-border-primary);
+  --form-field-text: var(--foreground);
+  --form-field-outline: var(--border-primary);
   --form-field-outline-focus:var(--color-primary-600);
   --form-field-bg-error: oklch(0.267 0.019 7.232);
   --form-field-outline-error: oklch(0.502 0.093 15.483);
@@ -190,33 +186,33 @@
   --form-field-outline-disabled: oklch(0.20 0 0);
 
   /* Form Field Label Variables - Dark Theme */
-  --form-field-label-text: var(--color-neutral-400);;
+  --form-field-label-text: var(--foreground-secondary);
   --form-field-label-text-focus: oklch(0.71 0.11 240);
   --form-field-label-text-error: var(--color-red-400);
-  --form-field-label-text-disabled: var(--color-neutral-500);
+  --form-field-label-text-disabled: var(--foreground-tertiary);
 
   /* Form Field Placeholder Variables - Dark Theme */
-  --form-field-placeholder: var(--color-neutral-500);
+  --form-field-placeholder: var(--foreground-tertiary);
 
   /* Input Variables - Dark Theme */
-  --input-text: var(--text-primary);
-  --input-text-disabled: var(--text-disabled);
+  --input-text: var(--foreground);
+  --input-text-disabled: var(--foreground-tertiary);;
 
   /* Popover Variables - Dark Theme */
   --popover-bg: oklch(30% 2% 253deg);
-  --popover-outline: var(--color-border-primary);
+  --popover-outline: var(--border-primary);
 
   /* Modal Variables - Dark Theme */
   --modal-bg: oklch(30% 2% 253deg);
-  --modal-outline: var(--color-border-primary);
+  --modal-outline: var(--border-primary);
 
   /* Card Variables - Dark Theme */
   --card-bg: oklch(30% 2% 253deg);
-  --card-outline: var(--color-border-primary);
+  --card-outline: var(--border-primary);
 
   /* Checkbox Variables - Dark Theme */
   --checkbox-bg: transparent;
-  --checkbox-border: var(--color-border-tertiary);
+  --checkbox-border: hsl(223deg 5% 37%);;
   --checkbox-border-focus: var(--color-blue-500);
   --checkbox-bg-checked:  var(--color-blue-500);
   --checkbox-border-checked: transparent;
@@ -230,15 +226,21 @@
   --datalist-item-text: oklch(0.92 0 0);
   --datalist-item-bg-active: --alpha(var(--color-foreground) / 5%);
   --datalist-item-bg-disabled: transparent;
-  --datalist-item-text-disabled: var(--text-disabled);
+  --datalist-item-text-disabled: var(--foreground-secondary);
   --datalist-item-bg-selected:  var(--color-primary-700);
   --datalist-item-text-selected: oklch(0.98 0 0);
   --datalist-item-bg-selected-disabled:  --alpha(var(--color-foreground) / 5%);
 
 
+  ::-webkit-scrollbar-thumb {
+    background:  --alpha(var(--color-white) / 10%);;
+    border-radius: var(--radius-sm);
+  }
 
-
-
+  ::-webkit-scrollbar-thumb:hover {
+    background:  --alpha(var(--color-white) / 20%);;
+    border-radius: var(--radius-sm);
+  }
 
 
 
@@ -256,9 +258,28 @@
 
   }
 
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: var(--radius-sm);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background:  --alpha(var(--color-foreground) / 10%);;
+    border-radius: var(--radius-sm);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background:  --alpha(var(--color-foreground) / 30%);;
+    border-radius: var(--radius-sm);
+  }
+
   /* Базовые стили для HTML элементов */
   h1, h2, h3, h4, h5, h6 {
-    color: var(--text-primary);
+    color: white;
     @apply font-semibold;
   }
 
@@ -276,46 +297,12 @@
 }
 
 
-/* ========================================
-   UTILITIES LAYER - Пользовательские утилиты
-   ======================================== */
+
 @layer utilities {
-  /* Текстовые утилиты */
-  .text-shadow {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
 
-  .text-shadow-lg {
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
 
-  /* Скроллбар утилиты */
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
 
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
 
-  /* Анимации */
-  .animate-fade-in {
-    animation: fadeIn 0.3s ease-in-out;
-  }
-
-  .animate-slide-up {
-    animation: slideUp 0.3s ease-out;
-  }
-
-  /* Градиенты */
-  .bg-gradient-primary {
-    background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600));
-  }
-
-  .bg-gradient-secondary {
-    background: linear-gradient(135deg, var(--color-secondary-500), var(--color-secondary-600));
-  }
 }
 
 
@@ -354,6 +341,9 @@
   .fibo-form-field-label {
     color: var(--form-field-label-text);
     transition: color 200ms;
+  }
+  .fibo-form-field-icon {
+    color: var(--form-field-label-text);
   }
 
   .group:focus-within .fibo-form-field-label {
@@ -471,14 +461,8 @@
     transition: color 200ms;
   }
 
-  .fibo-checkbox-label {
-    color: var(--text-primary);
-    transition: color 200ms;
-  }
 
-  .fibo-checkbox[aria-disabled="true"] .fibo-checkbox-label {
-    color: var(--text-disabled);
-  }
+
 
   /* ========================================
      INTERACTIVE COMPONENTS
@@ -486,7 +470,7 @@
 
   /* Button icon styles */
   .fibo-button-icon {
-    color: var(--text-tertiary);
+    color: var(--foreground-secondary);
     transition: background-color 200ms;
   }
 
@@ -502,7 +486,7 @@
     border-radius: 0.375rem;
     background-color: var(--color-primary-500);
     padding: 0.5rem 0.75rem;
-    color: var(--text-inverse);
+    color: var(--foreground-inverse);
     transition: all 200ms;
     cursor: pointer;
   }
@@ -524,7 +508,6 @@
 
   /* Button chip */
   .fibo-btn-chip {
-    color: var(--text-primary);
     background-color:  --alpha(var(--color-foreground) / 10%);
     transition: all 200ms;
   }
@@ -586,7 +569,6 @@
   /* Calendar cell */
   .calendar-cell {
     display: flex;
-    width: 100%;
     align-items: center;
     justify-content: center;
     width: 2rem;
@@ -596,47 +578,16 @@
 
   .calendar-cell[aria-disabled="true"] {
     background-color: --alpha(var(--color-foreground) / 10%);;
-    color: var(--text-disabled);
+    color: var(--foreground-secondary);
   }
 
   .calendar-cell[aria-selected="true"] {
     background-color: var(--color-primary-500);
-    color: var(--text-inverse);
+    color: var(--foreground-inverse);
   }
 
   .calendar-cell[aria-selected="false"][data-active="true"] {
     background-color: --alpha(var(--color-foreground) / 15%);;
     border-radius: 0.375rem;
   }
-}
-
-/* ========================================
-   UTILITIES LAYER - Пользовательские утилиты
-   ======================================== */
-@layer utilities {
-
-  .text-primary { color: var(--text-primary); }
-  .text-secondary { color: var(--text-secondary); }
-  .text-tertiary { color: var(--text-tertiary); }
-  .text-disabled { color: var(--text-disabled); }
-  .text-inverse { color: var(--text-inverse); }
-
-
-  /* Custom scrollbar styles */
-  .fibo-scrollbar::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .fibo-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: var(--radius-sm);
-  }
-
-  .fibo-scrollbar::-webkit-scrollbar-thumb {
-    background: var(--color-border-primary);
-    border-radius: var(--radius-sm);
-  }
-
-
-
 }
