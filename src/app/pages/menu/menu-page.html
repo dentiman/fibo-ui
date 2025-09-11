@@ -1,4 +1,6 @@
 <button class="btn mr-1" fiboPopoverTriggerToggle #menu="PopoverTrigger">Open Custom menu</button>
+<button class="btn btn-chip" fiboPopoverTriggerToggle #menu="PopoverTrigger">Open Custom menu</button>
+<button class="btn btn-text" fiboPopoverTriggerToggle #menu="PopoverTrigger">Open Custom menu</button>
 @if (menu.isOpen()) {
       <fibo-menu [popoverTrigger]="menu">
           <a fiboMenuItem [routerLink]="'/select'"> Select</a>

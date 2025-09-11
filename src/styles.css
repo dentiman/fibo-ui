@@ -194,7 +194,7 @@
   --form-field-bg: oklch(30% 2% 253deg);
   --form-field-text: var(--foreground);
   --form-field-outline: var(--border-primary);
-  --form-field-outline-focus:var(--color-primary-500);
+  --form-field-outline-focus: --alpha(var(--color-primary-500) / 40%);
   --form-field-bg-error: oklch(0.267 0.019 7.232);
   --form-field-outline-error: oklch(0.502 0.093 15.483);
   --form-field-bg-disabled: --alpha(var(--color-foreground) / 5%);;

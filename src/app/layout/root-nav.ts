@@ -65,6 +65,10 @@ export class RootNavComponent {
                 label: 'Switch',
                 url: '/switch',
               },
+              {
+                label: 'Button Demo',
+                url: '/button-demo',
+              },
             ],
           },
           {

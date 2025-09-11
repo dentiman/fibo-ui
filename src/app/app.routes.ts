@@ -17,6 +17,7 @@ import {PlaygroundPageComponent} from './pages/playground-page/playground-page';
 import {SideMenuPage} from './pages/side-menu/side-menu-page';
 import {ThemeDemoComponent} from './pages/theme-demo/theme-demo';
 import {ListboxPageComponent} from './pages/listbox/listbox-page';
+import {ButtonDemoPageComponent} from './pages/button-demo/button-demo-page';
 
 export const routes: Routes = [
   {
@@ -90,6 +91,10 @@ export const routes: Routes = [
       {
         path: 'listbox',
         component: ListboxPageComponent
+      },
+      {
+        path: 'button-demo',
+        component: ButtonDemoPageComponent
       }
     ]
   }
