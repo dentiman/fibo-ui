@@ -4,7 +4,10 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import {
   ChevronDown,
+  ChevronLeft,
   ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   File,
   Folder,
   House,
@@ -22,7 +25,7 @@ import {
   CalendarRange
 } from 'lucide-angular';
 
-const icons = { File, House, Menu, UserCheck, ChevronDown, X, Search, Folder, ChevronRight, CirclePlus, Moon, Sun, Monitor, CalendarDays,CalendarRange };
+const icons = { File, House, Menu, UserCheck, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, X, Search, Folder, CirclePlus, Moon, Sun, Monitor, CalendarDays, CalendarRange };
 
 export const appConfig: ApplicationConfig = {
   providers: [

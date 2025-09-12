@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import {DataList, Option, SELECTION_MODEL} from '@fibo-ui/cdk';
 import {ActiveMonth} from './active-date.state';
 import {parse} from 'date-fns';
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'fibo-calendar',
   standalone: true,
-  imports: [CommonModule,Option],
+  imports: [CommonModule, Option, LucideAngularModule],
   hostDirectives: [
     {
       directive: DataList,
@@ -31,48 +32,33 @@ import {parse} from 'date-fns';
 
   `,
   template: `
-    <div class="max-w-xs flex-none">
+    <div class=" w-70 flex-none">
       <div class="border-b border-border-primary ">
         <div class="flex items-center text-center text-foreground-secondary space-x-2 p-1">
           <button type="button" (click)="state.setPreviousYear()"
-                  class=" flex flex-none items-center justify-center btn btn-text p-1.5  py-2 px-2  rounded-md">
-            <span class="sr-only">Previous month</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                 stroke="currentColor" class="w-5 h-5">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5"/>
-            </svg>
+                  class=" flex flex-none items-center justify-center btn btn-text   p-1.5  rounded-md">
+            <span class="sr-only">Previous year</span>
+            <lucide-icon name="chevrons-left" class="size-4"></lucide-icon>
           </button>
           <button type="button" (click)="state.setPreviousMonth()"
-                  class=" flex flex-none items-center justify-center btn btn-text p-1.5  py-2 px-2  rounded-md">
+                  class=" flex flex-none items-center justify-center btn btn-text   p-1.5  rounded-md">
             <span class="sr-only">Previous month</span>
-            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd"
-                    d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
-                    clip-rule="evenodd"/>
-            </svg>
+            <lucide-icon name="chevron-left" class="size-4"></lucide-icon>
           </button>
 
-          <div class="flex-auto text-sm font-semibold py-2 px-2 whitespace-nowrap ">
+          <div class="flex-auto text-sm font-semibold p-1.5 whitespace-nowrap ">
             {{ state.monthName() }} {{ state.year() }}
           </div>
 
           <button type="button" (click)="state.setNextMonth()"
-                  class=" flex flex-none items-center justify-center btn btn-text  py-2 px-2 rounded-md">
+                  class=" flex flex-none items-center justify-center btn btn-text p-1.5 rounded-md">
             <span class="sr-only">Next month</span>
-            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd"
-                    d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                    clip-rule="evenodd"/>
-            </svg>
+            <lucide-icon name="chevron-right" class="size-4"></lucide-icon>
           </button>
           <button type="button" (click)="state.setNextYear()"
-                  class=" flex flex-none items-center justify-center btn btn-text py-2 px-2 rounded-md">
-            <span class="sr-only">Next month</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                 stroke="currentColor" class="w-5 h-5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"/>
-            </svg>
+                  class=" flex flex-none items-center justify-center btn btn-text p-1.5 rounded-md">
+            <span class="sr-only">Next year</span>
+            <lucide-icon name="chevrons-right" class="size-4"></lucide-icon>
           </button>
         </div>
         <div class=" grid grid-cols-7 text-center text-xs text-foreground-tertiary leading-6 px-1 ">
