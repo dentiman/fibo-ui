@@ -18,25 +18,34 @@ export class PopoverArrow {
 
   style = computed(() => {
     const position = this.popoverPosition();
-    if(!position) return {};
-      const side = position.placement.split("-")[0];
-      const staticSide = {
-        top: "bottom",
-        right: "left",
-        bottom: "top",
-        left: "right"
-      }[side];
+    if (!position) return {};
 
-      const arrowPosition = position.middlewareData.arrow;
-      if(!arrowPosition) return {};
+    const side = position.placement.split("-")[0];
+    const staticSide = {
+      top: "bottom",
+      right: "left",
+      bottom: "top",
+      left: "right"
+    }[side];
 
+    const arrowPosition = position.middlewareData.arrow;
+    if (!arrowPosition) return {};
+    console.log( arrowPosition)
 
-    return {
-        left: arrowPosition.x != null ? `${arrowPosition.x}px` : "",
-        top: arrowPosition.y != null ? `${arrowPosition.y}px` : "",
-      // @ts-ignore
-        [staticSide]: `${-( this.elementRef.nativeElement.offsetWidth/2+1) }px`,
-      }
-    });
+    // Get arrow element dimensions
+    const arrowElement = this.elementRef.nativeElement;
+    const arrowSize = arrowElement.offsetWidth || 0;
+
+    const styles: Record<string, string> = {
+      left: arrowPosition.x != null && arrowPosition.centerOffset === 0 ? `${arrowPosition.x}px` : "",
+      top: arrowPosition.y != null && arrowPosition.centerOffset === 0 ? `${arrowPosition.y}px` : "",
+    };
+
+    if (staticSide) {
+      styles[staticSide] = `${-arrowSize / 2}px`;
+    }
+
+    return styles;
+  });
 
 }

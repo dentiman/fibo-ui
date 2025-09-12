@@ -1,51 +1,59 @@
 <div class="p-8">
   <h2 class="text-xl font-semibold mb-6 text-center">Tooltip Placement Demo</h2>
-  
-  <!-- 3x3 Grid Layout -->
-  <div class="grid grid-cols-3 grid-rows-3 gap-8 max-w-4xl mx-auto">
-    <!-- Top Row -->
-    <div class="flex justify-center items-start">
-      <button class="btn-primary" [fiboTooltip]="'Top Start'" [placement]="'top-start'">Top Start</button>
-    </div>
-    <div class="flex justify-center items-start">
-      <button class="btn-primary" [fiboTooltip]="'Top'" [placement]="'top'">Top</button>
-    </div>
-    <div class="flex justify-center items-start">
-      <button class="btn-primary" [fiboTooltip]="'Top End'" [placement]="'top-end'">Top End</button>
-    </div>
 
-    <!-- Middle Row -->
-    <div class="flex justify-start items-center">
-      <button class="btn-primary" [fiboTooltip]="'Left Start'" [placement]="'left-start'">Left Start</button>
-    </div>
-    <div class="flex justify-center items-center">
-      <button class="btn-primary" [fiboTooltip]="'Center'" [placement]="'top'">Center</button>
-    </div>
-    <div class="flex justify-end items-center">
-      <button class="btn-primary" [fiboTooltip]="'Right End'" [placement]="'right-end'">Right End</button>
-    </div>
-
-    <!-- Bottom Row -->
-    <div class="flex justify-start items-end">
-      <button class="btn-primary" [fiboTooltip]="'Left End'" [placement]="'left-end'">Left End</button>
-    </div>
-    <div class="flex justify-center items-end">
-      <button class="btn-primary" [fiboTooltip]="'Bottom'" [placement]="'bottom'">Bottom</button>
-    </div>
-    <div class="flex justify-end items-end">
-      <button class="btn-primary" [fiboTooltip]="'Bottom End'" [placement]="'bottom-end'">Bottom End</button>
+  <!-- Basic Placements -->
+  <div class="mb-12">
+    <h3 class="text-lg font-semibold mb-4 text-center">Basic Placements</h3>
+    <div class="flex justify-center gap-8">
+      <button class="btn btn-primary" [fiboTooltip]="'top'" [placement]="'top'">top</button>
+      <button class="btn btn-primary" [fiboTooltip]="'left'" [placement]="'left'">left</button>
+      <button class="btn btn-primary" [fiboTooltip]="'right'" [placement]="'right'">right</button>
+      <button class="btn btn-primary" [fiboTooltip]="'bottom'" [placement]="'bottom'">bottom</button>
     </div>
   </div>
 
-  <!-- Additional placements for completeness -->
-  <div class="mt-12">
-    <h3 class="text-lg font-semibold mb-4 text-center">Additional Placements</h3>
-    <div class="flex flex-wrap justify-center gap-4">
-      <button class="btn-primary" [fiboTooltip]="'Left'" [placement]="'left'">Left</button>
-      <button class="btn-primary" [fiboTooltip]="'Right'" [placement]="'right'">Right</button>
-      <button class="btn-primary" [fiboTooltip]="'Right Start'" [placement]="'right-start'">Right Start</button>
-      <button class="btn-primary" [fiboTooltip]="'Bottom Start'" [placement]="'bottom-start'">Bottom Start</button>
+  <!-- Aligned Placements Grid -->
+  <div class="mb-8">
+    <h3 class="text-lg font-semibold mb-4 text-center">Aligned Placements</h3>
+    <div class="grid grid-cols-2 grid-rows-4 gap-8 max-w-4xl mx-auto">
+      <!-- Row 1 -->
+      <div class="fibo-card w-full h-32 flex items-center justify-center cursor-pointer" [fiboTooltip]="'top-start'" [placement]="'top-start'">
+        top-start
+      </div>
+      <div class="fibo-card w-full h-32 flex items-center justify-center cursor-pointer" [fiboTooltip]="'top-end top-end'" [placement]="'top-end'">
+        top-end
+      </div>
+
+      <!-- Row 2 -->
+      <div class="fibo-card w-full h-32 flex items-center justify-center cursor-pointer" [fiboTooltip]="'left-start'" [placement]="'left-start'">
+        left-start
+      </div>
+      <div class="fibo-card w-full h-32 flex items-center justify-center cursor-pointer" [fiboTooltip]="'left-end'" [placement]="'left-end'">
+        left-end
+      </div>
+
+      <!-- Row 3 -->
+      <div class="fibo-card w-full h-32 flex items-center justify-center cursor-pointer" [fiboTooltip]="rightStart" [placement]="'right-start'">
+        right-start
+      </div>
+      <div class="fibo-card w-full h-32 flex items-center justify-center cursor-pointer" [fiboTooltip]="'right-end'" [placement]="'right-end'">
+        right-end
+      </div>
+
+      <!-- Row 4 -->
+      <div class="fibo-card w-full h-32 flex items-center justify-center cursor-pointer" [fiboTooltip]="'bottom-start'" [placement]="'bottom-start'">
+        bottom-start
+      </div>
+      <div class="fibo-card w-full h-32 flex items-center justify-center cursor-pointer" [fiboTooltip]="'bottom-end'" [placement]="'bottom-end'">
+        bottom-end
+      </div>
     </div>
   </div>
 </div>
 
+<ng-template #rightStart>
+  <p>right-start</p>
+  <p>right-start</p>
+  <p>right-start</p>
+  <p>right-start</p>
+</ng-template>

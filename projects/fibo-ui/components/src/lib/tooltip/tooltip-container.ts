@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
   selector: 'fibo-tooltip-container',
   standalone: true,
   imports: [
-    NgClass,
     NgTemplateOutlet,
     PopoverPosition,
     PopoverArrow,
