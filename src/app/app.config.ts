@@ -17,10 +17,12 @@ import {
   CirclePlus,
   Moon,
   Sun,
-  Monitor
+  Monitor,
+  CalendarDays,
+  CalendarRange
 } from 'lucide-angular';
 
-const icons = { File, House, Menu, UserCheck, ChevronDown, X, Search, Folder, ChevronRight, CirclePlus, Moon, Sun, Monitor };
+const icons = { File, House, Menu, UserCheck, ChevronDown, X, Search, Folder, ChevronRight, CirclePlus, Moon, Sun, Monitor, CalendarDays,CalendarRange };
 
 export const appConfig: ApplicationConfig = {
   providers: [

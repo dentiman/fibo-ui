@@ -495,14 +495,10 @@
   .datalist-item {
     display: flex;
     gap: 0.25rem;
-    padding: 0.125rem 0.5rem;
-    font-size: 0.875rem;
     line-height: 1.5rem;
     cursor: pointer;
-    border-radius: 0.375rem;
     background-color: var(--datalist-item-bg);
     color: var(--datalist-item-text);
-    transition: all 200ms;
   }
 
   .datalist-item[data-active="true"] {
@@ -543,7 +539,6 @@
     justify-content: center;
     width: 2rem;
     height: 2rem;
-    transition: all 200ms;
   }
 
   .calendar-cell[aria-disabled="true"] {

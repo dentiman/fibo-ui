@@ -34,7 +34,7 @@
     @for (user of users(); track user.id) {
       @let isSelected = user.id === selectedUser()?.id;
       <a [Option]="user.id"
-         class="datalist-item relative group">
+         class="datalist-item py-0.5 px-2 rounded-md relative group">
         <div class="flex items-center gap-3">
           <img
             [src]="user.avatar"

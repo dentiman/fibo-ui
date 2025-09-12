@@ -3,7 +3,7 @@
     <button [disabled]="!!item.disabled"
             fiboCollapseSubmenuItem [items]="item.children"
             #collapseSubmenuItem="fiboCollapseSubmenuItem"
-            class="datalist-item w-full relative  group"
+            class="datalist-item  py-0.5 px-2 rounded-md w-full relative  group"
     >
       @for (item of levelItems(); track $index) {
         <div class="w-px mx-2 flex-none translate-x-[1px] -mt-1 -mb-1 bg-gray-300/50 ">&nbsp;</div>
@@ -39,7 +39,7 @@
         [disabled]="!!item.disabled"
         [routerLink]="item.url"
 
-        class="datalist-item   group">
+        class="datalist-item rounded-md  group">
         @for (item of levelItems(); track $index) {
           <div class="w-px mx-2 translate-x-[1px] -mt-1 -mb-1  bg-gray-300/50 ">
             &nbsp;
@@ -52,7 +52,7 @@
         [Option]="item"
         [disabled]="!!item.disabled" (itemTrigger)="item.callback();"
 
-        class="datalist-item    group">
+        class="datalist-item rounded-md   group">
         @for (item of levelItems(); track $index) {
           <div class="w-px mx-2 translate-x-[1px]  -mt-1 -mb-1   bg-gray-300/50 ">
             &nbsp;

@@ -32,10 +32,10 @@ import {parse} from 'date-fns';
   `,
   template: `
     <div class="max-w-xs flex-none">
-      <div class="bg-radial-[at_50%_90%] from-white via-white to-gray-50 to-70% border-b border-gray-100 ">
-        <div class="flex items-center text-center text-gray-900 space-x-2 p-1">
+      <div class="border-b border-border-primary ">
+        <div class="flex items-center text-center text-foreground-secondary space-x-2 p-1">
           <button type="button" (click)="state.setPreviousYear()"
-                  class=" flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500 py-2 px-2 hover:bg-gray-100 rounded-md">
+                  class=" flex flex-none items-center justify-center btn btn-text p-1.5  py-2 px-2  rounded-md">
             <span class="sr-only">Previous month</span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                  stroke="currentColor" class="w-5 h-5">
@@ -44,7 +44,7 @@ import {parse} from 'date-fns';
             </svg>
           </button>
           <button type="button" (click)="state.setPreviousMonth()"
-                  class=" flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500 py-2 px-2 hover:bg-gray-100 rounded-md">
+                  class=" flex flex-none items-center justify-center btn btn-text p-1.5  py-2 px-2  rounded-md">
             <span class="sr-only">Previous month</span>
             <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd"
@@ -53,12 +53,12 @@ import {parse} from 'date-fns';
             </svg>
           </button>
 
-          <div class="flex-auto text-sm font-semibold py-2 px-2 ">
+          <div class="flex-auto text-sm font-semibold py-2 px-2 whitespace-nowrap ">
             {{ state.monthName() }} {{ state.year() }}
           </div>
 
           <button type="button" (click)="state.setNextMonth()"
-                  class=" flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500 py-2 px-2 hover:bg-gray-100 rounded-md">
+                  class=" flex flex-none items-center justify-center btn btn-text  py-2 px-2 rounded-md">
             <span class="sr-only">Next month</span>
             <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd"
@@ -67,7 +67,7 @@ import {parse} from 'date-fns';
             </svg>
           </button>
           <button type="button" (click)="state.setNextYear()"
-                  class=" flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500 py-2 px-2 hover:bg-gray-100 rounded-md">
+                  class=" flex flex-none items-center justify-center btn btn-text py-2 px-2 rounded-md">
             <span class="sr-only">Next month</span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                  stroke="currentColor" class="w-5 h-5">
@@ -75,7 +75,7 @@ import {parse} from 'date-fns';
             </svg>
           </button>
         </div>
-        <div class=" grid grid-cols-7 text-center text-xs leading-6 text-gray-500 px-1 ">
+        <div class=" grid grid-cols-7 text-center text-xs text-foreground-tertiary leading-6 px-1 ">
           <div>S</div>
           <div>M</div>
           <div>T</div>
@@ -86,14 +86,12 @@ import {parse} from 'date-fns';
         </div>
       </div>
 
-
-      <div class="isolate mt-2 grid grid-cols-7 space-y-1  text-sm p-1 ">
+      <div class="mt-2 grid grid-cols-7 space-y-1 space-x-0 text-sm p-1 ">
         @for (week of state.weeks(); track $index) {
           @for (date of week; track date + $index) {
-            <button [Option]="date"
-                    class="calendar-cell"
-                    [class.text-gray-300]="!state.hasTheSameMonthAs(date)"
-                    [class.text-gray-600]="state.hasTheSameMonthAs(date)"
+            <button [Option]="date" #option="Option"
+                    class="datalist-item p-1 justify-center items-center"
+                    [class.text-foreground-tertiary]="!state.hasTheSameMonthAs(date)"
             >
               {{ dayLabel(date) }}
             </button>
