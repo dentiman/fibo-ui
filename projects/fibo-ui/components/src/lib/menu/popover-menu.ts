@@ -19,7 +19,7 @@ import {LucideAngularModule} from 'lucide-angular';
     }
   ],
   host: {
-    'class': 'p-1 min-w-[180px] group rounded-md bg-white shadow-md outline-1 outline-gray-200',
+    'class': 'p-1 min-w-[180px]  group rounded-md fibo-popover',
     '(keydown.arrowleft)': 'focusToTrigger($event)'
   },
   imports: [CommonModule, DataListItem, PopoverSubmenuTrigger, RouterLink, LucideAngularModule],

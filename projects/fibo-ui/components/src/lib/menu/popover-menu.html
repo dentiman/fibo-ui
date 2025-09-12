@@ -4,7 +4,7 @@
               class="datalist-item w-full  items-center  group"
       >
         @if (item?.icon) {
-          <lucide-icon [name]="item.icon"  class="absolute self-center text-gray-400 mt-2 size-4"></lucide-icon>
+          <lucide-icon [name]="item.icon"  class="absolute self-center text-foreground-secondary  mt-2 size-4"></lucide-icon>
         }
         <div
           class="min-w-0 grow text-left"
@@ -14,7 +14,7 @@
 
         <lucide-icon
           name="chevron-right"
-          class="flex-none text-gray-400  group-data-active:text-gray-500 size-4 shrink-0"
+          class="flex-none text-foreground-secondary  group-data-active:text-foreground size-4 shrink-0"
         ></lucide-icon>
       </button>
       @if (menuItemTrigger.isOpen()) {

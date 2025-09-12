@@ -1,5 +1,51 @@
-<div class="space-x-2 mb-3 mt-40">
-  <button class="btn-primary" [fiboTooltip]="'Somme text'" >Tooltip</button>
-<button class="btn-primary" [fiboTooltip]="'Somme text 2'" >Tooltip</button>
+<div class="p-8">
+  <h2 class="text-xl font-semibold mb-6 text-center">Tooltip Placement Demo</h2>
+  
+  <!-- 3x3 Grid Layout -->
+  <div class="grid grid-cols-3 grid-rows-3 gap-8 max-w-4xl mx-auto">
+    <!-- Top Row -->
+    <div class="flex justify-center items-start">
+      <button class="btn-primary" [fiboTooltip]="'Top Start'" [placement]="'top-start'">Top Start</button>
+    </div>
+    <div class="flex justify-center items-start">
+      <button class="btn-primary" [fiboTooltip]="'Top'" [placement]="'top'">Top</button>
+    </div>
+    <div class="flex justify-center items-start">
+      <button class="btn-primary" [fiboTooltip]="'Top End'" [placement]="'top-end'">Top End</button>
+    </div>
+
+    <!-- Middle Row -->
+    <div class="flex justify-start items-center">
+      <button class="btn-primary" [fiboTooltip]="'Left Start'" [placement]="'left-start'">Left Start</button>
+    </div>
+    <div class="flex justify-center items-center">
+      <button class="btn-primary" [fiboTooltip]="'Center'" [placement]="'top'">Center</button>
+    </div>
+    <div class="flex justify-end items-center">
+      <button class="btn-primary" [fiboTooltip]="'Right End'" [placement]="'right-end'">Right End</button>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="flex justify-start items-end">
+      <button class="btn-primary" [fiboTooltip]="'Left End'" [placement]="'left-end'">Left End</button>
+    </div>
+    <div class="flex justify-center items-end">
+      <button class="btn-primary" [fiboTooltip]="'Bottom'" [placement]="'bottom'">Bottom</button>
+    </div>
+    <div class="flex justify-end items-end">
+      <button class="btn-primary" [fiboTooltip]="'Bottom End'" [placement]="'bottom-end'">Bottom End</button>
+    </div>
+  </div>
+
+  <!-- Additional placements for completeness -->
+  <div class="mt-12">
+    <h3 class="text-lg font-semibold mb-4 text-center">Additional Placements</h3>
+    <div class="flex flex-wrap justify-center gap-4">
+      <button class="btn-primary" [fiboTooltip]="'Left'" [placement]="'left'">Left</button>
+      <button class="btn-primary" [fiboTooltip]="'Right'" [placement]="'right'">Right</button>
+      <button class="btn-primary" [fiboTooltip]="'Right Start'" [placement]="'right-start'">Right Start</button>
+      <button class="btn-primary" [fiboTooltip]="'Bottom Start'" [placement]="'bottom-start'">Bottom Start</button>
+    </div>
+  </div>
 </div>
 
