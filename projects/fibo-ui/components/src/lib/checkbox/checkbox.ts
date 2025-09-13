@@ -1,10 +1,8 @@
-import {Component, inject, input} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {ChangeDetectionStrategy, Component, inject, input} from '@angular/core';
 import {PrimitiveValueAccessor} from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-checkbox',
-  imports: [CommonModule],
   templateUrl: './checkbox.html',
   hostDirectives: [
     {
@@ -13,20 +11,9 @@ import {PrimitiveValueAccessor} from '@fibo-ui/cdk';
       outputs: ['valueChange: checkedChange'],
     }
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'role': 'checkbox',
-    '[attr.aria-checked]': 'getAriaChecked()',
-    '(click)': 'onClick()',
-    '(blur)': 'cva.onTouched()',
-    '(keydown.space)': 'onKeydown($event)',
-    '(keydown.enter)': 'onKeydown($event)',
-    'tabindex': '0',
-    '[style.pointer-events]': 'cva.disabled() ? "none" : "auto"',
-    '[attr.aria-disabled]': 'cva.disabled()',
-    'class': `
-     flex items-center gap-2 cursor-pointer
-      aria-disabled:opacity-50 aria-disabled:cursor-not-allowed
-    `
+    'class': 'flex items-center'
   }
 })
 export class Checkbox {
@@ -38,23 +25,10 @@ export class Checkbox {
 
   checked = this.cva.value;
 
-  getAriaChecked(): string | boolean {
-    if (this.indeterminate()) {
-      return 'mixed';
-    }
-    return this.checked() ?? false;
-  }
-
-  onClick() {
-    if(!this.cva.disabled()) {
-      const newValue = !this.checked();
-      this.checked.set(newValue);
-    }
-  }
-
-  onKeydown(event: Event) {
-    event.preventDefault();
-    this.onClick();
+  onInputChange(event: Event) {
+    if (this.cva.disabled()) return;
+    const inputEl = event.target as HTMLInputElement;
+    this.checked.set(!!inputEl.checked);
   }
 
 }

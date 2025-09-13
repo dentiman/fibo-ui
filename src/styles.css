@@ -165,6 +165,7 @@
    DARK THEME CSS VARIABLES
    ======================================== */
 [data-theme="dark"] {
+  color-scheme: dark;
 
   --background: oklch(24% 2% 268deg);
   --background-secondary: oklch(30% 2% 253deg);
@@ -266,7 +267,7 @@
 @layer base {
   /* Reset и базовые стили */
   html {
-    color-scheme: light dark;
+    color-scheme: light;
   }
 
   body {
