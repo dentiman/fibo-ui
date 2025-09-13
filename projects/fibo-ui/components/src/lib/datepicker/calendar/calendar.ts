@@ -36,27 +36,27 @@ import { LucideAngularModule } from 'lucide-angular';
       <div class="border-b border-border-primary ">
         <div class="flex items-center text-center text-foreground-secondary space-x-2 p-1">
           <button type="button" (click)="state.setPreviousYear()"
-                  class=" flex flex-none items-center justify-center btn btn-text   p-1.5  rounded-md">
+                  class=" flex flex-none items-center justify-center btn btn-text   py-1 px-2  rounded-md">
             <span class="sr-only">Previous year</span>
             <lucide-icon name="chevrons-left" class="size-4"></lucide-icon>
           </button>
           <button type="button" (click)="state.setPreviousMonth()"
-                  class=" flex flex-none items-center justify-center btn btn-text   p-1.5  rounded-md">
+                  class=" flex flex-none items-center justify-center btn btn-text   py-1 px-2  rounded-md">
             <span class="sr-only">Previous month</span>
             <lucide-icon name="chevron-left" class="size-4"></lucide-icon>
           </button>
 
-          <div class="flex-auto text-sm font-semibold p-1.5 whitespace-nowrap ">
+          <div class="flex-auto text-sm font-semibold py-1  whitespace-nowrap ">
             {{ state.monthName() }} {{ state.year() }}
           </div>
 
           <button type="button" (click)="state.setNextMonth()"
-                  class=" flex flex-none items-center justify-center btn btn-text p-1.5 rounded-md">
+                  class=" flex flex-none items-center justify-center btn btn-text py-1 px-2 rounded-md">
             <span class="sr-only">Next month</span>
             <lucide-icon name="chevron-right" class="size-4"></lucide-icon>
           </button>
           <button type="button" (click)="state.setNextYear()"
-                  class=" flex flex-none items-center justify-center btn btn-text p-1.5 rounded-md">
+                  class=" flex flex-none items-center justify-center btn btn-text py-1 px-2 rounded-md">
             <span class="sr-only">Next year</span>
             <lucide-icon name="chevrons-right" class="size-4"></lucide-icon>
           </button>

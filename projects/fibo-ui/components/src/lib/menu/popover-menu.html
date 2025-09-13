@@ -1,7 +1,7 @@
 @for (item of items();  track idx ; let idx = $index) {
     @if (item.children || item.content) {
       <button fiboSubmenuTrigger [disabled]="!!item.disabled" #menuItemTrigger="PopoverTrigger"
-              class="datalist-item w-full rounded-md  items-center  group"
+              class="datalist-item py-0.5 px-2 w-full rounded-md  items-center  group text-sm"
       >
         @if (item?.icon) {
           <lucide-icon [name]="item.icon"  class="absolute self-center text-foreground-secondary  mt-2 size-4"></lucide-icon>
@@ -27,11 +27,11 @@
     } @else {
       @if(item.url) {
         <a fiboDataListItem [disabled]="!!item.disabled"  (itemTrigger)="closeMenuWithParent()" [routerLink]="item.url"
-           class="datalist-item py-0.5 px-2 rounded-md relative group">
+           class="datalist-item py-0.5 px-2 rounded-md relative group text-sm">
            <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
         </a>
       } @else if(item.callback) {
-        <a class="datalist-item py-0.5 px-2 rounded-md relative group"
+        <a class="datalist-item py-0.5 px-2 rounded-md relative group text-sm"
            fiboDataListItem [disabled]="!!item.disabled"
            (itemTrigger)="item.callback(); closeMenuWithParent()" >
           <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>

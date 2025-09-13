@@ -3,7 +3,7 @@
   }
   @for (item of items(); track getValue(item)) {
     <a [Option]="getValue(item)" #option="Option"
-       class="datalist-item py-0.5 px-2 rounded-md relative group">
+       class="datalist-item py-0.5 px-2 rounded-md relative group text-sm">
       @if (isMultiple) {
         <fibo-checkbox
           [checked]="option.isSelected()">
