@@ -529,31 +529,5 @@
     background-color: var(--datalist-item-bg-disabled);
   }
 
-  /* ========================================
-     CALENDAR COMPONENTS
-     ======================================== */
 
-  /* Calendar cell */
-  .calendar-cell {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
-  }
-
-  .calendar-cell[aria-disabled="true"] {
-    background-color: --alpha(var(--color-foreground) / 10%);;
-    color: var(--foreground-secondary);
-  }
-
-  .calendar-cell[aria-selected="true"] {
-    background-color: var(--color-primary-500);
-    color: var(--foreground-inverse);
-  }
-
-  .calendar-cell[aria-selected="false"][data-active="true"] {
-    background-color: --alpha(var(--color-foreground) / 15%);;
-    border-radius: 0.375rem;
-  }
 }

@@ -1,15 +1,15 @@
 <div class="p-8 max-w-7xl mx-auto">
-  <h1 class="mb-8 text-slate-900 text-3xl font-semibold tracking-tight">Switch Component Examples</h1>
+  <h1 class="mb-8  text-3xl font-semibold tracking-tight">Switch Component Examples</h1>
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
 
     <!-- Basic States -->
-    <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
-      <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Basic States</h2>
+    <div class="fibo-card rounded-lg p-6 shadow-sm">
+      <h2 class="mb-4  text-xl font-semibold tracking-tight">Basic States</h2>
 
       <div class="space-y-4">
         <div class="flex items-center justify-between">
-          <label class="text-sm font-medium text-slate-900">Default (Off)</label>
+          <label class="text-sm font-medium ">Default (Off)</label>
           <fibo-switch
             [(checked)]="basicSwitch"
             (checkedChange)="onSwitchChange($event, 'Basic')">
@@ -17,7 +17,7 @@
         </div>
 
         <div class="flex items-center justify-between">
-          <label class="text-sm font-medium text-slate-900">Default (On)</label>
+          <label class="text-sm font-medium ">Default (On)</label>
           <fibo-switch
             [(checked)]="checkedSwitch"
             (checkedChange)="onSwitchChange($event, 'Checked')">
@@ -41,7 +41,7 @@
         </div>
 
         <div class="flex items-center justify-between">
-          <label class="text-sm font-medium text-slate-900">Loading State</label>
+          <label class="text-sm font-medium ">Loading State</label>
           <div class="flex items-center gap-2">
             <fibo-switch
               [(checked)]="loadingSwitch"
@@ -49,14 +49,14 @@
             </fibo-switch>
             <button
               (click)="toggleLoading()"
-              class="px-3 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded border text-slate-700">
+              class="px-3 py-1 text-xs  hover:bg-slate-200 rounded border text-slate-700">
               Toggle
             </button>
           </div>
         </div>
       </div>
 
-      <div class="mt-4 p-3 bg-slate-50 rounded border">
+      <div class="mt-4 p-3  rounded border">
         <p class="text-xs text-slate-600 mb-2">Current States:</p>
         <ul class="text-xs text-slate-700 space-y-1">
           <li>Basic: {{ basicSwitch() }}</li>
@@ -67,12 +67,12 @@
     </div>
 
     <!-- Form Integration -->
-    <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
-      <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Form Integration</h2>
+    <div class="fibo-card rounded-lg p-6 shadow-sm">
+      <h2 class="mb-4  text-xl font-semibold tracking-tight">Form Integration</h2>
 
       <form class="space-y-4">
         <div class="flex items-center justify-between">
-          <label class="text-sm font-medium text-slate-900">
+          <label class="text-sm font-medium ">
             Accept Terms & Conditions *
           </label>
           <fibo-switch [formControl]="formSwitch"></fibo-switch>
@@ -87,8 +87,8 @@
           }
         </div>
 
-        <div class="pt-4 border-t border-slate-200">
-          <div class="bg-slate-50 border border-slate-200 rounded p-3">
+        <div class="pt-4 border-t ">
+          <div class=" border  rounded p-3">
             <p class="text-xs text-slate-600 mb-1">Form Status:</p>
             <p class="text-xs">
               <strong>Valid:</strong> {{ formSwitch.valid }}<br>
@@ -101,13 +101,13 @@
     </div>
 
     <!-- Settings Example -->
-    <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
-      <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Settings Panel Example</h2>
+    <div class="fibo-card rounded-lg p-6 shadow-sm">
+      <h2 class="mb-4  text-xl font-semibold tracking-tight">Settings Panel Example</h2>
 
       <div class="space-y-4">
         <div class="flex items-center justify-between">
           <div>
-            <label class="text-sm font-medium text-slate-900">Push Notifications</label>
+            <label class="text-sm font-medium ">Push Notifications</label>
             <p class="text-xs text-slate-500">Receive notifications on your device</p>
           </div>
           <fibo-switch
@@ -118,7 +118,7 @@
 
         <div class="flex items-center justify-between">
           <div>
-            <label class="text-sm font-medium text-slate-900">Dark Mode</label>
+            <label class="text-sm font-medium ">Dark Mode</label>
             <p class="text-xs text-slate-500">Switch to dark theme</p>
           </div>
           <fibo-switch
@@ -129,7 +129,7 @@
 
         <div class="flex items-center justify-between">
           <div>
-            <label class="text-sm font-medium text-slate-900">Auto Save</label>
+            <label class="text-sm font-medium ">Auto Save</label>
             <p class="text-xs text-slate-500">Automatically save your work</p>
           </div>
           <fibo-switch
@@ -139,7 +139,7 @@
         </div>
       </div>
 
-      <div class="mt-4 p-3 bg-slate-50 rounded border">
+      <div class="mt-4 p-3  rounded border">
         <p class="text-xs text-slate-600 mb-2">Your Settings:</p>
         <ul class="text-xs text-slate-700 space-y-1">
           <li>🔔 Notifications: {{ notifications() ? 'Enabled' : 'Disabled' }}</li>
@@ -150,23 +150,23 @@
     </div>
 
     <!-- Usage Instructions -->
-    <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
-      <h2 class="mb-4 text-slate-900 text-xl font-semibold tracking-tight">Usage</h2>
+    <div class="fibo-card rounded-lg p-6 shadow-sm">
+      <h2 class="mb-4  text-xl font-semibold tracking-tight">Usage</h2>
 
       <div class="space-y-4">
         <div>
-          <h3 class="text-sm font-medium text-slate-900 mb-2">Basic Usage</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch [(checked)]="isEnabled"&gt;&lt;/fibo-switch&gt;</code></pre>
+          <h3 class="text-sm font-medium  mb-2">Basic Usage</h3>
+          <pre class=" border  rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch [(checked)]="isEnabled"&gt;&lt;/fibo-switch&gt;</code></pre>
         </div>
 
         <div>
-          <h3 class="text-sm font-medium text-slate-900 mb-2">With Form Control</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch [formControl]="switchControl"&gt;&lt;/fibo-switch&gt;</code></pre>
+          <h3 class="text-sm font-medium  mb-2">With Form Control</h3>
+          <pre class=" border  rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch [formControl]="switchControl"&gt;&lt;/fibo-switch&gt;</code></pre>
         </div>
 
         <div>
-          <h3 class="text-sm font-medium text-slate-900 mb-2">With Loading State</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch
+          <h3 class="text-sm font-medium  mb-2">With Loading State</h3>
+          <pre class=" border  rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch
   [(checked)]="value"
   [isLoading]="loading"
   [disabled]="disabled"&gt;
@@ -175,7 +175,7 @@
       </div>
 
       <div class="mt-6">
-        <h3 class="text-sm font-medium text-slate-900 mb-2">Features:</h3>
+        <h3 class="text-sm font-medium  mb-2">Features:</h3>
         <ul class="text-xs text-slate-600 space-y-1 pl-4">
           <li>• Two-way data binding with [(checked)]</li>
           <li>• Angular Forms integration (FormControl, ngModel)</li>
@@ -190,14 +190,14 @@
   </div>
 
   <!-- Size Examples -->
-  <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm mb-8">
-    <h2 class="mb-6 text-slate-900 text-xl font-semibold tracking-tight">Size Variants</h2>
+  <div class="fibo-card rounded-lg p-6 shadow-sm mb-8">
+    <h2 class="mb-6  text-xl font-semibold tracking-tight">Size Variants</h2>
 
     <div class="space-y-6">
       <!-- Extra Small -->
       <div class="flex items-center justify-between">
         <div>
-          <label class="text-sm font-medium text-slate-900">Extra Small (xs)</label>
+          <label class="text-sm font-medium ">Extra Small (xs)</label>
           <p class="text-xs text-slate-500">h-4 w-7 container, h-3 w-3 thumb</p>
         </div>
         <fibo-switch
@@ -210,7 +210,7 @@
       <!-- Small -->
       <div class="flex items-center justify-between">
         <div>
-          <label class="text-sm font-medium text-slate-900">Small (sm)</label>
+          <label class="text-sm font-medium ">Small (sm)</label>
           <p class="text-xs text-slate-500">h-5 w-9 container, h-4 w-4 thumb</p>
         </div>
         <fibo-switch
@@ -223,7 +223,7 @@
       <!-- Base -->
       <div class="flex items-center justify-between">
         <div>
-          <label class="text-sm font-medium text-slate-900">Base (default)</label>
+          <label class="text-sm font-medium ">Base (default)</label>
           <p class="text-xs text-slate-500">h-6 w-11 container, h-5 w-5 thumb</p>
         </div>
         <fibo-switch
@@ -236,7 +236,7 @@
       <!-- Large -->
       <div class="flex items-center justify-between">
         <div>
-          <label class="text-sm font-medium text-slate-900">Large (lg)</label>
+          <label class="text-sm font-medium ">Large (lg)</label>
           <p class="text-xs text-slate-500">h-7 w-14 container, h-6 w-6 thumb</p>
         </div>
         <fibo-switch
@@ -249,7 +249,7 @@
       <!-- Extra Large -->
       <div class="flex items-center justify-between">
         <div>
-          <label class="text-sm font-medium text-slate-900">Extra Large (xl)</label>
+          <label class="text-sm font-medium ">Extra Large (xl)</label>
           <p class="text-xs text-slate-500">h-8 w-16 container, h-7 w-7 thumb</p>
         </div>
         <fibo-switch
@@ -260,7 +260,7 @@
       </div>
     </div>
 
-    <div class="mt-6 p-3 bg-slate-50 rounded border">
+    <div class="mt-6 p-3  rounded border">
       <p class="text-xs text-slate-600 mb-2">Size Switch States:</p>
       <ul class="text-xs text-slate-700 space-y-1">
         <li>XS: {{ xsSwitch() }}</li>
@@ -272,8 +272,8 @@
     </div>
 
     <div class="mt-4">
-      <h3 class="text-sm font-medium text-slate-900 mb-2">Usage:</h3>
-      <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch [size]="'xs'" [(checked)]="value"&gt;&lt;/fibo-switch&gt;
+      <h3 class="text-sm font-medium  mb-2">Usage:</h3>
+      <pre class=" border  rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch [size]="'xs'" [(checked)]="value"&gt;&lt;/fibo-switch&gt;
 &lt;fibo-switch [size]="'sm'" [(checked)]="value"&gt;&lt;/fibo-switch&gt;
 &lt;fibo-switch [size]="'base'" [(checked)]="value"&gt;&lt;/fibo-switch&gt;
 &lt;fibo-switch [size]="'lg'" [(checked)]="value"&gt;&lt;/fibo-switch&gt;

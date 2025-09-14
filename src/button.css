@@ -1,127 +1,48 @@
+/* stylelint-disable at-rule-no-unknown */
 /* ========================================
    BUTTON COMPONENTS
    ======================================== */
 
-  /* Default button */
+@layer components {
+
+  /* Base button (neutral) */
   .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    height: 2.25rem; /* h-9 */
-    padding: 0.5rem 1rem; /* py-2 px-4 */
-    font-size: 0.875rem; /* text-sm */
-    font-weight: 500; /* font-medium */
-    line-height: 1.25rem;
-    border-radius: 0.375rem; /* rounded-md */
-    border: 1px solid var(--border-primary);
-    background-color: transparent;
-    color: var(--foreground);
-    transition: all 100ms;
-    cursor: pointer;
-    user-select: none;
-    white-space: nowrap;
-    outline: none;
-
-    @variant hover {
-      background-color: --alpha(var(--color-foreground) / 5%);
-    }
-
-    @variant focus-visible {
-      outline: 2px solid var(--color-primary-500);
-      outline-offset: 1px;
-    }
-
-    @variant disabled {
-      background-color: transparent;
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
+    @apply inline-flex items-center justify-center gap-2 font-semibold transition-colors
+    bg-white dark:bg-white/10
+    hover:bg-gray-50 dark:hover:bg-white/20
+    text-gray-700 dark:text-neutral-300
+    hover:text-gray-900   dark:hover:text-white
+    shadow-xs dark:shadow-none
+    inset-ring
+    inset-ring-gray-950/20 dark:inset-ring-white/5
+    px-3 py-1.5 rounded-md
   }
 
-  /* Button with SVG icon - reduced horizontal padding */
-  .btn:has(> svg) {
-    padding-left: 0.75rem; /* has-[>svg]:px-3 */
-    padding-right: 0.75rem;
+  /* Sizes */
+  .btn-sm {
+    @apply rounded-sm px-2 py-1 text-sm;
   }
 
-.btn-primary {
-  border: 1px solid transparent;
-  background-color: var(--color-primary-500);
-  @variant dark {
-      background: --alpha(var(--color-primary-500) / 80%);
-  }
-  color: var(--color-primary-foreground);
-
-  outline: none;
-
-  @variant hover {
-    background: --alpha(var(--color-primary-500) / 90%);
+  /* Primary variant: color only */
+  .btn-primary {
+    @apply text-white hover:text-white
+    bg-blue-500 hover:bg-blue-400 dark:bg-blue-500 dark:hover:bg-blue-400 dark:shadow-none inset-ring-white/5;
   }
 
-  @variant dark {
-    @variant hover {
-      background: --alpha(var(--color-primary-500) / 90%);
-    }
+  .btn-chip {
+    @apply text-gray-700 dark:text-neutral-300
+    bg-gray-950/10 dark:bg-white/5
+    hover:bg-gray-950/8 dark:hover:bg-white/10
+      shadow-none inset-ring-0;
   }
 
-  @variant disabled {
-    background-color: var(--color-primary-500);
+  .btn-text {
+    @apply text-gray-700 dark:text-neutral-300
+    bg-transparent
+    hover:bg-gray-950/8 dark:hover:bg-white/10
+    shadow-none inset-ring-0;
   }
 
 }
 
-.btn-chip {
-  border: 0 solid transparent;
-  background-color:  --alpha(var(--color-foreground) / 8%);
-  @variant dark {
-    background:  --alpha(var(--color-foreground) / 5%);
-  }
-  color: var(--color-foreground-secondary);
-
-  outline: none;
-
-  @variant hover {
-    background:  --alpha(var(--color-foreground) / 10%);
-
-  }
-
-  @variant disabled {
-    background:  --alpha(var(--color-foreground) / 8%);
-    color: var(--foreground-tertiary);
-    cursor: not-allowed;
-    opacity: 0.6;
-
-  }
-}
-
-.btn-text {
-  border: 0 solid transparent;
-  background-color:  transparent;
-
-  color: var(--color-foreground-secondary);
-  box-shadow: none;
-  outline: none;
-
-  @variant hover {
-    background:  --alpha(var(--color-foreground) / 10%);
-  }
-  @variant dark {
-    @variant hover {
-      background:  --alpha(var(--color-foreground) / 5%);
-    }
-  }
-
-  @variant disabled {
-    background-color:  transparent;
-    color: var(--foreground-tertiary);
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
-}
-
-/* Button with SVG icon - reduced horizontal padding */
-.btn:has(> svg) {
-  padding-left: 0.75rem; /* has-[>svg]:px-3 */
-  padding-right: 0.75rem;
-}
+/* stylelint-enable at-rule-no-unknown */

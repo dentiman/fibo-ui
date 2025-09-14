@@ -39,7 +39,7 @@
     <div class="max-h-70 overflow-y-auto fibo-scrollbar">
       @for (item of items(); track getValue(item)) {
         <a [Option]="getValue(item)"
-           class="datalist-item py-0.5 px-2 rounded-md relative group text-sm">
+           class="datalist-item py-1 px-2 rounded-md relative group text-sm">
           @if (itemTemplate(); as template) {
             <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: item, isSelected: currentSelectedItem() && getValue(currentSelectedItem()!) === getValue(item) }"></ng-container>
           } @else {
