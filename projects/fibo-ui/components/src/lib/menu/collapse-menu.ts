@@ -2,7 +2,7 @@ import {Component, computed, DestroyRef, inject, input, OnInit, TemplateRef} fro
 import {CommonModule} from '@angular/common';
 import {NavigationEnd, Router, RouterLink} from '@angular/router';
 import {MenuItemType} from './menu-item.type';
-import {Option, SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
+import {ListItem, SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
 import {CollapseSubmenuItem} from './collapse-submenu-item';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {LucideAngularModule} from 'lucide-angular';
@@ -14,7 +14,7 @@ import {LucideAngularModule} from 'lucide-angular';
   host: {
     'class': 'flex flex-col',
   },
-  imports: [CommonModule, RouterLink,  CollapseSubmenuItem, Option, LucideAngularModule],
+  imports: [CommonModule, RouterLink,  CollapseSubmenuItem, ListItem, LucideAngularModule],
   templateUrl: './collapse-menu.html',
 })
 export class CollapseMenu implements OnInit {

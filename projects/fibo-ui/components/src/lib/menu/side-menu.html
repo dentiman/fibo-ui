@@ -23,7 +23,7 @@
         <li class="relative flex gap-x-2"
             fiboCollapseSubmenuItem [items]="item.children"
             #collapseSubmenuItem="fiboCollapseSubmenuItem"
-            #dataListItem="DataListItem"
+            #dataListItem="ListItem"
         >
           @if (showChain) {
           <fibo-side-menu-chain
@@ -85,9 +85,9 @@
           <a class="relative flex gap-x-2 group cursor-pointer
              aria-selected:rounded-md
            aria-selected:text-white"
-             [Option]="item"
+             [fiboListItemValue]="item"
              [routerLink]="item.url"
-             #dataListItem="DataListItem"
+             #dataListItem="ListItem"
           >
             @if (showChain) {
             <fibo-side-menu-chain

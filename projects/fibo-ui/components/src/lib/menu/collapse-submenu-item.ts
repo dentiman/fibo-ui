@@ -1,6 +1,6 @@
 import {DestroyRef, Directive, inject, input, model, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {DataListItem} from '@fibo-ui/cdk';
+import {ListItem} from '@fibo-ui/cdk';
 import {MenuItemType} from './menu-item.type';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
@@ -9,7 +9,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
   exportAs: 'fiboCollapseSubmenuItem',
   hostDirectives: [
     {
-      directive: DataListItem,
+      directive: ListItem,
       inputs: ['disabled'],
     },
   ],

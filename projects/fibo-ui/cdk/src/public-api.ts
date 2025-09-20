@@ -29,8 +29,7 @@ export * from './lib/utils/property.utils';
 
 // Data List Directives
 export * from './lib/data-list/data-list';
-export * from './lib/data-list/data-list-item';
-export * from './lib/data-list/option';
+export * from './lib/data-list/list-item';
 export * from './lib/data-list/selection-models';
 
 // Popover Directives

@@ -1,13 +1,13 @@
 import {Directive, inject, input} from '@angular/core';
 import {PopoverMenu} from './popover-menu';
-import {DataListItem} from '@fibo-ui/cdk';
+import {ListItem} from '@fibo-ui/cdk';
 
 
 @Directive({
   selector: '[fiboMenuItem]',
   standalone: true,
   hostDirectives: [{
-    directive: DataListItem,
+    directive: ListItem,
     inputs: ['disabled'],
     outputs: ['itemTrigger']
   }],

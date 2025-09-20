@@ -35,7 +35,7 @@
   } @else {
     @if (item.url) {
       <a
-        [Option]="item"
+        [fiboListItemValue]="item"
         [disabled]="!!item.disabled"
         [routerLink]="item.url"
 
@@ -49,7 +49,7 @@
       </a>
     } @else if (item.callback) {
       <a
-        [Option]="item"
+        [fiboListItemValue]="item"
         [disabled]="!!item.disabled" (itemTrigger)="item.callback();"
 
         class="datalist-item rounded-md   group">

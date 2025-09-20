@@ -2,7 +2,7 @@
     <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
   }
   @for (item of items(); track getValue(item)) {
-    <a [Option]="getValue(item)" #option="Option"
+    <a [fiboListItemValue]="getValue(item)" #option="ListItem"
        class="datalist-item py-1 px-2 rounded-md relative group text-sm items-center">
       @if (isMultiple) {
         <fibo-checkbox

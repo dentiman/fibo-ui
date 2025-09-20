@@ -1,5 +1,5 @@
 import {Directive, ElementRef, inject, Input, input, model, signal} from '@angular/core';
-import {DataListItem} from '../data-list/data-list-item';
+import {ListItem} from '../data-list/list-item';
 import {Popover} from './popover';
 
 
@@ -13,7 +13,7 @@ import {Popover} from './popover';
   }
 })
 export class PopoverTrigger {
-  isListItem = !!inject(DataListItem,{optional:true,self:true} );
+  isListItem = !!inject(ListItem,{optional:true,self:true} );
   element = inject(ElementRef<HTMLElement>).nativeElement;
   isOpen = signal(false);
 

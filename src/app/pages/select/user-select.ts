@@ -4,7 +4,7 @@ import {FormsModule} from "@angular/forms";
 import {
   DataList,
   FormFieldErrors,
-  Option,
+  ListItem,
   PopoverTriggerClick,
   Popover,
   SingleSelectionModel,
@@ -34,7 +34,7 @@ export interface User {
     FormField,
     PopoverTriggerClick,
     DataList,
-    Option,
+    ListItem,
     FormFieldErrors,
   ],
   templateUrl: './user-select.html',

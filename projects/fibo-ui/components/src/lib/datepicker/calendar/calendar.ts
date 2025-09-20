@@ -1,6 +1,6 @@
 import { Component, computed, inject, input, model, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {DataList, Option, SELECTION_MODEL} from '@fibo-ui/cdk';
+import {DataList, ListItem, SELECTION_MODEL} from '@fibo-ui/cdk';
 import {ActiveMonth} from './active-date.state';
 import {parse} from 'date-fns';
 import { LucideAngularModule } from 'lucide-angular';
@@ -8,7 +8,7 @@ import { LucideAngularModule } from 'lucide-angular';
 @Component({
   selector: 'fibo-calendar',
   standalone: true,
-  imports: [CommonModule, Option, LucideAngularModule],
+  imports: [CommonModule, ListItem, LucideAngularModule],
   hostDirectives: [
     {
       directive: DataList,
@@ -75,7 +75,7 @@ import { LucideAngularModule } from 'lucide-angular';
       <div class="mt-2 grid grid-cols-7 space-y-1 space-x-0 text-sm p-1 ">
         @for (week of state.weeks(); track $index) {
           @for (date of week; track date + $index) {
-            <button [Option]="date" #option="Option"
+            <button [fiboListItemValue]="date" #option="ListItem"
                     class="datalist-item p-1 justify-center items-center"
                     [class.text-foreground-tertiary]="!state.hasTheSameMonthAs(date)"
             >

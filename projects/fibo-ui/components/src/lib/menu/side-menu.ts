@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input,
 import {CommonModule} from '@angular/common';
 import {NavigationEnd, Router, RouterLink} from '@angular/router';
 import {MenuItemType} from './menu-item.type';
-import {Option, SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
+import {ListItem, SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {LucideAngularModule} from 'lucide-angular';
 import {CollapseMenu} from './collapse-menu';
@@ -15,7 +15,7 @@ import {SideMenuChain} from './side-menu-chain';
   host: {
     'class': 'flex flex-col',
   },
-  imports: [CommonModule, RouterLink, Option, LucideAngularModule, CollapseMenu, CollapseSubmenuItem, SideMenuChain],
+  imports: [CommonModule, RouterLink, ListItem, LucideAngularModule, CollapseMenu, CollapseSubmenuItem, SideMenuChain],
   templateUrl: './side-menu.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
