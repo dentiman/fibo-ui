@@ -25,7 +25,7 @@
         </div>
 
         <div class="flex items-center justify-between">
-          <label class="text-sm font-medium text-slate-700">Disabled (Off)</label>
+          <label class="text-sm font-medium text-foreground-secondary">Disabled (Off)</label>
           <fibo-switch
             [(checked)]="disabledSwitch"
             [disabled]="true">
@@ -33,7 +33,7 @@
         </div>
 
         <div class="flex items-center justify-between">
-          <label class="text-sm font-medium text-slate-700">Disabled (On)</label>
+          <label class="text-sm font-medium text-foreground-secondary">Disabled (On)</label>
           <fibo-switch
             [(checked)]="disabledCheckedSwitch"
             [disabled]="true">
@@ -49,16 +49,16 @@
             </fibo-switch>
             <button
               (click)="toggleLoading()"
-              class="px-3 py-1 text-xs  hover:bg-slate-200 rounded border text-slate-700">
+              class="btn btn-sm">
               Toggle
             </button>
           </div>
         </div>
       </div>
 
-      <div class="mt-4 p-3  rounded border">
-        <p class="text-xs text-slate-600 mb-2">Current States:</p>
-        <ul class="text-xs text-slate-700 space-y-1">
+      <div class="mt-4 p-3 fibo-card rounded">
+        <p class="text-xs text-foreground-secondary mb-2">Current States:</p>
+        <ul class="text-xs text-foreground space-y-1">
           <li>Basic: {{ basicSwitch() }}</li>
           <li>Checked: {{ checkedSwitch() }}</li>
           <li>Loading: {{ loadingSwitch() }}</li>
@@ -83,13 +83,13 @@
           @if (formSwitch.invalid && formSwitch.touched) {
             <span>You must accept the terms and conditions</span>
           } @else {
-            <span class="text-slate-500">Please accept to continue</span>
+            <span class="text-foreground-secondary">Please accept to continue</span>
           }
         </div>
 
-        <div class="pt-4 border-t ">
-          <div class=" border  rounded p-3">
-            <p class="text-xs text-slate-600 mb-1">Form Status:</p>
+        <div class="pt-4 border-t border-primary">
+          <div class="fibo-card rounded p-3">
+            <p class="text-xs text-foreground-secondary mb-1">Form Status:</p>
             <p class="text-xs">
               <strong>Valid:</strong> {{ formSwitch.valid }}<br>
               <strong>Value:</strong> {{ formSwitch.value }}<br>
@@ -108,7 +108,7 @@
         <div class="flex items-center justify-between">
           <div>
             <label class="text-sm font-medium ">Push Notifications</label>
-            <p class="text-xs text-slate-500">Receive notifications on your device</p>
+            <p class="text-xs text-foreground-secondary">Receive notifications on your device</p>
           </div>
           <fibo-switch
             [(checked)]="notifications"
@@ -119,7 +119,7 @@
         <div class="flex items-center justify-between">
           <div>
             <label class="text-sm font-medium ">Dark Mode</label>
-            <p class="text-xs text-slate-500">Switch to dark theme</p>
+            <p class="text-xs text-foreground-secondary">Switch to dark theme</p>
           </div>
           <fibo-switch
             [(checked)]="darkMode"
@@ -130,7 +130,7 @@
         <div class="flex items-center justify-between">
           <div>
             <label class="text-sm font-medium ">Auto Save</label>
-            <p class="text-xs text-slate-500">Automatically save your work</p>
+            <p class="text-xs text-foreground-secondary">Automatically save your work</p>
           </div>
           <fibo-switch
             [(checked)]="autoSave"
@@ -139,9 +139,9 @@
         </div>
       </div>
 
-      <div class="mt-4 p-3  rounded border">
-        <p class="text-xs text-slate-600 mb-2">Your Settings:</p>
-        <ul class="text-xs text-slate-700 space-y-1">
+      <div class="mt-4 p-3 fibo-card rounded">
+        <p class="text-xs text-foreground-secondary mb-2">Your Settings:</p>
+        <ul class="text-xs text-foreground space-y-1">
           <li>🔔 Notifications: {{ notifications() ? 'Enabled' : 'Disabled' }}</li>
           <li>🌙 Dark Mode: {{ darkMode() ? 'On' : 'Off' }}</li>
           <li>💾 Auto Save: {{ autoSave() ? 'On' : 'Off' }}</li>
@@ -156,17 +156,17 @@
       <div class="space-y-4">
         <div>
           <h3 class="text-sm font-medium  mb-2">Basic Usage</h3>
-          <pre class=" border  rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch [(checked)]="isEnabled"&gt;&lt;/fibo-switch&gt;</code></pre>
+          <pre class="fibo-card rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch [(checked)]="isEnabled"&gt;&lt;/fibo-switch&gt;</code></pre>
         </div>
 
         <div>
           <h3 class="text-sm font-medium  mb-2">With Form Control</h3>
-          <pre class=" border  rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch [formControl]="switchControl"&gt;&lt;/fibo-switch&gt;</code></pre>
+          <pre class="fibo-card rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch [formControl]="switchControl"&gt;&lt;/fibo-switch&gt;</code></pre>
         </div>
 
         <div>
           <h3 class="text-sm font-medium  mb-2">With Loading State</h3>
-          <pre class=" border  rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch
+          <pre class="fibo-card rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch
   [(checked)]="value"
   [isLoading]="loading"
   [disabled]="disabled"&gt;
@@ -176,7 +176,7 @@
 
       <div class="mt-6">
         <h3 class="text-sm font-medium  mb-2">Features:</h3>
-        <ul class="text-xs text-slate-600 space-y-1 pl-4">
+        <ul class="text-xs text-foreground-secondary space-y-1 pl-4">
           <li>• Two-way data binding with [(checked)]</li>
           <li>• Angular Forms integration (FormControl, ngModel)</li>
           <li>• Keyboard navigation (Space, Enter)</li>
@@ -198,7 +198,7 @@
       <div class="flex items-center justify-between">
         <div>
           <label class="text-sm font-medium ">Extra Small (xs)</label>
-          <p class="text-xs text-slate-500">h-4 w-7 container, h-3 w-3 thumb</p>
+          <p class="text-xs text-foreground-secondary">h-4 w-7 container, h-3 w-3 thumb</p>
         </div>
         <fibo-switch
           [size]="'xs'"
@@ -211,7 +211,7 @@
       <div class="flex items-center justify-between">
         <div>
           <label class="text-sm font-medium ">Small (sm)</label>
-          <p class="text-xs text-slate-500">h-5 w-9 container, h-4 w-4 thumb</p>
+          <p class="text-xs text-foreground-secondary">h-5 w-9 container, h-4 w-4 thumb</p>
         </div>
         <fibo-switch
           [size]="'sm'"
@@ -224,7 +224,7 @@
       <div class="flex items-center justify-between">
         <div>
           <label class="text-sm font-medium ">Base (default)</label>
-          <p class="text-xs text-slate-500">h-6 w-11 container, h-5 w-5 thumb</p>
+          <p class="text-xs text-foreground-secondary">h-6 w-11 container, h-5 w-5 thumb</p>
         </div>
         <fibo-switch
           [size]="'base'"
@@ -237,7 +237,7 @@
       <div class="flex items-center justify-between">
         <div>
           <label class="text-sm font-medium ">Large (lg)</label>
-          <p class="text-xs text-slate-500">h-7 w-14 container, h-6 w-6 thumb</p>
+          <p class="text-xs text-foreground-secondary">h-7 w-14 container, h-6 w-6 thumb</p>
         </div>
         <fibo-switch
           [size]="'lg'"
@@ -250,7 +250,7 @@
       <div class="flex items-center justify-between">
         <div>
           <label class="text-sm font-medium ">Extra Large (xl)</label>
-          <p class="text-xs text-slate-500">h-8 w-16 container, h-7 w-7 thumb</p>
+          <p class="text-xs text-foreground-secondary">h-8 w-16 container, h-7 w-7 thumb</p>
         </div>
         <fibo-switch
           [size]="'xl'"
@@ -260,9 +260,9 @@
       </div>
     </div>
 
-    <div class="mt-6 p-3  rounded border">
-      <p class="text-xs text-slate-600 mb-2">Size Switch States:</p>
-      <ul class="text-xs text-slate-700 space-y-1">
+    <div class="mt-6 p-3 fibo-card rounded">
+      <p class="text-xs text-foreground-secondary mb-2">Size Switch States:</p>
+      <ul class="text-xs text-foreground space-y-1">
         <li>XS: {{ xsSwitch() }}</li>
         <li>SM: {{ smSwitch() }}</li>
         <li>Base: {{ baseSwitch() }}</li>
@@ -273,7 +273,7 @@
 
     <div class="mt-4">
       <h3 class="text-sm font-medium  mb-2">Usage:</h3>
-      <pre class=" border  rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch [size]="'xs'" [(checked)]="value"&gt;&lt;/fibo-switch&gt;
+      <pre class="fibo-card rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-switch [size]="'xs'" [(checked)]="value"&gt;&lt;/fibo-switch&gt;
 &lt;fibo-switch [size]="'sm'" [(checked)]="value"&gt;&lt;/fibo-switch&gt;
 &lt;fibo-switch [size]="'base'" [(checked)]="value"&gt;&lt;/fibo-switch&gt;
 &lt;fibo-switch [size]="'lg'" [(checked)]="value"&gt;&lt;/fibo-switch&gt;

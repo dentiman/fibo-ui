@@ -40,15 +40,15 @@
           </fibo-checkbox>
           <button
             (click)="toggleLoading()"
-            class="px-3 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded border text-slate-700">
+            class="btn btn-sm">
             Toggle
           </button>
         </div>
       </div>
 
-      <div class="mt-4 p-3 bg-slate-50 rounded border">
-        <p class="text-xs text-slate-600 mb-2">Current States:</p>
-        <ul class="text-xs text-slate-700 space-y-1">
+      <div class="mt-4 p-3 fibo-card rounded">
+        <p class="text-xs text-foreground-secondary mb-2">Current States:</p>
+        <ul class="text-xs text-foreground space-y-1">
           <li>Basic: {{ basicCheckbox() }}</li>
           <li>Checked: {{ checkedCheckbox() }}</li>
           <li>Loading: {{ loadingCheckbox() }}</li>
@@ -79,7 +79,7 @@
           [indeterminate]="true"
           [(checked)]="disabledIndeterminateCheckbox"
           [disabled]="true">
-          <span class="text-slate-700">Disabled Indeterminate</span>
+          <span class="text-foreground">Disabled Indeterminate</span>
         </fibo-checkbox>
 
         <div class="flex items-center gap-2">
@@ -91,7 +91,7 @@
           </fibo-checkbox>
           <button
             (click)="toggleDynamicIndeterminate()"
-            class="px-3 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded border text-slate-700">
+            class="btn btn-sm">
             Toggle Indeterminate
           </button>
         </div>
@@ -105,7 +105,7 @@
           </fibo-checkbox>
           <button
             (click)="resetParentCheckbox()"
-            class="px-3 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded border text-slate-700">
+            class="btn btn-sm">
             Reset
           </button>
         </div>
@@ -129,9 +129,9 @@
         </div>
       </div>
 
-      <div class="mt-4 p-3 bg-slate-50 rounded border">
-        <p class="text-xs text-slate-600 mb-2">Indeterminate States:</p>
-        <ul class="text-xs text-slate-700 space-y-1">
+      <div class="mt-4 p-3 fibo-card rounded">
+        <p class="text-xs text-foreground-secondary mb-2">Indeterminate States:</p>
+        <ul class="text-xs text-foreground space-y-1">
           <li>Indeterminate: {{ indeterminateCheckbox() }}</li>
           <li>Indeterminate Checked: {{ indeterminateCheckedCheckbox() }}</li>
           <li>Dynamic Indeterminate: {{ dynamicIndeterminate() }}</li>
@@ -142,14 +142,14 @@
     </div>
 
     <!-- Form Integration -->
-    <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
+    <div class="fibo-card rounded-lg p-6 shadow-sm">
       <h2 class="mb-4  text-xl font-semibold tracking-tight">Form Integration</h2>
 
       <form class="space-y-4">
         <fibo-checkbox [formControl]="formCheckbox" class="items-start">
           <div>
             <div class="font-medium">I agree to the Terms of Service and Privacy Policy *</div>
-            <p class="text-xs text-slate-500 mt-1">
+            <p class="text-xs text-foreground-secondary mt-1">
               By checking this box, you acknowledge that you have read and agree to our terms.
             </p>
           </div>
@@ -160,13 +160,13 @@
           @if (formCheckbox.invalid && formCheckbox.touched) {
             <span>You must accept the terms and conditions</span>
           } @else {
-            <span class="text-slate-500">Please accept to continue</span>
+            <span class="text-foreground-secondary">Please accept to continue</span>
           }
         </div>
 
-        <div class="pt-4 border-t border-slate-200">
-          <div class="bg-slate-50 border border-slate-200 rounded p-3">
-            <p class="text-xs text-slate-600 mb-1">Form Status:</p>
+        <div class="pt-4 border-t border-primary">
+          <div class="fibo-card rounded p-3">
+            <p class="text-xs text-foreground-secondary mb-1">Form Status:</p>
             <p class="text-xs">
               <strong>Valid:</strong> {{ formCheckbox.valid }}<br>
               <strong>Value:</strong> {{ formCheckbox.value }}<br>
@@ -178,7 +178,7 @@
     </div>
 
     <!-- Settings Example -->
-    <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
+    <div class="fibo-card rounded-lg p-6 shadow-sm">
       <h2 class="mb-4  text-xl font-semibold tracking-tight">Notification Settings</h2>
 
       <div class="space-y-4 space-x-4">
@@ -188,7 +188,7 @@
           class="items-start">
           <div>
             <div class="font-medium">Email Notifications</div>
-            <p class="text-xs text-slate-500">Receive important updates via email</p>
+            <p class="text-xs text-foreground-secondary">Receive important updates via email</p>
           </div>
         </fibo-checkbox>
 
@@ -198,7 +198,7 @@
           class="items-start">
           <div>
             <div class="font-medium">Push Notifications</div>
-            <p class="text-xs text-slate-500">Get notified on your device</p>
+            <p class="text-xs text-foreground-secondary">Get notified on your device</p>
           </div>
         </fibo-checkbox>
 
@@ -208,7 +208,7 @@
           class="items-start">
           <div>
             <div class="font-medium">Marketing Emails</div>
-            <p class="text-xs text-slate-500">Receive promotional content and offers</p>
+            <p class="text-xs text-foreground-secondary">Receive promotional content and offers</p>
           </div>
         </fibo-checkbox>
 
@@ -218,14 +218,14 @@
           class="items-start">
           <div>
             <div class="font-medium">Two-Factor Authentication</div>
-            <p class="text-xs text-slate-500">Enhanced security for your account</p>
+            <p class="text-xs text-foreground-secondary">Enhanced security for your account</p>
           </div>
         </fibo-checkbox>
       </div>
 
-      <div class="mt-4 p-3 bg-slate-50 rounded border">
-        <p class="text-xs text-slate-600 mb-2">Your Preferences:</p>
-        <ul class="text-xs text-slate-700 space-y-1">
+      <div class="mt-4 p-3 fibo-card rounded">
+        <p class="text-xs text-foreground-secondary mb-2">Your Preferences:</p>
+        <ul class="text-xs text-foreground space-y-1">
           <li>📧 Email Notifications: {{ emailNotifications() ? 'Enabled' : 'Disabled' }}</li>
           <li>📱 Push Notifications: {{ pushNotifications() ? 'Enabled' : 'Disabled' }}</li>
           <li>📢 Marketing Emails: {{ marketingEmails() ? 'Enabled' : 'Disabled' }}</li>
@@ -235,27 +235,27 @@
     </div>
 
     <!-- Usage Instructions -->
-    <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
+    <div class="fibo-card rounded-lg p-6 shadow-sm">
       <h2 class="mb-4  text-xl font-semibold tracking-tight">Usage</h2>
 
       <div class="space-y-4">
         <div>
           <h3 class="text-sm font-medium  mb-2">Basic Usage with Inline Label</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox [(checked)]="isChecked"&gt;
+          <pre class="fibo-card rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox [(checked)]="isChecked"&gt;
   Accept terms
 &lt;/fibo-checkbox&gt;</code></pre>
         </div>
 
         <div>
           <h3 class="text-sm font-medium  mb-2">With Form Control</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox [formControl]="checkboxControl"&gt;
+          <pre class="fibo-card rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox [formControl]="checkboxControl"&gt;
   I agree to the terms
 &lt;/fibo-checkbox&gt;</code></pre>
         </div>
 
         <div>
           <h3 class="text-sm font-medium  mb-2">With Complex Content</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox [(checked)]="value" class="items-start"&gt;
+          <pre class="fibo-card rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox [(checked)]="value" class="items-start"&gt;
   &lt;div&gt;
     &lt;div class="font-medium"&gt;Title&lt;/div&gt;
     &lt;p class="text-xs text-slate-500"&gt;Description&lt;/p&gt;
@@ -265,7 +265,7 @@
 
         <div>
           <h3 class="text-sm font-medium  mb-2">With Loading State</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox
+          <pre class="fibo-card rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox
   [(checked)]="value"
   [isLoading]="loading"
   [disabled]="disabled"&gt;
@@ -275,7 +275,7 @@
 
         <div>
           <h3 class="text-sm font-medium  mb-2">With Indeterminate State</h3>
-          <pre class="bg-slate-100 border border-slate-200 rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox
+          <pre class="fibo-card rounded p-3 text-xs overflow-x-auto"><code>&lt;fibo-checkbox
   [(checked)]="value"
   [indeterminate]="true"&gt;
   Indeterminate checkbox
@@ -291,7 +291,7 @@
 
       <div class="mt-6">
         <h3 class="text-sm font-medium  mb-2">Features:</h3>
-        <ul class="text-xs text-slate-600 space-y-1 pl-4">
+        <ul class="text-xs text-foreground-secondary space-y-1 pl-4">
           <li>• Inline label support with content projection</li>
           <li>• Two-way data binding with [(checked)]</li>
           <li>• Angular Forms integration (FormControl, ngModel)</li>
