@@ -1,13 +1,13 @@
 <div class="p-8 max-w-7xl mx-auto">
   <h1 class="mb-8 text-3xl font-semibold tracking-tight">Button Component Examples</h1>
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+  <div class="grid grid-cols-1  gap-8 mb-12">
 
     <!-- Default Button -->
     <div class="fibo-card rounded-lg p-6 shadow-sm">
       <h2 class="mb-4 text-xl font-semibold tracking-tight">Default Button (.btn)</h2>
     <div class="space-y-4">
-        <div class="flex flex-wrap gap-3">
+        <div class="inline-flex flex-wrap gap-3">
           <button
             class="btn"
             (click)="onButtonClick('Default')">
@@ -42,6 +42,21 @@
             With Icon Disabled
           </button>
         </div>
+
+      <div class="inline-flex flex-wrap gap-3">
+        <button
+          class="btn px-2 py-1 text-sm"
+          (click)="onButtonClick('Default')">
+          px-2 py-1
+        </button>
+
+        <button
+          class="btn px-2 py-1 text-sm"
+          disabled
+          (click)="onButtonClick('Default Disabled')">
+          px-2 py-1 text-sm
+        </button>
+      </div>
       </div>
 
     </div>

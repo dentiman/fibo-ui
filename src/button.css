@@ -7,17 +7,20 @@
 
   /* Base button (neutral) */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 font-semibold transition-colors
-    bg-white dark:bg-white/10
-    hover:bg-gray-50 dark:hover:bg-white/20
+    @apply inline-flex items-center justify-center gap-2 transition-colors
+    bg-transparent
+    hover:bg-gray-50 dark:hover:bg-white/10
     text-gray-700 dark:text-neutral-300
     hover:text-gray-900   dark:hover:text-white
-    shadow-xs dark:shadow-none
+    shadow-xs
     inset-ring
-    inset-ring-gray-950/20 dark:inset-ring-white/5
+    inset-ring-gray-950/20 dark:inset-ring-white/8
     px-3 py-1.5 rounded-md
+    cursor-pointer
+    disabled:opacity-50 disabled:cursor-not-allowed
+    disabled:hover:bg-transparent
+    disabled:hover:text-gray-700 dark:disabled:hover:text-neutral-300
   }
-
   /* Sizes */
   .btn-sm {
     @apply rounded-sm px-2 py-1 text-sm;
@@ -26,21 +29,29 @@
   /* Primary variant: color only */
   .btn-primary {
     @apply text-white hover:text-white
-    bg-blue-500 hover:bg-blue-400 dark:bg-blue-500 dark:hover:bg-blue-400 dark:shadow-none inset-ring-white/5;
+    bg-blue-500 dark:bg-blue-500
+    hover:bg-blue-400 dark:hover:bg-blue-400 dark:shadow-none
+    inset-ring-white/5
+    disabled:hover:bg-blue-500 dark:disabled:hover:bg-blue-500
+    disabled:hover:text-white dark:disabled:hover:text-white;
   }
 
   .btn-chip {
     @apply text-gray-700 dark:text-neutral-300
-    bg-gray-950/10 dark:bg-white/5
-    hover:bg-gray-950/8 dark:hover:bg-white/10
-      shadow-none inset-ring-0;
+    bg-gray-950/10 dark:bg-white/10
+    hover:bg-gray-950/8 dark:hover:bg-white/15
+      shadow-none inset-ring-0
+      disabled:hover:bg-gray-950/10 dark:disabled:hover:bg-white/15
+      disabled:hover:text-gray-700 dark:disabled:hover:text-neutral-300;
   }
 
   .btn-text {
-    @apply text-gray-700 dark:text-neutral-300
+    @apply
     bg-transparent
     hover:bg-gray-950/8 dark:hover:bg-white/10
-    shadow-none inset-ring-0;
+    shadow-none inset-ring-0
+    disabled:hover:bg-transparent dark:disabled:hover:bg-transparent
+    disabled:hover:text-gray-700 dark:disabled:hover:text-neutral-300;
   }
 
 }

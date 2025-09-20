@@ -4,6 +4,7 @@ import { FiboDialog,  DialogTrigger} from '@fibo-ui/components';
 import {RouterLink} from '@angular/router';
 import {SelectPageComponent} from '../select/select-page';
 import {JsonPipe} from '@angular/common';
+import {FormExamplePageComponent} from '../form-example-page/form-example-page';
 
 @Component({
   imports: [
@@ -13,7 +14,8 @@ import {JsonPipe} from '@angular/common';
     FiboDialog,
     SelectPageComponent,
     JsonPipe,
-    DialogTrigger
+    DialogTrigger,
+    FormExamplePageComponent
   ],
   templateUrl: './dialog-page.html',
 

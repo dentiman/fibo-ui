@@ -1,11 +1,10 @@
-<button class="btn-primary" [fiboDialogTrigger]="content" >Open Dialog</button>
-<button class="ml-1 btn-primary" [fiboDialogTrigger]="content" [fiboDialogConfig]="{ mode: 'drawer' }" >Open Drawer</button>
+<button class="btn" [fiboDialogTrigger]="content" >Open Dialog</button>
+<button class="btn" [fiboDialogTrigger]="content" [fiboDialogConfig]="{ mode: 'drawer' }" >Open Drawer</button>
 
 
 <ng-template #content>
-  <div class="fibo-scrollbar overflow-y-scroll max-h-96 ">
-    <app-select-page></app-select-page>
+  <div class="overflow-hidden overflow-y-auto">
+    <app-form-example-page></app-form-example-page>
   </div>
-
 </ng-template>
 
