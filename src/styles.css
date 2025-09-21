@@ -271,7 +271,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-roboto;
+    @apply bg-gray-100 dark:bg-background text-foreground font-roboto;
 
   }
 
@@ -368,8 +368,13 @@
     color: var(--color-red-400);
   }
 
-
-  /* Form field */
+  .fibo-form-field {
+    @apply shadow-xs
+  }
+  .fibo-form-field {
+    @apply shadow-xs
+  }
+    /* Form field */
   .fibo-form-field {
     background-color: var(--form-field-bg);
     color: var(--form-field-text);

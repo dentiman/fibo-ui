@@ -5,7 +5,6 @@ import {MenuItemType} from './menu-item.type';
 import {ListItem, SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {LucideAngularModule} from 'lucide-angular';
-import {CollapseMenu} from './collapse-menu';
 import {CollapseSubmenuItem} from './collapse-submenu-item';
 import {SideMenuChain} from './side-menu-chain';
 
@@ -15,7 +14,7 @@ import {SideMenuChain} from './side-menu-chain';
   host: {
     'class': 'flex flex-col',
   },
-  imports: [CommonModule, RouterLink, ListItem, LucideAngularModule, CollapseMenu, CollapseSubmenuItem, SideMenuChain],
+  imports: [CommonModule, RouterLink, ListItem, LucideAngularModule, CollapseSubmenuItem, SideMenuChain],
   templateUrl: './side-menu.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

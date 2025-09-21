@@ -4,8 +4,7 @@ import {
   PopoverTriggerToggle,
   SingleSelectionModel
 } from '@fibo-ui/cdk';
-import {
-  CollapseMenu, MenuItem,
+import { MenuItem,
   PopoverMenu,
 } from '@fibo-ui/components';
 import {RouterLink} from '@angular/router';
@@ -16,7 +15,6 @@ import {RouterLink} from '@angular/router';
     PopoverTriggerToggle,
     PopoverMenu,
     MenuItem,
-    CollapseMenu,
     DataList,
     SingleSelectionModel
   ],

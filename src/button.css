@@ -15,7 +15,7 @@
     shadow-xs
     inset-ring
     inset-ring-gray-950/20 dark:inset-ring-white/8
-    px-3 py-1.5 rounded-md
+    px-3 rounded-md text-sm h-8
     cursor-pointer
     disabled:opacity-50 disabled:cursor-not-allowed
     disabled:hover:bg-transparent
@@ -23,18 +23,29 @@
   }
   /* Sizes */
   .btn-sm {
-    @apply rounded-sm px-2 py-1 text-sm;
+    @apply rounded-sm px-2 h-6 text-sm;
   }
 
   /* Primary variant: color only */
   .btn-primary {
     @apply text-white hover:text-white
     bg-blue-500 dark:bg-blue-500
-    hover:bg-blue-400 dark:hover:bg-blue-400 dark:shadow-none
+    hover:bg-blue-400 dark:hover:bg-blue-600 dark:shadow-none
     inset-ring-white/5
     disabled:hover:bg-blue-500 dark:disabled:hover:bg-blue-500
     disabled:hover:text-white dark:disabled:hover:text-white;
   }
+
+  .btn-inverse {
+    @apply text-white hover:text-white dark:text-black dark:hover:text-black
+    bg-gray-950/80 dark:bg-white
+    hover:bg-black/90 dark:hover:bg-gray-100 dark:shadow-none
+    inset-ring-white/5
+    disabled:hover:bg-black/80 dark:disabled:hover:bg-white
+    disabled:hover:text-white dark:disabled:hover:text-black;
+  }
+
+
 
   .btn-chip {
     @apply text-gray-700 dark:text-neutral-300

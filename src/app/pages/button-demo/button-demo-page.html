@@ -106,6 +106,50 @@
 
     </div>
 
+    <!-- Inverse Button -->
+    <div class="fibo-card rounded-lg p-6 shadow-sm">
+      <h2 class="mb-4 text-xl font-semibold tracking-tight">Inverse Button (.btn-inverse)</h2>
+
+      <div class="space-y-4">
+        <div class="flex flex-wrap gap-3">
+          <button
+            class="btn btn-inverse"
+            (click)="onButtonClick('Inverse')">
+            Inverse Button
+          </button>
+
+          <button
+            class="btn btn-inverse"
+            disabled
+            (click)="onButtonClick('Inverse Disabled')">
+            Inverse Disabled
+          </button>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <button
+            class="btn btn-inverse"
+            (click)="onButtonClick('Inverse with Icon')">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            Toggle Theme
+          </button>
+
+          <button
+            class="btn btn-inverse"
+            disabled
+            (click)="onButtonClick('Inverse with Icon Disabled')">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            Theme Disabled
+          </button>
+        </div>
+      </div>
+
+    </div>
+
     <!-- Chip Button -->
     <div class="fibo-card rounded-lg p-6 shadow-sm">
       <h2 class="mb-4 text-xl font-semibold tracking-tight">Chip Button (.btn-chip)</h2>
@@ -241,6 +285,12 @@
               (click)="onButtonClick('Small Chip')">
               Small Chip
             </button>
+
+            <button
+              class="btn btn-inverse text-xs px-2 py-1 h-7"
+              (click)="onButtonClick('Small Inverse')">
+              Small Inverse
+            </button>
           </div>
         </div>
 
@@ -264,6 +314,12 @@
               (click)="onButtonClick('Default Chip')">
               Default Chip
             </button>
+
+            <button
+              class="btn btn-inverse"
+              (click)="onButtonClick('Default Inverse')">
+              Default Inverse
+            </button>
           </div>
         </div>
 
@@ -286,6 +342,12 @@
               class="btn btn-chip text-base px-6 py-3 h-11"
               (click)="onButtonClick('Large Chip')">
               Large Chip
+            </button>
+
+            <button
+              class="btn btn-inverse text-base px-6 py-3 h-11"
+              (click)="onButtonClick('Large Inverse')">
+              Large Inverse
             </button>
           </div>
         </div>
@@ -320,7 +382,7 @@
             </button>
 
             <button
-              class="btn"
+              class="btn btn-inverse"
               (click)="onButtonClick('Cancel')">
               Cancel
             </button>
@@ -410,6 +472,7 @@
           <h3 class="text-sm font-medium mb-2">Basic Usage</h3>
           <pre class="fibo-card rounded p-3 text-xs overflow-x-auto"><code>&lt;button class="btn"&gt;Default Button&lt;/button&gt;
 &lt;button class="btn btn-primary"&gt;Primary Button&lt;/button&gt;
+&lt;button class="btn btn-inverse"&gt;Inverse Button&lt;/button&gt;
 &lt;button class="btn btn-chip"&gt;Chip Button&lt;/button&gt;
 &lt;button class="btn btn-text"&gt;Text Button&lt;/button&gt;</code></pre>
         </div>
@@ -443,7 +506,7 @@
       <div class="mt-6">
         <h3 class="text-sm font-medium mb-2">Features:</h3>
         <ul class="text-xs text-foreground-secondary space-y-1 pl-4">
-          <li>• Four button variants: default, primary, chip, text</li>
+          <li>• Five button variants: default, primary, inverse, chip, text</li>
           <li>• Automatic icon padding reduction</li>
           <li>• Hover and focus states</li>
           <li>• Disabled state support</li>
