@@ -1,12 +1,13 @@
 import {Component, computed, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {FormActionsComponent} from "../../common/form-actions";
 import {toSignal} from "@angular/core/rxjs-interop";
-import {FormFieldContent} from '@fibo-ui/cdk';
 import {User, usersChoices} from "../../common/form-data-example";
-import {UserSelectComponent} from "./user-select";
-import {Select} from '@fibo-ui/components';
+import {BasicSelectExampleComponent} from './content/basic-select-example';
+import {FloatingLabelSelectExampleComponent} from './content/floating-label-example';
+import {FixedLabelSelectExampleComponent} from './content/fixed-label-example';
+import {CustomTemplateSelectExampleComponent} from './content/custom-template-example';
+import {CustomComponentSelectExampleComponent} from './content/user-select-wrapper';
 
 @Component({
   selector: 'app-select-page',
@@ -15,10 +16,11 @@ import {Select} from '@fibo-ui/components';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    FormActionsComponent,
-    Select,
-    UserSelectComponent,
-    FormFieldContent,
+    BasicSelectExampleComponent,
+    FloatingLabelSelectExampleComponent,
+    FixedLabelSelectExampleComponent,
+    CustomTemplateSelectExampleComponent,
+    CustomComponentSelectExampleComponent,
 
   ],
   templateUrl: './select-page.html',

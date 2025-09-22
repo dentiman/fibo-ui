@@ -1,77 +1,8 @@
-<app-form-actions [ctrl]="form">
 
-    <div class=" px-4 w-[450px] space-y-1">
-
-
-      <span  class="block mt-2 text-foreground">With placeholder</span>
-      <div class="flex space-x-0.5">
-        <fibo-select [items]="items()" [formControl]="placeholderCtrl" [placeholder]="'Select User'" ></fibo-select>
-        <button class="btn flex-none">Disable</button>
-      </div>
-
-
-      <span  class="block mt-2">Floating label</span>
-              <fibo-select [items]="items()" [label]="'User'" [formControl]="floatingLabelCtrl" ></fibo-select>
-
-      <span  class="block mt-2">Fixed Label</span>
-              <fibo-select [items]="items()" [formControl]="fixedLabelCtrl" fixedLabel="Customer" [placeholder]="'Select Customer'" ></fibo-select>
-
-      <span  class="block mt-2"> with searchable Input</span>
-              <fibo-select [items]="filteredItems()" [value]="searchableCtrl.value"  [label]="'User'" [formControl]="searchableCtrl">
-                      <input
-              fiboFormFieldContent
-            [formControl]="searchableCtrl"
-            [value]="searchableCtrl.value"
-            [placeholder]="'Choose User'"
-            class="w-full text-gray-900 outline-hidden placeholder:text-gray-400 sm:text-sm peer"
-            type="text"
-          />
-      </fibo-select>
-
-      <span  class="block mt-2">User Select with Custom Template</span>
-      <fibo-select
-        [items]="users"
-        [formControl]="customTemplateCtrl"
-        [label]="'Select User'"
-        [placeholder]="'Choose a user'"
-        [valueProp]="'value'"
-        [labelProp]="'label'"
-        [itemTemplate]="userTemplate">
-      </fibo-select>
-
-      <span  class="block mt-2">User Select Component (Local)</span>
-      <app-user-select
-        [users]="users"
-        [formControl]="userSelectCtrl"
-        [label]="'Select User'"
-        [placeholder]="'Choose a user'">
-      </app-user-select>
-
-      <span  class="block mt-2">User Select Form Actions</span>
-      <app-form-actions [ctrl]="userSelectCtrl"></app-form-actions>
-
-    </div>
-</app-form-actions>
-
-<!-- User Template -->
-<ng-template #userTemplate let-user let-isSelected="isSelected">
-  <div class="flex items-center gap-3">
-    <img
-      [src]="user.avatar"
-      [alt]="user.username"
-      class="w-8 h-8 rounded-full object-cover"
-    />
-    <div class="flex flex-col min-w-0">
-      <span class="text-sm font-medium truncate"
-            [class.text-white]="isSelected"
-            [class.text-gray-900]="!isSelected"
-            [class.dark:text-gray-100]="!isSelected">{{ user.username }}</span>
-      <span class="text-xs truncate"
-            [class.text-primary-50]="isSelected"
-            [class.text-gray-500]="!isSelected"
-            [class.dark:text-gray-600]="!isSelected">
-        {{ user.email }}
-      </span>
-    </div>
-  </div>
-</ng-template>
+   <div class=" px-4 space-y-1">
+     <app-select-basic></app-select-basic>
+     <app-select-floating-label></app-select-floating-label>
+     <app-select-fixed-label></app-select-fixed-label>
+     <app-select-custom-template></app-select-custom-template>
+     <app-select-custom-component></app-select-custom-component>
+   </div>
