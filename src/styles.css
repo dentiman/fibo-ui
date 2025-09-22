@@ -51,14 +51,16 @@
   --background-tertiary:  oklch(1 0 0);
 
   --foreground: oklch(0.145 0 0);
-  --foreground-secondary: var(--color-gray-500);
+  --foreground-secondary: var(--color-gray-600);
   --foreground-tertiary:  var(--color-gray-400);
   --foreground-inverse: oklch(0.98 0 0);
 
 
   /* Border Colors */
   /*--border-primary: var(--color-gray-300);*/
-  --border-primary:  --alpha(var(--color-black) / 13%);;;
+  --border-primary:  --alpha(var(--color-black) / 13%);
+  --border-lite: --alpha(var(--color-black) / 20%);;
+  --border-hard: --alpha(var(--color-black) / 9%);;
   /*--color-border-secondary: oklch(0.80 0 0);*/
   /*--color-border-tertiary: oklch(0.75 0 0);*/
   /*--color-border-disabled: oklch(0.70 0 0);*/
@@ -174,13 +176,15 @@
 
   /*text, icons colors*/
   --foreground: var(--color-neutral-50);
-  --foreground-secondary:  var(--color-neutral-400);
+  --foreground-secondary:  var(--color-gray-400);
   --foreground-tertiary: var(--color-neutral-500);
   --foreground-inverse: oklch(0.92 0 0);
 
 
-  /*--border-primary: oklch(0.348 0 89.876);*/
+  /*--border-primary:  oklch(0.348 0 89.876);*/
   --border-primary: --alpha(var(--color-white) / 4%);;
+  --border-lite: --alpha(var(--color-white) / 8%);;
+  --border-hard: --alpha(var(--color-white) / 8%);
   /*--color-border-secondary: oklch(0.30 0 0);*/
   /*--color-border-tertiary: hsl(223deg 5% 37%);*/
   /*--color-border-disabled: oklch(0.42 0 0);*/
@@ -197,9 +201,9 @@
   --form-field-bg: oklch(30% 2% 253deg);
   --form-field-text: var(--foreground);
   --form-field-outline: var(--border-primary);
-  --form-field-outline-focus: --alpha(var(--color-primary-300) / 10%);
+  --form-field-outline-focus: --alpha(var(--color-primary-500) / 20%);
   --form-field-bg-error: oklch(0.267 0.019 7.232);
-  --form-field-outline-error:  --alpha(var(--color-red-300) / 15%);;
+  --form-field-outline-error:  --alpha(var(--color-red-300) / 20%);;
   --form-field-bg-disabled: --alpha(var(--color-foreground) / 5%);;
   --form-field-text-disabled: var(--color-neutral-600);
   --form-field-outline-disabled: oklch(0.20 0 0);
@@ -388,11 +392,12 @@
     @apply shadow-none;
     background-color: oklch(from var(--card-bg) calc(l - 0.02) c h);
     color: var(--form-field-text);
-    border: 1px solid var(--form-field-outline);
+    border: 1px solid --alpha(var(--color-black) / 7%);
 
     @variant dark {
-      border: 1px solid --alpha(var(--color-white) / 7%);
-      background-color: oklch(from var(--background) calc(l + 0.01) c h);
+      border: 1px solid oklch(100% 0 0 / 6%);
+      border-top-color: oklch(100% 0 0 / 7%);
+      background-color:  --alpha(var(--color-background) / 60%);
     }
 
   }
@@ -407,7 +412,7 @@
   }
 
   .fibo-form-field[data-error="true"] {
-    background-color: color-mix(in oklch, var(--background), red 1%);;
+    /*background-color: color-mix(in oklch, var(--background), red 1%);;*/
     border-color: var(--form-field-outline-error);
   }
 
