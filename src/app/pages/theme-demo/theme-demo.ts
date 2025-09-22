@@ -27,6 +27,46 @@ import { ChangeDetectionStrategy } from '@angular/core';
         </div>
       </div>
 
+      <!-- Text Colors on Background Tokens -->
+      <div class="p-6 rounded-lg fibo-card space-y-6">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Text Colors</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Background: background -->
+          <div class="rounded-lg p-4 bg-background outline -outline-offset-1 outline-black/10 space-y-2">
+            <div class="text-xs font-mono text-gray-600 dark:text-gray-400 mb-2">bg-background</div>
+            <p class="text-sm text-foreground">text-foreground</p>
+            <p class="text-sm text-foreground-secondary">text-foreground-secondary</p>
+            <p class="text-sm text-foreground-tertiary">text-foreground-tertiary</p>
+            <p class="text-sm text-foreground-inverse">text-foreground-inverse</p>
+            <p class="text-sm text-primary">text-primary</p>
+            <p class="text-sm text-primary-600">text-primary-600</p>
+          </div>
+
+          <!-- Background: background-secondary -->
+          <div class="rounded-lg p-4 bg-background-secondary outline -outline-offset-1 outline-black/10 space-y-2">
+            <div class="text-xs font-mono text-gray-600 dark:text-gray-400 mb-2">bg-background-secondary</div>
+            <p class="text-sm text-foreground">text-foreground</p>
+            <p class="text-sm text-foreground-secondary">text-foreground-secondary</p>
+            <p class="text-sm text-foreground-tertiary">text-foreground-tertiary</p>
+            <p class="text-sm text-foreground-inverse">text-foreground-inverse</p>
+            <p class="text-sm text-primary">text-primary</p>
+            <p class="text-sm text-primary-600">text-primary-600</p>
+          </div>
+
+          <!-- Background: background-tertiary -->
+          <div class="rounded-lg p-4 bg-background-tertiary outline -outline-offset-1 outline-black/10 space-y-2">
+            <div class="text-xs font-mono text-gray-600 dark:text-gray-400 mb-2">bg-background-tertiary</div>
+            <p class="text-sm text-foreground">text-foreground</p>
+            <p class="text-sm text-foreground-secondary">text-foreground-secondary</p>
+            <p class="text-sm text-foreground-tertiary">text-foreground-tertiary</p>
+            <p class="text-sm text-foreground-inverse">text-foreground-inverse</p>
+            <p class="text-sm text-primary">text-primary</p>
+            <p class="text-sm text-primary-600">text-primary-600</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Primary Colors -->
       <div class=" p-6 rounded-lg fibo-card  ">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Primary Colors</h3>
@@ -147,7 +187,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
         </div>
       </div>
 
-\n
+      \n
       <!-- Gray Colors -->
       <div class="p-6 rounded-lg fibo-card ">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Gray Colors</h3>
@@ -268,7 +308,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
         </div>
       </div>
 
-\n
+      \n
       <!-- Zinc Colors -->
       <div class="p-6 rounded-lg fibo-card">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Zinc Colors</h3>
@@ -389,7 +429,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
         </div>
       </div>
 
-\n
+      \n
       <!-- Neutral Colors -->
       <div class="p-6 rounded-lg fibo-card">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Neutral Colors</h3>
