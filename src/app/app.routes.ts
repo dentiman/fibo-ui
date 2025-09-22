@@ -18,6 +18,8 @@ import {SideMenuPage} from './pages/side-menu/side-menu-page';
 import {ThemeDemoComponent} from './pages/theme-demo/theme-demo';
 import {ListboxPageComponent} from './pages/listbox/listbox-page';
 import {ButtonDemoPageComponent} from './pages/button-demo/button-demo-page';
+import {CdkDataListPageComponent} from './pages/cdk/data-list-page';
+import {CdkPopoverPageComponent} from './pages/cdk/popover-page';
 
 export const routes: Routes = [
   {
@@ -95,6 +97,14 @@ export const routes: Routes = [
       {
         path: 'button-demo',
         component: ButtonDemoPageComponent
+      },
+      {
+        path: 'cdk',
+        children: [
+          { path: 'data-list', component: CdkDataListPageComponent },
+          { path: 'popover', component: CdkPopoverPageComponent },
+          { path: '', pathMatch: 'full', redirectTo: 'data-list' }
+        ]
       }
     ]
   }

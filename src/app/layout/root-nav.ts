@@ -19,12 +19,12 @@ export class RootNavComponent {
         label: 'CDK',
         children: [
           {
-            label: 'Popover',
-            url: '/popover',
+            label: 'Data List',
+            url: '/cdk/data-list',
           },
           {
-            label: 'Listbox',
-            url: '/listbox',
+            label: 'Popover',
+            url: '/cdk/popover',
           }
         ]
       },

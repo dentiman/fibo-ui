@@ -15,7 +15,7 @@ import {Datepicker, Input, MultipleSelect, Select} from '@fibo-ui/components';
     Datepicker
   ],
   template: `
-    <div class="container mx-auto p-4 w-[350px]">
+    <div class="container mx-auto p-4 w-[350px] fibo-card">
       <h1 class="text-2xl font-bold mb-4">Form Example</h1>
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">

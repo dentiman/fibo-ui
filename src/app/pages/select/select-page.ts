@@ -26,9 +26,9 @@ import {Select} from '@fibo-ui/components';
 export class SelectPageComponent {
   // Create a form group with individual controls for each field
   form = new FormGroup({
-    placeholderField: new FormControl(null, { validators: Validators.required }),
-    floatingLabelField: new FormControl('2', { validators: Validators.required }),
-    fixedLabelField: new FormControl('3', { validators: Validators.required }),
+    placeholderField: new FormControl(null),
+    floatingLabelField: new FormControl(null),
+    fixedLabelField: new FormControl(null),
     searchableField: new FormControl('4', { validators: Validators.required }),
     customTemplateField: new FormControl('5', { validators: Validators.required }),
     userSelectField: new FormControl(6, { validators: Validators.required })

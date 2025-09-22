@@ -2,17 +2,13 @@
 
     <div class=" px-4 w-[450px] space-y-1">
 
-      <!-- Disable/Enable Form Button -->
-      <div class="mb-4">
-        <button
-          type="button"
-          (click)="toggleFormDisabled()">
-          {{ form.disabled ? 'Enable Form' : 'Disable Form' }}
-        </button>
+
+      <span  class="block mt-2 text-foreground">With placeholder</span>
+      <div class="flex space-x-0.5">
+        <fibo-select [items]="items()" [formControl]="placeholderCtrl" [placeholder]="'Select User'" ></fibo-select>
+        <button class="btn flex-none">Disable</button>
       </div>
 
-      <span  class="block mt-2">With placeholder</span>
-      <fibo-select [items]="items()" [formControl]="placeholderCtrl" [placeholder]="'Select User'" ></fibo-select>
 
       <span  class="block mt-2">Floating label</span>
               <fibo-select [items]="items()" [label]="'User'" [formControl]="floatingLabelCtrl" ></fibo-select>
