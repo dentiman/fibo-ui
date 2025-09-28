@@ -1,3 +1,4 @@
+```html
 <fibo-form-field
   [control]="formFieldControl"
   appendIcon="chevron-down"
@@ -56,3 +57,4 @@
     }
   </div>
 }
+```

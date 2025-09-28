@@ -21,7 +21,7 @@ export class ListboxPageComponent {
 
   // Properties for the listbox
   valueProp: keyof User = 'id';
-  labelProp: keyof User = 'username';
+  labelProp: keyof User = 'name';
 
   // Selection values
   singleSelectionValue = signal<number | null>(null);
@@ -45,10 +45,10 @@ export class ListboxPageComponent {
     this.multipleSelectionValue.set([]);
   }
 
-  // Method to get selected username
-  getSelectedUsername(value: any): string {
+  // Method to get selected name
+  getSelectedName(value: any): string {
     if (!value) return 'None';
     const user = this.users.find(u => u.id === value);
-    return user?.username || 'None';
+    return user?.name || 'None';
   }
 }

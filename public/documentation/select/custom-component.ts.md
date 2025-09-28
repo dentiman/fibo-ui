@@ -1,3 +1,4 @@
+```ts
 import {Component, computed, inject, input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from "@angular/forms";
@@ -18,6 +19,7 @@ export interface User {
   email: string;
   avatar: string;
 }
+
 @Component({
   selector: 'app-user-select',
   standalone: true,
@@ -51,3 +53,4 @@ export class UserSelect {
     return this.users().find(user => user.id === currentValue);
   });
 }
+```
