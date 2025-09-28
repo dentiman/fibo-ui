@@ -1,17 +1,18 @@
-import { Component } from '@angular/core';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {FormActionsComponent} from '../../common/form-actions';
-import {Input} from '@fibo-ui/components';
+import {Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {BasicInputExampleComponent} from './content/basic-input-example';
+import {StylesStatesInputExampleComponent} from './content/label-input-example';
 
 @Component({
-  selector: 'app-input',
+  selector: 'app-input-page',
+  standalone: true,
   imports: [
-    FormActionsComponent,
-    Input,
-    ReactiveFormsModule
+    CommonModule,
+    BasicInputExampleComponent,
+    StylesStatesInputExampleComponent,
   ],
   templateUrl: './input-page.html',
 })
 export class InputPageComponent {
-  ctrl = new FormControl('Austin');
+
 }

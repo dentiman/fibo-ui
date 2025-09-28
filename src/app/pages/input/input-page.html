@@ -1,24 +1,4 @@
-<app-form-actions [ctrl]="ctrl">
-  <div class="relative mt-2 w-[350px] space-y-0.5">
-    <span  class="block text-sm/6 font-medium pl-3 mt-2">Placeholder</span>
-    <div class="flex space-x-0.5">
-      <fibo-input [placeholder]="'type city name'" [formControl]="ctrl" />
-     <button class="btn">Clear</button>
-    </div>
-
-    <span  class="block text-sm/6 font-medium pl-3 mt-2">Label</span>
-    <fibo-input label="City" [formControl]="ctrl" />
-
-    <span  class="block text-sm/6 font-medium pl-3 mt-2">Fixed Label</span>
-    <fibo-input fixedLabel="City" placeholder="type city name" [formControl]="ctrl" />
-  </div>
-
-  <div class="fibo-card p-4 rounded-md mt-3">
-    <span  class="block text-sm/6 font-medium pl-3">Placeholder</span>
-    <div class="flex space-x-0.5">
-      <fibo-input [placeholder]="'type city name'" [formControl]="ctrl" />
-      <button class="btn btn">Clear</button>
-      <button class="btn btn-secondary">Clear</button>
-    </div>
-  </div>
-</app-form-actions>
+<div class="px-4 flex flex-col space-y-12">
+  <app-input-basic></app-input-basic>
+  <app-input-styles-states></app-input-styles-states>
+</div>

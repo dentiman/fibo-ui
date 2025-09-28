@@ -18,7 +18,7 @@ import {LoadingSpin} from '../loading-spin/loading-spin';
 export class Switch {
 
   isLoading = input(false);
-  size = input<'xs' | 'sm' | 'base' | 'lg' | 'xl'>('base');
+  size = input<'xs' | 'sm' | 'md' | 'lg' | 'xl'>('md');
 
   protected cva = inject<PrimitiveValueAccessor<boolean>>(PrimitiveValueAccessor);
 
@@ -28,7 +28,7 @@ export class Switch {
     return {
       xs: 'h-4 w-7',
       sm: 'h-5 w-9',
-      base: 'h-6 w-11',
+      md: 'h-6 w-11',
       lg: 'h-7 w-14',
       xl: 'h-8 w-16'
     }[this.size()];
@@ -38,7 +38,7 @@ export class Switch {
     return {
       xs: 'h-3 w-3',
       sm: 'h-4 w-4',
-      base: 'h-5 w-5',
+      md: 'h-5 w-5',
       lg: 'h-6 w-6',
       xl: 'h-7 w-7'
     }[this.size()];
@@ -48,7 +48,7 @@ export class Switch {
     return {
       xs: 'translate-x-3',
       sm: 'translate-x-4',
-      base: 'translate-x-5',
+      md: 'translate-x-5',
       lg: 'translate-x-7',
       xl: 'translate-x-8'
     }[this.size()];
