@@ -11,7 +11,7 @@ import {UsageDemo} from '../../../common/usage-demo';
   template: `
     <h2 class="text-foreground">Floating label</h2>
     <app-usage-demo [codeBlocks]="codeBlocks">
-      <div class="mx-auto w-70">
+      <div class="mx-auto w-70 p-8">
         <fibo-datepicker [formControl]="dateCtrl" [label]="'Start Date'"></fibo-datepicker>
       </div>
     </app-usage-demo>

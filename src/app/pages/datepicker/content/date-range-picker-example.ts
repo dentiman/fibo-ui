@@ -10,7 +10,7 @@ import {UsageDemo} from '../../../common/usage-demo';
   template: `
     <h2 class="text-foreground">Date range picker</h2>
     <app-usage-demo [codeBlocks]="codeBlocks">
-      <div class="mx-auto w-70">
+      <div class="mx-auto w-70 p-8">
         <fibo-date-range-picker [label]="'Confirm Dates'" [(value)]="range"></fibo-date-range-picker>
       </div>
     </app-usage-demo>

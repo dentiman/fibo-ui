@@ -4,66 +4,80 @@
 @let label = formFieldControl.label();
 @let hasInnerContent = !!inputs().length || !!formFieldControl.inputs().length;
 @let hasFixedLabel = !!control()?.fixedLabel();
-<div class="min-w-0 grow relative">
 
-  @if (label) {
-    <label class=" fibo-form-field-label  block"
-           [class.text-xs]="!empty || hasFixedLabel"
-           [class.group-focus-within:text-xs]="hasInnerContent"
-           [class.group-aria-expanded:text-xs]="hasInnerContent"
-    >
-      {{ label }}@if (formFieldControl.cva.isRequired()) {
-      <span>*</span>
-    }
-    </label>
+  @if (cva()?.hasError()) {
+    <div class="backdrop absolute inset-0 pointer-events-none  rounded-md
+   bg-gradient-to-r from-red-700/4  from-0% via-red-700/6 via-30%  to-red-700/2 to-100%
+    "></div>
   }
-  @if (formFieldControl.placeholder() && empty && !hasInnerContent) {
 
-    @if (label && !hasFixedLabel) {
-
-    } @else {
-      <div class="from-field-placeholder text-sm">{{ formFieldControl.placeholder() }}!</div>
-    }
-
-  }
-  <div class="text-sm"
-    [class.hidden]="(empty && !hasInnerContent && !hasFixedLabel) || (empty && label && !hasFixedLabel)"
-    [class.group-focus-within:block]="empty || hasInnerContent"
-    [class.group-aria-expanded:block]="hasInnerContent"
-    [class.block]="(hasInnerContent && label)"
+  <div [class.min-h-14]="!!control().label()"
+       class="flex items-center space-x-1 text-left px-3 py-1 min-h-9 "
   >
-    <ng-content></ng-content>
-  </div>
+    <div class="min-w-0 grow relative">
+
+      @if (label) {
+        <div class="fibo-form-field-label"
+               [class.text-xs]="!empty || hasFixedLabel"
+               [class.group-focus-within:text-xs]="hasInnerContent"
+               [class.group-aria-expanded:text-xs]="hasInnerContent"
+        >
+          {{ label }}@if (formFieldControl.cva.isRequired()) {
+          <span>*</span>
+        }
+        </div>
+      }
+      @if (formFieldControl.placeholder() && empty && !hasInnerContent) {
+
+        @if (label && !hasFixedLabel) {
+
+        } @else {
+          <div class="from-field-placeholder text-sm">{{ formFieldControl.placeholder() }}!</div>
+        }
+
+      }
+      <div [class.block]="(hasInnerContent && label)"
+           [class.group-aria-expanded:block]="hasInnerContent"
+           [class.group-focus-within:block]="empty || hasInnerContent"
+           [class.hidden]="(empty && !hasInnerContent && !hasFixedLabel) || (empty && label && !hasFixedLabel)"
+           class="text-sm"
+      >
+        <ng-content></ng-content>
+      </div>
 
 
-</div>
-@let displayReset = empty || disabled;
-@if (!displayReset && formFieldControl.cva.ngControl) {
-  <div>
-    <button
-      (click)="formFieldControl.cva.ngControl?.reset()"
-      type="button"
-      class="flex-none
+    </div>
+    @let displayReset = empty || disabled;
+    @if (!displayReset && formFieldControl.cva.ngControl) {
+      <div>
+        <button
+          (click)="formFieldControl.cva.ngControl?.reset()"
+          type="button"
+          class="flex-none
             hidden
             group-hover:block
             group-focus-within:block btn-text
             rounded-full p-0.5 -mr-0.5  text-foreground-tertiary hover:text-foreground"
-    >
-      <lucide-icon name="X" size="15" class="" ></lucide-icon>
-    </button>
-    <div class="group-hover:hidden group-focus-within:hidden">
+        >
+          <lucide-icon name="X" size="15" class=""></lucide-icon>
+        </button>
+        <div class="group-hover:hidden group-focus-within:hidden">
+          <ng-container [ngTemplateOutlet]="appendBlock"></ng-container>
+        </div>
+      </div>
+
+    } @else {
       <ng-container [ngTemplateOutlet]="appendBlock"></ng-container>
-    </div>
+    }
+
+    <ng-template #appendBlock>
+      <ng-content select=".append">
+        @if (appendIcon(); as appendIcon) {
+          <lucide-icon [name]="appendIcon" size="16"
+                       class="self-center justify-self-end fibo-form-field-icon text-foreground-tertiary"></lucide-icon>
+        }
+      </ng-content>
+    </ng-template>
   </div>
 
-} @else {
-  <ng-container [ngTemplateOutlet]="appendBlock"></ng-container>
-}
 
-<ng-template #appendBlock>
-  <ng-content select=".append">
-    @if(appendIcon(); as appendIcon) {
-       <lucide-icon [name]="appendIcon" size="16" class="self-center justify-self-end fibo-form-field-icon text-foreground-tertiary"></lucide-icon>
-    }
-  </ng-content>
-</ng-template>

@@ -29,7 +29,7 @@ import {FormFieldErrors} from '@fibo-ui/cdk';
   hostDirectives: [
     {
       directive: FormFieldControl,
-      inputs: ['label', 'placeholder','fixedLabel'],
+      inputs: ['label', 'placeholder','fixedLabel', 'appearance'],
     }
   ],
 })

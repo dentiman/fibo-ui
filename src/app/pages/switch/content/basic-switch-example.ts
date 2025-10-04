@@ -10,7 +10,7 @@ import {UsageDemo} from '../../../common/usage-demo';
   template: `
     <h2 class="text-foreground">Basic switch</h2>
     <app-usage-demo [codeBlocks]="codeBlocks">
-      <div class="mx-auto w-90 space-x-4">
+      <div class="mx-auto w-90 space-x-4 p-8">
         <fibo-switch [checked]="false">
           Unchecked
         </fibo-switch>

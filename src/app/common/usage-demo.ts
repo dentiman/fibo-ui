@@ -1,8 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {SafeHtml} from '@angular/platform-browser';
-import {httpResource} from '@angular/common/http';
-// Markdown rendering now handled by ShikiHighlighterService
 import { ShikiHighlighterService } from './shiki-highlighter.service';
 
 @Component({
@@ -11,8 +8,8 @@ import { ShikiHighlighterService } from './shiki-highlighter.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
-      class="grid grid-cols-1 divide-y-1 divide-dashed divide-border-primary border-border-primary border-1 rounded-md dark:bg-background ">
-      <div class="p-8">
+      class="grid grid-cols-1 divide-y-1 divide-dashed divide-border-primary outline-1  -outline-offset-1  outline-black/13 dark:outline-white/5 rounded-md dark:bg-background ">
+      <div class="">
         <ng-content></ng-content>
       </div>
       <div class="px-3 py-1 flex space-x-1">

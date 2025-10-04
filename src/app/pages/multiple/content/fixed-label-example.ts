@@ -12,7 +12,7 @@ import {UsageDemo} from '../../../common/usage-demo';
   template: `
     <h2 class="text-foreground">Fixed label</h2>
     <app-usage-demo [codeBlocks]="codeBlocks">
-      <div class="mx-auto w-90">
+      <div class="mx-auto w-90 p-8">
         <fibo-multiple-select [items]="items()" [formControl]="usersCtrl" fixedLabel="Customers" [placeholder]="'Select Customers'"></fibo-multiple-select>
       </div>
     </app-usage-demo>

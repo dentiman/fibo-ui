@@ -11,7 +11,7 @@ import {UsageDemo} from '../../../common/usage-demo';
   template: `
     <h2 class="text-foreground">Basic input</h2>
     <app-usage-demo [codeBlocks]="codeBlocks">
-      <div class="mx-auto w-70 space-y-4">
+      <div class="mx-auto w-70 space-y-4 p-8">
         <fibo-input
           [formControl]="inputCtrl"
           [placeholder]="'Enter your name'">

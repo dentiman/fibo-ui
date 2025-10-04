@@ -85,6 +85,7 @@ export class PopoverPosition {
           )
         )
       ).subscribe(position => {
+        console.log('position changed')
         this.positionSignal.set(position);
       });
 
@@ -100,7 +101,7 @@ export class PopoverPosition {
       // Calculate arrow offset: half the arrow's width to account for the arrow pointing outward
       const arrowSize = this.arrow()?.elementRef.nativeElement.offsetWidth || 0;
       const arrowOffset = arrowSize / 2;
-      
+
       middleware.push(
         arrow({ element: this.arrow()?.elementRef.nativeElement }),
         offset(arrowOffset + this.offset())

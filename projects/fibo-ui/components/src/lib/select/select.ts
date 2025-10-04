@@ -27,7 +27,7 @@ import {LucideAngularModule} from 'lucide-angular';
   hostDirectives: [
     {
       directive: FormFieldControl,
-      inputs: ['label', 'placeholder','fixedLabel'],
+      inputs: ['label', 'placeholder','fixedLabel', 'appearance'],
     }
   ],
 })

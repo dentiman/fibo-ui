@@ -47,6 +47,7 @@
 
 
   --background: oklch(1 0 0);
+  --background-lite: oklch(0.898 0 89.876);
   --background-secondary: oklch(1 0 0);  /* for lite */
   --background-tertiary:  oklch(1 0 0);
 
@@ -87,6 +88,7 @@
 
 @theme inline  {
   --color-background: var(--background);
+  --color-lite: var(--background-lite);
   --color-background-secondary: var(--background-secondary);
   --color-background-tertiary:  var(--background-tertiary);
 
@@ -170,6 +172,7 @@
   color-scheme: dark;
 
   --background: oklch(24% 2% 268deg);
+  --background-lite: oklch(26% 2% 268deg);
   --background-secondary: oklch(30% 2% 253deg);
   --background-tertiary: oklch(35% 2% 265deg);
 
@@ -321,6 +324,62 @@
 
 @layer components {
 
+  .fibo-form-field {
+    @apply  text-foreground  shadow-xs  aria-disabled:shadow-none rounded-md
+    bg-[var(--background-secondary)]
+
+    data-[appearance=secondary]:bg-black/4 dark:data-[appearance=secondary]:bg-[var(--background-lite)]
+
+    outline-1 -outline-offset-1
+    outline-black/13 dark:outline-white/4
+    aria-disabled:outline-black/8 aria-disabled:dark:outline-white/4
+    focus-within:outline-black/18 dark:focus-within:outline-white/5
+
+    dark:data-[appearance=secondary]:outline-white/6
+    dark:data-[appearance=secondary]:focus-within:outline-white/8
+    dark:data-[appearance=secondary]:aria-disabled:outline-white/6
+
+    data-error:outline-red-700/15 dark:data-error:outline-red-300/10
+    dark:data-error:data-[appearance=secondary]:outline-red-300/13
+
+    aria-disabled:text-[var(--foreground-secondary)]  dark:aria-disabled:text-[var(--color-neutral-600)]
+    aria-disabled:cursor-not-allowed
+    dark:bg-[var(--background-secondary)] dark:text-[var(--foreground)]
+    aria-disabled:bg-transparent
+    aria-disabled:bg-[repeating-linear-gradient(45deg,rgb(0_0_0/_0.01),rgb(0_0_0/_0.01)_10px,rgb(0_0_0/_0.03)_10px,rgb(0_0_0/_0.03)_20px)]
+    dark:aria-disabled:bg-[repeating-linear-gradient(45deg,rgb(255_255_255/_0.01),rgb(255_255_255/_0.01)_10px,rgb(255_255_255/_0.03)_10px,rgb(255_255_255/_0.03)_20px)];
+  }
+
+  .fibo-form-field-label {
+    color: var(--form-field-label-text);
+    transition: color 200ms;
+  }
+
+
+  .fibo-form-field:focus-within .fibo-form-field-label,.fibo-form-field:focus .fibo-form-field-label {
+    color: var(--form-field-label-text-focus);
+  }
+
+  .fibo-form-field[aria-disabled=true] .fibo-form-field-label,
+  .fibo-form-field[aria-disabled=true] .from-field-placeholder{
+    color: var(--form-field-label-text-disabled);
+  }
+
+  .fibo-form-field[data-error=true] .fibo-form-field-label,
+  .fibo-form-field[data-error=true] .from-field-placeholder{
+    color: var(--form-field-label-text-error);
+  }
+
+  .fibo-form-field-icon {
+    color: var(--form-field-label-text);
+  }
+
+
+  .from-field-placeholder {
+    color: var(--form-field-placeholder);
+    transition: color 200ms;
+  }
+
 
   /* Modal component */
   .fibo-modal {
@@ -348,97 +407,7 @@
   }
 
 
-    /* Form field label */
-  .fibo-form-field-label {
-    color: var(--form-field-label-text);
-    transition: color 200ms;
-  }
-  .fibo-form-field-icon {
-    color: var(--form-field-label-text);
-  }
 
-  .group:focus-within .fibo-form-field-label {
-    color: var(--form-field-label-text-focus);
-  }
-
-  .group[data-error="true"] .fibo-form-field-label {
-    color: var(--form-field-label-text-error);
-  }
-
-  .group[aria-disabled="true"] .fibo-form-field-label {
-    color: var(--form-field-label-text-disabled);
-  }
-
-  .fibo-form-field-label[data-error="true"] {
-    color: var(--color-red-400);
-  }
-
-  .fibo-form-field {
-    @apply shadow-xs
-  }
-  .fibo-form-field {
-    @apply shadow-xs
-  }
-    /* Form field */
-  .fibo-form-field {
-    background-color: var(--form-field-bg);
-    color: var(--form-field-text);
-    border: 1px solid var(--form-field-outline);
-
-  }
-
-  .fibo-card .fibo-form-field {
-    @apply shadow-none;
-    background-color: oklch(from var(--card-bg) calc(l - 0.02) c h);
-    color: var(--form-field-text);
-    border: 1px solid --alpha(var(--color-black) / 7%);
-
-    @variant dark {
-      border: 1px solid oklch(100% 0 0 / 6%);
-      border-top-color: oklch(100% 0 0 / 7%);
-      background-color:  --alpha(var(--color-background) / 60%);
-    }
-
-  }
-
-  .fibo-form-field:focus-within {
-    /*background-color: color-mix(in oklch, var(--card-bg), var(--color-blue-600) 1%);;*/
-    border-color: var(--form-field-outline-focus);
-  }
-  .fibo-card .fibo-form-field:focus-within {
-    /*background-color: color-mix(in oklch, oklch(from var(--card-bg) calc(l - 0.02) c h), var(--color-blue-600) 1%);;*/
-    border-color:  oklch(from var(--form-field-outline-focus) calc(l + 0.10) c h);
-  }
-
-  .fibo-form-field[data-error="true"] {
-    /*background-color: color-mix(in oklch, var(--background), red 1%);;*/
-    border-color: var(--form-field-outline-error);
-  }
-
-  .fibo-form-field[aria-disabled="true"] {
-    background-color: var(--form-field-bg-disabled);
-    color: var(--form-field-text-disabled);
-    border-color: var(--form-field-outline-disabled);
-    cursor: not-allowed;
-  }
-
-
-  .from-field-placeholder {
-    color: var(--form-field-placeholder);
-    transition: color 200ms;
-  }
-
-  /*.group:focus-within .from-field-placeholder {*/
-  /*  color: var(--form-field-label-text-focus);*/
-  /*}*/
-
-  .group[data-error="true"] .from-field-placeholder {
-    color: var(--form-field-label-text);
-  }
-
-  .group[aria-disabled="true"] .from-field-placeholder {
-    color: var(--form-field-label-text-disabled);
-  }
 
   /* Input */
   .fibo-input {
@@ -466,56 +435,6 @@
   }
 
 
-
-
-  /* Checkbox */
-  .fibo-checkbox {
-    border: 1px solid var(--checkbox-border);
-    background-color: var(--checkbox-bg);
-    transition: all 200ms;
-  }
-
-  .fibo-checkbox:focus-visible {
-    border-color: var(--checkbox-border-focus);
-    box-shadow: 0 0 0 2px var(--checkbox-border-focus);
-  }
-
-  .fibo-checkbox[aria-checked="true"] {
-    background-color: var(--checkbox-bg-checked);
-    border-color: var(--checkbox-border-checked);
-  }
-
-  .fibo-checkbox[aria-disabled="true"] {
-    background-color: var(--checkbox-bg-disabled);
-    border-color: var(--checkbox-border-disabled);
-    cursor: not-allowed;
-  }
-
-  .fibo-checkbox-icon {
-    color: var(--checkbox-icon);
-    transition: color 200ms;
-  }
-
-
-
-
-
-
-
-
-
-
-
-  /* Button chip */
-  .fibo-btn-chip {
-    background-color:  --alpha(var(--color-foreground) / 10%);
-    transition: all 200ms;
-  }
-
-  .fibo-btn-chip:focus-visible {
-    outline: 1px solid var(--color-primary-600);
-    outline-offset: 1px;
-  }
 
   /* ========================================
      NAVIGATION COMPONENTS

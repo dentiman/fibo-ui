@@ -8,6 +8,7 @@ import {FloatingLabelSelectExampleComponent} from './content/floating-label-exam
 import {FixedLabelSelectExampleComponent} from './content/fixed-label-example';
 import {CustomTemplateSelectExampleComponent} from './content/custom-template-example';
 import {CustomComponentSelectExampleComponent} from './content/user-select-wrapper';
+import {StylesStatesSelectExampleComponent} from './content/styles-states-example';
 
 @Component({
   selector: 'app-select-page',
@@ -21,6 +22,7 @@ import {CustomComponentSelectExampleComponent} from './content/user-select-wrapp
     FixedLabelSelectExampleComponent,
     CustomTemplateSelectExampleComponent,
     CustomComponentSelectExampleComponent,
+    StylesStatesSelectExampleComponent,
 
   ],
   templateUrl: './select-page.html',

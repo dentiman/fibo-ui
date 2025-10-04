@@ -5,6 +5,7 @@ import {FloatingLabelMultipleSelectExampleComponent} from './content/floating-la
 import {FixedLabelMultipleSelectExampleComponent} from './content/fixed-label-example';
 import {CustomTemplateMultipleSelectExampleComponent} from './content/custom-template-example';
 import {SearchableMultipleSelectExampleComponent} from './content/searchable-multiple-select-example';
+import {StylesStatesMultipleSelectExampleComponent} from './content/styles-states-example';
 
 @Component({
   selector: 'app-multiple-select-page',
@@ -16,6 +17,7 @@ import {SearchableMultipleSelectExampleComponent} from './content/searchable-mul
     FixedLabelMultipleSelectExampleComponent,
     CustomTemplateMultipleSelectExampleComponent,
     SearchableMultipleSelectExampleComponent,
+    StylesStatesMultipleSelectExampleComponent,
   ],
   templateUrl: './multiple-select-page.html',
 })

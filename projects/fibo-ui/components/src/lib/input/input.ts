@@ -12,10 +12,12 @@ import {FormField} from '../form/form-field/form-field';
     ReactiveFormsModule
   ],
   templateUrl: './input.html',
+  styles: `
+  `,
   hostDirectives: [
     {
       directive: FormFieldControl,
-      inputs: ['label', 'placeholder','fixedLabel'],
+      inputs: ['label', 'placeholder','fixedLabel', 'appearance'],
     }
   ],
 })

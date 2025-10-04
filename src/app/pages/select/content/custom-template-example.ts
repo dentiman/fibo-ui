@@ -12,7 +12,7 @@ import {UsageDemo} from '../../../common/usage-demo';
   template: `
     <h2 class="text-foreground">Custom template</h2>
     <app-usage-demo [codeBlocks]="codeBlocks">
-      <div class="mx-auto w-70">
+      <div class="mx-auto w-70 p-8">
         <fibo-select
           [items]="users"
           [formControl]="userCtrl"

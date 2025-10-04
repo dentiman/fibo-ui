@@ -12,25 +12,20 @@ import {LucideAngularModule} from 'lucide-angular';
   imports: [
     IsEmptyPipe,
     NgTemplateOutlet,
-    FirstFormErrorPipe,
     LucideAngularModule,
   ],
   templateUrl: './form-field.html',
-  styles: `
-
-  `,
   host: {
-    '[tabindex]': 'control().cva.disabled()?"-1":"0"',
-     class: 'fibo-form-field group flex items-center space-x-1 text-left px-3 py-1 min-h-9 cursor-default rounded-md',
-    '[class.min-h-14]': '!!control().label()',
-    '[style.pointer-events]': 'cva()?.disabled() ? "none" : "auto"',
-    '[attr.aria-disabled]': 'cva()?.disabled()',
-    '[attr.data-error]': 'cva()?.hasError() || null',
-    '[attr.aria-required]': 'cva()?.isRequired() || null',
     '(click)': 'handleClick()',
     '(focusout)': 'onFocusOut($event)',
-
-  }
+    '[attr.aria-disabled]': 'cva()?.disabled()',
+    '[attr.aria-required]': 'cva()?.isRequired() || null',
+    '[attr.data-appearance]': 'control().appearance()',
+    '[attr.data-error]': 'cva()?.hasError() || null',
+    '[style.pointer-events]': "cva()?.disabled() ? 'none' : 'auto'",
+    '[tabindex]': "control().cva.disabled()?'-1':'0'",
+    'class': `  cursor-default  relative block fibo-form-field`,
+  },
 })
 
 export class FormField<T> {

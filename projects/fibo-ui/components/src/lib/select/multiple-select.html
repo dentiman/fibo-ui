@@ -13,7 +13,8 @@
         }"
   >
         @for (value of values; track value) {
-                <button class="break-words focus-visible:outline flex items-center gap-1 fibo-btn-chip rounded-md px-1.5 py-1 ">
+                <button class="break-words focus-visible:outline flex items-center gap-1 text-gray-700 dark:text-neutral-300
+    bg-gray-950/10 dark:bg-white/10   shadow-none inset-ring-0 rounded-md px-1.5 py-1 disabled:opacity-70 " [disabled]="disabled">
                       <span class="truncate flex-1">
                         @let item = selectedItem(value);
                         @if(item) {

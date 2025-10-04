@@ -3,6 +3,8 @@ import {PrimitiveValueAccessor} from '../../common/primitive-value-accessor';
 import {FormFieldContent} from './form-field-content';
 
 
+export type FormFieldAppearance = 'basic' | 'secondary' | 'clear';
+
 @Directive({
   hostDirectives: [
     {
@@ -24,6 +26,8 @@ export class FormFieldControl<T> {
   floatingLabel = input<string | null>(null, {alias: 'label'});
   fixedLabel = input<string | null>(null);
   label = computed(()=> this.floatingLabel() || this.fixedLabel());
+
+  appearance = input<FormFieldAppearance>('basic');
 
   inputs = contentChildren(FormFieldContent)
 
