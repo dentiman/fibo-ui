@@ -13,13 +13,14 @@ import {PrimitiveValueAccessor} from '@fibo-ui/cdk';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'flex items-center'
+    '[attr.aria-selected]': 'checked()',
+    'class': 'group flex items-center'
   }
 })
 export class Checkbox {
 
-  isLoading = input(false);
   indeterminate = input(false);
+  readonly = input(false);
 
   protected cva = inject<PrimitiveValueAccessor<boolean>>(PrimitiveValueAccessor);
 

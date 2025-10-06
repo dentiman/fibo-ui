@@ -52,6 +52,25 @@ export class ListItem<T = any> implements OnInit, OnDestroy {
     return this.selectionModel.isSelected(optionValue);
   });
 
+  handleClick = (event: MouseEvent) => {
+    const target = event.target as HTMLElement;
+    const tagName = target.tagName.toLowerCase();
+
+    // Allow click handling only if the clicked element is a button or link itself,
+    // or if it’s the host element (not a nested element).
+    const allowedTags = ['a', 'button','label'];
+
+    const isHostClick = target === this.element;
+    const isAllowed = allowedTags.includes(tagName);
+
+    if (!isHostClick && !isAllowed) {
+      return; // Ignore clicks on other child elements
+    }
+
+    this.triggerSelection(event);
+
+  }
+
   triggerSelection($event: Event) {
     if (this.disabled()) return;
 

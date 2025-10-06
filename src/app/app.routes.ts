@@ -20,6 +20,7 @@ import {ListboxPageComponent} from './pages/listbox/listbox-page';
 import {ButtonDemoPageComponent} from './pages/button-demo/button-demo-page';
 import {CdkDataListPageComponent} from './pages/cdk/data-list-page';
 import {CdkPopoverPageComponent} from './pages/cdk/popover-page';
+import {TablePageComponent} from './pages/grids/table-page/table-page';
 
 export const routes: Routes = [
   {
@@ -97,6 +98,10 @@ export const routes: Routes = [
       {
         path: 'button-demo',
         component: ButtonDemoPageComponent
+      },
+      {
+        path: 'table',
+        component: TablePageComponent
       },
       {
         path: 'cdk',

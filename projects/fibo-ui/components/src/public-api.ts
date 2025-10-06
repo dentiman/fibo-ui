@@ -53,3 +53,7 @@ export * from './lib/checkbox/checkbox';
 
 // Data List components
 export * from './lib/data-list/listbox/listbox';
+export * from './lib/table/table';
+export * from './lib/table/column-header';
+export * from './lib/table/column';
+export * from './lib/table/table-row';

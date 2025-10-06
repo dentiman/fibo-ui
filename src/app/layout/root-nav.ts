@@ -97,6 +97,10 @@ export class RootNavComponent {
             label: 'Notifications',
             url: '/notifications',
           },
+          {
+            label: 'Table',
+            url: '/table',
+          },
 
           {
             label: 'Form Example',
