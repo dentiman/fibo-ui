@@ -14,9 +14,10 @@ export class FiboColumn<T , K extends keyof T = keyof T> {
   // Column key to associate this cell template with
   fiboColumn = input.required<K>();
   // Optional human-readable column header
-  columnName = input<string>('');
+  fiboColumnHeader = input<string>('');
   fiboColumnThClass = input<string>('');
   fiboColumnTdClass = input<string>('');
+  fiboColumnIsSortable = input<boolean>(false);
 
   // Optional data source to help type inference for the template context
   fiboColumnSource = input<readonly T[] | T[]>([]);

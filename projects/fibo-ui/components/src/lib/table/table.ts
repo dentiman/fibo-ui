@@ -5,7 +5,8 @@ import {
   contentChild,
   contentChildren,
   inject,
-  input
+  input,
+  model
 } from '@angular/core';
 import {CommonModule, NgTemplateOutlet} from '@angular/common';
 import {FiboColumn} from './column';
@@ -14,8 +15,7 @@ import {FiboTableRow} from './table-row';
 import {ListItem, MultipleSelectionModel, SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
 import {Checkbox} from '../checkbox/checkbox';
 
-type RecordLike = Record<string, unknown>;
-
+// TODO:: need implement checkbox multiselect outside table component
 @Component({
   selector: 'fibo-table',
   imports: [CommonModule, NgTemplateOutlet, Checkbox, ListItem],
@@ -28,26 +28,51 @@ type RecordLike = Record<string, unknown>;
       <thead>
       <tr>
         @if (hasMultipleSelectionModel) {
-          <th scope="col" class="w-10 px-3 py-3.5 text-left text-sm font-semibold text-foreground">
-                <fibo-checkbox ></fibo-checkbox>
+          <th scope="col" class="w-10 px-3 py-3.5 items-center text-sm font-semibold text-foreground" >
+            <fibo-checkbox
+              [checked]="allSelected()"
+              [indeterminate]="isIndeterminate()"
+              (checkedChange)="toggleAll($event)"
+            ></fibo-checkbox>
           </th>
         }
 
 
-        @if (headers().length) {
-          @for (header of headers(); track header) {
-            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-foreground">
-              <ng-container [ngTemplateOutlet]="header.templateRef"></ng-container>
-            </th>
-          }
-        } @else {
-          @for (col of columns(); track col) {
-            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-foreground"
-                [class]="col.fiboColumnThClass()">
-              {{ col.columnName() || col.fiboColumn() }}
-            </th>
-          }
+        @for (col of columns(); track col) {
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-foreground"
+              [class]="col.fiboColumnThClass()">
+            @if (col.fiboColumnIsSortable()) {
+              <a class="inline-flex items-center gap-1 cursor-pointer select-none text-foreground"
+                 (click)="onHeaderClick(col.fiboColumn())">
+                <span>
+                  {{ col.fiboColumnHeader() || col.fiboColumn() }}
+                </span>
+                @if (isSortedBy(col.fiboColumn())) {
+                  @if (getSortOrderFor(col.fiboColumn()) === 'asc') {
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"
+                         aria-hidden="true">
+                      <path d="M12 19V5"/>
+                      <polyline points="5 12 12 5 19 12"/>
+                    </svg>
+                  } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"
+                         aria-hidden="true">
+                      <path d="M12 5v14"/>
+                      <polyline points="19 12 12 19 5 12"/>
+                    </svg>
+                  }
+                }
+              </a>
+            } @else {
+              <span>
+                {{ col.fiboColumnHeader() || col.fiboColumn() }}
+              </span>
+            }
+          </th>
         }
+
       </tr>
       </thead>
       <tbody class="divide-y divide-gray-200 dark:divide-white/10">
@@ -86,14 +111,81 @@ export class Table<T> {
 
   dataSource = input<T[]>([]);
 
+  sort = model<{ sortBy: string; sortOrder: string } | null>(null, { alias: 'sort' });
 
-  headers = contentChildren(FiboColumnHeader, { descendants: true });
   columns = contentChildren(FiboColumn as any, { descendants: true }) as unknown as () => readonly FiboColumn<T, keyof T>[];
 
   rows = computed<ReadonlyArray<T>>(() => this.dataSource());
 
   get hasMultipleSelectionModel() {
     return this.selectionModel instanceof MultipleSelectionModel;
+  }
+
+  // Number of selected items among the current rows
+  private selectedInViewCount = computed<number>(() => {
+    if (!(this.selectionModel instanceof MultipleSelectionModel)) return 0;
+    const currentRows = this.rows();
+    const selected = this.selectionModel.value();
+    if (!Array.isArray(selected) || currentRows.length === 0) return 0;
+    const selectedSet = new Set(selected as ReadonlyArray<T>);
+    let count = 0;
+    for (const row of currentRows) {
+      if (selectedSet.has(row)) count++;
+    }
+    return count;
+  });
+
+  // Header checkbox states
+  allSelected = computed<boolean>(() => {
+    const total = this.rows().length;
+    const selected = this.selectedInViewCount();
+    return total > 0 && selected === total;
+  });
+
+  isIndeterminate = computed<boolean>(() => {
+    const total = this.rows().length;
+    const selected = this.selectedInViewCount();
+    return selected > 0 && selected < total;
+  });
+
+  // Toggle all visible rows based on header checkbox
+  toggleAll(next: boolean | null) {
+    if (!(this.selectionModel instanceof MultipleSelectionModel)) return;
+    const checked = !!next;
+    const currentRows = this.rows();
+    if (currentRows.length === 0) return;
+    this.selectionModel.value.set(checked ? [...currentRows] : []);
+  }
+
+  // Sorting helpers
+  isSortedBy(key: unknown): boolean {
+    const s = this.sort();
+    const k = String(key as any);
+    return !!s && s.sortBy === k;
+  }
+
+  getSortOrderFor(key: unknown): 'asc' | 'desc' | null {
+    const s = this.sort();
+    const k = String(key as any);
+    if (!s || s.sortBy !== k) return null;
+    return (s.sortOrder === 'asc' ? 'asc' : 'desc');
+  }
+
+  onHeaderClick(key: unknown) {
+    const s = this.sort();
+    const k = String(key as any);
+    if (!s || s.sortBy !== k) {
+      // First click on a column or switching columns -> ascending
+      this.sort.set({ sortBy: k, sortOrder: 'asc' });
+      return;
+    }
+    if (s.sortOrder === 'asc') {
+      // Second click on same column -> descending
+      this.sort.set({ sortBy: k, sortOrder: 'desc' });
+      return;
+    }
+    // Third click on same column while descending -> remove sorting
+    this.sort.set(null);
   }
 
   getCellValue<Row extends T, K extends keyof Row>(row: Row, key: K) {
