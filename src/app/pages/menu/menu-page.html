@@ -1,19 +1,26 @@
-<button class="btn mr-1" fiboPopoverTriggerToggle #menu="PopoverTrigger">Open Custom menu</button>
-<button class="btn btn-chip" fiboPopoverTriggerToggle #menu="PopoverTrigger">Open Custom menu</button>
-<button class="btn btn-text" fiboPopoverTriggerToggle #menu="PopoverTrigger">Open Custom menu</button>
-@if (menu.isOpen()) {
-      <fibo-menu [popoverTrigger]="menu">
-          <a fiboMenuItem [routerLink]="'/select'"> Select</a>
-      <a fiboMenuItem [routerLink]="'/select-multiple'"> Select Multiple</a>
-  </fibo-menu>
-}
+<div class="px-4 flex flex-col space-y-12">
+<app-usage-demo [codeBlocks]="codeBlocksBasicMenu">
+  <div class="mx-auto w-60 p-8">
+  <button class="btn mr-1" fiboPopoverTriggerToggle #menu="PopoverTrigger">Open Basic Menu</button>
+  @if (menu.isOpen()) {
+        <fibo-menu [popoverTrigger]="menu">
+            <a fiboMenuItem class="datalist-item py-1 px-2 rounded-md relative group text-sm" [routerLink]="'/select'"> Select</a>
+            <a fiboMenuItem  class="datalist-item py-1 px-2 rounded-md relative group text-sm" [routerLink]="'/select-multiple'"> Select Multiple</a>
+        </fibo-menu>
+  }
+  </div>
+</app-usage-demo>
 
-<button class="btn btn-primary" fiboPopoverTriggerToggle #menu3="PopoverTrigger">Open Complex Menu</button>
-@if (menu3.isOpen()) {
-  <fibo-menu [popoverTrigger]="menu3" placement="bottom-start" [items]="items()">
-  </fibo-menu>
-}
-
+<app-usage-demo [codeBlocks]="codeBlocksComplexMenu">
+  <div class="mx-auto w-60 p-8">
+  <button class="btn btn-primary" fiboPopoverTriggerToggle #trigger="PopoverTrigger">Open Complex Menu</button>
+  @if (trigger.isOpen()) {
+    <fibo-menu [popoverTrigger]="trigger" placement="bottom-start" [items]="items()">
+    </fibo-menu>
+  }
+  </div>
+</app-usage-demo>
+</div>
 
 <ng-template #folderSvgIcon>
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"

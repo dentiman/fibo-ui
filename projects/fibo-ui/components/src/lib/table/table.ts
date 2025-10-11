@@ -28,7 +28,7 @@ import {Checkbox} from '../checkbox/checkbox';
       <thead>
       <tr>
         @if (hasMultipleSelectionModel) {
-          <th scope="col" class="w-10 px-3 py-3.5 items-center text-sm font-semibold text-foreground" >
+          <th scope="col" class="w-10 px-1 items-center text-sm font-semibold text-foreground" >
             <fibo-checkbox
               [checked]="allSelected()"
               [indeterminate]="isIndeterminate()"
@@ -39,7 +39,7 @@ import {Checkbox} from '../checkbox/checkbox';
 
 
         @for (col of columns(); track col) {
-          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-foreground"
+          <th scope="col" class=" text-left text-sm font-semibold text-foreground"
               [class]="col.fiboColumnThClass()">
             @if (col.fiboColumnIsSortable()) {
               <a class="inline-flex items-center gap-1 cursor-pointer select-none text-foreground"
@@ -79,7 +79,7 @@ import {Checkbox} from '../checkbox/checkbox';
         @for (row of rows(); track $index) {
           <tr>
             @if (hasMultipleSelectionModel) {
-              <td class="px-3 py-4 text-sm whitespace-nowrap text-foreground-secondary">
+              <td class="px-1 text-sm whitespace-nowrap text-foreground-secondary">
                 <a [fiboListItemValue]="row"
                    #item="ListItem">
                   <fibo-checkbox
@@ -91,7 +91,7 @@ import {Checkbox} from '../checkbox/checkbox';
               </td>
             }
             @for (col of columns(); track col) {
-              <td class="px-3 py-4 text-sm whitespace-nowrap text-foreground-secondary"
+              <td class=" text-sm whitespace-nowrap text-foreground-secondary"
                   [class]="col.fiboColumnTdClass()">
                 <ng-container
                   [ngTemplateOutlet]="col.templateRef"

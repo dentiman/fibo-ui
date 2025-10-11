@@ -8,6 +8,7 @@ import { MenuItem,
   PopoverMenu,
 } from '@fibo-ui/components';
 import {RouterLink} from '@angular/router';
+import {UsageDemo} from '../../common/usage-demo';
 
 @Component({
   imports: [
@@ -16,137 +17,87 @@ import {RouterLink} from '@angular/router';
     PopoverMenu,
     MenuItem,
     DataList,
-    SingleSelectionModel
+    UsageDemo
   ],
   templateUrl: './menu-page.html',
 
 })
 export class MenuPageComponent {
-  folderIcon = viewChild('folderSvgIcon');
+
+  readonly codeBlocksBasicMenu = [
+    { name: 'html', path: '/documentation/menu/basic-menu.html.md' },
+    { name: 'ts', path: '/documentation/menu/basic-menu.ts.md' }
+  ];
+
+  readonly codeBlocksComplexMenu = [
+    { name: 'html', path: '/documentation/menu/complex-menu.html.md' },
+    { name: 'ts', path: '/documentation/menu/complex-menu.ts.md' }
+  ];
 
   onTriggerClick() {
     alert('Menu trigger clicked!');
   }
 
-  // @ts-ignore
-  items = computed<MenuItemType[]>(() => {
+  items = computed(() => {
     return [
-
       {
         label: 'Components',
-        url: null,
-         icon: 'folder',
+        icon: 'folder',
         children: [
           {
             label: 'Select',
-             icon: 'folder',
+            icon: 'folder',
             children: [
-              {
-                label: 'Single',
-                url: '/',
-              },
-              {
-                label: 'Multiple',
-                url: '/select-multiple',
-              },
-              {
-                label: 'Autocomplete',
-                url: '/au',
-              },
+              { label: 'Single', url: '/menu', icon: 'check' },
+              { label: 'Multiple', url: '/menu', icon: 'list' },
+              { label: 'Autocomplete', url: '/menu', icon: 'search' },
             ],
           },
           {
             label: 'Popovers',
-             icon: 'folder',
+            icon: 'folder',
             children: [
-              {
-                label: 'Menu',
-                url: '/menu',
-              },
-              {
-                label: 'Dialog',
-                url: '/dialog',
-              },
-              {
-                label: 'Confirmation',
-                url: '/confirmation',
-              },
+              { label: 'Menu', url: '/menu', icon: 'panel-right' },
+              { label: 'Dialog', url: '/menu', icon: 'message-square' },
+              { label: 'Confirmation', url: '/menu', icon: 'shield-check' },
             ],
           },
           {
-            label: 'Notifications',
-            url: '/notifications',
-            disabled: true
-          },
-          {
-            label: 'Button',
-            url: '/button',
-            disabled: true
-          },
-          {
-            label: 'Checkbox',
-            url: '/checkbox',
-            disabled: true
-          },
-          {
-            label: 'Switch',
-          },
-          {
-            label: 'Chip',
-            url: '/chip',
-            disabled: true
-          },
-          {
-            label: 'Input',
-            url: '/input',
-          },
-          {
-            label: 'Datepicker',
-            url: '/datepicker',
-          },
-          {
-            label: 'Form Example',
-            url: '/form-example',
-          },
-          {
-            label: 'Radio',
-            url: '/radio-box',
-          },
-          {
-            label: 'Tooltips',
-            url: '/tooltips',
-          },
-          {
-            label: 'Popup Playground',
-            url: '/popup-playground',
-          },
-          {
-            label: 'Tabs',
-            url: '/tabs',
+            label: 'Inputs',
+            icon: 'folder',
+            children: [
+              {
+                label: 'Text',
+                icon: 'file-text',
+                children: [
+                  { label: 'Basic', url: '/menu', icon: 'dot' },
+                  { label: 'With Icon', url: '/menu', icon: 'dot' },
+                ],
+              },
+              {
+                label: 'Datepicker',
+                icon: 'calendar',
+                children: [
+                  { label: 'Single', url: '/menu', icon: 'dot' },
+                  { label: 'Range', url: '/menu', icon: 'dot' },
+                ],
+              },
+            ],
           },
         ],
       },
+      { label: 'Alert on Click', callback: this.onTriggerClick, icon: 'bell' },
       {
-        label: 'Alert on Click',
-        callback: this.onTriggerClick
-      },
-      {
-        label: 'Input',
-        url: '/input',
+        label: 'Settings',
+        icon: 'settings',
         children: [
-          {
-            label: 'Dropdown',
-            url: '/dropdown',
-             icon: 'folder',
-          },
-          {
-            label: 'List',
-            url: '/list',
-             icon: 'folder',
-          },
+          { label: 'Profile', url: '/menu', icon: 'user' },
+          { label: 'Security', url: '/menu', icon: 'lock' },
         ],
       },
     ];
   });
 }
+
+
 
