@@ -60,7 +60,7 @@ export class PopoverPosition {
     return this.popoverTrigger()?.element
   })
 
-  fullPopoverWidth = input<boolean>(false)
+  popoverFullWidth = input<boolean>(false)
   placement = model<Placement>('bottom');
   elementRef  = inject(ElementRef);
   offset = input<number>(5);
@@ -114,7 +114,7 @@ export class PopoverPosition {
 
   width = computed(() => {
     this.position();
-    return this.fullPopoverWidth()
+    return this.popoverFullWidth()
       ? this.realReferenceElement()?.offsetWidth
       : undefined;
   });

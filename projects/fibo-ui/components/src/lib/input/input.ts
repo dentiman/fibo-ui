@@ -17,7 +17,7 @@ import {FormField} from '../form/form-field/form-field';
   hostDirectives: [
     {
       directive: FormFieldControl,
-      inputs: ['label', 'placeholder','fixedLabel', 'appearance'],
+      inputs: ['label', 'placeholder','fixedLabel', 'appearance', 'controlClass'],
     }
   ],
 })

@@ -28,7 +28,7 @@
        fiboDataList
        class="fibo-popover max-h-70 overflow-y-auto py-1 px-1 rounded-md"
        [popoverTrigger]="trigger"
-       [fullPopoverWidth]="true"
+       [popoverFullWidth]="true"
        [(SingleSelectionModel)]="value"
        (optionTriggered)="trigger.close()"
   >

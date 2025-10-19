@@ -15,6 +15,8 @@ export * from './lib/form/form-error/form-error-pipes';
 export * from './lib/form/form-error/form-error-service';
 export * from './lib/form/form-field/form-field-control';
 export * from './lib/form/form-field/form-field-content';
+export * from './lib/form/form-field/form-control-append.directive';
+export * from './lib/form/form-field/form-control-prepend.directive';
 export * from './lib/form/control-status';
 export * from './lib/form/form-field-popover-trigger';
 

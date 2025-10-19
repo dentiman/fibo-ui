@@ -55,7 +55,7 @@ import {CalendarDateRangeSelectionModel, DateRange} from './calendar/calendar-da
   hostDirectives: [
     {
       directive: FormFieldControl,
-      inputs: ['label', 'placeholder','fixedLabel'],
+      inputs: ['label', 'placeholder','fixedLabel', 'controlClass'],
     }
   ],
   templateUrl: './date-range-picker.html',

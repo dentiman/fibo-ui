@@ -44,8 +44,9 @@
 @if (trigger.isOpen() && items().length) {
   <fibo-listbox fiboPopover
                class="fibo-popover rounded-md max-h-70 overflow-y-auto"
+               [class]="popoverClass()"
                [popoverTrigger]="trigger"
-               [fullPopoverWidth]="true"
+              [popoverFullWidth]="popoverFullWidth()"
                [(MultipleSelectionModel)]="value"
                [items]="items()"
                [valueProp]="valueProp()"

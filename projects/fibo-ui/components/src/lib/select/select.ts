@@ -27,7 +27,7 @@ import {LucideAngularModule} from 'lucide-angular';
   hostDirectives: [
     {
       directive: FormFieldControl,
-      inputs: ['label', 'placeholder','fixedLabel', 'appearance'],
+      inputs: ['label', 'placeholder','fixedLabel', 'appearance', 'controlClass'],
     }
   ],
 })
@@ -38,6 +38,9 @@ export class Select<T = any>  {
   items = input<T[]>([]);
   itemTemplate = input<TemplateRef<any> | undefined>(undefined);
   options = viewChild(Option);
+
+  popoverFullWidth = input<boolean>(true);
+  popoverClass = input<string>('');
 
   valueProp = input<keyof T>('value' as keyof T);
   labelProp = input<keyof T>('label' as keyof T);

@@ -36,7 +36,7 @@ export interface User {
   hostDirectives: [
     {
       directive: FormFieldControl,
-      inputs: ['label', 'placeholder','fixedLabel'],
+      inputs: ['label', 'placeholder','fixedLabel', 'controlClass'],
     }
   ],
 })

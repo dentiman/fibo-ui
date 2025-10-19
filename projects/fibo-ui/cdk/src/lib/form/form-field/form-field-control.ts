@@ -1,6 +1,8 @@
-import {computed, contentChildren, Directive, ElementRef, inject, input, output} from '@angular/core';
+import {computed, contentChild, contentChildren, Directive, ElementRef, inject, input, output} from '@angular/core';
 import {PrimitiveValueAccessor} from '../../common/primitive-value-accessor';
 import {FormFieldContent} from './form-field-content';
+import {FormControlAppendDirective} from './form-control-append.directive';
+import {FormControlPrependDirective} from './form-control-prepend.directive';
 
 
 export type FormFieldAppearance = 'basic' | 'secondary' | 'clear';
@@ -14,7 +16,7 @@ export type FormFieldAppearance = 'basic' | 'secondary' | 'clear';
     }
   ],
   host: {
-    class: 'relative block w-full group',
+    class: 'relative block group',
   }
 })
 export class FormFieldControl<T> {
@@ -22,6 +24,7 @@ export class FormFieldControl<T> {
 
   cva = inject<PrimitiveValueAccessor<T>>(PrimitiveValueAccessor);
   placeholder = input<string>('');
+  controlClass = input<string>('');
 
   floatingLabel = input<string | null>(null, {alias: 'label'});
   fixedLabel = input<string | null>(null);
@@ -30,6 +33,9 @@ export class FormFieldControl<T> {
   appearance = input<FormFieldAppearance>('basic');
 
   inputs = contentChildren(FormFieldContent)
+
+  appendTemplate = contentChild(FormControlAppendDirective)
+  prependTemplate = contentChild(FormControlPrependDirective)
 
 
 }

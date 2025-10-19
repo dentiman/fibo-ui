@@ -24,7 +24,8 @@ import {LucideAngularModule} from 'lucide-angular';
     '[attr.data-error]': 'cva()?.hasError() || null',
     '[style.pointer-events]': "cva()?.disabled() ? 'none' : 'auto'",
     '[tabindex]': "control().cva.disabled()?'-1':'0'",
-    'class': `  cursor-default  relative block fibo-form-field`,
+    '[class]': "'content-center   fibo-form-field' + (control().controlClass() ? ' ' + control().controlClass() : '')",
+    '[class.min-h-14]': "!!control().label()",
   },
 })
 

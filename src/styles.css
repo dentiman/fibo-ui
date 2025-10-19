@@ -325,7 +325,7 @@
 @layer components {
 
   .fibo-form-field {
-    @apply  text-foreground  shadow-xs  aria-disabled:shadow-none rounded-md
+    @apply min-h-9  block cursor-default  relative text-foreground  shadow-xs  aria-disabled:shadow-none rounded-md
     bg-[var(--background-secondary)]
 
     data-[appearance=secondary]:bg-black/4 dark:data-[appearance=secondary]:bg-[var(--background-lite)]

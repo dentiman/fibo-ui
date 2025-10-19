@@ -26,7 +26,7 @@ import {FormFieldContent} from '@fibo-ui/cdk';
   hostDirectives: [
     {
       directive: FormFieldControl,
-      inputs: ['label', ' placeholder','fixedLabel', 'appearance' ],
+      inputs: ['label', ' placeholder','fixedLabel', 'appearance', 'controlClass' ],
     }
   ],
   templateUrl: './datepicker.html',
@@ -37,5 +37,6 @@ export class Datepicker  {
   minDate = input<string|null>(null);
   maxDate = input<string|null>(null);
   dateChange = output();
+  placeholder = computed(() => this.formFieldControl.placeholder()?? 'YYYY-MM-DD');
 
 }

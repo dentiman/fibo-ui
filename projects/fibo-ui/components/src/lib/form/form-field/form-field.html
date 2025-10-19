@@ -11,9 +11,13 @@
     "></div>
   }
 
-  <div [class.min-h-14]="!!control().label()"
-       class="flex items-center space-x-1 text-left px-3 py-1 min-h-9 "
+  <div
+       class=" flex items-center space-x-2 text-left px-3 py-1  "
   >
+    @if (formFieldControl.prependTemplate(); as prep) {
+      <ng-container [ngTemplateOutlet]="prep.template"></ng-container>
+    }
+
     <div class="min-w-0 grow relative">
 
       @if (label) {
@@ -32,7 +36,7 @@
         @if (label && !hasFixedLabel) {
 
         } @else {
-          <div class="from-field-placeholder text-sm">{{ formFieldControl.placeholder() }}!</div>
+          <div class="from-field-placeholder text-sm">{{ formFieldControl.placeholder() }}</div>
         }
 
       }
@@ -54,29 +58,27 @@
           (click)="formFieldControl.cva.ngControl?.reset()"
           type="button"
           class="flex-none
-            hidden
+            hidden cursor-pointer
             group-hover:block
-            group-focus-within:block btn-text
-            rounded-full p-0.5 -mr-0.5  text-foreground-tertiary hover:text-foreground"
+            group-focus-within:block
+            rounded-full  text-foreground-tertiary hover:text-foreground"
         >
-          <lucide-icon name="X" size="15" class=""></lucide-icon>
+          <lucide-icon name="X" size="16" class=""></lucide-icon>
         </button>
         <div class="group-hover:hidden group-focus-within:hidden">
-          <ng-container [ngTemplateOutlet]="appendBlock"></ng-container>
+          <ng-container [ngTemplateOutlet]="formFieldControl.appendTemplate()?.template || defaultAppendBlock"></ng-container>
         </div>
       </div>
 
     } @else {
-      <ng-container [ngTemplateOutlet]="appendBlock"></ng-container>
+      <ng-container [ngTemplateOutlet]="formFieldControl.appendTemplate()?.template || defaultAppendBlock"></ng-container>
     }
 
-    <ng-template #appendBlock>
-      <ng-content select=".append">
-        @if (appendIcon(); as appendIcon) {
-          <lucide-icon [name]="appendIcon" size="16"
-                       class="self-center justify-self-end fibo-form-field-icon text-foreground-tertiary"></lucide-icon>
-        }
-      </ng-content>
+    <ng-template #defaultAppendBlock>
+          @if (appendIcon(); as appendIcon) {
+            <lucide-icon [name]="appendIcon" size="16"
+                         class="self-center   justify-self-end fibo-form-field-icon text-foreground-tertiary"></lucide-icon>
+          }
     </ng-template>
   </div>
 

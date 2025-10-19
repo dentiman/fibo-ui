@@ -29,7 +29,7 @@ import {FormFieldErrors} from '@fibo-ui/cdk';
   hostDirectives: [
     {
       directive: FormFieldControl,
-      inputs: ['label', 'placeholder','fixedLabel', 'appearance'],
+      inputs: ['label', 'placeholder','fixedLabel', 'appearance', 'controlClass'],
     }
   ],
 })
@@ -40,6 +40,9 @@ export class MultipleSelect<T> {
   items = input<T[]>([]);
   itemTemplate = input<TemplateRef<any> | undefined>(undefined);
   selectedItemTemplate = input<TemplateRef<any> | undefined>(undefined);
+
+  popoverFullWidth = input<boolean>(true);
+  popoverClass = input<string>('');
 
   valueProp = input<keyof T>('value' as keyof T);
   labelProp = input<keyof T>('label' as keyof T);

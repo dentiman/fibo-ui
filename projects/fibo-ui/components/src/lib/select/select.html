@@ -2,7 +2,7 @@
   [control]="formFieldControl"
   appendIcon="chevron-down"
   fiboPopoverTriggerClick #trigger="PopoverTrigger">
-  <ng-content>
+
     @if(currentSelectedItem()) {
       @if (itemTemplate(); as template) {
         <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: currentSelectedItem() }"></ng-container>
@@ -12,7 +12,6 @@
         </span>
       }
     }
-  </ng-content>
 
 </fibo-form-field>
 
@@ -21,21 +20,22 @@
 @if (trigger.isOpen()) {
   <div fiboPopover
        fiboDataList
-       class="fibo-popover  py-1 px-1 rounded-md"
+       class="fibo-popover py-1 px-1 rounded-md"
+       [class]="popoverClass()"
        [popoverTrigger]="trigger"
-       [fullPopoverWidth]="true"
+       [popoverFullWidth]="popoverFullWidth()"
        [(SingleSelectionModel)]="value"
        (optionTriggered)="trigger.close()"
   >
-    <div class="flex px-2 space-x-2">
-      <lucide-icon name="search" size="16" class="text-foreground-secondary self-center"></lucide-icon>
-      <input
-        class="w-full py-1 outline-hidden text-sm fibo-input"
-        placeholder="Search..."
-        type="text"
-      />
-    </div>
-    <div class="h-px  bg-border-primary my-1 mx-1"></div>
+<!--    <div class="flex px-2 space-x-2">-->
+<!--      <lucide-icon name="search" size="16" class="text-foreground-secondary self-center"></lucide-icon>-->
+<!--      <input-->
+<!--        class="w-full py-1 outline-hidden text-sm fibo-input"-->
+<!--        placeholder="Search..."-->
+<!--        type="text"-->
+<!--      />-->
+<!--    </div>-->
+<!--    <div class="h-px  bg-border-primary my-1 mx-1"></div>-->
     <div class="max-h-70 overflow-y-auto fibo-scrollbar">
       @for (item of items(); track getValue(item)) {
         <a [fiboListItemValue]="getValue(item)"
