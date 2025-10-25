@@ -1,275 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities);
-@import "./button.css" layer(components);
 
-/* Custom dark mode variant using data attribute for better control */
+
+/* Option 2: Import only specific parts (for more control) */
+@import "../projects/fibo-ui/components/src/theme.css" layer(theme);
+@import "../projects/fibo-ui/components/src/buttons.css";
+@import "../projects/fibo-ui/components/src/components.css" layer(components);
+
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-
-
-/* ========================================
-   CUSTOM THEME CONFIGURATION
-   ======================================== */
-@theme {
-  --font-roboto: "Roboto", sans-serif;
-  /* ========================================
-     SEMANTIC COLOR TOKENS
-     ======================================== */
-
-
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
-  --color-primary-950: #172554;
-
-
-
-  --color-primary-dark-50: oklch(95.00% 0.80% 240.00deg);
-  --color-primary-dark-100: oklch(90.22% 2.84% 240.00deg);
-  --color-primary-dark-200: oklch(80.67% 6.93% 240.00deg);
-  --color-primary-dark-300: oklch(71.11% 11.02% 240.00deg);
-  --color-primary-dark-400: oklch(61.56% 15.16% 240.00deg);
-  --color-primary-dark-500: oklch(52.00% 19.20% 240.00deg);
-  --color-primary-dark-600: oklch(45.78% 15.38% 246.22deg);
-  --color-primary-dark-700: oklch(39.56% 11.56% 252.44deg);
-  --color-primary-dark-800: oklch(33.33% 7.73% 258.67deg);
-  --color-primary-dark-900: oklch(27.11% 3.91% 264.89deg);
-  --color-primary-dark-950: oklch(24.00% 2.00% 268.00deg);
-
-
-  --background: oklch(1 0 0);
-  --background-lite: oklch(0.898 0 89.876);
-  --background-secondary: oklch(1 0 0);  /* for lite */
-  --background-tertiary:  oklch(1 0 0);
-
-  --foreground: oklch(0.145 0 0);
-  --foreground-secondary: var(--color-gray-600);
-  --foreground-tertiary:  var(--color-gray-400);
-  --foreground-inverse: oklch(0.98 0 0);
-
-
-  /* Border Colors */
-  /*--border-primary: var(--color-gray-300);*/
-  --border-primary:  --alpha(var(--color-black) / 13%);
-  --border-lite: --alpha(var(--color-black) / 20%);;
-  --border-hard: --alpha(var(--color-black) / 9%);;
-  /*--color-border-secondary: oklch(0.80 0 0);*/
-  /*--color-border-tertiary: oklch(0.75 0 0);*/
-  /*--color-border-disabled: oklch(0.70 0 0);*/
-
-  /* Shadow Tokens */
-  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-
-  /* Dark theme shadow variants */
-  --shadow-dark-xs: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-  --shadow-dark-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
-  --shadow-dark-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
-  --shadow-dark-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
-  --shadow-dark-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
-  --shadow-dark-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
-
-
-
-}
-
-@theme inline  {
-  --color-background: var(--background);
-  --color-lite: var(--background-lite);
-  --color-background-secondary: var(--background-secondary);
-  --color-background-tertiary:  var(--background-tertiary);
-
-  --color-foreground: var(--foreground);
-  --color-foreground-secondary: var(--foreground-secondary);
-  --color-foreground-tertiary: var(--foreground-tertiary);
-  --color-foreground-inverse: var(--foreground-inverse);
-
-  --color-primary: var(--color-blue-500);
-  --color-primary-foreground: white;
-
-  --color-border-primary: var(--border-primary);
-
-
-  /* Form Field Variables - Light Theme */
-  --form-field-bg: oklch(1 0 0);
-  --form-field-text: oklch(0.145 0 0);
-  --form-field-outline: var(--border-primary);
-  --form-field-outline-focus: --alpha(var(--color-blue-500) / 30%);;
-  --form-field-bg-error: oklch(0.98 0.008 0);
-  --form-field-outline-error: oklch(0.62 0.192 19.855 / 0.3);
-  --form-field-bg-disabled: oklch(0.95 0 0);
-  --form-field-text-disabled: var(--foreground-secondary);
-  --form-field-outline-disabled: oklch(0.80 0 0);
-
-  /* Form Field Label Variables - Light Theme */
-
-  --form-field-label-text-focus: var(--color-blue-500);
-  --form-field-label-text-error: oklch(0.62 0.192 20);
-  --form-field-label-text: var(--foreground-secondary);
-  --form-field-label-text-disabled: var(--foreground-tertiary);
-  --form-field-placeholder: var(--foreground-tertiary);
-
-  /* Input Variables - Light Theme */
-  --input-text: black;
-  --input-text-disabled: var(--foreground-tertiary);
-
-  /* Popover Variables - Light Theme */
-  --popover-bg: oklch(1 0 0);
-  --popover-outline: var(--border-primary);
-
-  /* Modal Variables - Light Theme */
-  --modal-bg: oklch(1 0 0);
-  --modal-outline: var(--border-primary);
-
-  /* Card Variables - Light Theme */
-  --card-bg: oklch(1 0 0);
-  --card-outline: var(--border-primary);
-
-
-  /* Checkbox Variables - Light Theme */
-  --checkbox-bg: oklch(1 0 0);
-  --checkbox-border: var(--border-primary);
-  --checkbox-border-focus: oklch(0.52 0.192 240);
-  --checkbox-bg-checked:  var(--color-blue-500);
-  --checkbox-border-checked: transparent ;
-  --checkbox-bg-disabled: oklch(0.95 0 0);
-  --checkbox-border-disabled: oklch(0.80 0 0);
-  --checkbox-icon: oklch(0.98 0 0);
-
-
-  /* DataList Item Variables - Light Theme */
-  --datalist-item-bg: transparent;
-  --datalist-item-text: oklch(0.12 0 0);
-  --datalist-item-bg-active: --alpha(var(--color-foreground) / 5%);
-  --datalist-item-bg-disabled: transparent;
-  --datalist-item-text-disabled: var(--foreground-secondary);
-  --datalist-item-bg-selected:  var(--color-primary-500);
-  --datalist-item-text-selected: oklch(0.98 0 0);
-  --datalist-item-bg-selected-disabled: var(--color-blue-500);
-
-
-
-
-}
-
-/* ========================================
-   DARK THEME CSS VARIABLES
-   ======================================== */
-[data-theme="dark"] {
-  color-scheme: dark;
-
-  --background: oklch(24% 2% 268deg);
-  --background-lite: oklch(26% 2% 268deg);
-  --background-secondary: oklch(30% 2% 253deg);
-  --background-tertiary: oklch(35% 2% 265deg);
-
-  /*text, icons colors*/
-  --foreground: var(--color-neutral-50);
-  --foreground-secondary:  var(--color-gray-400);
-  --foreground-tertiary: var(--color-neutral-500);
-  --foreground-inverse: oklch(0.92 0 0);
-
-
-  /*--border-primary:  oklch(0.348 0 89.876);*/
-  --border-primary: --alpha(var(--color-white) / 4%);;
-  --border-lite: --alpha(var(--color-white) / 8%);;
-  --border-hard: --alpha(var(--color-white) / 8%);
-  /*--color-border-secondary: oklch(0.30 0 0);*/
-  /*--color-border-tertiary: hsl(223deg 5% 37%);*/
-  /*--color-border-disabled: oklch(0.42 0 0);*/
-
-  /* Override shadows for dark theme */
-  --shadow-xs: var(--shadow-dark-xs);
-  --shadow-sm: var(--shadow-dark-sm);
-  --shadow-md: var(--shadow-dark-md);
-  --shadow-lg: var(--shadow-dark-lg);
-  --shadow-xl: var(--shadow-dark-xl);
-  --shadow-2xl: var(--shadow-dark-2xl);
-
-  /* Form Field Variables - Dark Theme */
-  --form-field-bg: oklch(30% 2% 253deg);
-  --form-field-text: var(--foreground);
-  --form-field-outline: var(--border-primary);
-  --form-field-outline-focus: --alpha(var(--color-primary-500) / 20%);
-  --form-field-bg-error: oklch(0.267 0.019 7.232);
-  --form-field-outline-error:  --alpha(var(--color-red-300) / 20%);;
-  --form-field-bg-disabled: --alpha(var(--color-foreground) / 5%);;
-  --form-field-text-disabled: var(--color-neutral-600);
-  --form-field-outline-disabled: oklch(0.20 0 0);
-
-  /* Form Field Label Variables - Dark Theme */
-  --form-field-label-text: var(--foreground-secondary);
-  --form-field-label-text-focus: oklch(0.71 0.11 240);
-  --form-field-label-text-error: var(--color-red-400);
-  --form-field-label-text-disabled: var(--foreground-tertiary);
-
-  /* Form Field Placeholder Variables - Dark Theme */
-  --form-field-placeholder: var(--foreground-tertiary);
-
-  /* Input Variables - Dark Theme */
-  --input-text: var(--foreground);
-  --input-text-disabled: var(--foreground-tertiary);;
-
-  /* Popover Variables - Dark Theme */
-  --popover-bg: oklch(30% 2% 253deg);
-  --popover-outline: var(--border-primary);
-
-  /* Modal Variables - Dark Theme */
-  --modal-bg: oklch(30% 2% 253deg);
-  --modal-outline: var(--border-primary);
-
-  /* Card Variables - Dark Theme */
-  --card-bg: oklch(30% 2% 253deg);
-  --card-outline: var(--border-primary);
-
-  /* Checkbox Variables - Dark Theme */
-  --checkbox-bg: transparent;
-  --checkbox-border: hsl(223deg 5% 37%);;
-  --checkbox-border-focus: var(--color-blue-500);
-  --checkbox-bg-checked:  var(--color-blue-500);
-  --checkbox-border-checked: transparent;
-  --checkbox-bg-disabled: oklch(0.28 0.02 268deg);
-  --checkbox-border-disabled: oklch(0.20 0 0);
-  --checkbox-icon: oklch(0.98 0 0);
-
-
-  /* DataList Item Variables - Dark Theme */
-  --datalist-item-bg: transparent;
-  --datalist-item-text: oklch(0.92 0 0);
-  --datalist-item-bg-active: --alpha(var(--color-foreground) / 5%);
-  --datalist-item-bg-disabled: transparent;
-  --datalist-item-text-disabled: var(--foreground-secondary);
-  --datalist-item-bg-selected:  var(--color-primary-500);
-  --datalist-item-text-selected: oklch(0.98 0 0);
-  --datalist-item-bg-selected-disabled:  --alpha(var(--color-foreground) / 5%);
-
-
-  ::-webkit-scrollbar-thumb {
-    background:  --alpha(var(--color-white) / 10%);;
-    border-radius: var(--radius-sm);
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background:  --alpha(var(--color-white) / 20%);;
-    border-radius: var(--radius-sm);
-  }
-
-
-
-}
 
 
 @layer base {
@@ -318,200 +60,57 @@
   a {
     @apply text-primary-600 hover:text-primary-700 transition-colors;
   }
+  ::-webkit-scrollbar-thumb {
+    background:  --alpha(var(--color-white) / 10%);;
+    border-radius: var(--radius-sm);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background:  --alpha(var(--color-white) / 20%);;
+    border-radius: var(--radius-sm);
+  }
 
 }
 
 
+
+
 @layer components {
-
-  .fibo-form-field {
-    @apply min-h-9  block cursor-default  relative text-foreground  shadow-xs  aria-disabled:shadow-none rounded-md
-    bg-[var(--background-secondary)]
-
-    data-[appearance=secondary]:bg-black/4 dark:data-[appearance=secondary]:bg-[var(--background-lite)]
-
-    outline-1 -outline-offset-1
-    outline-black/13 dark:outline-white/4
-    aria-disabled:outline-black/8 aria-disabled:dark:outline-white/4
-    focus-within:outline-black/18 dark:focus-within:outline-white/5
-
-    dark:data-[appearance=secondary]:outline-white/6
-    dark:data-[appearance=secondary]:focus-within:outline-white/8
-    dark:data-[appearance=secondary]:aria-disabled:outline-white/6
-
-    data-error:outline-red-700/15 dark:data-error:outline-red-300/10
-    dark:data-error:data-[appearance=secondary]:outline-red-300/13
-
-    aria-disabled:text-[var(--foreground-secondary)]  dark:aria-disabled:text-[var(--color-neutral-600)]
-    aria-disabled:cursor-not-allowed
-    dark:bg-[var(--background-secondary)] dark:text-[var(--foreground)]
-    aria-disabled:bg-transparent
-    aria-disabled:bg-[repeating-linear-gradient(45deg,rgb(0_0_0/_0.01),rgb(0_0_0/_0.01)_10px,rgb(0_0_0/_0.03)_10px,rgb(0_0_0/_0.03)_20px)]
-    dark:aria-disabled:bg-[repeating-linear-gradient(45deg,rgb(255_255_255/_0.01),rgb(255_255_255/_0.01)_10px,rgb(255_255_255/_0.03)_10px,rgb(255_255_255/_0.03)_20px)];
+  /* Shiki syntax highlighting styles */
+  .shiki {
+    background: transparent !important;
+    margin: 0;
+    padding: 0;
   }
 
-  .fibo-form-field-label {
-    color: var(--form-field-label-text);
-    transition: color 200ms;
+  /* Light theme styles for Shiki */
+  html:not([data-theme="dark"]) .shiki,
+  html:not([data-theme="dark"]) .shiki span {
+    color: var(--shiki-light) !important;
+    background-color: transparent !important;
+    /* Optional, if you also want font styles */
+    font-style: var(--shiki-light-font-style) !important;
+    font-weight: var(--shiki-light-font-weight) !important;
+    text-decoration: var(--shiki-light-text-decoration) !important;
   }
 
-
-  .fibo-form-field:focus-within .fibo-form-field-label,.fibo-form-field:focus .fibo-form-field-label {
-    color: var(--form-field-label-text-focus);
+  html:not([data-theme="dark"]) .shiki {
+    background-color: transparent !important;
   }
 
-  .fibo-form-field[aria-disabled=true] .fibo-form-field-label,
-  .fibo-form-field[aria-disabled=true] .from-field-placeholder{
-    color: var(--form-field-label-text-disabled);
+  /* Dark theme styles for Shiki */
+  [data-theme="dark"] .shiki,
+  [data-theme="dark"] .shiki span {
+    color: var(--shiki-dark) !important;
+    background-color: transparent !important;
+    /* Optional, if you also want font styles */
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
   }
 
-  .fibo-form-field[data-error=true] .fibo-form-field-label,
-  .fibo-form-field[data-error=true] .from-field-placeholder{
-    color: var(--form-field-label-text-error);
+  [data-theme="dark"] .shiki {
+    background-color: transparent !important;
   }
-
-  .fibo-form-field-icon {
-    color: var(--form-field-label-text);
-  }
-
-
-  .from-field-placeholder {
-    color: var(--form-field-placeholder);
-    transition: color 200ms;
-  }
-
-
-  /* Modal component */
-  .fibo-modal {
-    box-shadow: var(--shadow-lg);
-    background-color: var(--modal-bg);
-    outline: 1px solid var(--modal-outline);
-    outline-offset: -1px;
-    transition: all 300ms;
-  }
-
-  /* Popover component */
-  .fibo-popover {
-    box-shadow: var(--shadow-xl);
-    background-color: var(--popover-bg);
-    outline: 1px solid var(--popover-outline);
-    outline-offset: -1px;
-    transition: all 200ms;
-  }
-
-  .fibo-card {
-    background-color: var(--card-bg);
-    outline: 1px solid var(--card-outline);
-    outline-offset: -1px;
-    transition: all 200ms;
-  }
-
-
-
-
-  /* Input */
-  .fibo-input {
-    color: var(--input-text);
-    transition: color 200ms;
-  }
-
-  .fibo-input::placeholder {
-    color: var(--form-field-placeholder);
-    transition: color 200ms;
-  }
-
-
-
-  .group[data-error="true"] .fibo-input::placeholder {
-    color: var(--form-field-label-text);
-  }
-
-  .group[aria-disabled="true"] .fibo-input, .fibo-input[aria-disabled="true"]  {
-    color: var(--input-text-disabled);
-  }
-
-  .group[aria-disabled="true"] .fibo-input::placeholder, .fibo-input[aria-disabled="true"]::placeholder {
-    color: var(--form-field-label-text-disabled);
-  }
-
-
-
-  /* ========================================
-     NAVIGATION COMPONENTS
-     ======================================== */
-
-  /* DataList item */
-  .datalist-item {
-    display: flex;
-    gap: 0.25rem;
-    line-height: 1.5rem;
-    cursor: pointer;
-    background-color: var(--datalist-item-bg);
-    color: var(--datalist-item-text);
-  }
-
-  .datalist-item[data-active="true"] {
-    background-color: var(--datalist-item-bg-active);
-  }
-
-  .datalist-item[aria-disabled="true"] {
-    background-color: var(--datalist-item-bg-disabled);
-    color: var(--datalist-item-text-disabled);
-  }
-
-  .datalist-item[data-multiple="false"][aria-selected="true"] {
-    background-color: var(--datalist-item-bg-selected);
-    color: var(--datalist-item-text-selected);
-  }
-
-  .datalist-item[aria-selected="true"][aria-disabled="true"] {
-    background-color: var(--datalist-item-bg-selected);
-    color: var(--datalist-item-text-selected);
-  }
-  .datalist-item[aria-selected="true"][data-active="true"][aria-disabled="true"] {
-    background-color: var(--datalist-item-bg-selected);
-    color: var(--datalist-item-text-selected);
-  }
-
-  .datalist-item[aria-disabled="true"][data-active="true"] {
-    background-color: var(--datalist-item-bg-disabled);
-  }
-
- /* Shiki syntax highlighting styles */
- .shiki {
-   background: transparent !important;
-   margin: 0;
-   padding: 0;
- }
-
- /* Light theme styles for Shiki */
- html:not([data-theme="dark"]) .shiki,
- html:not([data-theme="dark"]) .shiki span {
-   color: var(--shiki-light) !important;
-   background-color: transparent !important;
-   /* Optional, if you also want font styles */
-   font-style: var(--shiki-light-font-style) !important;
-   font-weight: var(--shiki-light-font-weight) !important;
-   text-decoration: var(--shiki-light-text-decoration) !important;
- }
-
- html:not([data-theme="dark"]) .shiki {
-   background-color: transparent !important;
- }
-
- /* Dark theme styles for Shiki */
- [data-theme="dark"] .shiki,
- [data-theme="dark"] .shiki span {
-   color: var(--shiki-dark) !important;
-   background-color: transparent !important;
-   /* Optional, if you also want font styles */
-   font-style: var(--shiki-dark-font-style) !important;
-   font-weight: var(--shiki-dark-font-weight) !important;
-   text-decoration: var(--shiki-dark-text-decoration) !important;
- }
-
- [data-theme="dark"] .shiki {
-   background-color: transparent !important;
- }
 
 }

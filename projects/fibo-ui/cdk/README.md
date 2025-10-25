@@ -1,63 +1,166 @@
-# Cdk
+# @fibo-ui/cdk
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.0.
+Core development kit for Fibo UI components. This library provides essential directives, form controls, utilities, and building blocks for creating Angular UI components.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Installation
 
 ```bash
-ng generate component component-name
+npm install @fibo-ui/cdk
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Features
+
+### Common Directives
+- **AutoFocus**: Automatically focuses elements when they become visible
+- **DataActive**: Manages active state for interactive elements
+- **IsEmpty**: Utility directive for checking empty states
+- **PrimitiveValueAccessor**: Base class for form controls
+- **RandomId**: Generates unique IDs for elements
+
+### Form Components & Services
+- **Form Field Control**: Base interface for form field controls
+- **Form Field Content**: Manages form field content structure
+- **Form Field Errors**: Error handling and display utilities
+- **Form Error Service**: Centralized error management
+- **Control Status**: Form control state management
+- **Form Field Popover Trigger**: Popover integration for form fields
+
+### Data List Directives
+- **Data List**: Base directive for list components
+- **List Item**: Individual list item management
+- **Selection Models**: Various selection strategies for lists
+
+### Popover Directives
+- **Popover Trigger**: Triggers popover display
+- **Popover Position**: Manages popover positioning
+- **Popover Arrow**: Arrow indicator for popovers
+- **Popover**: Core popover functionality
+
+### Utility Functions
+- **Property Utils**: Common property manipulation utilities
+
+## Usage
+
+### Basic Import
+
+```typescript
+import { AutoFocusDirective, FormFieldControl } from '@fibo-ui/cdk';
+```
+
+### Using Directives
+
+```typescript
+import { Component } from '@angular/core';
+import { AutoFocusDirective } from '@fibo-ui/cdk';
+
+@Component({
+  selector: 'app-example',
+  template: `
+    <input autoFocus placeholder="This input will be focused automatically" />
+  `,
+  imports: [AutoFocusDirective]
+})
+export class ExampleComponent {}
+```
+
+### Form Field Control
+
+```typescript
+import { Component, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormFieldControl } from '@fibo-ui/cdk';
+
+@Component({
+  selector: 'app-custom-input',
+  template: `
+    <input 
+      [value]="value"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+    />
+  `,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => CustomInputComponent),
+      multi: true
+    },
+    {
+      provide: FormFieldControl,
+      useExisting: CustomInputComponent
+    }
+  ]
+})
+export class CustomInputComponent implements ControlValueAccessor, FormFieldControl {
+  value = '';
+  onChange = (value: string) => {};
+  onTouched = () => {};
+
+  writeValue(value: string): void {
+    this.value = value;
+  }
+
+  registerOnChange(fn: (value: string) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  onInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.value = target.value;
+    this.onChange(this.value);
+  }
+
+  onBlur(): void {
+    this.onTouched();
+  }
+}
+```
+
+## Requirements
+
+- Angular 20.1.0 or higher
+- TypeScript 5.8.2 or higher
+
+## Peer Dependencies
+
+- `@angular/common`: ^20.1.0
+- `@angular/core`: ^20.1.0
+
+## Development
+
+### Building the Library
 
 ```bash
-ng generate --help
+ng build @fibo-ui/cdk --configuration=production
 ```
 
-## Building
-
-To build the library, run:
+### Running Tests
 
 ```bash
-ng build cdk
+ng test @fibo-ui/cdk
 ```
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
-
-### Publishing the Library
-
-Once the project is built, you can publish your library by following these steps:
-
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/cdk
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Publishing
 
 ```bash
-ng test
+cd dist/fibo-ui/cdk
+npm publish
 ```
 
-## Running end-to-end tests
+## License
 
-For end-to-end (e2e) testing, run:
+MIT
 
-```bash
-ng e2e
-```
+## Contributing
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Please read our [contributing guidelines](https://github.com/your-org/fibo-ui/blob/main/CONTRIBUTING.md) before submitting pull requests.
 
-## Additional Resources
+## Support
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- [Documentation](https://github.com/your-org/fibo-ui#readme)
+- [Issues](https://github.com/your-org/fibo-ui/issues)
+- [Discussions](https://github.com/your-org/fibo-ui/discussions)

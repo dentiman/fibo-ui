@@ -1,4 +1,4 @@
-import {Component, computed, inject, input, TemplateRef, viewChild} from '@angular/core';
+import {Component, computed, inject, input, TemplateRef, viewChild, ViewEncapsulation} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from "@angular/forms";
 import {DataList, ListItem, PopoverTriggerClick, Popover, SingleSelectionModel,} from '@fibo-ui/cdk';
@@ -24,6 +24,7 @@ import {LucideAngularModule} from 'lucide-angular';
     LucideAngularModule,
   ],
   templateUrl: './select.html',
+  encapsulation: ViewEncapsulation.None,
   hostDirectives: [
     {
       directive: FormFieldControl,
@@ -37,7 +38,6 @@ export class Select<T = any>  {
   disabled =  this.formFieldControl.cva.disabled
   items = input<T[]>([]);
   itemTemplate = input<TemplateRef<any> | undefined>(undefined);
-  options = viewChild(Option);
 
   popoverFullWidth = input<boolean>(true);
   popoverClass = input<string>('');

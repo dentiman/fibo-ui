@@ -1,63 +1,140 @@
-# Components
+# @fibo-ui/components
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.0.
+A comprehensive Angular UI component library with modern design and accessibility features. Built with Angular 20+ and Tailwind CSS.
 
-## Code scaffolding
+## Features
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- 🎨 **Modern Design**: Clean, accessible components with Tailwind CSS styling
+- 🚀 **Angular 20+**: Built with the latest Angular features including signals and standalone components
+- ♿ **Accessibility**: WCAG compliant components with proper ARIA attributes
+- 📱 **Responsive**: Mobile-first design approach
+- 🎯 **TypeScript**: Full TypeScript support with strict typing
+- 🔧 **Customizable**: Easy theming and customization options
+
+## Installation
 
 ```bash
-ng generate component component-name
+npm install @fibo-ui/components
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Peer Dependencies
+
+Make sure you have the required peer dependencies installed:
 
 ```bash
-ng generate --help
+npm install @angular/common@^20.1.0 @angular/core@^20.1.0 @angular/forms@^20.1.0 @angular/platform-browser@^20.1.0 @angular/router@^20.1.0 @floating-ui/dom@^1.7.3 date-fns@^4.1.0 lucide-angular@^0.539.0 ngxtension@^5.1.0 rxjs@~7.8.0 tailwindcss@^4.1.12
 ```
 
-## Building
+## Quick Start
 
-To build the library, run:
+1. **Import the components** in your Angular application:
+
+```typescript
+import { Component } from '@angular/core';
+import { LoadingSpin, Dialog, DialogTrigger, Confirmation, Notification } from '@fibo-ui/components';
+
+@Component({
+  selector: 'app-root',
+  imports: [LoadingSpin, Dialog, DialogTrigger, Confirmation, Notification],
+  template: `
+    <fibo-loading-spin [isLoading]="loading"></fibo-loading-spin>
+    
+    <fibo-dialog-trigger>
+      <button>Open Dialog</button>
+      <fibo-dialog>
+        <h2>Dialog Title</h2>
+        <p>Dialog content goes here</p>
+      </fibo-dialog>
+    </fibo-dialog-trigger>
+    
+    <fibo-confirmation>
+      <button>Confirm Action</button>
+    </fibo-confirmation>
+  `
+})
+export class AppComponent {
+  loading = false;
+}
+```
+
+2. **Configure Tailwind CSS** in your project to include the component styles.
+
+## Available Components
+
+### Currently Available (v0.0.1)
+- **Loading Spin** - Loading indicators
+- **Dialog** - Modal dialogs with customizable content
+- **Confirmation** - Confirmation dialogs
+- **Notification** - Toast notifications
+
+### Coming Soon
+The following components are being prepared for future releases. They are currently excluded due to a TypeScript compilation issue with CDK dependencies:
+
+#### Form Components
+- **Input** - Text input with floating labels and validation states
+- **Select** - Dropdown selection with search and custom templates
+- **Multiple Select** - Multi-selection dropdown with tags
+- **Checkbox** - Custom checkbox with indeterminate state
+- **Switch** - Toggle switch component
+- **Datepicker** - Date selection with calendar
+- **Date Range Picker** - Date range selection
+
+#### Navigation Components
+- **Menu** - Context menus and navigation
+- **Side Menu** - Collapsible sidebar navigation
+- **Popover Menu** - Floating menu component
+
+#### Additional Components
+- **Tooltip** - Contextual tooltips
+- **Table** - Data tables with sorting and filtering
+- **Listbox** - Selectable list component
+- **Data List** - Generic data listing component
+
+## Styling
+
+All components are styled with Tailwind CSS. Make sure to include Tailwind CSS in your project and configure it to scan the component files.
+
+## Development
+
+### Building the Library
 
 ```bash
 ng build components
 ```
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
+### Publishing
 
-### Publishing the Library
-
-Once the project is built, you can publish your library by following these steps:
-
-1. Navigate to the `dist` directory:
+1. Build the library:
    ```bash
-   cd dist/components
+   ng build components
    ```
 
-2. Run the `npm publish` command to publish your library to the npm registry:
+2. Navigate to the dist directory:
+   ```bash
+   cd dist/fibo-ui/components
+   ```
+
+3. Publish to npm:
    ```bash
    npm publish
    ```
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Testing
 
 ```bash
-ng test
+ng test components
 ```
 
-## Running end-to-end tests
+## Contributing
 
-For end-to-end (e2e) testing, run:
+Contributions are welcome! Please read our contributing guidelines and submit pull requests to our repository.
 
-```bash
-ng e2e
-```
+## License
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Additional Resources
+## Support
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- 📖 [Documentation](https://github.com/your-org/fibo-ui#readme)
+- 🐛 [Report Issues](https://github.com/your-org/fibo-ui/issues)
+- 💬 [Discussions](https://github.com/your-org/fibo-ui/discussions)

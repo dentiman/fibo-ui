@@ -1,9 +1,10 @@
-import {ChangeDetectionStrategy, Component, inject, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, input, ViewEncapsulation} from '@angular/core';
 import {PrimitiveValueAccessor} from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-checkbox',
   templateUrl: './checkbox.html',
+  encapsulation: ViewEncapsulation.None,
   hostDirectives: [
     {
       directive: PrimitiveValueAccessor,

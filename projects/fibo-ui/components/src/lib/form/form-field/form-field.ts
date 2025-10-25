@@ -1,4 +1,4 @@
-import {Component, computed, contentChildren, inject, input} from '@angular/core';
+import {Component, computed, contentChildren, inject, input, ViewEncapsulation} from '@angular/core';
 import {IsEmptyPipe} from '@fibo-ui/cdk';
 import {PopoverTrigger} from '@fibo-ui/cdk';
 import {NgTemplateOutlet} from '@angular/common';
@@ -15,6 +15,7 @@ import {LucideAngularModule} from 'lucide-angular';
     LucideAngularModule,
   ],
   templateUrl: './form-field.html',
+  encapsulation: ViewEncapsulation.None,
   host: {
     '(click)': 'handleClick()',
     '(focusout)': 'onFocusOut($event)',

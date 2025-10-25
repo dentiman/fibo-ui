@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, input, ViewEncapsulation} from '@angular/core';
 import {PrimitiveValueAccessor} from '@fibo-ui/cdk';
 import {LoadingSpin} from '../loading-spin/loading-spin';
 
@@ -6,6 +6,7 @@ import {LoadingSpin} from '../loading-spin/loading-spin';
   selector: 'fibo-switch',
   imports: [LoadingSpin],
   templateUrl: './switch.html',
+  encapsulation: ViewEncapsulation.None,
   hostDirectives: [
     {
       directive: PrimitiveValueAccessor,

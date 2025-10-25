@@ -1,0 +1,15 @@
+/* Production TypeScript configuration for building and publishing to npm */
+/* This extends the base tsconfig.json but overrides paths to use compiled distribution files */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@fibo-ui/cdk": [
+        "./dist/fibo-ui/cdk/index.d.ts"
+      ],
+      "@fibo-ui/components": [
+        "./dist/fibo-ui/components/index.d.ts"
+      ]
+    }
+  }
+}

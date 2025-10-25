@@ -9,8 +9,8 @@ export type ConfirmationContent = {
 } | TemplateRef<unknown>
 
 export interface ConfirmationConfig {
-  content?:  ConfirmationContent|null;
-  onConfirm: () => void ;
+  content?: ConfirmationContent | null;
+  onConfirm: () => void;
 }
 
 @Injectable({
@@ -18,8 +18,8 @@ export interface ConfirmationConfig {
 })
 export class ConfirmationService {
 
-  config = signal< ConfirmationConfig | null >(null);
-  isOpen = computed(()=>!!this.config());
+  config = signal<ConfirmationConfig | null>(null);
+  isOpen = computed(() => !!this.config());
 
   isVisible = linkedSignal({
     source: this.isOpen,
@@ -34,19 +34,19 @@ export class ConfirmationService {
   }
 
   confirm() {
-    this.config()?.onConfirm()
-    this.close()
+    this.config()?.onConfirm();
+    this.close();
   }
 
   cancel() {
-    this.close()
+    this.close();
   }
 
-  close () {
+  close() {
     this.isVisible.set(false);
     setTimeout(
       () => {
         this.config.set(null);
-      },300)
-  };
+      }, 300);
+  }
 }

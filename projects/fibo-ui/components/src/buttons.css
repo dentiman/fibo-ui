@@ -1,0 +1,74 @@
+/* Fibo UI Button Components */
+@layer components {
+  /* ========================================
+     BUTTON COMPONENTS
+     ======================================== */
+
+  /* Base button (neutral) */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 transition-colors
+    bg-white dark:bg-white/5
+    hover:bg-gray-50 dark:hover:bg-white/8
+    text-gray-700 dark:text-neutral-300
+    hover:text-gray-900   dark:hover:text-white
+    shadow-xs
+    inset-ring
+    inset-ring-black/15 dark:inset-ring-white/8
+    px-3 rounded-md text-sm h-9
+    cursor-pointer
+    disabled:opacity-50 disabled:cursor-not-allowed
+    disabled:hover:bg-transparent
+    disabled:hover:text-gray-700 dark:disabled:hover:text-neutral-300
+  }
+  
+  /* Sizes */
+  .btn-sm {
+    @apply rounded-sm px-2.5 h-6 text-sm;
+  }
+
+  .btn-secondary {
+    @apply text-gray-700 hover:text-gray-800 dark:text-neutral-300 hover:dark:text-white
+    bg-gray-100 dark:bg-black/6
+    hover:bg-gray-50  dark:hover:bg-black/3
+    inset-ring-black/15 dark:inset-ring-white/13
+    disabled:hover:bg-blue-500 dark:disabled:hover:bg-blue-500
+    disabled:hover:text-white dark:disabled:hover:text-white;
+  }
+
+  /* Primary variant: color only */
+  .btn-primary {
+    @apply text-white hover:text-white
+    bg-blue-500 dark:bg-blue-500
+    hover:bg-blue-400 dark:hover:bg-blue-600 dark:shadow-none
+    inset-ring-white/5
+    disabled:hover:bg-blue-500 dark:disabled:hover:bg-blue-500
+    disabled:hover:text-white dark:disabled:hover:text-white;
+  }
+
+  .btn-inverse {
+    @apply text-white hover:text-white dark:text-black dark:hover:text-black
+    bg-gray-950/80 dark:bg-white
+    hover:bg-black/90 dark:hover:bg-gray-100 dark:shadow-none
+    inset-ring-white/5
+    disabled:hover:bg-black/80 dark:disabled:hover:bg-white
+    disabled:hover:text-white dark:disabled:hover:text-black;
+  }
+
+  .btn-chip {
+    @apply text-gray-700 dark:text-neutral-300
+    bg-gray-950/10 dark:bg-white/10
+    hover:bg-gray-950/8 dark:hover:bg-white/15
+      shadow-none inset-ring-0
+      disabled:hover:bg-gray-950/10 dark:disabled:hover:bg-white/15
+      disabled:hover:text-gray-700 dark:disabled:hover:text-neutral-300;
+  }
+
+  .btn-text {
+    @apply
+    bg-transparent
+    hover:bg-gray-950/8 dark:hover:bg-white/10
+    shadow-none inset-ring-0
+    disabled:hover:bg-transparent dark:disabled:hover:bg-transparent
+    disabled:hover:text-gray-700 dark:disabled:hover:text-neutral-300;
+  }
+}
