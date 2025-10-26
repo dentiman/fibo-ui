@@ -52,10 +52,12 @@
 
     </div>
     @let displayReset = empty || disabled;
-    @if (!displayReset && formFieldControl.cva.ngControl) {
+    @let resetCallback = formFieldControl.resetCallback();
+    @let hasResetAction = formFieldControl.cva.ngControl || resetCallback;
+    @if (!displayReset && hasResetAction) {
       <div>
         <button
-          (click)="formFieldControl.cva.ngControl?.reset()"
+          (click)="resetCallback ? resetCallback() : formFieldControl.cva.ngControl?.reset()"
           type="button"
           class="flex-none
             hidden cursor-pointer

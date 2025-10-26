@@ -24,7 +24,7 @@ import {Checkbox} from '../checkbox/checkbox';
     'class': 'fibo-table block w-full overflow-x-auto',
   },
   template: `
-    <table class="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
+    <table class="min-w-full divide-y divide-gray-300 dark:divide-white/15">
       <thead>
       <tr>
         @if (hasMultipleSelectionModel) {

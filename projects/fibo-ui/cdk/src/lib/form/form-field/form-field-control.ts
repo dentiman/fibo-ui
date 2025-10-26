@@ -31,6 +31,7 @@ export class FormFieldControl<T> {
   label = computed(()=> this.floatingLabel() || this.fixedLabel());
 
   appearance = input<FormFieldAppearance>('basic');
+  resetCallback = input<() => void>();
 
   inputs = contentChildren(FormFieldContent)
 

@@ -26,7 +26,7 @@ import {FormFieldContent} from '@fibo-ui/cdk';
   hostDirectives: [
     {
       directive: FormFieldControl,
-      inputs: ['label', ' placeholder','fixedLabel', 'appearance', 'controlClass' ],
+      inputs: ['label', ' placeholder','fixedLabel', 'appearance', 'controlClass', 'resetCallback' ],
     }
   ],
   templateUrl: './datepicker.html',

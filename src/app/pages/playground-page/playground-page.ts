@@ -47,6 +47,18 @@ import { User, usersChoices } from '../../common/form-data-example';
         <span *fiboFormControlPrepend class="text-sm text-foreground-secondary">Users:</span>
       </fibo-multiple-select>
 
+      <fibo-select
+        controlClass="rounded-full inline-block  "
+        popoverClass="w-60"
+        [popoverFullWidth]="false"
+        [(value)]="standaloneSelect"
+        [items]="items()"
+        [resetCallback]="resetStandaloneSelect"
+        appearance="secondary"
+        [placeholder]="'Select without form control'">
+        <span *fiboFormControlPrepend class="text-sm text-foreground-secondary">Standalone:</span>
+      </fibo-select>
+
     </div>
   `,
 
@@ -56,5 +68,10 @@ export class PlaygroundPageComponent {
   readonly userCtrl = new FormControl<number | null>(null);
 
   readonly search = signal('');
+  readonly standaloneSelect = signal<number | null>(null);
+
+  resetStandaloneSelect = () => {
+    this.standaloneSelect.set(null);
+  }
 
 }
