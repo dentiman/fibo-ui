@@ -149,6 +149,25 @@ export class SideMenuPage {
       label: 'List',
       url: '/list',
       icon: 'folder'
+    },
+
+    // Title item for callbacks
+    {
+      label: 'Callback Examples'
+    },
+
+    // Callback items
+    {
+      label: 'Alert Hello',
+      callback: () => alert('Hello!')
+    },
+    {
+      label: 'Console Log',
+      callback: () => console.log('Callback clicked!')
+    },
+    {
+      label: 'Log Current Path',
+      callback: () => console.log('Current URL:', window.location.href)
     }
   ]);
 }

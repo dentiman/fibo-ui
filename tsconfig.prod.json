@@ -11,5 +11,8 @@
         "./dist/fibo-ui/components/index.d.ts"
       ]
     }
+  },
+  "angularCompilerOptions": {
+    "compilationMode": "partial"
   }
 }
