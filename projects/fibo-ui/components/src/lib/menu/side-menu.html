@@ -131,6 +131,31 @@
             </div>
           </button>
         </li>
+
+      } @else if (item.value !== undefined) {
+        <li>
+          <button class="relative flex gap-x-2 group cursor-pointer text-left
+             aria-selected:rounded-md
+           aria-selected:text-white"
+             [fiboListItemValue]="item.value"
+             #dataListItem="ListItem"
+          >
+            @if (showChain) {
+            <fibo-side-menu-chain
+              [index]="$index"
+              [totalItems]="totalItems"
+              [isActive]="dataListItem.isActive()"
+            ></fibo-side-menu-chain>
+            }
+            <div class="flex-auto py-0.5 text-sm
+            text-foreground-secondary
+          group-data-[active=true]:text-foreground
+          group-aria-selected:text-foreground
+          group-aria-selected:font-semibold" [class.pl-2]="!showChain">
+              {{ item.label }}
+            </div>
+          </button>
+        </li>
       }
     }
   }

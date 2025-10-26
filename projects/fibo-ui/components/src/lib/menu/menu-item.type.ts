@@ -9,4 +9,5 @@ export type MenuItemType = {
   disabled?: boolean;
   content?: TemplateRef<any>;
   callback?: () => void;
+  value?: any;
 }
