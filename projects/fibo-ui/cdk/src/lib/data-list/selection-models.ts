@@ -1,4 +1,4 @@
-import {computed, Directive, inject, linkedSignal, model, output, Signal} from '@angular/core';
+import {computed, Directive, inject, input, linkedSignal, model, output, Signal} from '@angular/core';
 import { InjectionToken } from '@angular/core';
 
 export const SELECTION_MODEL = new InjectionToken<SelectionModel<any>>('SelectionModel');
@@ -9,6 +9,8 @@ export interface SelectionModel<T> {
   lastSelection: Signal<T|null>
 }
 
+export type CompareFn<T> = (a: T, b: T) => boolean;
+
 @Directive({
   selector: '[SingleSelectionModel],[SingleSelectionModelHost]',
   standalone: true,
@@ -18,12 +20,15 @@ export class SingleSelectionModel<T> implements SelectionModel<T> {
 
   value = model<T|null>(null,{ alias: 'SingleSelectionModel' })
   selectionChange = output<T>()
+  compareFn = input<CompareFn<T>>((a: T, b: T) => a === b)
 
   select(value: T) {
     this.value.set(value)
   }
   isSelected(value: T): boolean {
-    return this.value() === value
+    const selected = this.value()
+    if (selected === null || selected === undefined) return false
+    return this.compareFn()(selected, value)
   }
   lastSelection = computed(()=> this.value())
 }
@@ -35,13 +40,16 @@ export class SingleSelectionModel<T> implements SelectionModel<T> {
 })
 export class MultipleSelectionModel<T> implements SelectionModel<T> {
   value = model<T[]|null>(null,{ alias: 'MultipleSelectionModel' })
+  compareFn = input<CompareFn<T>>((a: T, b: T) => a === b)
 
   select(value: T) {
     const selected = this.value()
+    const compare = this.compareFn()
     if (Array.isArray(selected)) {
-      //TODO: this works only for primitive values (string | number)
-      if (selected.includes(value)) {
-        this.value.set(selected.filter(v => v !== value))
+      // Check if value is already selected using compareFn
+      const alreadySelected = selected.some(v => compare(v, value))
+      if (alreadySelected) {
+        this.value.set(selected.filter(v => !compare(v, value)))
       } else {
         this.value.set([...selected, value])
       }
@@ -52,7 +60,8 @@ export class MultipleSelectionModel<T> implements SelectionModel<T> {
   isSelected(value: T): boolean {
     const selected = this.value()
     if (Array.isArray(selected)) {
-      return selected.includes(value)
+      const compare = this.compareFn()
+      return selected.some(v => compare(v, value))
     }
     return false
 
