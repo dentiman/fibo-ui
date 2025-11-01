@@ -41,7 +41,8 @@
         <a [fiboListItemValue]="getValue(item)"
            class="datalist-item py-1 px-2 rounded-md relative group text-sm">
           @if (itemTemplate(); as template) {
-            <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: item, isSelected: currentSelectedItem() && getValue(currentSelectedItem()!) === getValue(item) }"></ng-container>
+            <ng-container [ngTemplateOutlet]="template"
+                          [ngTemplateOutletContext]="{ $implicit: item, isSelected: currentSelectedItem() && getValue(currentSelectedItem()!) === getValue(item) }"></ng-container>
           } @else {
             <span class="block truncate font-normal">{{ getLabel(item) }}</span>
           }

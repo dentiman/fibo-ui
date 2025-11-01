@@ -9,19 +9,19 @@ import {
 import {
   computePosition,
   flip,
+  shift,
   arrow,
   ComputePositionReturn,
   offset, Placement,
 } from '@floating-ui/dom';
 import { PopoverArrow} from './popover-arrow';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { injectResize } from 'ngxtension/resize';
 import {
   from,
   fromEvent,
   Observable,
-  startWith,
   switchMap,
+  merge,
+  debounceTime,
 } from 'rxjs';
 import {PopoverTrigger} from './popover-trigger';
 
@@ -71,21 +71,37 @@ export class PopoverPosition {
       const reference = this.realReferenceElement();
       if (!reference) return;
 
-      const subscription = fromResizeObserver(reference).pipe(
-        switchMap(() =>
-          from(
-            computePosition(
-              reference,
-              this.elementRef.nativeElement,
-              {
-                placement: this.placement(),
-                middleware: this.positionMiddleware(),
-              }
-            )
+      const allEvents = merge(
+        fromResizeObserver(reference),
+        fromResizeObserver(this.elementRef.nativeElement),
+        fromEvent(window, 'resize', { passive: true })
+      ).pipe(
+        debounceTime(10),
+        switchMap(() => from(
+          computePosition(
+            reference,
+            this.elementRef.nativeElement,
+            {
+              strategy: 'fixed',
+              placement: this.placement(),
+              middleware: this.positionMiddleware(),
+            }
           )
-        )
-      ).subscribe(position => {
-        console.log('position changed')
+        ))
+      );
+
+      const subscription = allEvents.subscribe(position => {
+        this.positionSignal.set(position);
+      });
+
+      computePosition(
+        reference,
+        this.elementRef.nativeElement,
+        {
+          placement: this.placement(),
+          middleware: this.positionMiddleware(),
+        }
+      ).then(position => {
         this.positionSignal.set(position);
       });
 
@@ -96,7 +112,11 @@ export class PopoverPosition {
   arrow = contentChild(PopoverArrow);
 
   positionMiddleware = computed(() => {
-    const middleware = [offset(this.offset()), flip()];
+    const middleware = [
+      offset(this.offset()),
+      shift(),
+      flip()
+    ];
     if (this.arrow()) {
       // Calculate arrow offset: half the arrow's width to account for the arrow pointing outward
       const arrowSize = this.arrow()?.elementRef.nativeElement.offsetWidth || 0;
