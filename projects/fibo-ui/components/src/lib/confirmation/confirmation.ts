@@ -2,6 +2,7 @@ import {Component, computed, inject, TemplateRef, viewChild} from '@angular/core
 import {CommonModule, NgTemplateOutlet} from '@angular/common';
 import {ClickOutside} from 'ngxtension/click-outside';
 import {ConfirmationService} from './confirmation-service';
+import {LucideAngularModule} from 'lucide-angular';
 
 
 const DEFAULT_CONFIG = {
@@ -14,7 +15,7 @@ const DEFAULT_CONFIG = {
 @Component({
   selector: 'fibo-confirmation',
   standalone: true,
-  imports: [ClickOutside, NgTemplateOutlet, CommonModule],
+  imports: [ClickOutside, NgTemplateOutlet, CommonModule, LucideAngularModule],
   templateUrl: './confirmation.html',
 })
 export class FiboConfirmation {
