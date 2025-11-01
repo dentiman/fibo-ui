@@ -7,6 +7,7 @@ export interface NotificationConfig {
   title?: string;
   template?: TemplateRef<unknown>;
   duration?: number; // Duration in seconds
+  id?: symbol; // Internal ID for tracking timers
 }
 
 @Injectable({
@@ -15,23 +16,35 @@ export interface NotificationConfig {
 export class Notifier {
   private readonly DEFAULT_DURATION = 5; // 5 seconds
   notifications = signal<NotificationConfig[]>([]);
+  private readonly timers = new Map<symbol, ReturnType<typeof setTimeout>>();
 
   push(config: NotificationConfig) {
-    const notification = {
+    const id = Symbol('notification-id');
+    const duration = config.duration ?? this.DEFAULT_DURATION;
+    const notification: NotificationConfig = {
       ...config,
-      duration: config.duration ?? this.DEFAULT_DURATION
+      duration,
+      id
     };
 
     this.notifications.update(value => [...value, notification]);
 
-    if (notification.duration > 0) {
-      setTimeout(() => {
+    if (duration > 0) {
+      const timerId = setTimeout(() => {
         this.removeNotification(notification);
-      }, notification.duration * 1000); // Convert seconds to milliseconds
+      }, duration * 1000); // Convert seconds to milliseconds
+      
+      this.timers.set(id, timerId);
     }
   }
 
   removeNotification(notification: NotificationConfig) {
+    // Clear timer if exists to prevent memory leaks
+    if (notification.id && this.timers.has(notification.id)) {
+      clearTimeout(this.timers.get(notification.id)!);
+      this.timers.delete(notification.id);
+    }
+
     this.notifications.update(notifications =>
       notifications.filter(n => n !== notification)
     );

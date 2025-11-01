@@ -1,13 +1,13 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {Notifier} from './notifier';
-import {CommonModule} from '@angular/common';
+import {CommonModule, NgTemplateOutlet} from '@angular/common';
 import {NotificationConfig} from './notifier';
 @Component({
   selector: 'fibo-notification',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgTemplateOutlet],
   templateUrl: './notification.html',
-
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Notification {
 

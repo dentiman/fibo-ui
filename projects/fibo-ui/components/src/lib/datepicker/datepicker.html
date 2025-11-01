@@ -12,14 +12,14 @@
   />
 </fibo-form-field>
 
-@if (trigger.isOpen()) {
-    <fibo-calendar
-      fiboPopover [popoverTrigger]="trigger"
-      class="fibo-popover rounded-md"
-      #dataList="DataList"
-      [(fiboCalendarDateSelectionModel)]="value"
-      [minDate]="minDate()"
-      [maxDate]="maxDate()"
-      (optionTriggered)="dateChange.emit();trigger.close()"
-    />
-}
+<ng-template fiboPortalTemplate [isOpen]="trigger.isOpen">
+  <fibo-calendar
+    fiboPopover [popoverTrigger]="trigger"
+    class="fibo-popover rounded-md"
+    #dataList="DataList"
+    [(fiboCalendarDateSelectionModel)]="value"
+    [minDate]="minDate()"
+    [maxDate]="maxDate()"
+    (optionTriggered)="dateChange.emit();trigger.close()"
+  />
+</ng-template>

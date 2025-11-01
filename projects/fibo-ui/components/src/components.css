@@ -60,7 +60,6 @@
     background-color: var(--modal-bg);
     outline: 1px solid var(--modal-outline);
     outline-offset: -1px;
-    transition: all 300ms;
   }
 
   /* Popover component */
@@ -69,14 +68,12 @@
     background-color: var(--popover-bg);
     outline: 1px solid var(--popover-outline);
     outline-offset: -1px;
-    transition: all 200ms;
   }
 
   .fibo-card {
     background-color: var(--card-bg);
     outline: 1px solid var(--card-outline);
     outline-offset: -1px;
-    transition: all 200ms;
   }
 
   /* Input */

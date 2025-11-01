@@ -16,8 +16,7 @@
 </fibo-form-field>
 
 <fibo-form-field-errors [control]="formFieldControl" ></fibo-form-field-errors>
-
-@if (trigger.isOpen()) {
+<ng-template fiboPortalTemplate [isOpen]="trigger.isOpen">
   <div fiboPopover
        fiboDataList
        class="fibo-popover py-1 px-1 rounded-md"
@@ -51,4 +50,4 @@
     </div>
 
   </div>
-}
+</ng-template>

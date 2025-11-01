@@ -39,3 +39,8 @@ export * from './lib/popover/popover-trigger';
 export * from './lib/popover/popover-position';
 export * from './lib/popover/popover-arrow';
 export * from './lib/popover/popover';
+
+// Portal Components and Services
+export * from './lib/portal/portal-registry';
+export * from './lib/portal/portal-template.directive';
+export * from './lib/portal/portal-outlet.component';

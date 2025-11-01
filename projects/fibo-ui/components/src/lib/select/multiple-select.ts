@@ -1,7 +1,7 @@
 import {Component, inject, input, TemplateRef, viewChild,} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from "@angular/forms";
-import {IsEmptyPipe, MultipleSelectionModel, Popover,PopoverTriggerClick} from '@fibo-ui/cdk';
+import {IsEmptyPipe, MultipleSelectionModel, Popover,PopoverTriggerClick, PortalTemplateDirective} from '@fibo-ui/cdk';
 import {FormFieldPopoverTrigger} from '@fibo-ui/cdk';
 import {Listbox} from '../data-list/listbox/listbox';
 import {FormField} from '../form/form-field/form-field';
@@ -24,6 +24,7 @@ import {FormFieldErrors} from '@fibo-ui/cdk';
     FormFieldErrors,
     Popover,
     MultipleSelectionModel,
+    PortalTemplateDirective,
   ],
   templateUrl: './multiple-select.html',
   hostDirectives: [

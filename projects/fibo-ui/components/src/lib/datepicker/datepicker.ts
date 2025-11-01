@@ -2,7 +2,7 @@ import {Component, computed, ElementRef, inject, Input, input, model, output, si
 import { CommonModule } from '@angular/common';
 import {FormControl, FormsModule, NG_VALUE_ACCESSOR, NgControl, ReactiveFormsModule} from '@angular/forms';
 import { Calendar } from './calendar/calendar';
-import {DataList, PopoverTriggerClick, Popover} from '@fibo-ui/cdk';
+import {DataList, PopoverTriggerClick, Popover, PortalTemplateDirective} from '@fibo-ui/cdk';
 import {PrimitiveValueAccessor} from '@fibo-ui/cdk';
 import {CalendarDateSelectionModel} from './calendar/calendar-date-selection-model';
 import {FormField} from '../form/form-field/form-field';
@@ -21,7 +21,8 @@ import {FormFieldContent} from '@fibo-ui/cdk';
     ReactiveFormsModule,
     FormField,
     PopoverTriggerClick,
-    FormFieldContent
+    FormFieldContent,
+    PortalTemplateDirective
   ],
   hostDirectives: [
     {

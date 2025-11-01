@@ -1,7 +1,7 @@
 import {Component, computed, inject, input, TemplateRef, viewChild, ViewEncapsulation} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from "@angular/forms";
-import {DataList, ListItem, PopoverTriggerClick, Popover, SingleSelectionModel,} from '@fibo-ui/cdk';
+import {DataList, ListItem, PopoverTriggerClick, Popover, SingleSelectionModel, PortalTemplateDirective,} from '@fibo-ui/cdk';
 
 import {FormField} from '../form/form-field/form-field';
 import {FormFieldControl, FormFieldErrors} from '@fibo-ui/cdk';
@@ -22,6 +22,7 @@ import {LucideAngularModule} from 'lucide-angular';
     ListItem,
     FormFieldErrors,
     LucideAngularModule,
+    PortalTemplateDirective,
   ],
   templateUrl: './select.html',
   encapsulation: ViewEncapsulation.None,

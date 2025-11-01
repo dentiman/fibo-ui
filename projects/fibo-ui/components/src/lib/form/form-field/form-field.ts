@@ -54,11 +54,23 @@ export class FormField<T> {
   onFocusOut(event: FocusEvent) {
     const relatedTarget = event.relatedTarget as Node;
     const controlElement = this.control().element.nativeElement;
-    if (!relatedTarget || !controlElement.contains(relatedTarget)) {
-
-      this.popover?.close();
-      this.control()?.cva.onTouched()
+    
+    if (!relatedTarget) {
+      this.control()?.cva.onTouched();
+      return;
     }
+
+    // Check if focus is moving to the popover container (rendered in portal outlet)
+    const popoverElement = this.popover?.popover()?.element.nativeElement;
+    const isMovingToPopover = popoverElement?.contains(relatedTarget);
+    
+    // Don't close if focus is moving within the control element or to the popover
+    if (controlElement.contains(relatedTarget) || isMovingToPopover) {
+      return;
+    }
+
+    this.popover?.close();
+    this.control()?.cva.onTouched();
   }
 
 }

@@ -41,16 +41,18 @@
 </fibo-form-field>
 <fibo-form-field-errors [control]="formFieldControl" ></fibo-form-field-errors>
 
-@if (trigger.isOpen() && items().length) {
-  <fibo-listbox fiboPopover
-               class="fibo-popover rounded-md max-h-70 overflow-y-auto"
-               [class]="popoverClass()"
-               [popoverTrigger]="trigger"
-              [popoverFullWidth]="popoverFullWidth()"
-               [(MultipleSelectionModel)]="value"
-               [items]="items()"
-               [valueProp]="valueProp()"
-               [labelProp]="labelProp()"
-               [itemTemplate]="itemTemplate()"
-  ></fibo-listbox>
-}
+<ng-template fiboPortalTemplate [isOpen]="trigger.isOpen">
+  @if (items().length) {
+    <fibo-listbox fiboPopover
+                 class="fibo-popover rounded-md max-h-70 overflow-y-auto"
+                 [class]="popoverClass()"
+                 [popoverTrigger]="trigger"
+                [popoverFullWidth]="popoverFullWidth()"
+                 [(MultipleSelectionModel)]="value"
+                 [items]="items()"
+                 [valueProp]="valueProp()"
+                 [labelProp]="labelProp()"
+                 [itemTemplate]="itemTemplate()"
+    ></fibo-listbox>
+  }
+</ng-template>

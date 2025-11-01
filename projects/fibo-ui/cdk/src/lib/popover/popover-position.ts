@@ -48,7 +48,7 @@ export function fromResizeObserver(
     '[style.left]': 'position() ? position()?.x+"px": ""',
     '[style.top]': 'position() ? position()?.y+"px": ""',
     '[style.width]': 'width() ? width()+"px": ""',
-    '[style.opacity]': 'position() ? "1": "0"',
+    // '[style.opacity]': 'position() ? "1": "0"',
   },
 })
 export class PopoverPosition {
@@ -74,7 +74,8 @@ export class PopoverPosition {
       const allEvents = merge(
         fromResizeObserver(reference),
         fromResizeObserver(this.elementRef.nativeElement),
-        fromEvent(window, 'resize', { passive: true })
+        fromEvent(window, 'resize', { passive: true }),
+        // fromEvent(window, 'scroll', { passive: true, capture: true })
       ).pipe(
         debounceTime(10),
         switchMap(() => from(
@@ -82,7 +83,7 @@ export class PopoverPosition {
             reference,
             this.elementRef.nativeElement,
             {
-              strategy: 'fixed',
+              // strategy: 'fixed',
               placement: this.placement(),
               middleware: this.positionMiddleware(),
             }
@@ -94,10 +95,12 @@ export class PopoverPosition {
         this.positionSignal.set(position);
       });
 
+      // Initial position calculation
       computePosition(
         reference,
         this.elementRef.nativeElement,
         {
+          strategy: 'fixed',
           placement: this.placement(),
           middleware: this.positionMiddleware(),
         }
