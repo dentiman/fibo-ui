@@ -21,7 +21,7 @@ import {
   Observable,
   switchMap,
   merge,
-  debounceTime,
+  debounceTime, tap,
 } from 'rxjs';
 import {PopoverTrigger} from './popover-trigger';
 
@@ -75,9 +75,9 @@ export class PopoverPosition {
         fromResizeObserver(reference),
         fromResizeObserver(this.elementRef.nativeElement),
         fromEvent(window, 'resize', { passive: true }),
-        // fromEvent(window, 'scroll', { passive: true, capture: true })
       ).pipe(
         debounceTime(10),
+        tap(()=>console.log('tap')),
         switchMap(() => from(
           computePosition(
             reference,
@@ -100,11 +100,12 @@ export class PopoverPosition {
         reference,
         this.elementRef.nativeElement,
         {
-          strategy: 'fixed',
+          // strategy: 'fixed',
           placement: this.placement(),
           middleware: this.positionMiddleware(),
         }
       ).then(position => {
+        console.log('position', position);
         this.positionSignal.set(position);
       });
 

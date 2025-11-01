@@ -57,7 +57,7 @@
     @if (!displayReset && hasResetAction) {
       <div>
         <button
-          (click)="resetCallback ? resetCallback() : formFieldControl.cva.ngControl?.reset()"
+          (click)="$event.preventDefault(); $event.stopPropagation(); resetCallback ? resetCallback() : formFieldControl.cva.ngControl?.reset()"
           type="button"
           class="flex-none
             hidden cursor-pointer
