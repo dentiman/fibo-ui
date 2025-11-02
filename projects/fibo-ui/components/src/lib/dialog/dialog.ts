@@ -11,13 +11,12 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import {NgClass, NgTemplateOutlet} from '@angular/common';
-import { ClickOutside } from 'ngxtension/click-outside';
 import { CommonModule } from '@angular/common';
 import {DialogService} from './dialog-service';
 @Component({
   selector: 'fibo-dialog',
   standalone: true,
-  imports: [ClickOutside,  NgTemplateOutlet, CommonModule],
+  imports: [NgTemplateOutlet, CommonModule],
   templateUrl: './dialog.html',
 
 })

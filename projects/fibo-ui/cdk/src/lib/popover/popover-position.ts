@@ -48,7 +48,7 @@ export function fromResizeObserver(
     '[style.left]': 'position() ? position()?.x+"px": ""',
     '[style.top]': 'position() ? position()?.y+"px": ""',
     '[style.width]': 'width() ? width()+"px": ""',
-    // '[style.opacity]': 'position() ? "1": "0"',
+     '[style.opacity]': 'position() ? "1": "0"',
   },
 })
 export class PopoverPosition {
