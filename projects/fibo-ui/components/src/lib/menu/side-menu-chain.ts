@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
     <div class="relative flex size-6 flex-none items-center justify-center">
       @let showCollapseButton = collapsable() && isGroup();
       @if (showCollapseButton) {
-        <div class="absolute z-3 top-50% left-50% text-xs text-neutral-500 "
+        <div class="absolute top-50% left-50% text-xs text-neutral-500 "
              [class.cursor-pointer]="collapsable()">
           @if (collapsed()) {
             <span>&ndash;</span>
@@ -27,7 +27,7 @@ import { CommonModule } from '@angular/common';
            'size-1.5':!showCollapseButton,
            'size-2':showCollapseButton,
            }"
-           class="z-1  rounded-full  bg-background-secondary
+           class="rounded-full  bg-background-secondary
                ring ring-border-primary
             group-aria-selected:ring-blue-500
               group-aria-selected:bg-blue-300

@@ -22,7 +22,7 @@ import {DataList} from '../data-list/data-list';
   ],
 
   host: {
-    class: ' z-20 origin-top-right',
+     class: 'fibo-popover-container',
     '(clickOutside)': 'clickOutsideHandle($event)',
     '(focusout)': 'onFocusOut($event)',
   },

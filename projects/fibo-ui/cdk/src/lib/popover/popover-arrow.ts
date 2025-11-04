@@ -30,7 +30,6 @@ export class PopoverArrow {
 
     const arrowPosition = position.middlewareData.arrow;
     if (!arrowPosition) return {};
-    console.log( arrowPosition)
 
     // Get arrow element dimensions
     const arrowElement = this.elementRef.nativeElement;

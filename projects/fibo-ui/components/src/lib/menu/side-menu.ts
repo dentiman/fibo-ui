@@ -44,7 +44,6 @@ export class SideMenu implements OnInit {
     this.items().forEach(item => {
       const activeUrlItem = this.findActiveUrlItem(item);
       if (activeUrlItem && this.selectionModel) {
-        console.log(activeUrlItem)
         this.selectionModel.select(activeUrlItem);
       }
     });

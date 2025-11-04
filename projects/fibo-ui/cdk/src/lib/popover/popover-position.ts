@@ -77,7 +77,6 @@ export class PopoverPosition {
         fromEvent(window, 'resize', { passive: true }),
       ).pipe(
         debounceTime(10),
-        tap(()=>console.log('tap')),
         switchMap(() => from(
           computePosition(
             reference,
@@ -105,7 +104,6 @@ export class PopoverPosition {
           middleware: this.positionMiddleware(),
         }
       ).then(position => {
-        console.log('position', position);
         this.positionSignal.set(position);
       });
 

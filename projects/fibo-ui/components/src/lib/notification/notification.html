@@ -1,7 +1,7 @@
 <div class="flex w-full flex-col items-center space-y-3 sm:items-end">
 
     @for (notification of notifications(); track notification) {
-      <div  class="relative pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-background-tertiary shadow-lg outline-1 -outline-offset-1
+      <div  class="fibo-notification-container relative pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-background-tertiary shadow-lg outline-1 -outline-offset-1
     outline-black/13 dark:outline-white/4">
         @if (notification.template) {
           <ng-container *ngTemplateOutlet="notification.template"></ng-container>

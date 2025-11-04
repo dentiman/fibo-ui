@@ -1,6 +1,6 @@
 {
   "name": "@fibo-ui/cdk",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "Core development kit for Fibo UI components - provides common directives, form controls, and utilities",
   "keywords": ["angular", "ui", "components", "cdk", "form", "directives"],
   "author": "Fibo UI Team",

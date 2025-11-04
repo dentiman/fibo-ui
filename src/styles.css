@@ -22,11 +22,12 @@
 
   body {
     @apply bg-gray-100 dark:bg-background text-foreground font-roboto;
-
   }
 
+  /* Scrollbar styles - Light theme */
   ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
@@ -34,13 +35,25 @@
     border-radius: var(--radius-sm);
   }
 
-  ::-webkit-scrollbar-thumb {
-    background:  --alpha(var(--color-foreground) / 10%);;
+  /* Light theme scrollbar thumb */
+  html:not([data-theme="dark"]) ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
     border-radius: var(--radius-sm);
   }
 
-  ::-webkit-scrollbar-thumb:hover {
-    background:  --alpha(var(--color-foreground) / 30%);;
+  html:not([data-theme="dark"]) ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-sm);
+  }
+
+  /* Dark theme scrollbar thumb */
+  [data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+  }
+
+  [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
     border-radius: var(--radius-sm);
   }
 
@@ -56,19 +69,6 @@
   h4 { @apply text-lg; }
   h5 { @apply text-base; }
   h6 { @apply text-sm; }
-
-  a {
-    @apply text-primary-600 hover:text-primary-700 transition-colors;
-  }
-  ::-webkit-scrollbar-thumb {
-    background:  --alpha(var(--color-white) / 10%);;
-    border-radius: var(--radius-sm);
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background:  --alpha(var(--color-white) / 20%);;
-    border-radius: var(--radius-sm);
-  }
 
 }
 

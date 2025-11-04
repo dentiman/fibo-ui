@@ -1,5 +1,21 @@
 /* Fibo UI Component Styles */
 @layer components {
+  .fibo-notification-container {
+    z-index: 10;
+  }
+  .fibo-dialog-backdrop {
+    z-index: 50;
+  }
+  fibo-confirmation-backdrop {
+    z-index: 60;
+  }
+  .fibo-popover-container {
+    z-index: 1000;
+  }
+  .fibo-tooltip-container {
+    z-index: 9999;
+  }
+
   .fibo-form-field {
     @apply min-h-9 block cursor-default relative text-foreground shadow-xs aria-disabled:shadow-none rounded-md
     bg-[var(--background-secondary)]
