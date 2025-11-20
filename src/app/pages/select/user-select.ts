@@ -41,7 +41,7 @@ export interface User {
   ],
 })
 export class UserSelect {
-  formFieldControl = inject<FormFieldControl<number|null>>(FormFieldControl)
+  formFieldControl = inject<FormFieldControl>(FormFieldControl)
   value = this.formFieldControl.cva.value;
   disabled = this.formFieldControl.cva.disabled
   users = input<User[]>([]);

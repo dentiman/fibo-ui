@@ -1,7 +1,7 @@
 import {Component, computed, viewChild} from '@angular/core';
 import {
   DataList,
-  PopoverTriggerToggle,
+  PopoverTriggerToggle, PortalTemplateDirective,
   SingleSelectionModel
 } from '@fibo-ui/cdk';
 import { MenuItem,
@@ -17,7 +17,8 @@ import {UsageDemo} from '../../common/usage-demo';
     PopoverMenu,
     MenuItem,
     DataList,
-    UsageDemo
+    UsageDemo,
+    PortalTemplateDirective
   ],
   templateUrl: './menu-page.html',
 

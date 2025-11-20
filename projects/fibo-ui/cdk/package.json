@@ -6,8 +6,8 @@
   "author": "Fibo UI Team",
   "license": "MIT",
   "peerDependencies": {
-    "@angular/common": "^20.1.0",
-    "@angular/core": "^20.1.0"
+    "@angular/common": "^21.0.0-next.10",
+    "@angular/core": "^21.0.0-next.10"
   },
   "dependencies": {
     "tslib": "^2.3.0"

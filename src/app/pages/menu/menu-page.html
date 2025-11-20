@@ -1,32 +1,34 @@
 <div class="px-4 flex flex-col space-y-12">
-<app-usage-demo [codeBlocks]="codeBlocksBasicMenu">
-  <div class="mx-auto w-60 p-8">
-  <button class="btn mr-1" fiboPopoverTriggerToggle #menu="PopoverTrigger">Open Basic Menu</button>
-  @if (menu.isOpen()) {
+  <app-usage-demo [codeBlocks]="codeBlocksBasicMenu">
+    <div class="mx-auto w-60 p-8">
+      <button #menu="PopoverTrigger" class="btn mr-1" fiboPopoverTriggerToggle>Open Basic Menu</button>
+      @if (menu.isOpen()) {
         <fibo-menu [popoverTrigger]="menu">
-            <a fiboMenuItem class="datalist-item py-1 px-2 rounded-md relative group text-sm" [routerLink]="'/select'"> Select</a>
-            <a fiboMenuItem  class="datalist-item py-1 px-2 rounded-md relative group text-sm" [routerLink]="'/select-multiple'"> Select Multiple</a>
+          <a fiboMenuItem class="datalist-item py-1 px-2 rounded-md relative group text-sm" [routerLink]="'/select'">
+            Select</a>
+          <a fiboMenuItem class="datalist-item py-1 px-2 rounded-md relative group text-sm"
+             [routerLink]="'/select-multiple'"> Select Multiple</a>
         </fibo-menu>
-  }
-  </div>
-</app-usage-demo>
+      }
+    </div>
+  </app-usage-demo>
 
-<app-usage-demo [codeBlocks]="codeBlocksComplexMenu">
-  <div class="mx-auto w-60 p-8">
-  <button class="btn btn-primary" fiboPopoverTriggerToggle #trigger="PopoverTrigger">Open Complex Menu</button>
-  @if (trigger.isOpen()) {
-    <fibo-menu [popoverTrigger]="trigger" placement="bottom-start" [items]="items()">
-    </fibo-menu>
-  }
-  </div>
-</app-usage-demo>
+  <app-usage-demo [codeBlocks]="codeBlocksComplexMenu">
+    <div class="mx-auto w-60 p-8">
+      <button #trigger="PopoverTrigger" class="btn btn-primary" fiboPopoverTriggerToggle>Open Complex Menu</button>
+      <ng-template [(isOpen)]="trigger.isOpen" fiboPortalTemplate>
+        <fibo-menu [items]="items()" [popoverTrigger]="trigger" placement="bottom-start">
+        </fibo-menu>
+      </ng-template>
+    </div>
+  </app-usage-demo>
 </div>
 
 <ng-template #folderSvgIcon>
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-       class="w-5 h-5 shrink-0 text-gray-400">
-    <path stroke-linecap="round" stroke-linejoin="round"
-          d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"/>
+  <svg class="w-5 h-5 shrink-0 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+       xmlns="http://www.w3.org/2000/svg">
+    <path d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" stroke-linecap="round"
+          stroke-linejoin="round"/>
   </svg>
 </ng-template>
 

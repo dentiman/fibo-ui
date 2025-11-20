@@ -1,159 +1,322 @@
-import {Component} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy, effect} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Datepicker, Input, MultipleSelect, Select} from '@fibo-ui/components';
+import {disabled, Field, form, required} from '@angular/forms/signals';
+import {FormField, Calendar, CalendarDateSelectionModel} from '@fibo-ui/components';
+import {
+  DataList,
+  FormFieldContent, ListItem,
+  Popover, PopoverTrigger,
+  PopoverTriggerClick,
+  PortalTemplateDirective,
+  SingleSelectionModel,
+  MultipleSelectionModel,
+  safeProp
+} from '@fibo-ui/cdk';
+import {LucideAngularModule} from 'lucide-angular';
+import {Checkbox} from '@fibo-ui/components';
+
+interface UserProfile {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  firstName: string;
+  lastName: string;
+  age: number | null;
+  phone: string;
+  website: string;
+  city: string | null;
+  country: string;
+  skills: string[];
+  birthDate: string | null;
+}
 
 @Component({
   selector: 'app-form-example-page',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    Input,
-    Select,
-    MultipleSelect,
-    Datepicker
+    Field,
+    FormField,
+    FormFieldContent,
+    DataList,
+    Popover,
+    PortalTemplateDirective,
+    PopoverTriggerClick,
+    SingleSelectionModel,
+    MultipleSelectionModel,
+    ListItem,
+    PopoverTrigger,
+    LucideAngularModule,
+    Checkbox,
+    Calendar,
+    CalendarDateSelectionModel
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="container mx-auto p-4 w-[350px]">
       <h1 class="text-2xl font-bold mb-4">Form Example</h1>
-
-      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
+      <form  class="space-y-5">
         <!-- Username -->
-        <fibo-input
-          formControlName="username"
-          label="Username"
-          placeholder="Enter username">
-        </fibo-input>
 
-        <!-- Email -->
-        <fibo-input
-          formControlName="email"
-          label="Email"
-          placeholder="Enter email address"
-          type="email">
-        </fibo-input>
-
-        <!-- Password -->
-        <fibo-input
-          formControlName="password"
-          label="Password"
-          placeholder="Enter password"
-          type="password">
-        </fibo-input>
-
-        <!-- Confirm Password -->
-        <fibo-input
-          formControlName="confirmPassword"
-          label="Confirm Password"
-          placeholder="Confirm your password"
-          type="password">
-        </fibo-input>
-
-        <!-- First Name -->
-        <fibo-input
-          formControlName="firstName"
-          label="First Name"
-          placeholder="Enter first name">
-        </fibo-input>
-
-        <!-- Last Name -->
-        <fibo-input
-          formControlName="lastName"
-          fixedLabel="Last Name"
-          placeholder="Enter last name">
-        </fibo-input>
-
-        <!-- Age -->
-        <fibo-input
-          formControlName="age"
-          label="Age"
-          placeholder="Enter your age"
-          type="number">
-        </fibo-input>
-
-        <!-- Phone -->
-        <fibo-input
-          formControlName="phone"
-          label="Phone Number"
-          placeholder="Enter phone number"
-          type="tel">
-        </fibo-input>
-
-        <!-- Website -->
-        <fibo-input
-          formControlName="website"
-          label="Website"
-          placeholder="Enter website URL"
-          type="url">
-        </fibo-input>
+          <fibo-form-field [field]="userProfileForm.username" label="Username">
+            <input
+              fiboFormFieldContent
+              name="username"
+              [field]="userProfileForm.username"
+              placeholder="Enter username"
+              class="w-full appearance-none outline-none text-sm   focus:outline-0"  />
+          </fibo-form-field>
 
         <!-- City -->
-        <fibo-select
-          formControlName="city"
-          fixedLabel="City"
-          placeholder="Select city"
-          [items]="cities">
-        </fibo-select>
+          <!-- Single  Select          //-->
+          <fibo-form-field fiboPopoverTriggerClick #trigger="PopoverTrigger"
+                           [field]="userProfileForm.city"
+                           label="City" appendIcon="chevron-down"
+                           placeholder="placeholder"
+          >
+            @if( userProfile().city ; as city) {  {{city}}  } @else {
+              <div class="from-field-placeholder text-sm">Select City</div>
+            }
 
-        <!-- Country -->
-        <fibo-select
-          formControlName="country"
-          fixedLabel="Country"
-          placeholder="Select country"
-          [items]="countries">
-        </fibo-select>
+            <ng-template fiboPortalTemplate  [(isOpen)]="trigger.isOpen">
+              <div fiboPopover
+                   fiboDataList
+                   class="fibo-popover py-1 px-1 rounded-md"
+                   [popoverTrigger]="trigger"
+                   [popoverFullWidth]="true"
+                   [(SingleSelectionModel)]="userProfileForm.city().value"
+                   (optionTriggered)="trigger.close()"
+              >
+                <div class="max-h-70 overflow-y-auto fibo-scrollbar">
+                  @for (c of cities; track c.value) {
+                    <a [fiboListItemValue]="c.value"
+                       class="datalist-item py-1 px-2 rounded-md relative group text-sm">
+                      <span class="block truncate font-normal">{{ c.label }}</span>
+                    </a>
+                  }
+                </div>
+              </div>
+            </ng-template>
+          </fibo-form-field>
 
-        <!-- Skills -->
-        <fibo-multiple-select
-          formControlName="skills"
-          fixedLabel="Skills"
-          placeholder="Select skills"
-          [items]="skills">
-        </fibo-multiple-select>
 
-        <!-- Date of Birth -->
-        <fibo-datepicker
-          formControlName="dateOfBirth"
-          fixedLabel="Date of Birth"
-          placeholder="Select date of birth">
-        </fibo-datepicker>
+        <!-- Email -->
+        <label class="block">
+          <span class="block mb-1">Email</span>
+          <fibo-form-field [field]="userProfileForm.email" fixedLabel="Email">
+            <input
+              fiboFormFieldContent
+              name="email"
+              type="email"
+              [field]="userProfileForm.email"
+              placeholder="Enter email address"
+              class="w-full appearance-none outline-none text-sm focus:outline-0" />
+          </fibo-form-field>
+        </label>
 
-        <!-- Hire Date -->
-        <fibo-datepicker
-          formControlName="hireDate"
-          fixedLabel="Hire Date"
-          placeholder="Select hire date">
-        </fibo-datepicker>
+        <!-- Password -->
+        <label class="block">
+          <span class="block mb-1">Password</span>
+          <fibo-form-field [field]="userProfileForm.password" label="Password">
+            <input
+              fiboFormFieldContent
+              name="password"
+              type="password"
+              [field]="userProfileForm.password"
+              placeholder="Enter password"
+              class="w-full appearance-none outline-none text-sm focus:outline-0" />
+          </fibo-form-field>
+        </label>
 
-        <button
-          type="submit"
-          class="btn-primary"
-          [disabled]="!form.valid">
-          Submit
-        </button>
+        <!-- Confirm Password -->
+        <label class="block">
+          <span class="block mb-1">Confirm Password</span>
+          <fibo-form-field [field]="userProfileForm.confirmPassword" label="Confirm Password">
+            <input
+              fiboFormFieldContent
+              name="confirmPassword"
+              type="password"
+              [field]="userProfileForm.confirmPassword"
+              placeholder="Confirm your password"
+              class="w-full appearance-none outline-none text-sm focus:outline-0" />
+          </fibo-form-field>
+        </label>
+
+        <!-- First Name -->
+        <label class="block">
+          <span class="block mb-1">First Name</span>
+          <fibo-form-field [field]="userProfileForm.firstName" label="First Name">
+            <input
+              fiboFormFieldContent
+              name="firstName"
+              [field]="userProfileForm.firstName"
+              placeholder="Enter first name"
+              class="w-full appearance-none outline-none text-sm focus:outline-0" />
+          </fibo-form-field>
+        </label>
+
+        <!-- Last Name -->
+        <label class="block">
+          <span class="block mb-1">Last Name</span>
+          <fibo-form-field [field]="userProfileForm.lastName" label="Last Name">
+            <input
+              fiboFormFieldContent
+              name="lastName"
+              [field]="userProfileForm.lastName"
+              placeholder="Enter last name"
+              class="w-full appearance-none outline-none text-sm focus:outline-0" />
+          </fibo-form-field>
+        </label>
+
+        <!-- Age -->
+        <label class="block">
+          <span class="block mb-1">Age</span>
+          <fibo-form-field [field]="userProfileForm.age" label="Age">
+            <input
+              fiboFormFieldContent
+              name="age"
+              type="number"
+              [field]="userProfileForm.age"
+              placeholder="Enter your age"
+              class="w-full appearance-none outline-none text-sm focus:outline-0" />
+          </fibo-form-field>
+        </label>
+
+        <!-- Birth Date -->
+        <fibo-form-field
+          fiboPopoverTrigger
+          #dateTrigger="PopoverTrigger"
+          [field]="userProfileForm.birthDate"
+          label="Birth Date"
+          appendIcon="calendar-days">
+          <input
+            fiboFormFieldContent
+            name="birthDate"
+            type="text"
+            [field]="userProfileForm.birthDate"
+            placeholder="YYYY-MM-DD"
+            (focus)="dateTrigger.open()"
+            class="w-full appearance-none outline-none text-sm focus:outline-0" />
+          <ng-template fiboPortalTemplate [(isOpen)]="dateTrigger.isOpen">
+            <fibo-calendar
+              fiboPopover
+              [popoverTrigger]="dateTrigger"
+              class="fibo-popover rounded-md"
+              [(fiboCalendarDateSelectionModel)]="userProfileForm.birthDate().value"
+              (optionTriggered)="dateTrigger.close()"
+            />
+          </ng-template>
+        </fibo-form-field>
+
+        <!-- Website -->
+        <label class="block">
+          <span class="block mb-1">Website</span>
+          <fibo-form-field [field]="userProfileForm.website" label="Website">
+            <input
+              fiboFormFieldContent
+              name="website"
+              type="url"
+              [field]="userProfileForm.website"
+              placeholder="Enter website URL"
+              class="w-full appearance-none outline-none text-sm focus:outline-0" />
+          </fibo-form-field>
+        </label>
+
+
+
+        <!-- Skills (multiple) -->
+          <fibo-form-field fiboPopoverTriggerClick #skillsTrigger="PopoverTrigger" [field]="userProfileForm.skills" label="Skills" appendIcon="chevron-down">
+            <span class="w-full flex flex-wrap gap-x-1 gap-y-1">
+              @for (value of userProfile().skills; track value) {
+                <div class="flex items-center gap-1 btn btn-sm" >
+                  <span class="truncate flex-1 text-xs font-medium">{{ value }}</span>
+                  <button type="button"
+                    class="rounded-full cursor-pointer flex-shrink-0 btn-text"
+                    (click)="removeSkill(value); $event.stopPropagation()"
+                    (keydown)="$event.stopPropagation()">
+                    <lucide-icon name="x" size="14"></lucide-icon>
+                  </button>
+                </div>
+              }
+            </span>
+            <ng-template fiboPortalTemplate [(isOpen)]="skillsTrigger.isOpen">
+              <div fiboPopover
+                   fiboDataList
+                   class="fibo-popover py-1 px-1 rounded-md"
+                   [popoverTrigger]="skillsTrigger"
+                   [popoverFullWidth]="true"
+                   [(MultipleSelectionModel)]="userProfileForm.skills().value"
+              >
+                <div class="max-h-70 overflow-y-auto ">
+                  @if (skills.length === 0) {
+                    <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
+                  }
+                  @for (item of skills; track getSkillValue(item)) {
+                    <a [fiboListItemValue]="getSkillValue(item)" #option="ListItem"
+                       class="datalist-item py-1 px-2 rounded-md relative group text-sm items-center">
+                      <fibo-checkbox
+                        [checked]="option.isSelected()">{{ getSkillLabel(item) }}
+                      </fibo-checkbox>
+                    </a>
+                  }
+                </div>
+              </div>
+            </ng-template>
+          </fibo-form-field>
+
+
+        <!-- Phone -->
+        <label class="block">
+          <span class="block mb-1">Phone Number</span>
+          <fibo-form-field [field]="userProfileForm.phone" label="Phone Number">
+            <input
+              fiboFormFieldContent
+              name="phone"
+              type="tel"
+              [field]="userProfileForm.phone"
+              placeholder="Enter phone number"
+              class="w-full appearance-none outline-none text-sm focus:outline-0" />
+          </fibo-form-field>
+        </label>
+
+
+        <button type="submit" class="btn btn-primary" [disabled]="!userProfileForm().valid">Submit</button>
       </form>
 
-      <!-- Form Data Display -->
-      <div *ngIf="submittedData" class="mt-8 p-4 bg-gray-100 rounded">
-        <h2 class="text-xl font-bold mb-2">Submitted Data:</h2>
-        <pre class="whitespace-pre-wrap">{{ submittedData | json }}</pre>
-      </div>
 
-      <!-- Form Validation Status -->
-      <div class="mt-4 p-4 bg-gray-50 rounded">
-        <h3 class="text-lg font-semibold mb-2">Form Status:</h3>
-        <p><strong>Valid:</strong> {{ form.valid }}</p>
-        <p><strong>Dirty:</strong> {{ form.dirty }}</p>
-        <p><strong>Touched:</strong> {{ form.touched }}</p>
-        <p><strong>Submitted:</strong> {{ submittedData ? 'Yes' : 'No' }}</p>
-      </div>
+      <!-- Form Data Display -->
+
+        <div class="mt-8 p-4 rounded">
+          <h2 class="text-xl font-bold mb-2">userProfile:</h2>
+          <pre class="whitespace-pre-wrap">{{ userProfile() | json }}</pre>
+        </div>
+
     </div>
   `
 })
 export class FormExamplePageComponent {
-  form: FormGroup;
-  submittedData: any = null;
+  userProfile = signal<UserProfile>({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: '',
+    age: null,
+    phone: '',
+    website: '',
+    city: 'london',
+    country: '',
+    skills: [],
+    birthDate: null
+  });
+
+  userProfileForm = form(this.userProfile, (patch)=>{
+    required(patch.username)
+  })
+
+  submittedData = signal<UserProfile | null>(null);
 
   cities = [
     {label: 'New York', value: 'new-york'},
@@ -188,100 +351,35 @@ export class FormExamplePageComponent {
     {label: 'Go', value: 'go'}
   ];
 
-  constructor(private fb: FormBuilder) {
-    this.form = this.fb.group({
-      username: ['', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(20),
-        Validators.pattern(/^[a-zA-Z0-9_]+$/)
-      ]],
-      email: ['', [
-        Validators.required,
-        Validators.email
-      ]],
-      password: ['', [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
-      ]],
-      confirmPassword: ['', [
-        Validators.required
-      ]],
-      firstName: ['', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-Z\s]+$/)
-      ]],
-      lastName: ['', [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(50),
-        Validators.pattern(/^[a-zA-Z\s]+$/)
-      ]],
-      age: ['', [
-        Validators.required,
-        Validators.min(18),
-        Validators.max(100)
-      ]],
-      phone: ['', [
-        Validators.required,
-        Validators.pattern(/^\+?[\d\s\-\(\)]+$/)
-      ]],
-      website: ['', [
-        Validators.pattern(/^https?:\/\/.+/)
-      ]],
-      city: ['', [
-        Validators.required
-      ]],
-      country: ['', [
-        Validators.required
-      ]],
-      skills: [[]],
-      dateOfBirth: ['', [
-        Validators.required
-      ]],
-      hireDate: ['']
-    }, {validators: this.passwordMatchValidator});
-  }
-
-  // Custom validator to check if passwords match
-  passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password');
-    const confirmPassword = form.get('confirmPassword');
-
-    if (password && confirmPassword && password.value !== confirmPassword.value) {
-      confirmPassword.setErrors({passwordMismatch: true});
-      return {passwordMismatch: true};
-    }
-
-    if (confirmPassword && confirmPassword.errors && confirmPassword.errors['passwordMismatch']) {
-      delete confirmPassword.errors['passwordMismatch'];
-      if (Object.keys(confirmPassword.errors).length === 0) {
-        confirmPassword.setErrors(null);
-      }
-    }
-
-    return null;
+  constructor() {
+    effect(() => {
+      const data = this.userProfile();
+      console.log('userProfile changed:', data);
+    });
   }
 
   onSubmit() {
-    if (this.form.valid) {
-      this.submittedData = this.form.value;
-      console.log('Form submitted successfully:', this.form.value);
-    } else {
-      console.log('Form has validation errors');
-      this.markFormGroupTouched();
-    }
+    const data = this.userProfile();
+    this.submittedData.set(data);
+    console.log('Form submitted successfully:', data);
   }
 
-  // Mark all form controls as touched to trigger validation display
-  markFormGroupTouched() {
-    Object.keys(this.form.controls).forEach(key => {
-      const control = this.form.get(key);
-      control?.markAsTouched();
-    });
+  getSkillValue(item: {label: string; value: string}): string {
+    return safeProp(item, 'value');
+  }
+
+  getSkillLabel(item: {label: string; value: string}): string {
+    return String(safeProp(item, 'label'));
+  }
+
+  selectedSkill(value: string): {label: string; value: string} | undefined {
+    return this.skills.find(item => this.getSkillValue(item) === value);
+  }
+
+  removeSkill(value: string) {
+    const currentValue = this.userProfileForm.skills().value();
+    if (!currentValue) return;
+    this.userProfileForm.skills().value.set(currentValue.filter((v: string) => v !== value));
   }
 
 }

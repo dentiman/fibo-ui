@@ -1,5 +1,5 @@
 <fibo-form-field
-  [control]="formFieldControl"
+
   appendIcon="calendar-days"
   fiboPopoverTriggerClick #trigger="PopoverTrigger">
   <input
@@ -12,7 +12,7 @@
   />
 </fibo-form-field>
 
-<ng-template fiboPortalTemplate [isOpen]="trigger.isOpen">
+<ng-template fiboPortalTemplate [(isOpen)]="trigger.isOpen">
   <fibo-calendar
     fiboPopover [popoverTrigger]="trigger"
     class="fibo-popover rounded-md"

@@ -22,12 +22,12 @@ import {FormField} from '../form/form-field/form-field';
   ],
 })
 export class Input {
-  formFieldControl = inject<FormFieldControl<string|number|null>>(FormFieldControl)
-  value =  this.formFieldControl.cva.value;
 
-  onInput(event: Event): void {
-    const inputValue = (event.target as HTMLInputElement).value;
-    this.value.set(inputValue);
-    this.formFieldControl.cva.onChange(inputValue);
-  }
+  // value =  this.formFieldControl.cva.value;
+  //
+  // onInput(event: Event): void {
+  //   const inputValue = (event.target as HTMLInputElement).value;
+  //   this.value.set(inputValue);
+  //
+  // }
 }

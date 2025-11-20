@@ -4,7 +4,7 @@
 
 <fibo-form-field
   appendIcon="chevron-down"
-  [control]="formFieldControl"
+
   fiboPopoverTriggerClick #trigger="PopoverTrigger">
   <span class="w-full flex flex-wrap gap-x-1  gap-y-1 "
         [class]="{
@@ -41,7 +41,7 @@
 </fibo-form-field>
 <fibo-form-field-errors [control]="formFieldControl" ></fibo-form-field-errors>
 
-<ng-template fiboPortalTemplate [isOpen]="trigger.isOpen">
+<ng-template fiboPortalTemplate [(isOpen)]="trigger.isOpen">
   @if (items().length) {
     <fibo-listbox fiboPopover
                  class="fibo-popover rounded-md max-h-70 overflow-y-auto"

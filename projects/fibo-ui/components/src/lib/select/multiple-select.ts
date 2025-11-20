@@ -35,7 +35,7 @@ import {FormFieldErrors} from '@fibo-ui/cdk';
   ],
 })
 export class MultipleSelect<T> {
-  formFieldControl = inject<FormFieldControl<(string|number)[]|null>>(FormFieldControl)
+  formFieldControl = inject<FormFieldControl>(FormFieldControl)
   value = this.formFieldControl.cva.value;
   disabled = this.formFieldControl.cva.disabled;
   items = input<T[]>([]);

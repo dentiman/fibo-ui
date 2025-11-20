@@ -1,5 +1,5 @@
 <fibo-form-field
-  [control]="formFieldControl"
+
   appendIcon="chevron-down"
   fiboPopoverTriggerClick #trigger="PopoverTrigger">
 
@@ -15,9 +15,8 @@
 
 </fibo-form-field>
 
-<fibo-form-field-errors [control]="formFieldControl" ></fibo-form-field-errors>
 
-<ng-template fiboPortalTemplate [isOpen]="trigger.isOpen">
+<ng-template fiboPortalTemplate [(isOpen)]="trigger.isOpen">
   <div fiboPopover
        fiboDataList
        class="fibo-popover py-1 px-1 rounded-md"

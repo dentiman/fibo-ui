@@ -1,79 +1,87 @@
-@let formFieldControl = control();
-@let empty = formFieldControl.cva.value() | isEmpty;
-@let disabled = formFieldControl.cva.disabled();
-@let label = formFieldControl.label();
-@let hasInnerContent = !!inputs().length || !!formFieldControl.inputs().length;
-@let hasFixedLabel = !!control()?.fixedLabel();
+@let empty = value() | isEmpty;
 
-  @if (cva()?.hasError()) {
+@let labelValue = label();
+@let hasInnerContent = !!inputs().length;
+@let hasFixedLabel = !!fixedLabel();
+
+  @if (invalid()) {
     <div class="backdrop absolute inset-0 pointer-events-none  rounded-md
    bg-gradient-to-r from-red-700/4  from-0% via-red-700/6 via-30%  to-red-700/2 to-100%
     "></div>
   }
 
   <div
-       class=" flex items-center space-x-2 text-left px-3 py-1  "
+       class=" flex items-center space-x-2 text-left px-3 py-1 relative "
   >
-    @if (formFieldControl.prependTemplate(); as prep) {
-      <ng-container [ngTemplateOutlet]="prep.template"></ng-container>
-    }
+    <ng-content select=".prepend"></ng-content>
 
-    <div class="min-w-0 grow relative">
+    <div class="min-w-0 grow ">
 
-      @if (label) {
-        <div class="fibo-form-field-label"
-               [class.text-xs]="!empty || hasFixedLabel"
-               [class.group-focus-within:text-xs]="hasInnerContent"
-               [class.group-aria-expanded:text-xs]="hasInnerContent"
-        >
-          {{ label }}@if (formFieldControl.cva.isRequired()) {
-          <span>*</span>
-        }
+      @if (fixedLabel()) {
+        <div class="fibo-form-field-label text-xs">
+          {{ fixedLabel() }}@if (required()) {<span>*</span>}
         </div>
-      }
-      @if (formFieldControl.placeholder() && empty && !hasInnerContent) {
+      } @else if (label()) {
+      <div class="fibo-form-field-label group-focus-within:text-xs"
+           [class.not-group-focus-within:text-base]="empty"
+           [class.not-group-focus-within:text-xs]="!empty"
+           [class.group-aria-expanded:text-xs]="true"
+      >
+        {{ label() }}@if (required()) {<span>*</span>}
+      </div>
+    }
+      @if (placeholder() && empty && !hasInnerContent) {
 
-        @if (label && !hasFixedLabel) {
+        @if (labelValue && !hasFixedLabel) {
 
         } @else {
-          <div class="from-field-placeholder text-sm">{{ formFieldControl.placeholder() }}</div>
+          <div class="from-field-placeholder text-sm">{{ placeholder() }}</div>
         }
 
       }
-      <div [class.block]="(hasInnerContent && label)"
-           [class.group-aria-expanded:block]="hasInnerContent"
-           [class.group-focus-within:block]="empty || hasInnerContent"
-           [class.hidden]="(empty && !hasInnerContent && !hasFixedLabel) || (empty && label && !hasFixedLabel)"
-           class="text-sm"
+<!--      <div-->
+<!--           [class.block]="(hasInnerContent && labelValue)"-->
+<!--           [class.group-aria-expanded:block]="hasInnerContent"-->
+<!--           [class.group-focus-within:block]="empty || hasInnerContent"-->
+<!--           [class.hidden]="(empty && !hasInnerContent && !hasFixedLabel) || (empty && labelValue && !hasFixedLabel)"-->
+<!--           class="text-sm"-->
+<!--      >-->
+<!--        <ng-content></ng-content>-->
+<!--      </div>-->
+
+      <div
+        class="text-sm"
+        [class.not-group-focus-within:hidden]="empty && floatingLabel()"
       >
         <ng-content></ng-content>
       </div>
 
 
+
     </div>
-    @let displayReset = empty || disabled;
-    @let resetCallback = formFieldControl.resetCallback();
-    @let hasResetAction = formFieldControl.cva.ngControl || resetCallback;
-    @if (!displayReset && hasResetAction) {
+    @let displayReset = empty || disabled();
+    @let resetCallbackValue = resetCallback();
+    @let hasResetAction = resetCallbackValue;
+    @if ( !empty || !disabled() ) {
       <div>
-        <button
-          (click)="$event.preventDefault(); $event.stopPropagation(); resetCallback ? resetCallback() : formFieldControl.cva.ngControl?.reset()"
-          type="button"
-          class="flex-none
-            hidden cursor-pointer
+        <span
+          (click)="reset($event)"
+          class="
+            hidden
+            cursor-pointer
             group-hover:block
             group-focus-within:block
             rounded-full  text-foreground-tertiary hover:text-foreground"
         >
           <lucide-icon name="X" size="16" class=""></lucide-icon>
-        </button>
+        </span>
         <div class="group-hover:hidden group-focus-within:hidden">
-          <ng-container [ngTemplateOutlet]="formFieldControl.appendTemplate()?.template || defaultAppendBlock"></ng-container>
+          <ng-container [ngTemplateOutlet]="appendTemplate()?.template || defaultAppendBlock"></ng-container>
         </div>
       </div>
 
     } @else {
-      <ng-container [ngTemplateOutlet]="formFieldControl.appendTemplate()?.template || defaultAppendBlock"></ng-container>
+      <ng-container [ngTemplateOutlet]="appendTemplate()?.template || defaultAppendBlock"></ng-container>
     }
 
     <ng-template #defaultAppendBlock>
@@ -84,4 +92,11 @@
     </ng-template>
   </div>
 
+@if (errors().length) {
+  <ul class="absolute top-full left-0 w-full text-red-400 text-xs pl-3 mt-1 flex flex-col space-y-1">
+    @for (error of errors(); track error) {
+      <li>{{ error.kind }}</li>
+    }
+  </ul>
+}
 

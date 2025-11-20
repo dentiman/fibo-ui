@@ -6,7 +6,7 @@ import {
   TemplateRef,
   Signal,
   effect,
-  DestroyRef
+  DestroyRef, model
 } from '@angular/core';
 import { PortalRegistry } from './portal-registry';
 
@@ -15,7 +15,7 @@ import { PortalRegistry } from './portal-registry';
   standalone: true
 })
 export class PortalTemplateDirective implements OnDestroy {
-  isOpen = input.required<Signal<boolean>>();
+  isOpen =   model<boolean>();
 
   templateRef = inject<TemplateRef<any>>(TemplateRef);
 
@@ -28,7 +28,7 @@ export class PortalTemplateDirective implements OnDestroy {
   constructor() {
     // Watch the isOpen signal and register/unregister accordingly
     effect(() => {
-      const isOpen = this.isOpen()();
+      const isOpen = this.isOpen();
 
       if (isOpen) {
         // Portal is opening - register it

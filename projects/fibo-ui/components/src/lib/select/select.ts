@@ -34,7 +34,7 @@ import {LucideAngularModule} from 'lucide-angular';
   ],
 })
 export class Select<T = any>  {
-  formFieldControl = inject<FormFieldControl<string|number|null>>(FormFieldControl)
+  formFieldControl = inject<FormFieldControl>(FormFieldControl)
   value =  this.formFieldControl.cva.value;
   disabled =  this.formFieldControl.cva.disabled
   items = input<T[]>([]);

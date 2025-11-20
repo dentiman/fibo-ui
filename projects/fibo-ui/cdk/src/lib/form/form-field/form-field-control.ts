@@ -19,10 +19,10 @@ export type FormFieldAppearance = 'basic' | 'secondary' | 'clear';
     class: 'relative block group',
   }
 })
-export class FormFieldControl<T> {
+export class FormFieldControl{
   element = inject(ElementRef)
 
-  cva = inject<PrimitiveValueAccessor<T>>(PrimitiveValueAccessor);
+  cva = inject<PrimitiveValueAccessor<any>>(PrimitiveValueAccessor);
   placeholder = input<string>('');
   controlClass = input<string>('');
 
