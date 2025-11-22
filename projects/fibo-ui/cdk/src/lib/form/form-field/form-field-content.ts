@@ -1,11 +1,11 @@
-import {computed, Directive, ElementRef, inject, input} from '@angular/core';
+import {Directive, ElementRef, inject} from '@angular/core';
 
 @Directive({ 
-  selector: '[fiboFormFieldContent]',
+  selector: '[fiboInput]',
   host: {
     class: 'fibo-input'
   }
 })
-export class FormFieldContent {
+export class FiboInput {
   element = inject(ElementRef)
 }

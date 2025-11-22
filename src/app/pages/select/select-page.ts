@@ -18,8 +18,6 @@ import {StylesStatesSelectExampleComponent} from './content/styles-states-exampl
     ReactiveFormsModule,
     FormsModule,
     BasicSelectExampleComponent,
-    FloatingLabelSelectExampleComponent,
-    FixedLabelSelectExampleComponent,
     CustomTemplateSelectExampleComponent,
     CustomComponentSelectExampleComponent,
     StylesStatesSelectExampleComponent,

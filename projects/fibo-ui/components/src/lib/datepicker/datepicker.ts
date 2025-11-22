@@ -7,7 +7,7 @@ import {PrimitiveValueAccessor} from '@fibo-ui/cdk';
 import {CalendarDateSelectionModel} from './calendar/calendar-date-selection-model';
 import {FormField} from '../form/form-field/form-field';
 import {FormFieldControl} from '@fibo-ui/cdk';
-import {FormFieldContent} from '@fibo-ui/cdk';
+import {FiboInput} from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-datepicker',
@@ -21,7 +21,7 @@ import {FormFieldContent} from '@fibo-ui/cdk';
     ReactiveFormsModule,
     FormField,
     PopoverTriggerClick,
-    FormFieldContent,
+    FiboInput,
     PortalTemplateDirective
   ],
   hostDirectives: [

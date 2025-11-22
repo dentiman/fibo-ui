@@ -33,7 +33,7 @@ import {FormFieldPopoverTrigger} from '@fibo-ui/cdk';
 import {ResetControl} from '../form/reset-control';
 import {FormField} from '../form/form-field/form-field';
 import {FormFieldControl} from '@fibo-ui/cdk';
-import {FormFieldContent} from '@fibo-ui/cdk';
+import {FiboInput} from '@fibo-ui/cdk';
 import {CalendarDateRangeSelectionModel, DateRange} from './calendar/calendar-date-range-selection-model';
 
 @Component({
@@ -50,7 +50,7 @@ import {CalendarDateRangeSelectionModel, DateRange} from './calendar/calendar-da
     ResetControl,
     FormField,
     PopoverTriggerClick,
-    FormFieldContent
+    FiboInput
   ],
   hostDirectives: [
     {

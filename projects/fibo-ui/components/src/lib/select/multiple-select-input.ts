@@ -1,11 +1,11 @@
 import { Directive, ElementRef, effect, inject, input, output, signal } from '@angular/core';
-import {FormFieldContent} from '@fibo-ui/cdk';
+import {FiboInput} from '@fibo-ui/cdk';
 import {MultipleSelect} from './multiple-select';
 
 @Directive({
   selector: 'input[fiboMultipleSelectInput]',
   standalone: true,
-  hostDirectives: [FormFieldContent],
+  hostDirectives: [FiboInput],
   host: {
      class: 'fibo-input flex-1 w-full min-w-30 outline-0  appearance-none text-sm',
     '[placeholder]': 'placeholder()',

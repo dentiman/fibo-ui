@@ -4,7 +4,7 @@ import {disabled, Field, form, required} from '@angular/forms/signals';
 import {FormField, Calendar, CalendarDateSelectionModel} from '@fibo-ui/components';
 import {
   DataList,
-  FormFieldContent, ListItem,
+  FiboInput, ListItem,
   Popover, PopoverTrigger,
   PopoverTriggerClick,
   PortalTemplateDirective,
@@ -14,6 +14,7 @@ import {
 } from '@fibo-ui/cdk';
 import {LucideAngularModule} from 'lucide-angular';
 import {Checkbox} from '@fibo-ui/components';
+import {FieldLabel} from '../../../../projects/fibo-ui/components/src/lib/form/form-field/field-label';
 
 interface UserProfile {
   username: string;
@@ -26,6 +27,7 @@ interface UserProfile {
   phone: string;
   website: string;
   city: string | null;
+  userRole: string | null;
   country: string;
   skills: string[];
   birthDate: string | null;
@@ -38,7 +40,7 @@ interface UserProfile {
     CommonModule,
     Field,
     FormField,
-    FormFieldContent,
+    FiboInput,
     DataList,
     Popover,
     PortalTemplateDirective,
@@ -50,7 +52,8 @@ interface UserProfile {
     LucideAngularModule,
     Checkbox,
     Calendar,
-    CalendarDateSelectionModel
+    CalendarDateSelectionModel,
+    FieldLabel
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -59,9 +62,10 @@ interface UserProfile {
       <form  class="space-y-5">
         <!-- Username -->
 
-          <fibo-form-field [field]="userProfileForm.username" label="Username">
+          <fibo-form-field [field]="userProfileForm.username">
+            <fibo-field-label>Username</fibo-field-label>
             <input
-              fiboFormFieldContent
+              fiboInput
               name="username"
               [field]="userProfileForm.username"
               placeholder="Enter username"
@@ -72,13 +76,15 @@ interface UserProfile {
           <!-- Single  Select          //-->
           <fibo-form-field fiboPopoverTriggerClick #trigger="PopoverTrigger"
                            [field]="userProfileForm.city"
-                           label="City" appendIcon="chevron-down"
-                           placeholder="placeholder"
+                           appendIcon="chevron-down"
           >
-            @if( userProfile().city ; as city) {  {{city}}  } @else {
+            <fibo-field-label>City</fibo-field-label>
+            @if( userProfile().city ; as city) {
+             <span class="text-sm">{{city}}</span>
+            }
+            @else {
               <div class="from-field-placeholder text-sm">Select City</div>
             }
-
             <ng-template fiboPortalTemplate  [(isOpen)]="trigger.isOpen">
               <div fiboPopover
                    fiboDataList
@@ -100,13 +106,41 @@ interface UserProfile {
             </ng-template>
           </fibo-form-field>
 
+        <!-- User Role -->
+        <fibo-form-field fiboPopoverTrigger
+                         #roleTrigger="PopoverTrigger"
+                         [field]="userProfileForm.userRole"
+                         appendIcon="chevron-down">
+          <fibo-field-label>User Role</fibo-field-label>
+          @let role = userProfile().userRole;
+          <span class="text-sm" [class.from-field-placeholder]="!role">{{ role || 'Select Role' }}</span>
+
+          <ng-template fiboPortalTemplate [(isOpen)]="roleTrigger.isOpen">
+            <div fiboPopover
+                 fiboDataList
+                 class="fibo-popover py-1 px-1 rounded-md"
+                 [popoverTrigger]="roleTrigger"
+                 [popoverFullWidth]="true"
+                 [(SingleSelectionModel)]="userProfileForm.userRole().value"
+                 (optionTriggered)="roleTrigger.close()">
+              <div class="max-h-70 overflow-y-auto">
+                @for (role of userRoles; track role) {
+                  <a [fiboListItemValue]="role"
+                     class="datalist-item py-1 px-2 rounded-md relative group text-sm">
+                    <span class="block truncate font-normal">{{ role }}</span>
+                  </a>
+                }
+              </div>
+            </div>
+          </ng-template>
+        </fibo-form-field>
 
         <!-- Email -->
         <label class="block">
           <span class="block mb-1">Email</span>
-          <fibo-form-field [field]="userProfileForm.email" fixedLabel="Email">
+          <fibo-form-field [field]="userProfileForm.email">
             <input
-              fiboFormFieldContent
+              fiboInput
               name="email"
               type="email"
               [field]="userProfileForm.email"
@@ -118,9 +152,9 @@ interface UserProfile {
         <!-- Password -->
         <label class="block">
           <span class="block mb-1">Password</span>
-          <fibo-form-field [field]="userProfileForm.password" label="Password">
+          <fibo-form-field [field]="userProfileForm.password" >
             <input
-              fiboFormFieldContent
+              fiboInput
               name="password"
               type="password"
               [field]="userProfileForm.password"
@@ -132,9 +166,9 @@ interface UserProfile {
         <!-- Confirm Password -->
         <label class="block">
           <span class="block mb-1">Confirm Password</span>
-          <fibo-form-field [field]="userProfileForm.confirmPassword" label="Confirm Password">
+          <fibo-form-field [field]="userProfileForm.confirmPassword">
             <input
-              fiboFormFieldContent
+              fiboInput
               name="confirmPassword"
               type="password"
               [field]="userProfileForm.confirmPassword"
@@ -146,9 +180,9 @@ interface UserProfile {
         <!-- First Name -->
         <label class="block">
           <span class="block mb-1">First Name</span>
-          <fibo-form-field [field]="userProfileForm.firstName" label="First Name">
+          <fibo-form-field [field]="userProfileForm.firstName">
             <input
-              fiboFormFieldContent
+              fiboInput
               name="firstName"
               [field]="userProfileForm.firstName"
               placeholder="Enter first name"
@@ -159,9 +193,9 @@ interface UserProfile {
         <!-- Last Name -->
         <label class="block">
           <span class="block mb-1">Last Name</span>
-          <fibo-form-field [field]="userProfileForm.lastName" label="Last Name">
+          <fibo-form-field [field]="userProfileForm.lastName">
             <input
-              fiboFormFieldContent
+              fiboInput
               name="lastName"
               [field]="userProfileForm.lastName"
               placeholder="Enter last name"
@@ -172,9 +206,9 @@ interface UserProfile {
         <!-- Age -->
         <label class="block">
           <span class="block mb-1">Age</span>
-          <fibo-form-field [field]="userProfileForm.age" label="Age">
+          <fibo-form-field [field]="userProfileForm.age">
             <input
-              fiboFormFieldContent
+              fiboInput
               name="age"
               type="number"
               [field]="userProfileForm.age"
@@ -188,10 +222,9 @@ interface UserProfile {
           fiboPopoverTrigger
           #dateTrigger="PopoverTrigger"
           [field]="userProfileForm.birthDate"
-          label="Birth Date"
           appendIcon="calendar-days">
           <input
-            fiboFormFieldContent
+            fiboInput
             name="birthDate"
             type="text"
             [field]="userProfileForm.birthDate"
@@ -212,9 +245,9 @@ interface UserProfile {
         <!-- Website -->
         <label class="block">
           <span class="block mb-1">Website</span>
-          <fibo-form-field [field]="userProfileForm.website" label="Website">
+          <fibo-form-field [field]="userProfileForm.website">
             <input
-              fiboFormFieldContent
+              fiboInput
               name="website"
               type="url"
               [field]="userProfileForm.website"
@@ -226,7 +259,7 @@ interface UserProfile {
 
 
         <!-- Skills (multiple) -->
-          <fibo-form-field fiboPopoverTriggerClick #skillsTrigger="PopoverTrigger" [field]="userProfileForm.skills" label="Skills" appendIcon="chevron-down">
+          <fibo-form-field fiboPopoverTriggerClick #skillsTrigger="PopoverTrigger" [field]="userProfileForm.skills" appendIcon="chevron-down">
             <span class="w-full flex flex-wrap gap-x-1 gap-y-1">
               @for (value of userProfile().skills; track value) {
                 <div class="flex items-center gap-1 btn btn-sm" >
@@ -269,9 +302,9 @@ interface UserProfile {
         <!-- Phone -->
         <label class="block">
           <span class="block mb-1">Phone Number</span>
-          <fibo-form-field [field]="userProfileForm.phone" label="Phone Number">
+          <fibo-form-field [field]="userProfileForm.phone">
             <input
-              fiboFormFieldContent
+              fiboInput
               name="phone"
               type="tel"
               [field]="userProfileForm.phone"
@@ -307,6 +340,7 @@ export class FormExamplePageComponent {
     phone: '',
     website: '',
     city: 'london',
+    userRole: null,
     country: '',
     skills: [],
     birthDate: null
@@ -326,6 +360,8 @@ export class FormExamplePageComponent {
     {label: 'Berlin', value: 'berlin'},
     {label: 'Rome', value: 'rome'}
   ];
+
+  userRoles = ['admin', 'user', 'guest'];
 
   countries = [
     {label: 'United States', value: 'us'},
@@ -380,6 +416,11 @@ export class FormExamplePageComponent {
     const currentValue = this.userProfileForm.skills().value();
     if (!currentValue) return;
     this.userProfileForm.skills().value.set(currentValue.filter((v: string) => v !== value));
+  }
+
+  capitalizeFirst(str: string | null): string {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
 }

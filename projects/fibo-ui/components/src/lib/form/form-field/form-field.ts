@@ -1,16 +1,17 @@
-import {Component, computed, contentChild, contentChildren, ElementRef, inject, input, model, ViewEncapsulation} from '@angular/core';
+import {Component, computed, contentChild, contentChildren, ElementRef, forwardRef, inject, input, model, ViewEncapsulation} from '@angular/core';
 import {FormErrorPipe, IsEmptyPipe} from '@fibo-ui/cdk';
 import {PopoverTrigger} from '@fibo-ui/cdk';
 import {JsonPipe, NgTemplateOutlet} from '@angular/common';
 import {
   FormFieldAppearance,
-  FormFieldContent,
+  FiboInput,
   FormControlAppendDirective,
   FormControlPrependDirective,
   PrimitiveValueAccessor
 } from '@fibo-ui/cdk';
 import {LucideAngularModule} from 'lucide-angular';
 import {FormValueControl, ValidationError, WithOptionalField} from '@angular/forms/signals';
+import {FieldLabel} from './field-label';
 
 
 @Component({
@@ -19,11 +20,10 @@ import {FormValueControl, ValidationError, WithOptionalField} from '@angular/for
     IsEmptyPipe,
     NgTemplateOutlet,
     LucideAngularModule,
-    FormErrorPipe,
-    JsonPipe,
   ],
   templateUrl: './form-field.html',
   encapsulation: ViewEncapsulation.None,
+  viewProviders: [{ provide: FormField, useExisting: forwardRef(() => FormField) }],
   host: {
     '(click)': 'handleClick()',
     '(focusout)': 'onFocusOut($event)',
@@ -34,7 +34,6 @@ import {FormValueControl, ValidationError, WithOptionalField} from '@angular/for
     '[style.pointer-events]': "disabled() ? 'none' : 'auto'",
     '[tabindex]': "disabled() ? '-1' : '0'",
     'class': "group content-center fibo-form-field",
-    '[class.min-h-14]': "!!label()",
   },
 })
 
@@ -47,22 +46,13 @@ export class FormField implements FormValueControl<any> {
   dirty = input(false)
   errors = input<readonly WithOptionalField<ValidationError>[]>([])
 
-
-  placeholder = input<string>('');
-  controlClass = input<string>('');
-  floatingLabel = input<string | null>(null, {alias: 'label'});
-  fixedLabel = input<string | null>(null);
   appearance = input<FormFieldAppearance>('basic');
-  resetCallback = input<() => void>();
 
   // Computed and injected properties
-  label = computed(() => this.floatingLabel() || this.fixedLabel());
-  hasErrors = computed(() => this.errors().length > 0);
+  hasErrors = computed(() => this.errors().length > 0 &&  this.touched());
 
   element = inject(ElementRef);
-  inputs = contentChildren<FormFieldContent>(FormFieldContent);
-  appendTemplate = contentChild(FormControlAppendDirective);
-  prependTemplate = contentChild(FormControlPrependDirective);
+  inputs = contentChildren<FiboInput>(FiboInput);
 
   prependIcon = input<string>()
   appendIcon = input<string>()

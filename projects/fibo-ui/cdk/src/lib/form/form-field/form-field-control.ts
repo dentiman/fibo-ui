@@ -1,6 +1,6 @@
 import {computed, contentChild, contentChildren, Directive, ElementRef, inject, input, output} from '@angular/core';
 import {PrimitiveValueAccessor} from '../../common/primitive-value-accessor';
-import {FormFieldContent} from './form-field-content';
+import {FiboInput} from './form-field-content';
 import {FormControlAppendDirective} from './form-control-append.directive';
 import {FormControlPrependDirective} from './form-control-prepend.directive';
 
@@ -33,7 +33,7 @@ export class FormFieldControl{
   appearance = input<FormFieldAppearance>('basic');
   resetCallback = input<() => void>();
 
-  inputs = contentChildren(FormFieldContent)
+  inputs = contentChildren(FiboInput)
 
   appendTemplate = contentChild(FormControlAppendDirective)
   prependTemplate = contentChild(FormControlPrependDirective)

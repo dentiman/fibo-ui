@@ -4,7 +4,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {Calendar, CalendarDateSelectionModel, FormField} from '@fibo-ui/components';
 import {
   DataList,
-  FormFieldContent,
+    FiboInput,
   ListItem,
   Popover,
   PopoverTrigger,
@@ -25,7 +25,7 @@ import {Checkbox} from '@fibo-ui/components';
     ReactiveFormsModule,
     FormsModule,
     FormField,
-    FormFieldContent,
+    FiboInput,
     DataList,
     Popover,
     PortalTemplateDirective,
@@ -77,11 +77,10 @@ import {Checkbox} from '@fibo-ui/components';
         <!-- Search Input -->
         <fibo-form-field
           [(value)]="search"
-          class="rounded-full inline-block w-60"
-          [placeholder]="'search...'">
+          class="rounded-full inline-block w-60">
           <span class="prepend text-sm text-foreground-secondary text-nowrap">User Serach:</span>
           <input
-            fiboFormFieldContent
+            fiboInput
             type="text"
             [(ngModel)]="search"
             [ngModelOptions]="{standalone: true}"
@@ -95,11 +94,10 @@ import {Checkbox} from '@fibo-ui/components';
           #dateTrigger="PopoverTrigger"
           [(value)]="createdAfter"
           class="rounded-full inline-block w-46"
-          appendIcon="calendar-days"
-          [placeholder]="'Any'">
+          appendIcon="calendar-days">
           <span class="prepend text-sm text-foreground-secondary">Date:</span>
           <input
-            fiboFormFieldContent
+            fiboInput
             type="text"
             [(ngModel)]="createdAfter"
             [ngModelOptions]="{standalone: true}"
@@ -166,11 +164,9 @@ import {Checkbox} from '@fibo-ui/components';
       <div class="flex flex-row justify-start space-x-1">
         <!-- Text Input -->
         <fibo-form-field
-          label="Text"
-          class="  w-60"
-          [placeholder]="'Enter text...'">
+          class="  w-60">
           <input
-            fiboFormFieldContent
+            fiboInput
             type="text"
             [(ngModel)]="standaloneInput"
             [ngModelOptions]="{standalone: true}"
@@ -180,11 +176,9 @@ import {Checkbox} from '@fibo-ui/components';
 
         <!-- Email Input -->
         <fibo-form-field
-          label="Email"
-          class="rounded-full inline-block w-60"
-          [placeholder]="'email@example.com'">
+          class="rounded-full inline-block w-60">
           <input
-            fiboFormFieldContent
+            fiboInput
             type="email"
             [formControl]="emailCtrl"
             [placeholder]="'email@example.com'"
@@ -193,11 +187,9 @@ import {Checkbox} from '@fibo-ui/components';
 
         <!-- Age Input -->
         <fibo-form-field
-          label="Age"
-          class="rounded-full inline-block w-60"
-          [placeholder]="'Enter age'">
+          class="rounded-full inline-block w-60">
           <input
-            fiboFormFieldContent
+            fiboInput
             type="number"
             [formControl]="ageCtrl"
             [placeholder]="'Enter age'"
@@ -212,12 +204,10 @@ import {Checkbox} from '@fibo-ui/components';
           <fibo-form-field
             fiboPopoverTriggerClick
             #statusTrigger="PopoverTrigger"
-            label="Status"
             [(value)]="statusSelect"
             appearance="secondary"
             class=" w-60"
-            appendIcon="chevron-down"
-            [placeholder]="'Select status'">
+            appendIcon="chevron-down">
             <span class="text-sm">{{ getStatusLabel(statusSelect()) || 'Select status' }}</span>
             <ng-template fiboPortalTemplate [(isOpen)]="statusTrigger.isOpen">
               <div fiboPopover
@@ -243,11 +233,9 @@ import {Checkbox} from '@fibo-ui/components';
         <fibo-form-field
           fiboPopoverTriggerClick
           #categoryTrigger="PopoverTrigger"
-          label="Category"
           appearance="secondary"
           class="rounded-full inline-block w-60"
-          appendIcon="chevron-down"
-          [placeholder]="'Select category'">
+          appendIcon="chevron-down">
           <span class="text-sm">{{ getCategoryLabel(categorySelect()) || 'Select category' }}</span>
           <ng-template fiboPortalTemplate [(isOpen)]="categoryTrigger.isOpen">
             <div fiboPopover

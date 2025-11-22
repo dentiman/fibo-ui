@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {FormFieldControl} from '@fibo-ui/cdk';
-import {FormFieldContent} from '@fibo-ui/cdk';
+import {FiboInput} from '@fibo-ui/cdk';
 import {ReactiveFormsModule} from '@angular/forms';
 import {FormField} from '../form/form-field/form-field';
 
@@ -8,7 +8,7 @@ import {FormField} from '../form/form-field/form-field';
   selector: 'fibo-input',
   imports: [
     FormField,
-    FormFieldContent,
+    FiboInput,
     ReactiveFormsModule
   ],
   templateUrl: './input.html',
