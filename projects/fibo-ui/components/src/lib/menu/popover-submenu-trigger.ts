@@ -15,7 +15,6 @@ import {MenuPanel} from './menu-panel';
   host: {
     '(keydown.enter)': 'popoverTrigger.open()',
     '(keydown.escape)': 'popoverTrigger.close()',
-
     '(keydown.arrowright)': 'popoverTrigger.popover()?.dataList?.navigateNext($event)',
     '(click)': 'popoverTrigger.open()'
   }

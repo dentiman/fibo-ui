@@ -1,17 +1,15 @@
 import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {BasicDatepickerExampleComponent} from './content/basic-datepicker-example';
-import {FloatingLabelDatepickerExampleComponent} from './content/floating-label-example';
-import {DateRangePickerExampleComponent} from './content/date-range-picker-example';
+import {SignalFormsDatepickerExampleComponent} from './content/signal-forms-datepicker-example';
+import {SignalFormsDateRangeExampleComponent} from './content/signal-forms-date-range-example';
 
 @Component({
   selector: 'app-datepicker-page',
   standalone: true,
   imports: [
     CommonModule,
-    BasicDatepickerExampleComponent,
-    FloatingLabelDatepickerExampleComponent,
-    DateRangePickerExampleComponent,
+    SignalFormsDatepickerExampleComponent,
+    SignalFormsDateRangeExampleComponent,
   ],
   templateUrl: './datepicker.html',
 })

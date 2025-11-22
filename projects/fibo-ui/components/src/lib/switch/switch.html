@@ -1,11 +1,11 @@
 <label class="inline-flex items-center gap-2 cursor-pointer select-none"
-       [attr.aria-disabled]="cva.disabled()">
+       [attr.aria-disabled]="disabled()">
   <input type="checkbox"
          class="peer sr-only"
-         [checked]="checked() ?? false"
-         [disabled]="cva.disabled()"
+         [checked]="checked()"
+         [disabled]="disabled()"
          (change)="onInputChange($event)"
-         (blur)="cva.onTouched()" />
+         (blur)="onBlur()" />
 
   <span class="relative inline-flex flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out
                 bg-gray-200 dark:bg-neutral-700 peer-checked:bg-blue-500 dark:peer-checked:bg-blue-600

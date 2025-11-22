@@ -1,7 +1,44 @@
 ```html
-<fibo-multiple-select 
-  [formControl]="usersCtrl"
-  [items]="items" 
-  [placeholder]="'Select Users'">
-</fibo-multiple-select>
+<fibo-form-field 
+  fiboPopoverTriggerClick 
+  #skillsTrigger="PopoverTrigger" 
+  [field]="userForm.skills" 
+  appendIcon="chevron-down">
+  <fibo-field-label>Skills</fibo-field-label>
+  <span class="w-full flex flex-wrap gap-x-1 gap-y-1">
+    @for (value of user().skills; track value) {
+      <div class="flex items-center gap-1 btn btn-sm">
+        <span class="truncate flex-1 text-xs font-medium">{{ value }}</span>
+        <button type="button"
+          class="rounded-full cursor-pointer flex-shrink-0 btn-text"
+          (click)="removeSkill(value); $event.stopPropagation()"
+          (keydown)="$event.stopPropagation()">
+          <lucide-icon name="x" size="14"></lucide-icon>
+        </button>
+      </div>
+    }
+  </span>
+  <ng-template fiboPortalTemplate [(isOpen)]="skillsTrigger.isOpen">
+    <div fiboPopover
+         fiboDataList
+         class="fibo-popover py-1 px-1 rounded-md"
+         [popoverTrigger]="skillsTrigger"
+         [popoverFullWidth]="true"
+         [(MultipleSelectionModel)]="userForm.skills().value">
+      <div class="max-h-70 overflow-y-auto">
+              @if (skills.length === 0) {
+                <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
+              }
+              @for (skill of skills; track skill) {
+                <a [fiboListItemValue]="skill" #option="ListItem"
+                   class="datalist-item py-1 px-2 rounded-md relative group text-sm items-center">
+                  <fibo-checkbox
+                    [checked]="option.isSelected()">{{ skill }}
+                  </fibo-checkbox>
+                </a>
+              }
+      </div>
+    </div>
+  </ng-template>
+</fibo-form-field>
 ```

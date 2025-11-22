@@ -1,18 +1,14 @@
 import {Component, computed, contentChild, contentChildren, ElementRef, forwardRef, inject, input, model, ViewEncapsulation} from '@angular/core';
-import {FormErrorPipe, IsEmptyPipe} from '@fibo-ui/cdk';
+import { IsEmptyPipe} from '@fibo-ui/cdk';
 import {PopoverTrigger} from '@fibo-ui/cdk';
-import {JsonPipe, NgTemplateOutlet} from '@angular/common';
+import { NgTemplateOutlet} from '@angular/common';
 import {
-  FormFieldAppearance,
   FiboInput,
-  FormControlAppendDirective,
-  FormControlPrependDirective,
-  PrimitiveValueAccessor
 } from '@fibo-ui/cdk';
 import {LucideAngularModule} from 'lucide-angular';
 import {FormValueControl, ValidationError, WithOptionalField} from '@angular/forms/signals';
-import {FieldLabel} from './field-label';
 
+export type FormFieldAppearance = 'basic' | 'secondary' | 'clear';
 
 @Component({
   selector: 'fibo-form-field',

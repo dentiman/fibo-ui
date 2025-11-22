@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, computed, inject, input, ViewEncapsulation} from '@angular/core';
-import {PrimitiveValueAccessor} from '@fibo-ui/cdk';
+import {ChangeDetectionStrategy, Component, computed, input, model, ViewEncapsulation} from '@angular/core';
+import {FormCheckboxControl} from '@angular/forms/signals';
 import {LoadingSpin} from '../loading-spin/loading-spin';
 
 @Component({
@@ -7,23 +7,17 @@ import {LoadingSpin} from '../loading-spin/loading-spin';
   imports: [LoadingSpin],
   templateUrl: './switch.html',
   encapsulation: ViewEncapsulation.None,
-  hostDirectives: [
-    {
-      directive: PrimitiveValueAccessor,
-      inputs: ['value: checked', 'disabled'],
-      outputs: ['valueChange: checkedChange'],
-    }
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Switch {
+export class Switch implements FormCheckboxControl {
+
+  /** Whether the switch is checked */
+  checked = model<boolean>(false);
 
   isLoading = input(false);
   size = input<'xs' | 'sm' | 'md' | 'lg' | 'xl'>('md');
-
-  protected cva = inject<PrimitiveValueAccessor<boolean>>(PrimitiveValueAccessor);
-
-  checked = this.cva.value;
+  disabled = input<boolean>(false);
+  touched = model<boolean>(false);
 
   trackSize = computed(() => {
     return {
@@ -56,9 +50,13 @@ export class Switch {
   });
 
   onInputChange(event: Event) {
-    if (this.cva.disabled()) return;
+    if (this.disabled()) return;
     const inputEl = event.target as HTMLInputElement;
-    this.checked.set(!!inputEl.checked);
+    this.checked.set(inputEl.checked);
+  }
+
+  onBlur() {
+    this.touched.set(true);
   }
 
 }

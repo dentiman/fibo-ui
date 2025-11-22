@@ -1,25 +1,48 @@
 ```ts
-import { Component, signal } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Field, form } from '@angular/forms/signals';
+import { FormField } from '@fibo-ui/components';
+import {
+  DataList,
+  ListItem,
+  Popover,
+  PopoverTrigger,
+  PortalTemplateDirective,
+  SingleSelectionModel
+} from '@fibo-ui/cdk';
+import { FieldLabel } from '@fibo-ui/components/src/lib/form/form-field/field-label';
+
+interface UserModel {
+  role: string | null;
+}
 
 @Component({
-  template: 'basic-select-example.html'
+  selector: 'app-select-example',
+  standalone: true,
+  imports: [
+    CommonModule,
+    Field,
+    FormField,
+    DataList,
+    Popover,
+    PortalTemplateDirective,
+    PopoverTrigger,
+    SingleSelectionModel,
+    ListItem,
+    FieldLabel
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: 'basic-select.html'
 })
-export class BasicSelectExample {
-  // Default select items properties: value,  label 
-  readonly items = [
-    { value: 1, label: 'Scott Johnson' },
-    { value: 2, label: 'Mike Smith' },
-    { value: 3, label: 'Emma Davis' },
-    { value: 4, label: 'John Wilson' },
-    { value: 5, label: 'Lisa Thompson' },
-    { value: 6, label: 'David Miller' },
-    { value: 7, label: 'Anna Lee' },
-    { value: 8, label: 'James Brown' },
-    { value: 9, label: 'Maria Clark' },
-    { value: 10, label: 'Robert Lewis' }
-  ];
+export class SelectExampleComponent {
+  readonly user = signal<UserModel>({
+    role: null
+  });
+  
+  readonly userForm = form(this.user);
 
-  readonly userCtrl = new FormControl<number | null>(null);
+  readonly userRoles = ['admin', 'user', 'guest'];
 }
 ```
+

@@ -1,36 +1,34 @@
-import {ChangeDetectionStrategy, Component, inject, input, ViewEncapsulation} from '@angular/core';
-import {PrimitiveValueAccessor} from '@fibo-ui/cdk';
+import {ChangeDetectionStrategy, Component, input, model, ViewEncapsulation} from '@angular/core';
+import {FormCheckboxControl} from '@angular/forms/signals';
 
 @Component({
   selector: 'fibo-checkbox',
   templateUrl: './checkbox.html',
   encapsulation: ViewEncapsulation.None,
-  hostDirectives: [
-    {
-      directive: PrimitiveValueAccessor,
-      inputs: ['value: checked', 'disabled'],
-      outputs: ['valueChange: checkedChange'],
-    }
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[attr.aria-selected]': 'checked()',
     'class': 'group flex items-center'
   }
 })
-export class Checkbox {
+export class Checkbox implements FormCheckboxControl {
+
+  /** Whether the checkbox is checked */
+  checked = model<boolean>(false);
 
   indeterminate = input(false);
   readonly = input(false);
-
-  protected cva = inject<PrimitiveValueAccessor<boolean>>(PrimitiveValueAccessor);
-
-  checked = this.cva.value;
+  disabled = input<boolean>(false);
+  touched = model<boolean>(false);
 
   onInputChange(event: Event) {
-    if (this.cva.disabled()) return;
+    if (this.disabled()) return;
     const inputEl = event.target as HTMLInputElement;
-    this.checked.set(!!inputEl.checked);
+    this.checked.set(inputEl.checked);
+  }
+
+  onBlur() {
+    this.touched.set(true);
   }
 
 }
