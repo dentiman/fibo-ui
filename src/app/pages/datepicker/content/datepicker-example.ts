@@ -12,7 +12,7 @@ import {FieldLabel} from '../../../../../projects/fibo-ui/components/src/lib/for
 import {UsageDemo} from '../../../common/usage-demo';
 
 @Component({
-  selector: 'app-datepicker-signal-forms',
+  selector: 'app-datepicker',
   imports: [
     CommonModule,
     Field,
@@ -61,7 +61,7 @@ import {UsageDemo} from '../../../common/usage-demo';
     </app-usage-demo>
   `,
 })
-export class SignalFormsDatepickerExampleComponent {
+export class DatepickerExampleComponent {
   userModel = signal({
     birthDate: null as string | null
   });

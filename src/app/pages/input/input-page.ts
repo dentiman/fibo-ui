@@ -1,13 +1,13 @@
 import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {SignalFormsInputExampleComponent} from './content/signal-forms-input-example';
+import {InputExampleComponent} from './content/input-example';
 
 @Component({
   selector: 'app-input-page',
   standalone: true,
   imports: [
     CommonModule,
-    SignalFormsInputExampleComponent,
+    InputExampleComponent,
   ],
   templateUrl: './input-page.html',
 })

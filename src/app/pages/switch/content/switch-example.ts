@@ -5,7 +5,7 @@ import {Switch} from '@fibo-ui/components';
 import {UsageDemo} from '../../../common/usage-demo';
 
 @Component({
-  selector: 'app-switch-signal-forms',
+  selector: 'app-switch',
   imports: [CommonModule, Field, Switch, UsageDemo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -41,7 +41,7 @@ import {UsageDemo} from '../../../common/usage-demo';
     </app-usage-demo>
   `,
 })
-export class SignalFormsSwitchExampleComponent {
+export class SwitchExampleComponent {
   settingsModel = signal({
     enableNotifications: false,
     enableDarkMode: false,

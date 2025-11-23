@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BasicCheckboxExampleComponent} from './content/basic-checkbox-example';
-import {SignalFormsCheckboxExampleComponent} from './content/signal-forms-checkbox-example';
+import {CheckboxExampleComponent} from './content/checkbox-example';
 
 @Component({
   selector: 'app-checkbox-page',
@@ -9,7 +9,7 @@ import {SignalFormsCheckboxExampleComponent} from './content/signal-forms-checkb
   imports: [
     CommonModule,
     BasicCheckboxExampleComponent,
-    SignalFormsCheckboxExampleComponent,
+    CheckboxExampleComponent,
   ],
   templateUrl: './checkbox-page.html',
 })

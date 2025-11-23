@@ -5,7 +5,7 @@ import {Checkbox} from '@fibo-ui/components';
 import {UsageDemo} from '../../../common/usage-demo';
 
 @Component({
-  selector: 'app-checkbox-signal-forms',
+  selector: 'app-checkbox',
   imports: [CommonModule, Field, Checkbox, UsageDemo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -35,7 +35,7 @@ import {UsageDemo} from '../../../common/usage-demo';
     </app-usage-demo>
   `,
 })
-export class SignalFormsCheckboxExampleComponent {
+export class CheckboxExampleComponent {
   settingsModel = signal({
     acceptTerms: false,
     enableNotifications: false,

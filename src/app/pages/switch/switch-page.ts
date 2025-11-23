@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BasicSwitchExampleComponent} from './content/basic-switch-example';
 import {SwitchSizesExampleComponent} from './content/switch-sizes-example';
-import {SignalFormsSwitchExampleComponent} from './content/signal-forms-switch-example';
+import {SwitchExampleComponent} from './content/switch-example';
 
 @Component({
   selector: 'app-switch-page',
@@ -11,7 +11,7 @@ import {SignalFormsSwitchExampleComponent} from './content/signal-forms-switch-e
     CommonModule,
     BasicSwitchExampleComponent,
     SwitchSizesExampleComponent,
-    SignalFormsSwitchExampleComponent,
+    SwitchExampleComponent,
   ],
   templateUrl: './switch-page.html',
 })

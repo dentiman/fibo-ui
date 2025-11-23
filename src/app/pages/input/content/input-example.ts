@@ -7,7 +7,7 @@ import {FieldLabel} from '../../../../../projects/fibo-ui/components/src/lib/for
 import {UsageDemo} from '../../../common/usage-demo';
 
 @Component({
-  selector: 'app-input-signal-forms',
+  selector: 'app-input',
   imports: [CommonModule, Field, FormField, FiboInput, FieldLabel, UsageDemo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -29,7 +29,7 @@ import {UsageDemo} from '../../../common/usage-demo';
     </app-usage-demo>
   `,
 })
-export class SignalFormsInputExampleComponent {
+export class InputExampleComponent {
   userModel = signal({
     username: ''
   });

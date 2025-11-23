@@ -12,7 +12,7 @@ import {FieldLabel} from '../../../../../projects/fibo-ui/components/src/lib/for
 import {UsageDemo} from '../../../common/usage-demo';
 
 @Component({
-  selector: 'app-date-range-signal-forms',
+  selector: 'app-date-range',
   imports: [
     CommonModule,
     Field,
@@ -35,7 +35,6 @@ import {UsageDemo} from '../../../common/usage-demo';
           <fibo-form-field
             fiboPopoverTrigger
             #dateRangeTrigger="PopoverTrigger"
-            [field]="userForm.dateRange"
             appendIcon="calendar-range">
             <fibo-field-label>Date Range</fibo-field-label>
             <div class="flex items-center gap-1">
@@ -43,21 +42,19 @@ import {UsageDemo} from '../../../common/usage-demo';
                 fiboInput
                 name="startDate"
                 type="text"
-                [value]="dateRangeValue().startDate || ''"
+                [field]="dateRangeForm.startDate"
                 placeholder="YYYY-MM-DD"
                 (focus)="dateRangeTrigger.open()"
-                (input)="onStartDateInput($event)"
-                class="w-19 appearance-none outline-none text-sm placeholder:text-xs focus:outline-0" />
+                class="w-19 appearance-none outline-none text-sm placeholder:text-xs focus:outline-0"/>
               <span class="flex items-center mx-1 text-gray-400 text-center">-</span>
               <input
                 fiboInput
                 name="endDate"
                 type="text"
-                [value]="dateRangeValue().endDate || ''"
+                [field]="dateRangeForm.endDate"
                 placeholder="YYYY-MM-DD"
                 (focus)="dateRangeTrigger.open()"
-                (input)="onEndDateInput($event)"
-                class="w-full pl-1 appearance-none outline-none text-sm placeholder:text-xs focus:outline-0" />
+                class="w-full pl-1 appearance-none outline-none text-sm placeholder:text-xs focus:outline-0"/>
             </div>
             <ng-template fiboPortalTemplate [(isOpen)]="dateRangeTrigger.isOpen">
               <fibo-calendar
@@ -65,7 +62,7 @@ import {UsageDemo} from '../../../common/usage-demo';
                 [popoverTrigger]="dateRangeTrigger"
                 class="fibo-popover rounded-md"
                 [(fiboCalendarDateRangeSelectionModel)]="calendarDateRange"
-                (optionTriggered)="dateRangeTrigger.close()"
+
               />
             </ng-template>
           </fibo-form-field>
@@ -74,20 +71,7 @@ import {UsageDemo} from '../../../common/usage-demo';
     </app-usage-demo>
   `,
 })
-export class SignalFormsDateRangeExampleComponent {
-  userModel = signal({
-    dateRange: {
-      startDate: null,
-      endDate: null
-    } as DateRange
-  });
-
-  userForm = form(this.userModel, (schemaPath) => {
-    // Add validation if needed
-  });
-
-  // Computed signal to get the date range value from the form
-  dateRangeValue = computed(() => this.userForm.dateRange().value());
+export class DateRangeExampleComponent {
 
   // Model signal for calendar component (needs to sync with form field)
   calendarDateRange = model<DateRange>({
@@ -95,44 +79,10 @@ export class SignalFormsDateRangeExampleComponent {
     endDate: null
   });
 
-  constructor() {
-    // Sync form field value to calendar model
-    effect(() => {
-      const formValue = this.dateRangeValue();
-      this.calendarDateRange.set(formValue);
-    });
+  dateRangeForm = form(this.calendarDateRange, (schemaPath) => {
+    // Add validation if needed
+  });
 
-    // Sync calendar model changes back to form field
-    effect(() => {
-      const calendarValue = this.calendarDateRange();
-      const currentFormValue = this.dateRangeValue();
-      // Only update if different to avoid infinite loops
-      if (calendarValue.startDate !== currentFormValue.startDate || 
-          calendarValue.endDate !== currentFormValue.endDate) {
-        this.userForm.dateRange().value.set(calendarValue);
-      }
-    });
-  }
-
-  onStartDateInput(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const value = input.value || null;
-    const currentRange = this.dateRangeValue();
-    this.userForm.dateRange().value.set({
-      ...currentRange,
-      startDate: value
-    });
-  }
-
-  onEndDateInput(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const value = input.value || null;
-    const currentRange = this.dateRangeValue();
-    this.userForm.dateRange().value.set({
-      ...currentRange,
-      endDate: value
-    });
-  }
 
   readonly codeBlocks = [
     { name: 'html', path: '/documentation/datepicker/signal-forms-date-range.html.md' },
