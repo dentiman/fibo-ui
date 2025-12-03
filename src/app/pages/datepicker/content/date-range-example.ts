@@ -40,7 +40,6 @@ import {UsageDemo} from '../../../common/usage-demo';
             <div class="flex items-center gap-1">
               <input
                 fiboInput
-                name="startDate"
                 type="text"
                 [field]="dateRangeForm.startDate"
                 placeholder="YYYY-MM-DD"
@@ -49,7 +48,6 @@ import {UsageDemo} from '../../../common/usage-demo';
               <span class="flex items-center mx-1 text-gray-400 text-center">-</span>
               <input
                 fiboInput
-                name="endDate"
                 type="text"
                 [field]="dateRangeForm.endDate"
                 placeholder="YYYY-MM-DD"
@@ -74,9 +72,9 @@ import {UsageDemo} from '../../../common/usage-demo';
 export class DateRangeExampleComponent {
 
   // Model signal for calendar component (needs to sync with form field)
-  calendarDateRange = model<DateRange>({
-    startDate: null,
-    endDate: null
+  calendarDateRange = model({
+    startDate: '',
+    endDate: ''
   });
 
   dateRangeForm = form(this.calendarDateRange, (schemaPath) => {

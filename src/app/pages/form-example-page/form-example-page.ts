@@ -66,7 +66,6 @@ interface UserProfile {
             <fibo-field-label>Username</fibo-field-label>
             <input
               fiboInput
-              name="username"
               [field]="userProfileForm.username"
               placeholder="Enter username"
               class="w-full appearance-none outline-none text-sm   focus:outline-0"  />
@@ -141,7 +140,6 @@ interface UserProfile {
           <fibo-form-field [field]="userProfileForm.email">
             <input
               fiboInput
-              name="email"
               type="email"
               [field]="userProfileForm.email"
               placeholder="Enter email address"
@@ -155,7 +153,6 @@ interface UserProfile {
           <fibo-form-field [field]="userProfileForm.password" >
             <input
               fiboInput
-              name="password"
               type="password"
               [field]="userProfileForm.password"
               placeholder="Enter password"
@@ -169,7 +166,6 @@ interface UserProfile {
           <fibo-form-field [field]="userProfileForm.confirmPassword">
             <input
               fiboInput
-              name="confirmPassword"
               type="password"
               [field]="userProfileForm.confirmPassword"
               placeholder="Confirm your password"
@@ -183,7 +179,6 @@ interface UserProfile {
           <fibo-form-field [field]="userProfileForm.firstName">
             <input
               fiboInput
-              name="firstName"
               [field]="userProfileForm.firstName"
               placeholder="Enter first name"
               class="w-full appearance-none outline-none text-sm focus:outline-0" />
@@ -196,7 +191,6 @@ interface UserProfile {
           <fibo-form-field [field]="userProfileForm.lastName">
             <input
               fiboInput
-              name="lastName"
               [field]="userProfileForm.lastName"
               placeholder="Enter last name"
               class="w-full appearance-none outline-none text-sm focus:outline-0" />
@@ -209,7 +203,6 @@ interface UserProfile {
           <fibo-form-field [field]="userProfileForm.age">
             <input
               fiboInput
-              name="age"
               type="number"
               [field]="userProfileForm.age"
               placeholder="Enter your age"
@@ -225,7 +218,6 @@ interface UserProfile {
           appendIcon="calendar-days">
           <input
             fiboInput
-            name="birthDate"
             type="text"
             [field]="userProfileForm.birthDate"
             placeholder="YYYY-MM-DD"
@@ -248,7 +240,6 @@ interface UserProfile {
           <fibo-form-field [field]="userProfileForm.website">
             <input
               fiboInput
-              name="website"
               type="url"
               [field]="userProfileForm.website"
               placeholder="Enter website URL"
@@ -305,7 +296,6 @@ interface UserProfile {
           <fibo-form-field [field]="userProfileForm.phone">
             <input
               fiboInput
-              name="phone"
               type="tel"
               [field]="userProfileForm.phone"
               placeholder="Enter phone number"

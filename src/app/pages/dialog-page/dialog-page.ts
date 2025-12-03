@@ -8,12 +8,6 @@ import {FormExamplePageComponent} from '../form-example-page/form-example-page';
 
 @Component({
   imports: [
-    PopoverTrigger,
-    Popover,
-    RouterLink,
-    FiboDialog,
-    SelectPageComponent,
-    JsonPipe,
     DialogTrigger,
     FormExamplePageComponent
   ],

@@ -19,7 +19,6 @@ import {UsageDemo} from '../../../common/usage-demo';
             <fibo-field-label>Username</fibo-field-label>
             <input
               fiboInput
-              name="username"
               [field]="userForm.username"
               placeholder="Enter username"
               class="w-full appearance-none outline-none text-sm focus:outline-0" />

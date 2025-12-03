@@ -40,8 +40,7 @@ import {UsageDemo} from '../../../common/usage-demo';
             <fibo-field-label>Birth Date</fibo-field-label>
             <input
               fiboInput
-              name="birthDate"
-              type="text"
+              type="number"
               [field]="userForm.birthDate"
               placeholder="YYYY-MM-DD"
               (focus)="dateTrigger.open()"
