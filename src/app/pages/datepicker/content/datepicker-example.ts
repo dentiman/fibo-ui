@@ -62,7 +62,7 @@ import {UsageDemo} from '../../../common/usage-demo';
 })
 export class DatepickerExampleComponent {
   userModel = signal({
-    birthDate: null as string | null
+    birthDate: ''
   });
 
   userForm = form(this.userModel, (schemaPath) => {

@@ -23,14 +23,14 @@ interface UserProfile {
   confirmPassword: string;
   firstName: string;
   lastName: string;
-  age: number | null;
+  age: number ;
   phone: string;
   website: string;
-  city: string | null;
-  userRole: string | null;
+  city: string;
+  userRole: string ;
   country: string;
   skills: string[];
-  birthDate: string | null;
+  birthDate: string;
 }
 
 @Component({
@@ -326,14 +326,14 @@ export class FormExamplePageComponent {
     confirmPassword: '',
     firstName: '',
     lastName: '',
-    age: null,
+    age: 0,
     phone: '',
     website: '',
     city: 'london',
-    userRole: null,
+    userRole: '',
     country: '',
     skills: [],
-    birthDate: null
+    birthDate: ''
   });
 
   userProfileForm = form(this.userProfile, (patch)=>{

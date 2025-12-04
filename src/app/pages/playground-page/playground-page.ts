@@ -83,7 +83,6 @@ import {Checkbox} from '@fibo-ui/components';
             fiboInput
             type="text"
             [(ngModel)]="search"
-            [ngModelOptions]="{standalone: true}"
             [placeholder]="'search...'"
             class="w-full appearance-none outline-none text-sm focus:outline-0" />
         </fibo-form-field>
