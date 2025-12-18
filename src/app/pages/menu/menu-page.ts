@@ -1,4 +1,4 @@
-import {Component, computed, viewChild} from '@angular/core';
+import {Component, computed, signal, viewChild} from '@angular/core';
 import {
   DataList,
   PopoverTriggerToggle, PortalTemplateDirective,
@@ -18,7 +18,8 @@ import {UsageDemo} from '../../common/usage-demo';
     MenuItem,
     DataList,
     UsageDemo,
-    PortalTemplateDirective
+    PortalTemplateDirective,
+    SingleSelectionModel
   ],
   templateUrl: './menu-page.html',
 
@@ -34,6 +35,36 @@ export class MenuPageComponent {
     { name: 'html', path: '/documentation/menu/complex-menu.html.md' },
     { name: 'ts', path: '/documentation/menu/complex-menu.ts.md' }
   ];
+
+  readonly codeBlocksValueMenu = [
+    { name: 'html', path: '/documentation/menu/value-menu.html.md' },
+    { name: 'ts', path: '/documentation/menu/value-menu.ts.md' }
+  ];
+
+  selectedValue = signal('apple');
+
+  valueItems = computed(() => [
+    {
+      label: 'Fruits',
+      icon: 'apple',
+      children: [
+        { label: 'Apple', value: 'apple', icon: 'circle' },
+        { label: 'Banana', value: 'banana', icon: 'circle' },
+        { label: 'Orange', value: 'orange', icon: 'circle' },
+      ],
+    },
+    {
+      label: 'Vegetables',
+      icon: 'leaf',
+      children: [
+        { label: 'Carrot', value: 'carrot', icon: 'circle' },
+        { label: 'Broccoli', value: 'broccoli', icon: 'circle' },
+        { label: 'Tomato', value: 'tomato', icon: 'circle' },
+      ],
+    },
+    { label: 'Water', value: 'water', icon: 'droplet' },
+    { label: 'Juice', value: 'juice', icon: 'cup-soda' },
+  ]);
 
   onTriggerClick() {
     alert('Menu trigger clicked!');

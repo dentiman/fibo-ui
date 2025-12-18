@@ -36,6 +36,13 @@
            (itemTrigger)="item.callback(); closeMenuWithParent()" >
           <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
         </a>
+      } @else if(item.value !== undefined) {
+        <a class="datalist-item py-1 px-2 rounded-md relative group text-sm"
+           fiboListItem [disabled]="!!item.disabled"
+           [fiboListItemValue]="item.value"
+           (itemTrigger)="closeMenuWithParent()" >
+          <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
+        </a>
       }
     }
 }

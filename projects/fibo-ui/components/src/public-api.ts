@@ -34,7 +34,6 @@ export * from './lib/datepicker/calendar/calendar-date-selection-model';
 export * from './lib/datepicker/calendar/calendar-date-range-selection-model';
 
 // Form components and interfaces
-export * from './lib/form/reset-control';
 export * from './lib/form/form-field/form-field';
 export * from './lib/form/form-field/field-label';
 
