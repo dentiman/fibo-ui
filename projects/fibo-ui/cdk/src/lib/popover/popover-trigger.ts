@@ -10,6 +10,7 @@ import {Popover} from './popover';
   host: {
     '[attr.aria-expanded]': 'isOpen() || null',
     '(keydown)': 'onKeydown($event)',
+    '(focusout)': 'onFocusOut($event)',
   }
 })
 export class PopoverTrigger {
@@ -47,6 +48,27 @@ export class PopoverTrigger {
       this.popover()?.dataList?.onKeydown(event)
     }
   }
+
+  onFocusOut(event: FocusEvent) {
+    const relatedTarget = event.relatedTarget as Node;
+    const controlElement = this.element;
+
+    if (!relatedTarget) {
+      return;
+    }
+
+    // Check if focus is moving to the popover container (rendered in portal outlet)
+    const popoverElement = this.popover()?.element.nativeElement;
+    const isMovingToPopover = popoverElement?.contains(relatedTarget);
+
+    // Don't close if focus is moving within the control element or to the popover
+    if (controlElement.contains(relatedTarget) || isMovingToPopover) {
+      return;
+    }
+
+    this.popover()?.close();
+  }
+
 }
 
 @Directive({

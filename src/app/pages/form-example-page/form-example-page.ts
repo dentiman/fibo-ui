@@ -1,7 +1,7 @@
 import {Component, signal, ChangeDetectionStrategy, effect} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {disabled, Field, form, required} from '@angular/forms/signals';
-import {FormField, Calendar, CalendarDateSelectionModel} from '@fibo-ui/components';
+import {FormField, Calendar, CalendarDateSelectionModel, Select, Listbox} from '@fibo-ui/components';
 import {
   DataList,
   FiboInput, ListItem,
@@ -10,7 +10,7 @@ import {
   PortalTemplateDirective,
   SingleSelectionModel,
   MultipleSelectionModel,
-  safeProp
+  safeProp, FormFieldDirective, FormFieldTrigger
 } from '@fibo-ui/cdk';
 import {LucideAngularModule} from 'lucide-angular';
 import {Checkbox} from '@fibo-ui/components';
@@ -39,7 +39,7 @@ interface UserProfile {
   imports: [
     CommonModule,
     Field,
-    FormField,
+    FormFieldDirective,
     FiboInput,
     DataList,
     Popover,
@@ -53,7 +53,12 @@ interface UserProfile {
     Checkbox,
     Calendar,
     CalendarDateSelectionModel,
-    FieldLabel
+    FieldLabel,
+    FormFieldDirective,
+    FormField,
+    FormFieldTrigger,
+    Select,
+    Listbox
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -62,22 +67,28 @@ interface UserProfile {
       <form  class="space-y-5">
         <!-- Username -->
 
-          <fibo-form-field [field]="userProfileForm.username">
-            <fibo-field-label>Username</fibo-field-label>
-            <input
-              fiboInput
-              [field]="userProfileForm.username"
-              placeholder="Enter username"
-              class="w-full appearance-none outline-none text-sm   focus:outline-0"  />
-          </fibo-form-field>
+        <div fiboFormField class="group content-center fibo-form-field px-3 py-1 ">
+          <label  class="block text-xs fibo-form-field-label">Name</label>
+          <input  [field]="userProfileForm.username"  type="text"  placeholder="Name" class="w-full appearance-none outline-none text-sm   focus:outline-0" />
+        </div>
 
-        <!-- City -->
-          <!-- Single  Select          //-->
-          <fibo-form-field fiboPopoverTriggerClick #trigger="PopoverTrigger"
-                           [field]="userProfileForm.city"
-                           appendIcon="chevron-down"
-          >
-            <fibo-field-label>City</fibo-field-label>
+
+        <div fiboFormField class="group content-center fibo-form-field px-3 py-1 relative">
+          <label for="name" class="block text-xs fibo-form-field-label">First Name</label>
+          <input  [field]="userProfileForm.firstName"  type="text"  placeholder="Name" class="w-full appearance-none outline-none text-sm   focus:outline-0" />
+          <div class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 hidden
+            cursor-pointer
+            group-hover:block
+            group-focus-within:block
+            rounded-full  text-foreground-tertiary hover:text-foreground">
+            <lucide-icon name="X" size="16" class=""></lucide-icon>
+          </div>
+        </div>
+
+        <button  type="button" fiboFormFieldTrigger class="w-full group fibo-form-field px-3 py-1 relative block text-left"
+             #trigger="PopoverTrigger">
+          <input type="hidden"  [field]="userProfileForm.userRole">
+          <span class="block text-xs fibo-form-field-label">City</span>
             @if( userProfile().city ; as city) {
              <span class="text-sm">{{city}}</span>
             }
@@ -103,7 +114,13 @@ interface UserProfile {
                 </div>
               </div>
             </ng-template>
-          </fibo-form-field>
+            <lucide-icon name="chevron-down" size="16" class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2   text-foreground-tertiary"></lucide-icon>
+        </button>
+
+        <div>
+          <fibo-select [items]="cities" [field]="userProfileForm.city" [label]="'City'"></fibo-select>
+        </div>
+
 
         <!-- User Role -->
         <fibo-form-field fiboPopoverTrigger
@@ -173,29 +190,7 @@ interface UserProfile {
           </fibo-form-field>
         </label>
 
-        <!-- First Name -->
-        <label class="block">
-          <span class="block mb-1">First Name</span>
-          <fibo-form-field [field]="userProfileForm.firstName">
-            <input
-              fiboInput
-              [field]="userProfileForm.firstName"
-              placeholder="Enter first name"
-              class="w-full appearance-none outline-none text-sm focus:outline-0" />
-          </fibo-form-field>
-        </label>
 
-        <!-- Last Name -->
-        <label class="block">
-          <span class="block mb-1">Last Name</span>
-          <fibo-form-field [field]="userProfileForm.lastName">
-            <input
-              fiboInput
-              [field]="userProfileForm.lastName"
-              placeholder="Enter last name"
-              class="w-full appearance-none outline-none text-sm focus:outline-0" />
-          </fibo-form-field>
-        </label>
 
         <!-- Age -->
         <label class="block">

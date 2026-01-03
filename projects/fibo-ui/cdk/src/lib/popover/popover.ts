@@ -30,6 +30,7 @@ import {DataList} from '../data-list/data-list';
 export class Popover implements OnInit, OnDestroy {
 
   element = inject(ElementRef);
+  // call by trigger for navigate
   dataList = inject(DataList,{self:true,optional:true});
   popoverTrigger = input.required<PopoverTrigger>()
 

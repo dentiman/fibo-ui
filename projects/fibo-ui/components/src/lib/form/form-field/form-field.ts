@@ -22,7 +22,6 @@ export type FormFieldAppearance = 'basic' | 'secondary' | 'clear';
   viewProviders: [{ provide: FormField, useExisting: forwardRef(() => FormField) }],
   host: {
     '(click)': 'handleClick()',
-    '(focusout)': 'onFocusOut($event)',
     '[attr.aria-disabled]': 'disabled()',
     '[attr.aria-required]': 'required() || null',
     '[attr.data-appearance]': 'appearance()',
@@ -34,7 +33,7 @@ export type FormFieldAppearance = 'basic' | 'secondary' | 'clear';
 })
 
 export class FormField implements FormValueControl<any> {
-  value = model()
+  value = model<unknown>()
   required = input(false)
   disabled = input(false)
   touched = input(false)
@@ -43,6 +42,7 @@ export class FormField implements FormValueControl<any> {
   errors = input<readonly WithOptionalField<ValidationError>[]>([])
 
   appearance = input<FormFieldAppearance>('basic');
+  clearTo = input<unknown>()
 
   // Computed and injected properties
   hasErrors = computed(() => this.errors().length > 0 &&  this.touched());
@@ -66,29 +66,10 @@ export class FormField implements FormValueControl<any> {
 
   reset(event: Event) {
     event.preventDefault();
-    this.value.set(null);
+    const clearTo = this.clearTo();
+    if (clearTo === undefined) return;
+    this.value.set(clearTo as any);
   }
 
-  onFocusOut(event: FocusEvent) {
-    const relatedTarget = event.relatedTarget as Node;
-    const controlElement = this.element.nativeElement;
-
-    if (!relatedTarget) {
-      this.touched();
-      return;
-    }
-
-    // Check if focus is moving to the popover container (rendered in portal outlet)
-    const popoverElement = this.popover?.popover()?.element.nativeElement;
-    const isMovingToPopover = popoverElement?.contains(relatedTarget);
-
-    // Don't close if focus is moving within the control element or to the popover
-    if (controlElement.contains(relatedTarget) || isMovingToPopover) {
-      return;
-    }
-
-    this.popover?.close();
-    this.touched();
-  }
 
 }

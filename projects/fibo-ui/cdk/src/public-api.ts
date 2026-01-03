@@ -11,6 +11,8 @@ export * from './lib/form/form-error/form-field-errors';
 export * from './lib/form/form-error/form-error-pipes';
 export * from './lib/form/form-error/form-error-service';
 export * from './lib/form/form-field/input';
+export * from './lib/form/form-field/form-field.directive';
+export * from './lib/form/form-field/form-field-trigger';
 
 
 // Utility Functions

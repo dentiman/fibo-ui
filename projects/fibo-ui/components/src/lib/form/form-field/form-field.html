@@ -13,7 +13,7 @@
     <ng-content></ng-content>
   </div>
 
-  @if (!empty && !disabled()) {
+  @if (!empty && !disabled() && clearTo() !== undefined) {
     <div>
         <span
           (click)="reset($event)"
