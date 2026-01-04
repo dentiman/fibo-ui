@@ -27,7 +27,7 @@
         (input)="onEndDateInput($event)"
         class="w-full pl-1 appearance-none outline-none text-sm placeholder:text-xs focus:outline-0" />
     </div>
-    <ng-template fiboPortalTemplate [(isOpen)]="dateRangeTrigger.isOpen">
+    <ng-template fiboPortalContent [(isOpen)]="dateRangeTrigger.isOpen">
       <fibo-calendar
         fiboPopover
         [trigger]="dateRangeTrigger"

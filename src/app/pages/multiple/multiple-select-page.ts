@@ -4,11 +4,11 @@ import {Field, form} from '@angular/forms/signals';
 import {FormField, Checkbox} from '@fibo-ui/components';
 import {
   DataList,
-  ListItem,
+  Option,
   Popover,
   PopoverTriggerClick,
-  PortalTemplateDirective,
-  MultipleSelectionModel
+  PortalContent,
+  SelectMulti
 } from '@fibo-ui/cdk';
 import {FieldLabel} from '../../../../projects/fibo-ui/components/src/lib/form/form-field/field-label';
 import {UsageDemo} from '../../common/usage-demo';
@@ -27,10 +27,10 @@ interface UserModel {
     FormField,
     DataList,
     Popover,
-    PortalTemplateDirective,
+    PortalContent,
     PopoverTriggerClick,
-    MultipleSelectionModel,
-    ListItem,
+    SelectMulti,
+    Option,
     FieldLabel,
     Checkbox,
     LucideAngularModule,
@@ -43,7 +43,7 @@ export class MultipleSelectPageComponent {
   readonly user = signal<UserModel>({
     skills: []
   });
-  
+
   readonly userForm = form(this.user);
 
   readonly skills = ['Angular', 'React', 'Vue', 'Node.js', 'Python', 'Java', 'C#', 'PHP', 'Ruby', 'Go'];

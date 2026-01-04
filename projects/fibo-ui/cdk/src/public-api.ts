@@ -20,7 +20,7 @@ export * from './lib/utils/property.utils';
 
 // Data List Directives
 export * from './lib/data-list/data-list';
-export * from './lib/data-list/list-item';
+export * from './lib/data-list/option.directive';
 export * from './lib/data-list/selection-models';
 
 // Popover Directives
@@ -31,5 +31,5 @@ export * from './lib/popover/popover';
 
 // Portal Components and Services
 export * from './lib/portal/portal-registry';
-export * from './lib/portal/portal-template.directive';
+export * from './lib/portal/portal-content.directive';
 export * from './lib/portal/portal-outlet.component';

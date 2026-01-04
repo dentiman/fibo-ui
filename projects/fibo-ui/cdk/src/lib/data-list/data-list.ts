@@ -1,6 +1,6 @@
 import {Directive, effect, ElementRef, inject, InjectionToken, input, model, output, signal,} from '@angular/core';
 import {PopoverTrigger} from '../popover/popover-trigger';
-import {ListItem} from './list-item';
+import {Option} from './option.directive';
 
 export const DATA_LIST = new InjectionToken<DataList>('DataList');
 
@@ -30,11 +30,11 @@ export class DataList {
 
   optionTriggered = output<Event>();
 
-  options = model<ListItem[]>([]);
+  options = model<Option[]>([]);
 
   id = `data-list-${nextDataListId++}`;
 
-  protected _activeOption = signal<ListItem | null>(null);
+  protected _activeOption = signal<Option | null>(null);
 
   activeOption = this._activeOption.asReadonly();
 
@@ -45,26 +45,26 @@ export class DataList {
     });
   }
 
-  registerOption(option: ListItem) {
+  registerOption(option: Option) {
     const currentOptions = this.options();
     if (!currentOptions.includes(option)) {
       this.options.set([...currentOptions, option]);
     }
   }
 
-  unregisterOption(option: ListItem) {
+  unregisterOption(option: Option) {
     const currentOptions = this.options();
     this.options.set(currentOptions.filter(opt => opt !== option));
   }
 
 
-  setActiveOption(option: ListItem | null) {
+  setActiveOption(option: Option | null) {
     this._activeOption.set(option);
   }
 
   findNextOption(
-    currentOption: ListItem | null
-  ): ListItem | null {
+    currentOption: Option | null
+  ): Option | null {
     const optionsArray = this.options();
     // @ts-ignore
     const currentIndex = optionsArray.indexOf(currentOption);
@@ -92,8 +92,8 @@ export class DataList {
   }
 
   findPreviousOption(
-    currentOption: ListItem | null
-  ): ListItem | null {
+    currentOption: Option | null
+  ): Option | null {
     const optionsArray = this.options();
     // @ts-ignore
     const currentIndex = optionsArray.indexOf(currentOption);

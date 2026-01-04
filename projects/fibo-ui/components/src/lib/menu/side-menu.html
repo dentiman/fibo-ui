@@ -23,7 +23,7 @@
         <li class="relative flex gap-x-2"
             fiboCollapseSubmenuItem [items]="item.children"
             #collapseSubmenuItem="fiboCollapseSubmenuItem"
-            #dataListItem="ListItem"
+            #dataListItem="Option"
         >
           @if (showChain) {
           <fibo-side-menu-chain
@@ -85,9 +85,9 @@
           <a class="relative flex gap-x-2 group cursor-pointer
              aria-selected:rounded-md
            aria-selected:text-white"
-             [fiboListItemValue]="item"
+             fiboOption [value]="item"
              [routerLink]="item.url"
-             #dataListItem="ListItem"
+             #dataListItem="Option"
           >
             @if (showChain) {
             <fibo-side-menu-chain
@@ -111,9 +111,9 @@
           <button class="relative flex gap-x-2 group cursor-pointer text-left
              aria-selected:rounded-md
            aria-selected:text-white"
-             [fiboListItemValue]="item"
+             fiboOption [value]="item"
              (click)="item.callback!()"
-             #dataListItem="ListItem"
+             #dataListItem="Option"
           >
             @if (showChain) {
             <fibo-side-menu-chain
@@ -137,8 +137,8 @@
           <button class="relative flex gap-x-2 group cursor-pointer text-left
              aria-selected:rounded-md
            aria-selected:text-white"
-             [fiboListItemValue]="item.value"
-             #dataListItem="ListItem"
+             fiboOption [value]="item.value"
+             #dataListItem="Option"
           >
             @if (showChain) {
             <fibo-side-menu-chain

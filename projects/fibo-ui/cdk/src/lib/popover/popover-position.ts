@@ -48,16 +48,16 @@ export function fromResizeObserver(
     '[style.left]': 'position() ? position()?.x+"px": ""',
     '[style.top]': 'position() ? position()?.y+"px": ""',
     '[style.width]': 'width() ? width()+"px": ""',
-     '[style.opacity]': 'position() ? "1": "0"',
+    '[style.opacity]': 'position() ? "1": "0"',
   },
 })
 export class PopoverPosition {
   referenceElement = input<HTMLElement>()
-  popoverTrigger = input<PopoverTrigger>()
+  trigger = input<PopoverTrigger>()
 
   realReferenceElement = computed(()=>{
     if (this.referenceElement()) return this.referenceElement();
-    return this.popoverTrigger()?.element
+    return this.trigger()?.element
   })
 
   matchWidth = input<boolean>(false)

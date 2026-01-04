@@ -1,12 +1,12 @@
 import {Component, computed} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import { DataList, SingleSelectionModel} from '@fibo-ui/cdk';
+import { DataList, SelectOne} from '@fibo-ui/cdk';
 import { SideMenu} from '@fibo-ui/components';
 
 @Component({
   selector: 'app-root-nav',
   standalone: true,
-  imports: [CommonModule,DataList, SingleSelectionModel, SideMenu],
+  imports: [CommonModule, DataList, SideMenu, SelectOne],
   templateUrl: './root-nav.html'
 })
 export class RootNavComponent {

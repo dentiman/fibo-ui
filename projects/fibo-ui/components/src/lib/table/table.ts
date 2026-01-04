@@ -12,13 +12,13 @@ import {CommonModule, NgTemplateOutlet} from '@angular/common';
 import {FiboColumn} from './column';
 import {FiboColumnHeader} from './column-header';
 import {FiboTableRow} from './table-row';
-import {ListItem, MultipleSelectionModel, SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
+import {Option, SelectMulti, SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
 import {Checkbox} from '../checkbox/checkbox';
 
 // TODO:: need implement checkbox multiselect outside table component
 @Component({
   selector: 'fibo-table',
-  imports: [CommonModule, NgTemplateOutlet, Checkbox, ListItem],
+  imports: [CommonModule, NgTemplateOutlet, Checkbox, Option],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'fibo-table block w-full overflow-x-auto',
@@ -80,8 +80,8 @@ import {Checkbox} from '../checkbox/checkbox';
           <tr>
             @if (hasMultipleSelectionModel) {
               <td class="px-1 text-sm whitespace-nowrap text-foreground-secondary">
-                <a [fiboListItemValue]="row"
-                   #item="ListItem">
+                <a fiboOption [value]="row"
+                   #item="Option">
                   <fibo-checkbox
                     [readonly]="true"
                     [checked]="item.isSelected()"
@@ -118,12 +118,12 @@ export class Table<T> {
   rows = computed<ReadonlyArray<T>>(() => this.dataSource());
 
   get hasMultipleSelectionModel() {
-    return this.selectionModel instanceof MultipleSelectionModel;
+    return this.selectionModel instanceof SelectMulti;
   }
 
   // Number of selected items among the current rows
   private selectedInViewCount = computed<number>(() => {
-    if (!(this.selectionModel instanceof MultipleSelectionModel)) return 0;
+    if (!(this.selectionModel instanceof SelectMulti)) return 0;
     const currentRows = this.rows();
     const selected = this.selectionModel.value();
     if (!Array.isArray(selected) || currentRows.length === 0) return 0;
@@ -150,7 +150,7 @@ export class Table<T> {
 
   // Toggle all visible rows based on header checkbox
   toggleAll(next: boolean | null) {
-    if (!(this.selectionModel instanceof MultipleSelectionModel)) return;
+    if (!(this.selectionModel instanceof SelectMulti)) return;
     const checked = !!next;
     const currentRows = this.rows();
     if (currentRows.length === 0) return;

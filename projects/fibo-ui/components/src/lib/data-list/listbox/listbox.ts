@@ -1,6 +1,6 @@
 import {Component, inject, input, TemplateRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {DataList, MultipleSelectionModel, ListItem, SELECTION_MODEL, SelectionModel, safeProp} from '@fibo-ui/cdk';
+import {DataList, SelectMulti, Option, SELECTION_MODEL, SelectionModel, safeProp} from '@fibo-ui/cdk';
 import {Checkbox} from '../../checkbox/checkbox';
 
 @Component({
@@ -8,7 +8,7 @@ import {Checkbox} from '../../checkbox/checkbox';
   imports: [
     CommonModule,
     Checkbox,
-    ListItem
+    Option
   ],
   hostDirectives: [{
     directive: DataList,
@@ -32,7 +32,7 @@ export class Listbox<T = any> {
   labelProp = input<keyof T>('label' as keyof T);
 
   get isMultiple() {
-    return this.selectionModel instanceof MultipleSelectionModel;
+    return this.selectionModel instanceof SelectMulti;
   }
 
   getValue(item: T): string | number {

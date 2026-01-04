@@ -21,18 +21,18 @@
   </div>
 </button>
 
-<ng-template fiboPortalTemplate [(isOpen)]="trigger.isOpen">
+<ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
   <div fiboPopover
        fiboDataList
        class="fibo-popover py-1 px-1 rounded-md"
        [trigger]="trigger"
        [matchWidth]="true"
-       [(fiboSelectOne)]="value"
+       fiboSelectOne [(value)]="value"
        (optionTriggered)="trigger.close()"
   >
     <div class="max-h-70 overflow-y-auto ">
       @for (item of items(); track item.value) {
-        <a [fiboListItemValue]="item.value"
+        <a fiboOption [value]="item.value"
            class="datalist-item py-1 px-2 rounded-md relative group text-sm">
           <span class="block truncate font-normal">{{ item.label }}</span>
         </a>

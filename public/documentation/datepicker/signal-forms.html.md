@@ -14,7 +14,7 @@
       placeholder="YYYY-MM-DD"
       (focus)="dateTrigger.open()"
       class="w-full appearance-none outline-none text-sm focus:outline-0" />
-    <ng-template fiboPortalTemplate [(isOpen)]="dateTrigger.isOpen">
+    <ng-template fiboPortalContent [(isOpen)]="dateTrigger.isOpen">
       <fibo-calendar
         fiboPopover
         [trigger]="dateTrigger"

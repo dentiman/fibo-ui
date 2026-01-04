@@ -1,6 +1,6 @@
 import {Component, computed, inject, input, output, TemplateRef, viewChildren} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Popover, DataList, ListItem} from '@fibo-ui/cdk';
+import {Popover, DataList, Option} from '@fibo-ui/cdk';
 import {RouterLink} from '@angular/router';
 import {PopoverSubmenuTrigger} from './popover-submenu-trigger';
 import {MenuPanel} from './menu-panel';
@@ -22,7 +22,7 @@ import {LucideAngularModule} from 'lucide-angular';
     'class': 'p-1 min-w-[180px]  group rounded-md fibo-popover',
     '(keydown.arrowleft)': 'focusToTrigger($event)'
   },
-  imports: [CommonModule, ListItem, PopoverSubmenuTrigger, RouterLink, LucideAngularModule],
+  imports: [CommonModule, Option, PopoverSubmenuTrigger, RouterLink, LucideAngularModule],
   templateUrl: './popover-menu.html',
 })
 export class PopoverMenu {

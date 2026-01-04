@@ -6,7 +6,7 @@ import {
   FiboInput,
   Popover,
   PopoverTrigger,
-  PortalTemplateDirective
+  PortalContent
 } from '@fibo-ui/cdk';
 import {FieldLabel} from '../../../../../projects/fibo-ui/components/src/lib/form/form-field/field-label';
 import {UsageDemo} from '../../../common/usage-demo';
@@ -19,7 +19,7 @@ import {UsageDemo} from '../../../common/usage-demo';
     FormField,
     FiboInput,
     Popover,
-    PortalTemplateDirective,
+    PortalContent,
     PopoverTrigger,
     Calendar,
     CalendarDateSelectionModel,
@@ -45,7 +45,7 @@ import {UsageDemo} from '../../../common/usage-demo';
               placeholder="YYYY-MM-DD"
               (focus)="dateTrigger.open()"
               class="w-full appearance-none outline-none text-sm focus:outline-0" />
-            <ng-template fiboPortalTemplate [(isOpen)]="dateTrigger.isOpen">
+            <ng-template fiboPortalContent [(isOpen)]="dateTrigger.isOpen">
               <fibo-calendar
                 fiboPopover
                 [trigger]="dateTrigger"

@@ -4,12 +4,12 @@ import {disabled, Field, form, required} from '@angular/forms/signals';
 import {Calendar, CalendarDateSelectionModel} from '@fibo-ui/components';
 import {
   DataList,
-  ListItem,
+  Option,
   Popover, PopoverTrigger,
   PopoverTriggerClick,
-  PortalTemplateDirective,
-  SingleSelectionModel,
-  MultipleSelectionModel,
+  PortalContent,
+  SelectOne,
+  SelectMulti,
   safeProp, FormFieldDirective
 } from '@fibo-ui/cdk';
 import {LucideAngularModule} from 'lucide-angular';
@@ -41,11 +41,11 @@ interface UserProfile {
     FormFieldDirective,
     DataList,
     Popover,
-    PortalTemplateDirective,
+    PortalContent,
     PopoverTriggerClick,
-    SingleSelectionModel,
-    MultipleSelectionModel,
-    ListItem,
+    SelectOne,
+    SelectMulti,
+    Option,
     PopoverTrigger,
     LucideAngularModule,
     Checkbox,
@@ -86,18 +86,18 @@ interface UserProfile {
             @else {
               <div class="from-field-placeholder text-sm">Select City</div>
             }
-            <ng-template fiboPortalTemplate  let-trigger>
+            <ng-template fiboPortalContent  let-trigger>
               <div fiboPopover
                    fiboDataList
                    class="fibo-popover py-1 px-1 rounded-md"
                    [trigger]="trigger"
                    [matchWidth]="true"
-                   [(fiboSelectOne)]="userProfileForm.city().value"
+                   fiboSelectOne [(value)]="userProfileForm.city().value"
                    (optionTriggered)="trigger.close()"
               >
-                <div class="max-h-70 overflow-y-auto fibo-scrollbar">
+                <div class="max-h-70 overflow-y-auto ">
                   @for (c of cities; track c.value) {
-                    <a [fiboListItemValue]="c.value"
+                    <a fiboOption [value]="c.value"
                        class="datalist-item py-1 px-2 rounded-md relative group text-sm">
                       <span class="block truncate font-normal">{{ c.label }}</span>
                     </a>
@@ -121,15 +121,19 @@ interface UserProfile {
           @else {
             <div class="from-field-placeholder text-sm">Select Role</div>
           }
-          <ng-template fiboPortalTemplate let-trigger>
+          <div class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2">
+            <lucide-icon name="chevron-down" size="16" class="text-foreground-tertiary" ></lucide-icon>
+          </div>
+
+          <ng-template fiboPortalContent let-trigger>
             <div fiboPopover    [trigger]="trigger" [matchWidth]="true"
                  fiboDataList   (optionTriggered)="trigger.close()"
                  fiboSelectOne  [(value)]="userProfileForm.userRole().value"
                  class="fibo-popover py-1 px-1 rounded-md"
-                >
+            >
               <div class="max-h-70 overflow-y-auto">
                 @for (role of userRoles; track role) {
-                  <a [fiboListItemValue]="role"
+                  <a fiboOption [value]="role"
                      class="datalist-item py-1 px-2 rounded-md relative group text-sm">
                     <span class="block truncate font-normal">{{ role }}</span>
                   </a>
@@ -137,9 +141,6 @@ interface UserProfile {
               </div>
             </div>
           </ng-template>
-          <div class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2">
-            <lucide-icon name="chevron-down" size="16" class="text-foreground-tertiary" ></lucide-icon>
-          </div>
         </button>
 
         <!-- Email -->
@@ -177,7 +178,7 @@ interface UserProfile {
             placeholder="YYYY-MM-DD"
             class="w-full appearance-none outline-none text-sm focus:outline-0" />
           <lucide-icon name="calendar-days" size="16" class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
-          <ng-template fiboPortalTemplate let-trigger>
+          <ng-template fiboPortalContent let-trigger>
             <fibo-calendar
               fiboPopover
               [trigger]="trigger"
@@ -215,20 +216,20 @@ interface UserProfile {
               <div class="from-field-placeholder text-sm">Select Skills</div>
             }
           </span>
-          <ng-template fiboPortalTemplate let-trigger>
+          <ng-template fiboPortalContent let-trigger>
             <div fiboPopover
                  fiboDataList
                  class="fibo-popover py-1 px-1 rounded-md"
                  [trigger]="trigger"
                  [matchWidth]="true"
-                 [(MultipleSelectionModel)]="userProfileForm.skills().value"
+                 fiboSelectMulti [(value)]="userProfileForm.skills().value"
             >
               <div class="max-h-70 overflow-y-auto ">
                 @if (skills.length === 0) {
                   <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
                 }
                 @for (item of skills; track getSkillValue(item)) {
-                  <a [fiboListItemValue]="getSkillValue(item)" #option="ListItem"
+                  <a fiboOption [value]="getSkillValue(item)" #option="Option"
                      class="datalist-item py-1 px-2 rounded-md relative group text-sm items-center">
                     <fibo-checkbox
                       [checked]="option.isSelected()">{{ getSkillLabel(item) }}

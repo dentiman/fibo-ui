@@ -1,11 +1,11 @@
 import {computed, Directive, ElementRef, inject, input, OnDestroy, OnInit, output, Signal,} from '@angular/core';
 import {DataList} from './data-list';
-import {MultipleSelectionModel, SELECTION_MODEL, SelectionModel} from './selection-models';
+import {SelectMulti, SELECTION_MODEL, SelectionModel} from './selection-models';
 
 
 @Directive({
-  selector: '[fiboListItemValue], [fiboListItem]',
-  exportAs: 'ListItem',
+  selector: '[fiboOption]',
+  exportAs: 'Option',
   standalone: true,
   host: {
     '[attr.aria-disabled]': '(disabled() === true || this.dataList.disabled() === true) || null',
@@ -17,7 +17,7 @@ import {MultipleSelectionModel, SELECTION_MODEL, SelectionModel} from './selecti
     'tabindex': '-1',
   },
 })
-export class ListItem<T = any> implements OnInit, OnDestroy {
+export class Option<T = any> implements OnInit, OnDestroy {
   readonly dataList = inject(DataList);
 
   readonly element: HTMLElement = inject(ElementRef).nativeElement;
@@ -30,14 +30,14 @@ export class ListItem<T = any> implements OnInit, OnDestroy {
   selectionModel = inject(SELECTION_MODEL, { optional: true }) as SelectionModel<T> | null;
 
   // Option value input
-  value = input<T|undefined>(undefined, { alias: 'fiboListItemValue' });
+  value = input<T|undefined>(undefined);
 
   isActive: Signal<boolean> = computed(() => {
     return this === this.dataList.activeOption();
   });
 
   get isMultiple() {
-    return this.selectionModel instanceof MultipleSelectionModel;
+    return this.selectionModel instanceof SelectMulti;
   }
 
   isSelected: Signal<boolean> = computed(() => {

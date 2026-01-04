@@ -12,10 +12,10 @@ import { PortalRegistry } from './portal-registry';
 import {PopoverTrigger} from '../popover/popover-trigger';
 
 @Directive({
-  selector: 'ng-template[fiboPortalTemplate]',
+  selector: 'ng-template[fiboPortalContent]',
   standalone: true
 })
-export class PortalTemplateDirective implements OnDestroy {
+export class PortalContent implements OnDestroy {
   isOpen =   model<boolean>();
 
   trigger = inject( PopoverTrigger, {optional: true})
@@ -35,7 +35,7 @@ export class PortalTemplateDirective implements OnDestroy {
       effect(() => {
         const triggerIsOpen = this.trigger!.isOpen();
         const modelIsOpen = this.isOpen();
-        
+
         if (triggerIsOpen !== modelIsOpen) {
           this.isOpen.set(triggerIsOpen);
         }
@@ -45,7 +45,7 @@ export class PortalTemplateDirective implements OnDestroy {
       effect(() => {
         const modelIsOpen = this.isOpen();
         const triggerIsOpen = this.trigger!.isOpen();
-        
+
         if (modelIsOpen !== triggerIsOpen) {
           if (modelIsOpen) {
             this.trigger!.open();

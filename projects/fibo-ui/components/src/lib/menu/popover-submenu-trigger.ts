@@ -1,5 +1,5 @@
 import {Directive, inject, OnDestroy, OnInit} from '@angular/core';
-import {ListItem, PopoverTrigger} from '@fibo-ui/cdk';
+import {Option, PopoverTrigger} from '@fibo-ui/cdk';
 import {MenuPanel} from './menu-panel';
 
 // @ts-ignore
@@ -7,7 +7,7 @@ import {MenuPanel} from './menu-panel';
   selector: '[fiboSubmenuTrigger]',
   hostDirectives: [
     {
-      directive: ListItem,
+      directive: Option,
       inputs: ['disabled']
     },
     PopoverTrigger,
@@ -22,7 +22,7 @@ import {MenuPanel} from './menu-panel';
 export class PopoverSubmenuTrigger implements OnInit, OnDestroy {
 
   popoverTrigger = inject(PopoverTrigger);
-  dataListItem = inject(ListItem);
+  dataListItem = inject(Option);
   menuPanel = inject(MenuPanel);
 
   ngOnDestroy(): void {

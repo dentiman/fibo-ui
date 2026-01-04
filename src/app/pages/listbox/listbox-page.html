@@ -14,7 +14,7 @@
               [items]="users"
               [valueProp]="valueProp"
               [labelProp]="labelProp"
-              [(fiboSelectOne)]="singleSelectionValue">
+              fiboSelectOne [(value)]="singleSelectionValue">
             </fibo-listbox>
           </div>
           <div class="mt-2 text-sm text-gray-600">
@@ -35,7 +35,7 @@
               [items]="users"
               [valueProp]="valueProp"
               [labelProp]="labelProp"
-              [(MultipleSelectionModel)]="multipleSelectionValue">
+              fiboSelectMulti [(value)]="multipleSelectionValue">
             </fibo-listbox>
           </div>
           <div class="mt-2 text-sm text-gray-600">
@@ -67,7 +67,7 @@
               [valueProp]="valueProp"
               [labelProp]="labelProp"
               [disabled]="true"
-              [(fiboSelectOne)]="disabledValue">
+              fiboSelectOne [(value)]="disabledValue">
             </fibo-listbox>
           </div>
         </div>

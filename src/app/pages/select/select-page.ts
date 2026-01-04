@@ -4,11 +4,11 @@ import {Field, form} from '@angular/forms/signals';
 import {FormField} from '@fibo-ui/components';
 import {
   DataList,
-  ListItem,
+  Option,
   Popover,
   PopoverTrigger,
-  PortalTemplateDirective,
-  SingleSelectionModel
+  PortalContent,
+  SelectOne
 } from '@fibo-ui/cdk';
 import {FieldLabel} from '../../../../projects/fibo-ui/components/src/lib/form/form-field/field-label';
 import {UsageDemo} from '../../common/usage-demo';
@@ -26,10 +26,10 @@ interface UserModel {
     FormField,
     DataList,
     Popover,
-    PortalTemplateDirective,
+    PortalContent,
     PopoverTrigger,
-    SingleSelectionModel,
-    ListItem,
+    SelectOne,
+    Option,
     FieldLabel,
     UsageDemo
   ],
@@ -40,7 +40,7 @@ export class SelectPageComponent {
   readonly user = signal<UserModel>({
     role: null
   });
-  
+
   readonly userForm = form(this.user);
 
   readonly userRoles = ['admin', 'user', 'guest'];

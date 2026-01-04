@@ -1,6 +1,6 @@
 import {Component, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MultipleSelectionModel, SingleSelectionModel} from '@fibo-ui/cdk';
+import {SelectMulti, SelectOne} from '@fibo-ui/cdk';
 import {User, usersChoices} from "../../common/form-data-example";
 import {Listbox} from '@fibo-ui/components';
 
@@ -10,8 +10,8 @@ import {Listbox} from '@fibo-ui/components';
   imports: [
     CommonModule,
     Listbox,
-    SingleSelectionModel,
-    MultipleSelectionModel,
+    SelectOne,
+    SelectMulti,
   ],
   templateUrl: './listbox-page.html',
 })

@@ -13,7 +13,7 @@ import {DataList} from '../data-list/data-list';
   hostDirectives: [
     {
       directive:  PopoverPosition,
-      inputs: ['placement', 'matchWidth','popoverTrigger','referenceElement','offset']
+      inputs: ['placement', 'matchWidth','trigger','referenceElement','offset']
     },
     {
       directive:  ClickOutside,

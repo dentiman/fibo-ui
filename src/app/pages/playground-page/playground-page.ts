@@ -5,13 +5,13 @@ import {Calendar, CalendarDateSelectionModel, FormField} from '@fibo-ui/componen
 import {
   DataList,
     FiboInput,
-  ListItem,
+  Option,
   Popover,
   PopoverTrigger,
   PopoverTriggerClick,
-  PortalTemplateDirective,
-  SingleSelectionModel,
-  MultipleSelectionModel
+  PortalContent,
+  SelectOne,
+  SelectMulti
 } from '@fibo-ui/cdk';
 import { User, usersChoices } from '../../common/form-data-example';
 import {LucideAngularModule} from 'lucide-angular';
@@ -28,11 +28,11 @@ import {Checkbox} from '@fibo-ui/components';
     FiboInput,
     DataList,
     Popover,
-    PortalTemplateDirective,
+    PortalContent,
     PopoverTriggerClick,
-    SingleSelectionModel,
-    MultipleSelectionModel,
-    ListItem,
+    SelectOne,
+    SelectMulti,
+    Option,
     PopoverTrigger,
     LucideAngularModule,
     Checkbox,
@@ -54,17 +54,17 @@ import {Checkbox} from '@fibo-ui/components';
           appendIcon="chevron-down">
           <span class="prepend text-sm text-foreground-secondary">User:</span>
           <span  class="text-sm text-foreground-secondary text-nowrap">{{ getSelectedUserLabel() || 'Any' }}</span>
-          <ng-template fiboPortalTemplate [(isOpen)]="userTrigger.isOpen">
+          <ng-template fiboPortalContent [(isOpen)]="userTrigger.isOpen">
             <div fiboPopover
                  fiboDataList
                  class="fibo-popover py-1 px-1 rounded-md w-60"
                  [trigger]="userTrigger"
                  [matchWidth]="false"
-                 [(fiboSelectOne)]="userSelectValue"
+                 fiboSelectOne [(value)]="userSelectValue"
                  (optionTriggered)="userTrigger.close()">
               <div class="max-h-70 overflow-y-auto fibo-scrollbar">
                 @for (item of items(); track getUserId(item)) {
-                  <a [fiboListItemValue]="getUserId(item)"
+                  <a fiboOption [value]="getUserId(item)"
                      class="datalist-item py-1 px-2 rounded-md relative group text-sm">
                     <span class="block truncate font-normal">{{ getUserLabel(item) }}</span>
                   </a>
@@ -103,7 +103,7 @@ import {Checkbox} from '@fibo-ui/components';
             [placeholder]="'Any'"
             (focus)="dateTrigger.open()"
             class="w-full appearance-none outline-none text-sm focus:outline-0" />
-          <ng-template fiboPortalTemplate [(isOpen)]="dateTrigger.isOpen">
+          <ng-template fiboPortalContent [(isOpen)]="dateTrigger.isOpen">
             <fibo-calendar
               fiboPopover
               [trigger]="dateTrigger"
@@ -137,16 +137,16 @@ import {Checkbox} from '@fibo-ui/components';
               <span class="text-sm text-foreground-tertiary">Any</span>
             }
           </span>
-          <ng-template fiboPortalTemplate [(isOpen)]="usersTrigger.isOpen">
+          <ng-template fiboPortalContent [(isOpen)]="usersTrigger.isOpen">
             <div fiboPopover
                  fiboDataList
                  class="fibo-popover py-1 px-1 rounded-md w-60"
                  [trigger]="usersTrigger"
                  [matchWidth]="false"
-                 [(MultipleSelectionModel)]="selectedUsers">
+                 fiboSelectMulti [(value)]="selectedUsers">
               <div class="max-h-70 overflow-y-auto">
                 @for (item of items(); track getUserId(item)) {
-                  <a [fiboListItemValue]="getUserId(item)" #option="ListItem"
+                  <a fiboOption [value]="getUserId(item)" #option="Option"
                      class="datalist-item py-1 px-2 rounded-md relative group text-sm items-center">
                     <fibo-checkbox [checked]="option.isSelected()">{{ getUserLabel(item) }}</fibo-checkbox>
                   </a>
@@ -208,17 +208,17 @@ import {Checkbox} from '@fibo-ui/components';
             class=" w-60"
             appendIcon="chevron-down">
             <span class="text-sm">{{ getStatusLabel(statusSelect()) || 'Select status' }}</span>
-            <ng-template fiboPortalTemplate [(isOpen)]="statusTrigger.isOpen">
+            <ng-template fiboPortalContent [(isOpen)]="statusTrigger.isOpen">
               <div fiboPopover
                    fiboDataList
                    class="fibo-popover py-1 px-1 rounded-md w-60"
                    [trigger]="statusTrigger"
                    [matchWidth]="false"
-                   [(fiboSelectOne)]="statusSelect"
+                   fiboSelectOne [(value)]="statusSelect"
                    (optionTriggered)="statusTrigger.close()">
                 <div class="max-h-70 overflow-y-auto fibo-scrollbar">
                   @for (item of statusItems; track item.value) {
-                    <a [fiboListItemValue]="item.value"
+                    <a fiboOption [value]="item.value"
                        class="datalist-item py-1 px-2 rounded-md relative group text-sm">
                       <span class="block truncate font-normal">{{ item.label }}</span>
                     </a>
@@ -236,17 +236,17 @@ import {Checkbox} from '@fibo-ui/components';
           class="rounded-full inline-block w-60"
           appendIcon="chevron-down">
           <span class="text-sm">{{ getCategoryLabel(categorySelect()) || 'Select category' }}</span>
-          <ng-template fiboPortalTemplate [(isOpen)]="categoryTrigger.isOpen">
+          <ng-template fiboPortalContent [(isOpen)]="categoryTrigger.isOpen">
             <div fiboPopover
                  fiboDataList
                  class="fibo-popover py-1 px-1 rounded-md w-60"
                  [trigger]="categoryTrigger"
                  [matchWidth]="false"
-                 [(fiboSelectOne)]="categorySelect"
+                 fiboSelectOne [(value)]="categorySelect"
                  (optionTriggered)="categoryTrigger.close()">
               <div class="max-h-70 overflow-y-auto fibo-scrollbar">
                 @for (item of categoryItems; track item.value) {
-                  <a [fiboListItemValue]="item.value"
+                  <a fiboOption [value]="item.value"
                      class="datalist-item py-1 px-2 rounded-md relative group text-sm">
                     <span class="block truncate font-normal">{{ item.label }}</span>
                   </a>

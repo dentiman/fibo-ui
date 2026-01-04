@@ -2,11 +2,11 @@ import {Component, computed, inject, input, model} from '@angular/core';
 import {FormValueControl, ValidationError, WithOptionalField} from '@angular/forms/signals';
 import {
   DataList,
-  FormFieldTrigger, ListItem,
+  FormFieldTrigger, Option,
   Popover,
   PopoverTrigger,
-  PortalTemplateDirective,
-  SingleSelectionModel
+  PortalContent,
+  SelectOne
 } from '@fibo-ui/cdk';
 import {LucideAngularModule} from 'lucide-angular';
 
@@ -18,13 +18,13 @@ export interface SelectItem {
 @Component({
   selector: 'fibo-select',
   imports: [
-    PortalTemplateDirective,
+    PortalContent,
     Popover,
     DataList,
-    SingleSelectionModel,
+    SelectOne,
     LucideAngularModule,
     FormFieldTrigger,
-    ListItem
+    Option
   ],
   templateUrl: './select.html',
   styleUrl: './select.css',

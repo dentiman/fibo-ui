@@ -3,12 +3,12 @@ import {CommonModule} from '@angular/common';
 import {SideMenu} from '@fibo-ui/components';
 import {MenuItemType} from '@fibo-ui/components';
 import {ChangeDetectionStrategy} from '@angular/core';
-import {DataList, SingleSelectionModel} from '@fibo-ui/cdk';
+import {DataList, SelectOne} from '@fibo-ui/cdk';
 
 @Component({
   selector: 'app-side-menu-page',
   standalone: true,
-  imports: [CommonModule, SideMenu, DataList, SingleSelectionModel],
+  imports: [CommonModule, SideMenu, DataList, SelectOne],
   template: `
     <fibo-side-menu SingleSelectionModelHost fiboDataList [items]="menuItems()"></fibo-side-menu>
 

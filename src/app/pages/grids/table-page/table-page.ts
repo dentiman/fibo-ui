@@ -10,16 +10,16 @@ import {
 import {CommonModule} from '@angular/common';
 import {FiboColumn, Table} from '@fibo-ui/components';
 import {User, usersChoices} from '../../../common/form-data-example';
-import {DataList, MultipleSelectionModel} from '@fibo-ui/cdk';
+import {DataList, SelectMulti} from '@fibo-ui/cdk';
 
 @Component({
   selector: 'app-table-page',
-  imports: [CommonModule, Table, FiboColumn, MultipleSelectionModel, DataList],
+  imports: [CommonModule, Table, FiboColumn, SelectMulti, DataList],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="p-8">
       <h2 class="text-foreground mb-4">Table</h2>
-      <fibo-table  [dataSource]="users()" fiboDataList [(MultipleSelectionModel)]="selectedItems" [(sort)]="sort">
+      <fibo-table  [dataSource]="users()" fiboDataList fiboSelectMulti [(value)]="selectedItems" [(sort)]="sort">
 
         <div *fiboColumn="'name';  source: users();  isSortable:true ; thClass: 'py-1.5 px-2' ;  tdClass: 'py-1.5 px-2' ; let user"  class="flex items-center gap-3">
           <img

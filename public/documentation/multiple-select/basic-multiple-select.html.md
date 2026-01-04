@@ -18,19 +18,19 @@
       </div>
     }
   </span>
-  <ng-template fiboPortalTemplate [(isOpen)]="skillsTrigger.isOpen">
+  <ng-template fiboPortalContent [(isOpen)]="skillsTrigger.isOpen">
     <div fiboPopover
          fiboDataList
          class="fibo-popover py-1 px-1 rounded-md"
          [trigger]="skillsTrigger"
          [matchWidth]="true"
-         [(MultipleSelectionModel)]="userForm.skills().value">
+         fiboSelectMulti [(value)]="userForm.skills().value">
       <div class="max-h-70 overflow-y-auto">
               @if (skills.length === 0) {
                 <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
               }
               @for (skill of skills; track skill) {
-                <a [fiboListItemValue]="skill" #option="ListItem"
+                <a fiboOption [value]="skill" #option="Option"
                    class="datalist-item py-1 px-2 rounded-md relative group text-sm items-center">
                   <fibo-checkbox
                     [checked]="option.isSelected()">{{ skill }}

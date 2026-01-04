@@ -14,9 +14,9 @@ export type CompareFn<T> = (a: T, b: T) => boolean;
 @Directive({
   selector: '[fiboSelectOne]',
   standalone: true,
-  providers: [{ provide: SELECTION_MODEL, useExisting: SingleSelectionModel }]
+  providers: [{ provide: SELECTION_MODEL, useExisting: SelectOne }]
 })
-export class SingleSelectionModel<T> implements SelectionModel<T> {
+export class SelectOne<T> implements SelectionModel<T> {
 
   value = model<T|null>(null)
   selectionChange = output<T>()
@@ -34,12 +34,12 @@ export class SingleSelectionModel<T> implements SelectionModel<T> {
 }
 
 @Directive({
-  selector: '[MultipleSelectionModel]',
+  selector: '[fiboSelectMulti]',
   standalone: true,
-  providers: [{ provide: SELECTION_MODEL, useExisting: MultipleSelectionModel }]
+  providers: [{ provide: SELECTION_MODEL, useExisting: SelectMulti }]
 })
-export class MultipleSelectionModel<T> implements SelectionModel<T> {
-  value = model<T[]|null>(null,{ alias: 'MultipleSelectionModel' })
+export class SelectMulti<T> implements SelectionModel<T> {
+  value = model<T[]|null>(null)
   compareFn = input<CompareFn<T>>((a: T, b: T) => a === b)
 
   select(value: T) {
