@@ -3,7 +3,7 @@
     <div class="mx-auto w-60 p-8">
       <button #menu="PopoverTrigger" class="btn mr-1" fiboPopoverTriggerToggle>Open Basic Menu</button>
       @if (menu.isOpen()) {
-        <fibo-menu [popoverTrigger]="menu">
+        <fibo-menu [trigger]="menu">
           <a fiboMenuItem class="datalist-item py-1 px-2 rounded-md relative group text-sm" [routerLink]="'/select'">
             Select</a>
           <a fiboMenuItem class="datalist-item py-1 px-2 rounded-md relative group text-sm"
@@ -17,7 +17,7 @@
     <div class="mx-auto w-60 p-8">
       <button #trigger="PopoverTrigger" class="btn btn-primary" fiboPopoverTriggerToggle>Open Complex Menu</button>
       <ng-template [(isOpen)]="trigger.isOpen" fiboPortalTemplate>
-        <fibo-menu [items]="items()" [popoverTrigger]="trigger" placement="bottom-start">
+        <fibo-menu [items]="items()" [trigger]="trigger" placement="bottom-start">
         </fibo-menu>
       </ng-template>
     </div>
@@ -30,8 +30,8 @@
       </button>
       <ng-template [(isOpen)]="valueMenu.isOpen" fiboPortalTemplate>
         <fibo-menu [items]="valueItems()"
-                   [popoverTrigger]="valueMenu"
-                   [(SingleSelectionModel)]="selectedValue"
+                   [trigger]="valueMenu"
+                   [(fiboSelectOne)]="selectedValue"
                    placement="bottom-start">
         </fibo-menu>
       </ng-template>

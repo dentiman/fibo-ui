@@ -22,8 +22,8 @@
     <div fiboPopover
          fiboDataList
          class="fibo-popover py-1 px-1 rounded-md"
-         [popoverTrigger]="skillsTrigger"
-         [popoverFullWidth]="true"
+         [trigger]="skillsTrigger"
+         [matchWidth]="true"
          [(MultipleSelectionModel)]="userForm.skills().value">
       <div class="max-h-70 overflow-y-auto">
               @if (skills.length === 0) {

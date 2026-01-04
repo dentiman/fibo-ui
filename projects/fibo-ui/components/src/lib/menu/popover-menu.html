@@ -19,7 +19,7 @@
       </button>
       @if (menuItemTrigger.isOpen()) {
         <fibo-menu (closeParent)="closeMenuWithParent()"
-                  [popoverTrigger]="menuItemTrigger"
+                  [trigger]="menuItemTrigger"
                   [offset]="1" placement="right-start"
                   [menuContent]="item.content"
                   [items]="item.children" />

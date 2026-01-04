@@ -9,7 +9,7 @@ import {debounceTime, filter} from 'rxjs';
   hostDirectives: [
     {
       directive: DataList,
-      inputs: ['popoverTrigger']
+      inputs: ['trigger']
     }
   ]
 })

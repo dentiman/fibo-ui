@@ -13,7 +13,7 @@ import {DataList} from '../data-list/data-list';
   hostDirectives: [
     {
       directive:  PopoverPosition,
-      inputs: ['placement', 'popoverFullWidth','popoverTrigger','referenceElement','offset']
+      inputs: ['placement', 'matchWidth','popoverTrigger','referenceElement','offset']
     },
     {
       directive:  ClickOutside,
@@ -32,30 +32,30 @@ export class Popover implements OnInit, OnDestroy {
   element = inject(ElementRef);
   // call by trigger for navigate
   dataList = inject(DataList,{self:true,optional:true});
-  popoverTrigger = input.required<PopoverTrigger>()
+  trigger = input.required<PopoverTrigger>()
 
   close() {
-    this.popoverTrigger().close();
+    this.trigger().close();
   }
   clickOutsideHandle( event: Event ) {
-    if(!this.popoverTrigger().element.contains(event.target as Node)) {
-      this.popoverTrigger().close();
+    if(!this.trigger().element.contains(event.target as Node)) {
+      this.trigger().close();
     }
   }
   onFocusOut(event: FocusEvent) {
     const relatedTarget = event.relatedTarget as Node;
     if(!relatedTarget) return;
-    if (this.popoverTrigger().element.contains(relatedTarget) || this.element.nativeElement.contains(relatedTarget)) {
+    if (this.trigger().element.contains(relatedTarget) || this.element.nativeElement.contains(relatedTarget)) {
       return
 
     }
-    this.popoverTrigger().close();
+    this.trigger().close();
   }
   ngOnInit(): void {
-     this.popoverTrigger().popover.set(this);
+     this.trigger().popover.set(this);
   }
   ngOnDestroy(): void {
-    this.popoverTrigger().popover.set(null);
+    this.trigger().popover.set(null);
   }
 
 }

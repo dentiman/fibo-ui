@@ -90,9 +90,9 @@ interface UserProfile {
               <div fiboPopover
                    fiboDataList
                    class="fibo-popover py-1 px-1 rounded-md"
-                   [popoverTrigger]="trigger"
-                   [popoverFullWidth]="true"
-                   [(SingleSelectionModel)]="userProfileForm.city().value"
+                   [trigger]="trigger"
+                   [matchWidth]="true"
+                   [(fiboSelectOne)]="userProfileForm.city().value"
                    (optionTriggered)="trigger.close()"
               >
                 <div class="max-h-70 overflow-y-auto fibo-scrollbar">
@@ -122,13 +122,11 @@ interface UserProfile {
             <div class="from-field-placeholder text-sm">Select Role</div>
           }
           <ng-template fiboPortalTemplate let-trigger>
-            <div fiboPopover
-                 fiboDataList
+            <div fiboPopover    [trigger]="trigger" [matchWidth]="true"
+                 fiboDataList   (optionTriggered)="trigger.close()"
+                 fiboSelectOne  [(value)]="userProfileForm.userRole().value"
                  class="fibo-popover py-1 px-1 rounded-md"
-                 [popoverTrigger]="trigger"
-                 [popoverFullWidth]="true"
-                 [(SingleSelectionModel)]="userProfileForm.userRole().value"
-                 (optionTriggered)="trigger.close()">
+                >
               <div class="max-h-70 overflow-y-auto">
                 @for (role of userRoles; track role) {
                   <a [fiboListItemValue]="role"
@@ -139,7 +137,9 @@ interface UserProfile {
               </div>
             </div>
           </ng-template>
-          <lucide-icon name="chevron-down" size="16" class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
+          <div class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2">
+            <lucide-icon name="chevron-down" size="16" class="text-foreground-tertiary" ></lucide-icon>
+          </div>
         </button>
 
         <!-- Email -->
@@ -180,7 +180,7 @@ interface UserProfile {
           <ng-template fiboPortalTemplate let-trigger>
             <fibo-calendar
               fiboPopover
-              [popoverTrigger]="trigger"
+              [trigger]="trigger"
               class="fibo-popover rounded-md"
               [(fiboCalendarDateSelectionModel)]="userProfileForm.birthDate().value"
               (optionTriggered)="trigger.close()"
@@ -219,8 +219,8 @@ interface UserProfile {
             <div fiboPopover
                  fiboDataList
                  class="fibo-popover py-1 px-1 rounded-md"
-                 [popoverTrigger]="trigger"
-                 [popoverFullWidth]="true"
+                 [trigger]="trigger"
+                 [matchWidth]="true"
                  [(MultipleSelectionModel)]="userProfileForm.skills().value"
             >
               <div class="max-h-70 overflow-y-auto ">

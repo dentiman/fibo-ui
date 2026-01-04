@@ -28,9 +28,9 @@
 <div
   fiboPopover
   fiboDataList
-  [popoverTrigger]="trigger"
+  [trigger]="trigger"
   [disabled]="isDisabled"
-  [(SingleSelectionModel)]="selectedCountry">
+  [(fiboSelectOne)]="selectedCountry">
   @for (country of countries; track country) {
     <a
       [fiboListItemValue]="country"

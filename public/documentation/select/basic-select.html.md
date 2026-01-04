@@ -12,9 +12,9 @@
     <div fiboPopover
          fiboDataList
          class="fibo-popover py-1 px-1 rounded-md"
-         [popoverTrigger]="roleTrigger"
-         [popoverFullWidth]="true"
-         [(SingleSelectionModel)]="userForm.role().value"
+         [trigger]="roleTrigger"
+         [matchWidth]="true"
+         [(fiboSelectOne)]="userForm.role().value"
          (optionTriggered)="roleTrigger.close()">
       <div class="max-h-70 overflow-y-auto">
         @for (role of userRoles; track role) {

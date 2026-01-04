@@ -12,13 +12,13 @@ export interface SelectionModel<T> {
 export type CompareFn<T> = (a: T, b: T) => boolean;
 
 @Directive({
-  selector: '[SingleSelectionModel],[SingleSelectionModelHost]',
+  selector: '[fiboSelectOne]',
   standalone: true,
   providers: [{ provide: SELECTION_MODEL, useExisting: SingleSelectionModel }]
 })
 export class SingleSelectionModel<T> implements SelectionModel<T> {
 
-  value = model<T|null>(null,{ alias: 'SingleSelectionModel' })
+  value = model<T|null>(null)
   selectionChange = output<T>()
   compareFn = input<CompareFn<T>>((a: T, b: T) => a === b)
 

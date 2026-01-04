@@ -4,8 +4,8 @@
 </button>
 <ng-template [(isOpen)]="valueMenu.isOpen" fiboPortalTemplate>
   <fibo-menu [items]="valueItems()"
-             [popoverTrigger]="valueMenu"
-             [(SingleSelectionModel)]="selectedValue"
+             [trigger]="valueMenu"
+             [(fiboSelectOne)]="selectedValue"
              placement="bottom-start">
   </fibo-menu>
 </ng-template>

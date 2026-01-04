@@ -30,7 +30,7 @@
     <ng-template fiboPortalTemplate [(isOpen)]="dateRangeTrigger.isOpen">
       <fibo-calendar
         fiboPopover
-        [popoverTrigger]="dateRangeTrigger"
+        [trigger]="dateRangeTrigger"
         class="fibo-popover rounded-md"
         [(fiboCalendarDateRangeSelectionModel)]="calendarDateRange"
         (optionTriggered)="dateRangeTrigger.close()"

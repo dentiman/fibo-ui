@@ -15,7 +15,7 @@ import {LucideAngularModule} from 'lucide-angular';
     MenuPanel,
     {
       directive: Popover,
-      inputs: ['popoverTrigger']
+      inputs: ['trigger']
     }
   ],
   host: {
@@ -44,8 +44,8 @@ export class PopoverMenu {
 
 
   focusToTrigger(event: Event) {
-    if (this.popover.popoverTrigger().isListItem) {
-      this.popover.popoverTrigger().element.focus();
+    if (this.popover.trigger().isListItem) {
+      this.popover.trigger().element.focus();
       this.dataList.resetActiveOption();
       event.stopPropagation();
       this.submenuItems()

@@ -58,9 +58,9 @@ import {Checkbox} from '@fibo-ui/components';
             <div fiboPopover
                  fiboDataList
                  class="fibo-popover py-1 px-1 rounded-md w-60"
-                 [popoverTrigger]="userTrigger"
-                 [popoverFullWidth]="false"
-                 [(SingleSelectionModel)]="userSelectValue"
+                 [trigger]="userTrigger"
+                 [matchWidth]="false"
+                 [(fiboSelectOne)]="userSelectValue"
                  (optionTriggered)="userTrigger.close()">
               <div class="max-h-70 overflow-y-auto fibo-scrollbar">
                 @for (item of items(); track getUserId(item)) {
@@ -106,7 +106,7 @@ import {Checkbox} from '@fibo-ui/components';
           <ng-template fiboPortalTemplate [(isOpen)]="dateTrigger.isOpen">
             <fibo-calendar
               fiboPopover
-              [popoverTrigger]="dateTrigger"
+              [trigger]="dateTrigger"
               class="fibo-popover rounded-md"
               [(fiboCalendarDateSelectionModel)]="createdAfter"
               (optionTriggered)="dateTrigger.close()"
@@ -141,8 +141,8 @@ import {Checkbox} from '@fibo-ui/components';
             <div fiboPopover
                  fiboDataList
                  class="fibo-popover py-1 px-1 rounded-md w-60"
-                 [popoverTrigger]="usersTrigger"
-                 [popoverFullWidth]="false"
+                 [trigger]="usersTrigger"
+                 [matchWidth]="false"
                  [(MultipleSelectionModel)]="selectedUsers">
               <div class="max-h-70 overflow-y-auto">
                 @for (item of items(); track getUserId(item)) {
@@ -212,9 +212,9 @@ import {Checkbox} from '@fibo-ui/components';
               <div fiboPopover
                    fiboDataList
                    class="fibo-popover py-1 px-1 rounded-md w-60"
-                   [popoverTrigger]="statusTrigger"
-                   [popoverFullWidth]="false"
-                   [(SingleSelectionModel)]="statusSelect"
+                   [trigger]="statusTrigger"
+                   [matchWidth]="false"
+                   [(fiboSelectOne)]="statusSelect"
                    (optionTriggered)="statusTrigger.close()">
                 <div class="max-h-70 overflow-y-auto fibo-scrollbar">
                   @for (item of statusItems; track item.value) {
@@ -240,9 +240,9 @@ import {Checkbox} from '@fibo-ui/components';
             <div fiboPopover
                  fiboDataList
                  class="fibo-popover py-1 px-1 rounded-md w-60"
-                 [popoverTrigger]="categoryTrigger"
-                 [popoverFullWidth]="false"
-                 [(SingleSelectionModel)]="categorySelect"
+                 [trigger]="categoryTrigger"
+                 [matchWidth]="false"
+                 [(fiboSelectOne)]="categorySelect"
                  (optionTriggered)="categoryTrigger.close()">
               <div class="max-h-70 overflow-y-auto fibo-scrollbar">
                 @for (item of categoryItems; track item.value) {

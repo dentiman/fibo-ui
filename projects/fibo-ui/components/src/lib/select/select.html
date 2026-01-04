@@ -25,9 +25,9 @@
   <div fiboPopover
        fiboDataList
        class="fibo-popover py-1 px-1 rounded-md"
-       [popoverTrigger]="trigger"
-       [popoverFullWidth]="true"
-       [(SingleSelectionModel)]="value"
+       [trigger]="trigger"
+       [matchWidth]="true"
+       [(fiboSelectOne)]="value"
        (optionTriggered)="trigger.close()"
   >
     <div class="max-h-70 overflow-y-auto ">

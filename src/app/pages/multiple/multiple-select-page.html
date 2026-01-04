@@ -2,10 +2,10 @@
   <h2 class="text-foreground">Basic multiple select</h2>
   <app-usage-demo [codeBlocks]="codeBlocks">
     <div class="mx-auto w-90 p-8">
-      <fibo-form-field 
-        fiboPopoverTriggerClick 
-        #skillsTrigger="PopoverTrigger" 
-        [field]="userForm.skills" 
+      <fibo-form-field
+        fiboPopoverTriggerClick
+        #skillsTrigger="PopoverTrigger"
+        [field]="userForm.skills"
         appendIcon="chevron-down">
         <fibo-field-label>Skills</fibo-field-label>
         <span class="w-full flex flex-wrap gap-x-1 gap-y-1">
@@ -25,8 +25,8 @@
           <div fiboPopover
                fiboDataList
                class="fibo-popover py-1 px-1 rounded-md"
-               [popoverTrigger]="skillsTrigger"
-               [popoverFullWidth]="true"
+               [trigger]="skillsTrigger"
+               [matchWidth]="true"
                [(MultipleSelectionModel)]="userForm.skills().value">
             <div class="max-h-70 overflow-y-auto">
               @if (skills.length === 0) {

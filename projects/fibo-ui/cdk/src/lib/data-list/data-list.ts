@@ -26,7 +26,7 @@ export class DataList {
   disabled = input(false);
   elementRef = inject(ElementRef<HTMLElement>)
 
-  popoverTrigger = input<PopoverTrigger>()
+  trigger = input<PopoverTrigger>()
 
   optionTriggered = output<Event>();
 
@@ -163,8 +163,8 @@ export class DataList {
         event.stopPropagation();
         break;
       case 'Escape':
-        this.popoverTrigger()?.element.focus();
-        this.popoverTrigger()?.close();
+        this.trigger()?.element.focus();
+        this.trigger()?.close();
         event.stopPropagation();
         break;
       default:
