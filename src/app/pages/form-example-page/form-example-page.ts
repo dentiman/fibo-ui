@@ -1,20 +1,19 @@
 import {Component, signal, ChangeDetectionStrategy, effect} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {disabled, Field, form, required} from '@angular/forms/signals';
-import {FormField, Calendar, CalendarDateSelectionModel, Select, Listbox} from '@fibo-ui/components';
+import {Calendar, CalendarDateSelectionModel} from '@fibo-ui/components';
 import {
   DataList,
-  FiboInput, ListItem,
+  ListItem,
   Popover, PopoverTrigger,
   PopoverTriggerClick,
   PortalTemplateDirective,
   SingleSelectionModel,
   MultipleSelectionModel,
-  safeProp, FormFieldDirective, FormFieldTrigger
+  safeProp, FormFieldDirective
 } from '@fibo-ui/cdk';
 import {LucideAngularModule} from 'lucide-angular';
 import {Checkbox} from '@fibo-ui/components';
-import {FieldLabel} from '../../../../projects/fibo-ui/components/src/lib/form/form-field/field-label';
 
 interface UserProfile {
   username: string;
@@ -40,7 +39,6 @@ interface UserProfile {
     CommonModule,
     Field,
     FormFieldDirective,
-    FiboInput,
     DataList,
     Popover,
     PortalTemplateDirective,
@@ -52,13 +50,7 @@ interface UserProfile {
     LucideAngularModule,
     Checkbox,
     Calendar,
-    CalendarDateSelectionModel,
-    FieldLabel,
-    FormFieldDirective,
-    FormField,
-    FormFieldTrigger,
-    Select,
-    Listbox
+    CalendarDateSelectionModel
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -85,8 +77,7 @@ interface UserProfile {
           </div>
         </div>
 
-        <button  type="button" fiboFormFieldTrigger class="w-full group fibo-form-field px-3 py-1 relative block text-left"
-             #trigger="PopoverTrigger">
+        <button  type="button"  fiboFormField fiboPopoverTriggerClick class="w-full group fibo-form-field px-3 py-1 relative block text-left">
           <input type="hidden"  [field]="userProfileForm.userRole">
           <span class="block text-xs fibo-form-field-label">City</span>
             @if( userProfile().city ; as city) {
@@ -95,7 +86,7 @@ interface UserProfile {
             @else {
               <div class="from-field-placeholder text-sm">Select City</div>
             }
-            <ng-template fiboPortalTemplate  [(isOpen)]="trigger.isOpen">
+            <ng-template fiboPortalTemplate  let-trigger>
               <div fiboPopover
                    fiboDataList
                    class="fibo-popover py-1 px-1 rounded-md"
@@ -117,28 +108,27 @@ interface UserProfile {
             <lucide-icon name="chevron-down" size="16" class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2   text-foreground-tertiary"></lucide-icon>
         </button>
 
-        <div>
-          <fibo-select [items]="cities" [field]="userProfileForm.city" [label]="'City'"></fibo-select>
-        </div>
 
 
         <!-- User Role -->
-        <fibo-form-field fiboPopoverTrigger
-                         #roleTrigger="PopoverTrigger"
-                         [field]="userProfileForm.userRole"
-                         appendIcon="chevron-down">
-          <fibo-field-label>User Role</fibo-field-label>
+        <button type="button" fiboFormField fiboPopoverTriggerClick   class="w-full group fibo-form-field px-3 py-1 relative block text-left">
+          <input type="hidden" [field]="userProfileForm.userRole">
+          <label class="block text-xs fibo-form-field-label">User Role</label>
           @let role = userProfile().userRole;
-          <span class="text-sm" [class.from-field-placeholder]="!role">{{ role || 'Select Role' }}</span>
-
-          <ng-template fiboPortalTemplate [(isOpen)]="roleTrigger.isOpen">
+          @if (role) {
+            <span class="text-sm">{{ role }}</span>
+          }
+          @else {
+            <div class="from-field-placeholder text-sm">Select Role</div>
+          }
+          <ng-template fiboPortalTemplate let-trigger>
             <div fiboPopover
                  fiboDataList
                  class="fibo-popover py-1 px-1 rounded-md"
-                 [popoverTrigger]="roleTrigger"
+                 [popoverTrigger]="trigger"
                  [popoverFullWidth]="true"
                  [(SingleSelectionModel)]="userProfileForm.userRole().value"
-                 (optionTriggered)="roleTrigger.close()">
+                 (optionTriggered)="trigger.close()">
               <div class="max-h-70 overflow-y-auto">
                 @for (role of userRoles; track role) {
                   <a [fiboListItemValue]="role"
@@ -149,157 +139,117 @@ interface UserProfile {
               </div>
             </div>
           </ng-template>
-        </fibo-form-field>
+          <lucide-icon name="chevron-down" size="16" class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
+        </button>
 
         <!-- Email -->
-        <label class="block">
-          <span class="block mb-1">Email</span>
-          <fibo-form-field [field]="userProfileForm.email">
-            <input
-              fiboInput
-              type="email"
-              [field]="userProfileForm.email"
-              placeholder="Enter email address"
-              class="w-full appearance-none outline-none text-sm focus:outline-0" />
-          </fibo-form-field>
-        </label>
+        <div fiboFormField class="group content-center fibo-form-field px-3 py-1">
+          <label class="block text-xs fibo-form-field-label">Email</label>
+          <input [field]="userProfileForm.email" type="email" placeholder="Enter email address" class="w-full appearance-none outline-none text-sm focus:outline-0" />
+        </div>
 
         <!-- Password -->
-        <label class="block">
-          <span class="block mb-1">Password</span>
-          <fibo-form-field [field]="userProfileForm.password" >
-            <input
-              fiboInput
-              type="password"
-              [field]="userProfileForm.password"
-              placeholder="Enter password"
-              class="w-full appearance-none outline-none text-sm focus:outline-0" />
-          </fibo-form-field>
-        </label>
+        <div fiboFormField class="group content-center fibo-form-field px-3 py-1">
+          <label class="block text-xs fibo-form-field-label">Password</label>
+          <input [field]="userProfileForm.password" type="password" placeholder="Enter password" class="w-full appearance-none outline-none text-sm focus:outline-0" />
+        </div>
 
         <!-- Confirm Password -->
-        <label class="block">
-          <span class="block mb-1">Confirm Password</span>
-          <fibo-form-field [field]="userProfileForm.confirmPassword">
-            <input
-              fiboInput
-              type="password"
-              [field]="userProfileForm.confirmPassword"
-              placeholder="Confirm your password"
-              class="w-full appearance-none outline-none text-sm focus:outline-0" />
-          </fibo-form-field>
-        </label>
+        <div fiboFormField class="group content-center fibo-form-field px-3 py-1">
+          <label class="block text-xs fibo-form-field-label">Confirm Password</label>
+          <input [field]="userProfileForm.confirmPassword" type="password" placeholder="Confirm your password" class="w-full appearance-none outline-none text-sm focus:outline-0" />
+        </div>
 
 
 
         <!-- Age -->
-        <label class="block">
-          <span class="block mb-1">Age</span>
-          <fibo-form-field [field]="userProfileForm.age">
-            <input
-              fiboInput
-              type="number"
-              [field]="userProfileForm.age"
-              placeholder="Enter your age"
-              class="w-full appearance-none outline-none text-sm focus:outline-0" />
-          </fibo-form-field>
-        </label>
+        <div fiboFormField class="group content-center fibo-form-field px-3 py-1">
+          <label class="block text-xs fibo-form-field-label">Age</label>
+          <input [field]="userProfileForm.age" type="number" placeholder="Enter your age" class="w-full appearance-none outline-none text-sm focus:outline-0" />
+        </div>
 
         <!-- Birth Date -->
-        <fibo-form-field
-          fiboPopoverTrigger
-          #dateTrigger="PopoverTrigger"
-          [field]="userProfileForm.birthDate"
-          appendIcon="calendar-days">
+        <div fiboFormField fiboPopoverTrigger   class="group content-center fibo-form-field px-3 py-1 relative">
+          <label class="block text-xs fibo-form-field-label">Birth Date</label>
           <input
-            fiboInput
             type="text"
             [field]="userProfileForm.birthDate"
             placeholder="YYYY-MM-DD"
-            (focus)="dateTrigger.open()"
             class="w-full appearance-none outline-none text-sm focus:outline-0" />
-          <ng-template fiboPortalTemplate [(isOpen)]="dateTrigger.isOpen">
+          <lucide-icon name="calendar-days" size="16" class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
+          <ng-template fiboPortalTemplate let-trigger>
             <fibo-calendar
               fiboPopover
-              [popoverTrigger]="dateTrigger"
+              [popoverTrigger]="trigger"
               class="fibo-popover rounded-md"
               [(fiboCalendarDateSelectionModel)]="userProfileForm.birthDate().value"
-              (optionTriggered)="dateTrigger.close()"
+              (optionTriggered)="trigger.close()"
             />
           </ng-template>
-        </fibo-form-field>
+        </div>
 
         <!-- Website -->
-        <label class="block">
-          <span class="block mb-1">Website</span>
-          <fibo-form-field [field]="userProfileForm.website">
-            <input
-              fiboInput
-              type="url"
-              [field]="userProfileForm.website"
-              placeholder="Enter website URL"
-              class="w-full appearance-none outline-none text-sm focus:outline-0" />
-          </fibo-form-field>
-        </label>
+        <div fiboFormField class="group content-center fibo-form-field px-3 py-1">
+          <label class="block text-xs fibo-form-field-label">Website</label>
+          <input [field]="userProfileForm.website" type="url" placeholder="Enter website URL" class="w-full appearance-none outline-none text-sm focus:outline-0" />
+        </div>
 
 
 
         <!-- Skills (multiple) -->
-          <fibo-form-field fiboPopoverTriggerClick #skillsTrigger="PopoverTrigger" [field]="userProfileForm.skills" appendIcon="chevron-down">
-            <span class="w-full flex flex-wrap gap-x-1 gap-y-1">
-              @for (value of userProfile().skills; track value) {
-                <div class="flex items-center gap-1 btn btn-sm" >
-                  <span class="truncate flex-1 text-xs font-medium">{{ value }}</span>
-                  <button type="button"
-                    class="rounded-full cursor-pointer flex-shrink-0 btn-text"
-                    (click)="removeSkill(value); $event.stopPropagation()"
-                    (keydown)="$event.stopPropagation()">
-                    <lucide-icon name="x" size="14"></lucide-icon>
-                  </button>
-                </div>
-              }
-            </span>
-            <ng-template fiboPortalTemplate [(isOpen)]="skillsTrigger.isOpen">
-              <div fiboPopover
-                   fiboDataList
-                   class="fibo-popover py-1 px-1 rounded-md"
-                   [popoverTrigger]="skillsTrigger"
-                   [popoverFullWidth]="true"
-                   [(MultipleSelectionModel)]="userProfileForm.skills().value"
-              >
-                <div class="max-h-70 overflow-y-auto ">
-                  @if (skills.length === 0) {
-                    <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
-                  }
-                  @for (item of skills; track getSkillValue(item)) {
-                    <a [fiboListItemValue]="getSkillValue(item)" #option="ListItem"
-                       class="datalist-item py-1 px-2 rounded-md relative group text-sm items-center">
-                      <fibo-checkbox
-                        [checked]="option.isSelected()">{{ getSkillLabel(item) }}
-                      </fibo-checkbox>
-                    </a>
-                  }
-                </div>
+        <button type="button" fiboFormField fiboPopoverTriggerClick class="w-full group fibo-form-field px-3 py-1 relative block text-left">
+          <label class="block text-xs fibo-form-field-label">Skills</label>
+          <span class="w-full flex flex-wrap gap-x-1 gap-y-1">
+            @for (value of userProfile().skills; track value) {
+              <div class="flex items-center gap-1 btn btn-sm">
+                <span class="truncate flex-1 text-xs font-medium">{{ value }}</span>
+                <button type="button"
+                  class="rounded-full cursor-pointer flex-shrink-0 btn-text"
+                  (click)="removeSkill(value); $event.stopPropagation()"
+                  (keydown)="$event.stopPropagation()">
+                  <lucide-icon name="x" size="14"></lucide-icon>
+                </button>
               </div>
-            </ng-template>
-          </fibo-form-field>
+            }
+            @if (userProfile().skills.length === 0) {
+              <div class="from-field-placeholder text-sm">Select Skills</div>
+            }
+          </span>
+          <ng-template fiboPortalTemplate let-trigger>
+            <div fiboPopover
+                 fiboDataList
+                 class="fibo-popover py-1 px-1 rounded-md"
+                 [popoverTrigger]="trigger"
+                 [popoverFullWidth]="true"
+                 [(MultipleSelectionModel)]="userProfileForm.skills().value"
+            >
+              <div class="max-h-70 overflow-y-auto ">
+                @if (skills.length === 0) {
+                  <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
+                }
+                @for (item of skills; track getSkillValue(item)) {
+                  <a [fiboListItemValue]="getSkillValue(item)" #option="ListItem"
+                     class="datalist-item py-1 px-2 rounded-md relative group text-sm items-center">
+                    <fibo-checkbox
+                      [checked]="option.isSelected()">{{ getSkillLabel(item) }}
+                    </fibo-checkbox>
+                  </a>
+                }
+              </div>
+            </div>
+          </ng-template>
+          <lucide-icon name="chevron-down" size="16" class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
+        </button>
 
 
         <!-- Phone -->
-        <label class="block">
-          <span class="block mb-1">Phone Number</span>
-          <fibo-form-field [field]="userProfileForm.phone">
-            <input
-              fiboInput
-              type="tel"
-              [field]="userProfileForm.phone"
-              placeholder="Enter phone number"
-              class="w-full appearance-none outline-none text-sm focus:outline-0" />
-          </fibo-form-field>
-        </label>
+        <div fiboFormField class="group content-center fibo-form-field px-3 py-1">
+          <label class="block text-xs fibo-form-field-label">Phone Number</label>
+          <input [field]="userProfileForm.phone" type="tel" placeholder="Enter phone number" class="w-full appearance-none outline-none text-sm focus:outline-0" />
+        </div>
 
 
-        <button type="submit" class="btn btn-primary" [disabled]="!userProfileForm().valid">Submit</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!userProfileForm().valid()">Submit</button>
       </form>
 
 
