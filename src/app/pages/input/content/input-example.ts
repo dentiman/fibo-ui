@@ -1,12 +1,12 @@
 import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Field, form, required} from '@angular/forms/signals';
+import {FormField, form, required} from '@angular/forms/signals';
 import {FormFieldDirective} from '@fibo-ui/cdk';
 import {UsageDemo} from '../../../common/usage-demo';
 
 @Component({
   selector: 'app-input',
-  imports: [CommonModule, Field, FormFieldDirective, UsageDemo],
+  imports: [CommonModule, FormField, FormFieldDirective, UsageDemo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <h2 class="text-foreground">Input with Signal Forms</h2>
@@ -15,7 +15,7 @@ import {UsageDemo} from '../../../common/usage-demo';
         <form class="space-y-4">
           <div fiboFormField class="group content-center fibo-form-field px-3 py-1">
             <label class="block text-xs fibo-form-field-label">Username</label>
-            <input [field]="userForm.username" type="text" placeholder="Enter username" class="w-full appearance-none outline-none text-sm focus:outline-0" />
+            <input [formField]="userForm.username" type="text" placeholder="Enter username" class="w-full appearance-none outline-none text-sm focus:outline-0" />
           </div>
         </form>
       </div>

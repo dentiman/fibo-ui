@@ -1,12 +1,12 @@
 import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Field, form, required} from '@angular/forms/signals';
+import {FormField, form, required} from '@angular/forms/signals';
 import {Checkbox} from '@fibo-ui/components';
 import {UsageDemo} from '../../../common/usage-demo';
 
 @Component({
   selector: 'app-checkbox',
-  imports: [CommonModule, Field, Checkbox, UsageDemo],
+  imports: [CommonModule, FormField, Checkbox, UsageDemo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <h2 class="text-foreground">Checkbox with Signal Forms</h2>
@@ -14,19 +14,19 @@ import {UsageDemo} from '../../../common/usage-demo';
       <div class="mx-auto w-70 space-y-4 p-8">
         <form class="space-y-4">
           <div>
-            <fibo-checkbox [field]="settingsForm.acceptTerms">
+            <fibo-checkbox [formField]="settingsForm.acceptTerms">
               I accept the terms and conditions
             </fibo-checkbox>
           </div>
           
           <div>
-            <fibo-checkbox [field]="settingsForm.enableNotifications">
+            <fibo-checkbox [formField]="settingsForm.enableNotifications">
               Enable email notifications
             </fibo-checkbox>
           </div>
           
           <div>
-            <fibo-checkbox [field]="settingsForm.marketingEmails">
+            <fibo-checkbox [formField]="settingsForm.marketingEmails">
               Receive marketing emails
             </fibo-checkbox>
           </div>

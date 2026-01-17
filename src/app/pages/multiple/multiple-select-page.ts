@@ -1,6 +1,6 @@
 import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Field, form} from '@angular/forms/signals';
+import {FormField, form} from '@angular/forms/signals';
 import {Checkbox} from '@fibo-ui/components';
 import {
   DataList,
@@ -23,7 +23,7 @@ interface UserModel {
   standalone: true,
   imports: [
     CommonModule,
-    Field,
+    FormField,
     FormFieldTrigger,
     DataList,
     Popover,
@@ -41,7 +41,7 @@ interface UserModel {
       <h2 class="text-foreground">Basic multiple select</h2>
       <app-usage-demo [codeBlocks]="codeBlocks">
         <div class="mx-auto w-90 p-8">
-          <button type="button" fiboFormFieldTrigger [field]="userForm.skills" class="w-full group fibo-form-field px-3 py-1 relative block text-left">
+          <button type="button" fiboFormFieldTrigger [formField]="userForm.skills" class="w-full group fibo-form-field px-3 py-1 relative block text-left">
             <label class="block text-xs fibo-form-field-label">Skills</label>
             <span class="w-full flex flex-wrap gap-x-1 gap-y-1">
               @for (value of user().skills; track value) {

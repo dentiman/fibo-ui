@@ -1,6 +1,6 @@
 import {Component, ChangeDetectionStrategy, signal, model} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Field, form} from '@angular/forms/signals';
+import {FormField, form} from '@angular/forms/signals';
 import {Calendar, CalendarDateSelectionModel, CalendarDateRangeSelectionModel} from '@fibo-ui/components';
 import {
   Popover,
@@ -16,7 +16,7 @@ import {UsageDemo} from '../../common/usage-demo';
   standalone: true,
   imports: [
     CommonModule,
-    Field,
+    FormField,
     FormFieldDirective,
     Popover,
     PortalContent,
@@ -41,7 +41,7 @@ import {UsageDemo} from '../../common/usage-demo';
                 <label class="block text-xs fibo-form-field-label">Birth Date</label>
                 <input
                   type="text"
-                  [field]="userForm.birthDate"
+                  [formField]="userForm.birthDate"
                   placeholder="YYYY-MM-DD"
                   class="w-full appearance-none outline-none text-sm focus:outline-0" />
                 <div class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2">
@@ -72,13 +72,13 @@ import {UsageDemo} from '../../common/usage-demo';
                 <div class="flex items-center gap-1">
                   <input
                     type="text"
-                    [field]="dateRangeForm.startDate"
+                    [formField]="dateRangeForm.startDate"
                     placeholder="YYYY-MM-DD"
                     class="w-19 appearance-none outline-none text-sm placeholder:text-xs focus:outline-0"/>
                   <span class="flex items-center mx-1 text-gray-400 text-center">-</span>
                   <input
                     type="text"
-                    [field]="dateRangeForm.endDate"
+                    [formField]="dateRangeForm.endDate"
                     placeholder="YYYY-MM-DD"
                     class="w-full pl-1 appearance-none outline-none text-sm placeholder:text-xs focus:outline-0"/>
                 </div>

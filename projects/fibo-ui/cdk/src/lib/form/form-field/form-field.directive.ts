@@ -1,5 +1,5 @@
-import {contentChild, Directive, effect, computed} from '@angular/core';
-import {FIELD} from '@angular/forms/signals';
+import { contentChild, Directive, computed } from '@angular/core';
+import { FORM_FIELD, REQUIRED } from '@angular/forms/signals';
 
 @Directive({
   selector: '[fiboFormField]',
@@ -11,22 +11,23 @@ import {FIELD} from '@angular/forms/signals';
 })
 export class FormFieldDirective {
 
-  field = contentChild(FIELD);
+  field = contentChild(FORM_FIELD);
 
-  readonly required = computed(() => this.field()?.state().required() ?? true);
+  readonly required = computed(() => this.field()?.state().metadata(REQUIRED)?.() ?? true);
 
   readonly invalid = computed(() => this.field()?.state().invalid() ?? true);
 
-  readonly touched = computed(() => this.field()?.state().touched() ?? false);
+  // touched is not explicitly in FieldState types currently, using unsafe cast
+  readonly touched = computed(() => (this.field()?.state() as any)?.touched?.() ?? false);
 
   readonly dirty = computed(() => this.field()?.state().dirty() ?? false);
 
-  readonly disabled = computed(() => this.field()?.state().disabled() ?? false);
+  readonly disabled = computed(() => (this.field()?.state().disabledReasons()?.length ?? 0) > 0);
 
-  readonly readonly = computed(() => this.field()?.state().readonly() ?? false);
+  // readonly is not explicitly in FieldState types currently
+  readonly readonly = computed(() => (this.field()?.state() as any)?.readonly?.() ?? false);
 
   readonly pending = computed(() => this.field()?.state().pending() ?? false);
 
   readonly errors = computed(() => this.field()?.state().errors() ?? []);
-
 }

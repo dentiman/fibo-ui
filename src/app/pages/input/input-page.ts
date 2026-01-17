@@ -1,6 +1,6 @@
 import {Component, ChangeDetectionStrategy, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Field, form, required} from '@angular/forms/signals';
+import {FormField, form, required} from '@angular/forms/signals';
 import {FormFieldDirective} from '@fibo-ui/cdk';
 import {UsageDemo} from '../../common/usage-demo';
 
@@ -9,7 +9,7 @@ import {UsageDemo} from '../../common/usage-demo';
   standalone: true,
   imports: [
     CommonModule,
-    Field,
+    FormField,
     FormFieldDirective,
     UsageDemo
   ],
@@ -23,7 +23,7 @@ import {UsageDemo} from '../../common/usage-demo';
             <form class="space-y-4">
               <div fiboFormField class="group fibo-form-field px-3 py-1 flex flex-col justify-center">
                 <label class="block text-xs fibo-form-field-label">Username</label>
-                <input [field]="userForm.username" type="text" placeholder="Enter username" class="w-full appearance-none outline-none text-sm focus:outline-0" />
+                <input [formField]="userForm.username" type="text" placeholder="Enter username" class="w-full appearance-none outline-none text-sm focus:outline-0" />
               </div>
             </form>
           </div>

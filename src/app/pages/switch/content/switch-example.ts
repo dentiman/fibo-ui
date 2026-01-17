@@ -1,12 +1,12 @@
 import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Field, form, required} from '@angular/forms/signals';
+import {FormField, form, required} from '@angular/forms/signals';
 import {Switch} from '@fibo-ui/components';
 import {UsageDemo} from '../../../common/usage-demo';
 
 @Component({
   selector: 'app-switch',
-  imports: [CommonModule, Field, Switch, UsageDemo],
+  imports: [CommonModule, FormField, Switch, UsageDemo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <h2 class="text-foreground">Switch with Signal Forms</h2>
@@ -14,25 +14,25 @@ import {UsageDemo} from '../../../common/usage-demo';
       <div class="mx-auto w-70 space-y-4 p-8">
         <form class="space-y-4">
           <div>
-            <fibo-switch [field]="settingsForm.enableNotifications">
+            <fibo-switch [formField]="settingsForm.enableNotifications">
               Enable push notifications
             </fibo-switch>
           </div>
           
           <div>
-            <fibo-switch [field]="settingsForm.enableDarkMode">
+            <fibo-switch [formField]="settingsForm.enableDarkMode">
               Enable dark mode
             </fibo-switch>
           </div>
           
           <div>
-            <fibo-switch [field]="settingsForm.enableAnalytics">
+            <fibo-switch [formField]="settingsForm.enableAnalytics">
               Enable analytics tracking
             </fibo-switch>
           </div>
           
           <div>
-            <fibo-switch [field]="settingsForm.requireTwoFactor">
+            <fibo-switch [formField]="settingsForm.requireTwoFactor">
               Require two-factor authentication
             </fibo-switch>
           </div>

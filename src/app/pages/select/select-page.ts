@@ -1,6 +1,6 @@
 import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Field, form} from '@angular/forms/signals';
+import {FormField, form} from '@angular/forms/signals';
 import {
   DataList,
   Option,
@@ -21,7 +21,7 @@ interface UserModel {
   standalone: true,
   imports: [
     CommonModule,
-    Field,
+    FormField,
     FormFieldTrigger,
     DataList,
     Popover,
@@ -37,7 +37,7 @@ interface UserModel {
       <h2 class="text-foreground">Basic select</h2>
       <app-usage-demo [codeBlocks]="codeBlocks">
         <div class="mx-auto w-90 p-8">
-          <button type="button" fiboFormFieldTrigger [field]="userForm.role"
+          <button type="button" fiboFormFieldTrigger [formField]="userForm.role"
                   class="w-full group fibo-form-field px-3 py-1 flex flex-col justify-center relative text-left">
             <label class="block text-xs fibo-form-field-label">User Role</label>
             @let role = user().role;
