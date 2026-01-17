@@ -2,16 +2,16 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Field, form } from '@angular/forms/signals';
-import { FormField } from '@fibo-ui/components';
 import {
   DataList,
-  ListItem,
+  Option,
   Popover,
-  PopoverTrigger,
-  PortalTemplateDirective,
-  SingleSelectionModel
+  PopoverTriggerClick,
+  PortalContent,
+  SelectOne,
+  FormFieldDirective
 } from '@fibo-ui/cdk';
-import { FieldLabel } from '@fibo-ui/components/src/lib/form/form-field/field-label';
+import { LucideAngularModule } from 'lucide-angular';
 
 interface UserModel {
   role: string | null;
@@ -23,14 +23,14 @@ interface UserModel {
   imports: [
     CommonModule,
     Field,
-    FormField,
+    FormFieldDirective,
     DataList,
     Popover,
-    PortalTemplateDirective,
-    PopoverTrigger,
-    SingleSelectionModel,
-    ListItem,
-    FieldLabel
+    PortalContent,
+    PopoverTriggerClick,
+    SelectOne,
+    Option,
+    LucideAngularModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: 'basic-select.html'
@@ -39,7 +39,7 @@ export class SelectExampleComponent {
   readonly user = signal<UserModel>({
     role: null
   });
-  
+
   readonly userForm = form(this.user);
 
   readonly userRoles = ['admin', 'user', 'guest'];

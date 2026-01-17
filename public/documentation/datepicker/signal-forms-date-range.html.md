@@ -1,42 +1,30 @@
 ```html
 <form class="space-y-4">
-  <fibo-form-field
-    fiboPopoverTrigger
-    #dateRangeTrigger="PopoverTrigger"
-    [field]="userForm.dateRange"
-    appendIcon="calendar-range">
-    <fibo-field-label>Date Range</fibo-field-label>
+  <div fiboFormField fiboPopoverTriggerClick class="group content-center fibo-form-field px-3 py-1 relative">
+    <label class="block text-xs fibo-form-field-label">Date Range</label>
     <div class="flex items-center gap-1">
       <input
-        fiboInput
-        name="startDate"
         type="text"
-        [value]="dateRangeValue().startDate || ''"
+        [field]="dateRangeForm.startDate"
         placeholder="YYYY-MM-DD"
-        (focus)="dateRangeTrigger.open()"
-        (input)="onStartDateInput($event)"
-        class="w-19 appearance-none outline-none text-sm placeholder:text-xs focus:outline-0" />
+        class="w-19 appearance-none outline-none text-sm placeholder:text-xs focus:outline-0"/>
       <span class="flex items-center mx-1 text-gray-400 text-center">-</span>
       <input
-        fiboInput
-        name="endDate"
         type="text"
-        [value]="dateRangeValue().endDate || ''"
+        [field]="dateRangeForm.endDate"
         placeholder="YYYY-MM-DD"
-        (focus)="dateRangeTrigger.open()"
-        (input)="onEndDateInput($event)"
-        class="w-full pl-1 appearance-none outline-none text-sm placeholder:text-xs focus:outline-0" />
+        class="w-full pl-1 appearance-none outline-none text-sm placeholder:text-xs focus:outline-0"/>
     </div>
-    <ng-template fiboPortalContent [(isOpen)]="dateRangeTrigger.isOpen">
-      <fibo-calendar
-        fiboPopover
-        [trigger]="dateRangeTrigger"
-        class="fibo-popover rounded-md"
-        [(fiboCalendarDateRangeSelectionModel)]="calendarDateRange"
-        (optionTriggered)="dateRangeTrigger.close()"
-              />
-            </ng-template>
-          </fibo-form-field>
-        </form>
+    <div class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2">
+      <lucide-icon name="calendar-range" size="16" class="text-foreground-tertiary"></lucide-icon>
+    </div>
+    <ng-template fiboPortalContent let-trigger>
+      <fibo-calendar fiboPopover              [trigger]="trigger"
+                     fiboCalendarDateRange    [(value)]="calendarDateRange"
+                     class="fibo-popover rounded-md"
+      />
+    </ng-template>
+  </div>
+</form>
 ```
 

@@ -1,16 +1,13 @@
 import {
   Directive,
-  Signal,
-  signal,
-  WritableSignal,
-  InjectionToken,
-  effect, model, linkedSignal
+  model,
+  linkedSignal
 } from '@angular/core';
-import {parse, isValid, isEqual} from "date-fns";
+import {parse, isEqual} from "date-fns";
 import {SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
 
 @Directive({
-  selector: '[fiboCalendarDateSelectionModel]',
+  selector: '[fiboCalendarDate]',
   standalone: true,
   providers: [
     {provide: SELECTION_MODEL, useExisting: CalendarDateSelectionModel}
@@ -18,19 +15,14 @@ import {SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
 })
 export class CalendarDateSelectionModel implements SelectionModel<string> {
   private readonly dateFormat = 'yyyy-MM-dd';
-  readonly valueSignal = model<string | null>(null, {alias: 'fiboCalendarDateSelectionModel'});
-
-  get value(): Signal<string | null> {
-    return this.valueSignal.asReadonly();
-  }
+  value = model<string | null>(null);
 
   select(value: string) {
-    this.valueSignal.set(value);
-    this.lastSelection.set(value);
+    this.value.set(value);
   }
 
   isSelected(value: string): boolean {
-    const current = this.valueSignal();
+    const current = this.value();
     if (!current) return false;
 
     const date = parse(value, this.dateFormat, new Date());

@@ -1,12 +1,9 @@
 import {
   Directive,
-  Signal,
-  signal,
-  WritableSignal,
-  InjectionToken,
-  effect, model, linkedSignal
+  model,
+  linkedSignal
 } from '@angular/core';
-import {parse, isValid, isEqual, isAfter, isBefore, format} from "date-fns";
+import {parse, isEqual, isAfter, isBefore, format} from "date-fns";
 import {SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
 
 export interface DateRange {
@@ -15,7 +12,7 @@ export interface DateRange {
 }
 
 @Directive({
-  selector: '[fiboCalendarDateRangeSelectionModel]',
+  selector: '[fiboCalendarDateRange]',
   standalone: true,
   providers: [
     {provide: SELECTION_MODEL, useExisting: CalendarDateRangeSelectionModel}
@@ -23,31 +20,27 @@ export interface DateRange {
 })
 export class CalendarDateRangeSelectionModel implements SelectionModel<string> {
   private readonly dateFormat = 'yyyy-MM-dd';
-  readonly valueSignal = model<DateRange>({
+  value = model<DateRange>({
     startDate: null,
     endDate: null
-  }, {alias: 'fiboCalendarDateRangeSelectionModel'});
-
-  get value(): Signal<DateRange> {
-    return this.valueSignal.asReadonly();
-  }
+  });
 
   select(value: string) {
-    const currentValue = this.valueSignal();
+    const currentValue = this.value();
     const startDate = currentValue.startDate;
     const endDate = currentValue.endDate;
 
     if (startDate && (endDate === null || endDate === undefined) && this.firstIsMoreOrEqualThenSecond(value, startDate)) {
-      this.valueSignal.set({startDate, endDate: value});
+      this.value.set({startDate, endDate: value});
     } else if (startDate && (endDate === null || endDate === undefined) && this.firstIsMoreOrEqualThenSecond(startDate, value)) {
-      this.valueSignal.set({startDate: value, endDate});
+      this.value.set({startDate: value, endDate});
     } else {
-      this.valueSignal.set({startDate: value, endDate: null});
+      this.value.set({startDate: value, endDate: null});
     }
   }
 
   isSelected(value: string): boolean {
-    const current = this.valueSignal();
+    const current = this.value();
     if (!current.startDate) return false;
 
     const date = parse(value, this.dateFormat, new Date());
