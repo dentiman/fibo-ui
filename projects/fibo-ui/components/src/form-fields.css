@@ -1,5 +1,5 @@
 @layer components {
-    .text-field-control {
+    .form-field-control {
         text-align: left;
         min-height: 2.25rem;
         /* min-h-9 */
@@ -26,14 +26,15 @@
         /* black/13 */
 
         /* Focus within */
+
         &:focus-within {
             outline-color: rgb(0 0 0 / 0.18);
             /* black/18 */
         }
 
 
-
         /* Using [data-theme="dark"] as defined in global styles */
+
         [data-theme="dark"] & {
             background-color: oklch(30% 2% 253deg);
             color: #fafafa;
@@ -45,6 +46,7 @@
         }
 
         /* Error State */
+
         &[data-error] {
             outline-color: rgb(185 28 28 / 0.15);
             /* red-700/15 */
@@ -56,8 +58,8 @@
         }
 
 
-
         /* Disabled State (aria-disabled) */
+
         &[aria-disabled="true"],
         &:disabled {
             box-shadow: none;
@@ -117,6 +119,7 @@
         }
 
         /* Error Styles (input specific) */
+
         &[data-error]::placeholder {
             color: oklch(0.62 0.192 20);
         }
@@ -127,9 +130,9 @@
         }
 
 
-
         /* Handling the group-aria-disabled equivalent for input's text */
         /* Currently in text-field.ts: group-aria-disabled:text-gray-400 */
+
         &:disabled {
             color: rgb(156 163 175);
             /* text-gray-400 */
@@ -173,36 +176,83 @@
         }
     }
 
-    /* Contextual styles when inside .text-field-control */
-
+    /* Contextual styles when inside .form-field-control */
     /* Focus Within */
-    .text-field-control:focus-within .form-field-label {
+    .form-field-control:focus-within .form-field-label {
         color: rgb(59 130 246);
         /* text-blue-500 */
     }
 
-    [data-theme="dark"] .text-field-control:focus-within .form-field-label {
+    [data-theme="dark"] .form-field-control:focus-within .form-field-label {
         color: oklch(0.71 0.11 240);
     }
 
     /* Disabled (aria-disabled) */
-    .text-field-control[aria-disabled="true"] .form-field-label {
+    .form-field-control[aria-disabled="true"] .form-field-label {
         color: rgb(156 163 175);
         /* text-gray-400 */
     }
 
-    [data-theme="dark"] .text-field-control[aria-disabled="true"] .form-field-label {
+    [data-theme="dark"] .form-field-control[aria-disabled="true"] .form-field-label {
         color: rgb(115 115 115);
         /* text-neutral-500 */
     }
 
     /* Error state */
-    .text-field-control[data-error] .form-field-label {
+    .form-field-control[data-error] .form-field-label {
         color: oklch(0.62 0.192 20);
     }
 
-    [data-theme="dark"] .text-field-control[data-error] .form-field-label {
+    [data-theme="dark"] .form-field-control[data-error] .form-field-label {
         color: rgb(248 113 113);
         /* text-red-400 */
+    }
+
+    .form-field-error {
+        margin-left: 0.75rem;
+        margin-top: 0.25rem;
+        font-size: 0.75rem;
+        line-height: 1rem;
+        color: oklch(0.62 0.192 20);
+
+        [data-theme="dark"] & {
+            color: rgb(248 113 113);
+        }
+    }
+
+    .form-field-icon {
+        color: var(--foreground-tertiary);
+    }
+
+    .form-field-clear-icon {
+        display: none;
+        cursor: pointer;
+        border-radius: 9999px;
+        /* rounded-full */
+        flex-shrink: 0;
+        /* shrink-0 */
+        color: var(--foreground-tertiary);
+        transition-property: color;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 200ms;
+
+        &:hover {
+            color: var(--foreground);
+        }
+    }
+
+    .form-field-icon-end {
+        display: block;
+    }
+
+    /* Visibility based on parent .form-field-control state */
+    .form-field-control:not([aria-disabled="true"]):hover .form-field-clear-icon,
+    .form-field-control:not([aria-disabled="true"]):focus-within .form-field-clear-icon {
+        display: block;
+    }
+
+    .form-field-control[data-can-clear]:not([aria-disabled="true"]):hover .form-field-icon-end,
+    .form-field-control[data-can-clear]:not([aria-disabled="true"]):focus-within .form-field-icon-end {
+        display: none;
     }
 }

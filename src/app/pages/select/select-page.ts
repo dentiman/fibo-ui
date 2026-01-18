@@ -1,6 +1,6 @@
-import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormField, form} from '@angular/forms/signals';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormField, form } from '@angular/forms/signals';
 import {
   DataList,
   Option,
@@ -9,8 +9,8 @@ import {
   SelectOne,
   FormFieldTrigger
 } from '@fibo-ui/cdk';
-import {LucideAngularModule} from 'lucide-angular';
-import {UsageDemo} from '../../common/usage-demo';
+import { LucideAngularModule } from 'lucide-angular';
+import { UsageDemo } from '../../common/usage-demo';
 
 interface UserModel {
   role: string;
@@ -50,14 +50,12 @@ interface UserModel {
                  fiboPopover [trigger]="trigger" [matchWidth]="true"
                  fiboDataList (optionTriggered)="trigger.close()"
                  fiboSelectOne [(value)]="userForm.role().value"
-                 class="fibo-popover py-1 px-1 rounded-md">
-              <div class="max-h-70 overflow-y-auto">
+                 class="popover-container">
                 @for (role of userRoles; track role) {
-                  <a fiboOption [value]="role" class="datalist-item py-1 px-2 rounded-md relative group text-sm">
+                  <a fiboOption [value]="role" class="datalist-item">
                     <span class="block truncate font-normal">{{ role }}</span>
                   </a>
                 }
-              </div>
             </div>
           </button>
         </div>

@@ -3,63 +3,24 @@
   .fibo-notification-container {
     z-index: 10;
   }
+
   .fibo-dialog-backdrop {
     z-index: 50;
   }
+
   fibo-confirmation-backdrop {
     z-index: 60;
   }
+
   .fibo-popover-container {
     z-index: 1000;
   }
+
   .fibo-tooltip-container {
     z-index: 9999;
   }
 
-  .fibo-form-field {
-    @apply min-h-9 block cursor-default relative text-foreground shadow-xs aria-disabled:shadow-none rounded-md
-    bg-[var(--background-secondary)]
 
-    data-[appearance=secondary]:bg-black/4 dark:data-[appearance=secondary]:bg-[var(--background-lite)]
-
-    outline-1 -outline-offset-1
-    outline-black/13 dark:outline-white/4
-    aria-disabled:outline-black/8 aria-disabled:dark:outline-white/4
-    focus-within:outline-black/18 dark:focus-within:outline-white/5
-
-    dark:data-[appearance=secondary]:outline-white/6
-    dark:data-[appearance=secondary]:focus-within:outline-white/8
-    dark:data-[appearance=secondary]:aria-disabled:outline-white/6
-
-    data-error:outline-red-700/15 dark:data-error:outline-red-300/10
-    dark:data-error:data-[appearance=secondary]:outline-red-300/13
-
-    aria-disabled:text-[var(--foreground-secondary)] dark:aria-disabled:text-[var(--color-neutral-600)]
-    aria-disabled:cursor-not-allowed
-    dark:bg-[var(--background-secondary)] dark:text-[var(--foreground)]
-    aria-disabled:bg-transparent
-    aria-disabled:bg-[repeating-linear-gradient(45deg,rgb(0_0_0/_0.01),rgb(0_0_0/_0.01)_10px,rgb(0_0_0/_0.03)_10px,rgb(0_0_0/_0.03)_20px)]
-    dark:aria-disabled:bg-[repeating-linear-gradient(45deg,rgb(255_255_255/_0.01),rgb(255_255_255/_0.01)_10px,rgb(255_255_255/_0.03)_10px,rgb(255_255_255/_0.03)_20px)];
-  }
-
-  .fibo-form-field-label {
-    color: var(--form-field-label-text);
-    transition: color 200ms;
-  }
-
-  .fibo-form-field:focus-within .fibo-form-field-label,.fibo-form-field:focus .fibo-form-field-label {
-    color: var(--form-field-label-text-focus);
-  }
-
-  .fibo-form-field[aria-disabled=true] .fibo-form-field-label,
-  .fibo-form-field[aria-disabled=true] .from-field-placeholder{
-    color: var(--form-field-label-text-disabled);
-  }
-
-  .fibo-form-field[data-error=true] .fibo-form-field-label,
-  .fibo-form-field[data-error=true] .from-field-placeholder{
-    color: var(--form-field-label-text-error);
-  }
 
   .fibo-form-field-icon {
     color: var(--form-field-label-text);
@@ -79,7 +40,11 @@
   }
 
   /* Popover component */
-  .fibo-popover {
+  .popover-container {
+    padding: 0.25rem;
+    border-radius: 0.375rem;
+    max-height: 17.5rem;
+    overflow-y: auto;
     box-shadow: var(--shadow-xl);
     background-color: var(--popover-bg);
     outline: 1px solid var(--popover-outline);
@@ -107,11 +72,13 @@
     color: var(--form-field-label-text);
   }
 
-  .group[aria-disabled="true"] .fibo-input, .fibo-input[aria-disabled="true"] {
+  .group[aria-disabled="true"] .fibo-input,
+  .fibo-input[aria-disabled="true"] {
     color: var(--input-text-disabled);
   }
 
-  .group[aria-disabled="true"] .fibo-input::placeholder, .fibo-input[aria-disabled="true"]::placeholder {
+  .group[aria-disabled="true"] .fibo-input::placeholder,
+  .fibo-input[aria-disabled="true"]::placeholder {
     color: var(--form-field-label-text-disabled);
   }
 
@@ -119,7 +86,11 @@
   .datalist-item {
     display: flex;
     gap: 0.25rem;
-    line-height: 1.5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    position: relative;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
     cursor: pointer;
     background-color: var(--datalist-item-bg);
     color: var(--datalist-item-text);
@@ -143,6 +114,7 @@
     background-color: var(--datalist-item-bg-selected);
     color: var(--datalist-item-text-selected);
   }
+
   .datalist-item[aria-selected="true"][data-active="true"][aria-disabled="true"] {
     background-color: var(--datalist-item-bg-selected);
     color: var(--datalist-item-text-selected);

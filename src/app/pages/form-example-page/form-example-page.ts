@@ -1,7 +1,7 @@
-import {Component, signal, ChangeDetectionStrategy, effect} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {disabled, FormField, form, required} from '@angular/forms/signals';
-import {Calendar, CalendarDateSelectionModel, Select} from '@fibo-ui/components';
+import { Component, signal, ChangeDetectionStrategy, effect } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { disabled, FormField, form, required } from '@angular/forms/signals';
+import { Calendar, CalendarDateSelectionModel } from '@fibo-ui/components';
 import {
   DataList,
   Option,
@@ -12,8 +12,8 @@ import {
   SelectMulti,
   safeProp, FormFieldDirective, FormFieldTrigger
 } from '@fibo-ui/cdk';
-import {LucideAngularModule} from 'lucide-angular';
-import {Checkbox} from '@fibo-ui/components';
+import { LucideAngularModule } from 'lucide-angular';
+import { Checkbox } from '@fibo-ui/components';
 
 interface UserProfile {
   username: string;
@@ -22,11 +22,11 @@ interface UserProfile {
   confirmPassword: string;
   firstName: string;
   lastName: string;
-  age: number ;
+  age: number;
   phone: string;
   website: string;
   city: string;
-  userRole: string ;
+  userRole: string;
   country: string;
   skills: string[];
   birthDate: string;
@@ -51,7 +51,6 @@ interface UserProfile {
     Checkbox,
     Calendar,
     CalendarDateSelectionModel,
-    Select,
     FormFieldTrigger
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -92,16 +91,14 @@ interface UserProfile {
             <div fiboPopover [trigger]="trigger" [matchWidth]="true"
                  fiboDataList (optionTriggered)="trigger.close()"
                  fiboSelectOne [(value)]="userProfileForm.city().value"
-                 class="fibo-popover py-1 px-1 rounded-md"
+                 class="popover-container"
             >
-              <div class="max-h-70 overflow-y-auto ">
                 @for (c of cities; track c.value) {
                   <a fiboOption [value]="c.value"
-                     class="datalist-item py-1 px-2 rounded-md relative group text-sm">
+                     class="datalist-item">
                     <span class="block truncate font-normal">{{ c.label }}</span>
                   </a>
                 }
-              </div>
             </div>
           </ng-template>
           <div class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2">
@@ -123,15 +120,13 @@ interface UserProfile {
                fiboPopover [trigger]="trigger" [matchWidth]="true"
                fiboDataList (optionTriggered)="trigger.close()"
                fiboSelectOne [(value)]="userProfileForm.userRole().value"
-               class="fibo-popover py-1 px-1 rounded-md">
-            <div class="max-h-70 overflow-y-auto">
+               class="popover-container">
               @for (role of userRoles; track role) {
                 <a fiboOption [value]="role"
-                   class="datalist-item py-1 px-2 rounded-md relative group text-sm">
+                   class="datalist-item">
                   <span class="block truncate font-normal">{{ role }}</span>
                 </a>
               }
-            </div>
           </div>
         </button>
 
@@ -177,10 +172,10 @@ interface UserProfile {
             <lucide-icon name="calendar-days" size="16" class="text-foreground-tertiary"></lucide-icon>
           </div>
           <fibo-calendar *fiboPortalContent="let trigger"
-                         fiboPopover           [trigger]="trigger"
-                         fiboCalendarDate      [(value)]="userProfileForm.birthDate().value"
+                         fiboPopover [trigger]="trigger"
+                         fiboCalendarDate [(value)]="userProfileForm.birthDate().value"
                          (optionTriggered)="trigger.close()"
-                         class="fibo-popover rounded-md"/>
+                         class="popover-container"/>
         </div>
 
         <!-- Website -->
@@ -215,20 +210,18 @@ interface UserProfile {
                fiboPopover [trigger]="trigger" [matchWidth]="true"
                fiboDataList
                fiboSelectMulti [(value)]="userProfileForm.skills().value"
-               class="fibo-popover py-1 px-1 rounded-md">
-            <div class="max-h-70 overflow-y-auto ">
-              @if (skills.length === 0) {
-                <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
-              }
-              @for (item of skills; track getSkillValue(item)) {
-                <a fiboOption [value]="getSkillValue(item)" #option="Option"
-                   class="datalist-item py-1 px-2 rounded-md relative group text-sm items-center">
-                  <fibo-checkbox
-                    [checked]="option.isSelected()">{{ getSkillLabel(item) }}
-                  </fibo-checkbox>
-                </a>
-              }
-            </div>
+               class="popover-container">
+            @if (skills.length === 0) {
+              <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
+            }
+            @for (item of skills; track getSkillValue(item)) {
+              <a fiboOption [value]="getSkillValue(item)" #option="Option"
+                 class="datalist-item items-center">
+                <fibo-checkbox
+                  [checked]="option.isSelected()">{{ getSkillLabel(item) }}
+                </fibo-checkbox>
+              </a>
+            }
           </div>
           <div class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2">
             <lucide-icon name="chevron-down" size="16" class="text-foreground-tertiary"></lucide-icon>
@@ -276,45 +269,45 @@ export class FormExamplePageComponent {
     birthDate: ''
   });
 
-  userProfileForm = form(this.userProfile, (patch)=>{
+  userProfileForm = form(this.userProfile, (patch) => {
     required(patch.username)
   })
 
   submittedData = signal<UserProfile | null>(null);
 
   cities = [
-    {label: 'New York', value: 'new-york'},
-    {label: 'London', value: 'london'},
-    {label: 'Paris', value: 'paris'},
-    {label: 'Tokyo', value: 'tokyo'},
-    {label: 'Berlin', value: 'berlin'},
-    {label: 'Rome', value: 'rome'}
+    { label: 'New York', value: 'new-york' },
+    { label: 'London', value: 'london' },
+    { label: 'Paris', value: 'paris' },
+    { label: 'Tokyo', value: 'tokyo' },
+    { label: 'Berlin', value: 'berlin' },
+    { label: 'Rome', value: 'rome' }
   ];
 
   userRoles = ['admin', 'user', 'guest'];
 
   countries = [
-    {label: 'United States', value: 'us'},
-    {label: 'United Kingdom', value: 'uk'},
-    {label: 'France', value: 'fr'},
-    {label: 'Germany', value: 'de'},
-    {label: 'Italy', value: 'it'},
-    {label: 'Japan', value: 'jp'},
-    {label: 'Canada', value: 'ca'},
-    {label: 'Australia', value: 'au'}
+    { label: 'United States', value: 'us' },
+    { label: 'United Kingdom', value: 'uk' },
+    { label: 'France', value: 'fr' },
+    { label: 'Germany', value: 'de' },
+    { label: 'Italy', value: 'it' },
+    { label: 'Japan', value: 'jp' },
+    { label: 'Canada', value: 'ca' },
+    { label: 'Australia', value: 'au' }
   ];
 
   skills = [
-    {label: 'Angular', value: 'angular'},
-    {label: 'React', value: 'react'},
-    {label: 'Vue', value: 'vue'},
-    {label: 'Node.js', value: 'nodejs'},
-    {label: 'Python', value: 'python'},
-    {label: 'Java', value: 'java'},
-    {label: 'C#', value: 'csharp'},
-    {label: 'PHP', value: 'php'},
-    {label: 'Ruby', value: 'ruby'},
-    {label: 'Go', value: 'go'}
+    { label: 'Angular', value: 'angular' },
+    { label: 'React', value: 'react' },
+    { label: 'Vue', value: 'vue' },
+    { label: 'Node.js', value: 'nodejs' },
+    { label: 'Python', value: 'python' },
+    { label: 'Java', value: 'java' },
+    { label: 'C#', value: 'csharp' },
+    { label: 'PHP', value: 'php' },
+    { label: 'Ruby', value: 'ruby' },
+    { label: 'Go', value: 'go' }
   ];
 
   constructor() {
@@ -330,15 +323,15 @@ export class FormExamplePageComponent {
     console.log('Form submitted successfully:', data);
   }
 
-  getSkillValue(item: {label: string; value: string}): string {
+  getSkillValue(item: { label: string; value: string }): string {
     return safeProp(item, 'value');
   }
 
-  getSkillLabel(item: {label: string; value: string}): string {
+  getSkillLabel(item: { label: string; value: string }): string {
     return String(safeProp(item, 'label'));
   }
 
-  selectedSkill(value: string): {label: string; value: string} | undefined {
+  selectedSkill(value: string): { label: string; value: string } | undefined {
     return this.skills.find(item => this.getSkillValue(item) === value);
   }
 

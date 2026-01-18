@@ -1,21 +1,29 @@
 import { Component, input, model, signal } from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
+import { FormFieldControl } from '../form-field-control';
 
 @Component({
   selector: 'fibo-text-field',
+  standalone: true,
+  imports: [FormFieldControl],
+  host: {
+    'class': 'block'
+  },
   template: `
-    <div
-        class="text-field-control group "
-        [attr.aria-disabled]="disabled() || null"
-        [attr.aria-required]="required() || null"
-        [attr.data-error]="invalid() && touched() || null"
-        [class.disabled]="disabled()"
+    <fibo-form-field-control
+      [id]="id()"
+      [label]="label()"
+      [iconStart]="iconStart()"
+      [iconEnd]="iconEnd()"
+      [required]="required()"
+      [disabled]="disabled()"
+      [invalid]="invalid()"
+      [touched]="touched()"
+      [errors]="errors()"
+      [clearValue]="''"
+      [(value)]="value"
     >
-      <div class="flex flex-col justify-center">
-        @if (label()) {
-        <label [for]="id()" class="form-field-label">{{ label() }}</label>
-        }
-        <input
+      <input
         [id]="id()"
         [type]="type()"
         [value]="value()"
@@ -25,9 +33,14 @@ import { FormValueControl, ValidationError, WithOptionalField } from '@angular/f
         (input)="onInput($event)"
         (blur)="onBlur()"
         class="text-field-input"
-        />
+      />
+    </fibo-form-field-control>
+
+    @if (invalid() && touched() && errors().length > 0) {
+      <div class="form-field-error mr-3">
+        {{ errors()[0].message }}
       </div>
-    </div>
+    }
   `
 })
 export class TextField implements FormValueControl<string> {
@@ -46,6 +59,8 @@ export class TextField implements FormValueControl<string> {
 
   label = input<string>('');
   placeholder = input<string>('');
+  iconStart = input<string>('');
+  iconEnd = input<string>('');
 
   onInput(event: Event) {
     const target = event.target as HTMLInputElement;

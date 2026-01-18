@@ -1,13 +1,15 @@
-import {Component, computed, inject, input, model} from '@angular/core';
-import {FormValueControl, ValidationError, WithOptionalField} from '@angular/forms/signals';
+import { Component, computed, inject, input, model, viewChild } from '@angular/core';
+import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
 import {
   DataList, Option,
   Popover,
-  PopoverTrigger,
+  PopoverTrigger, PopoverTriggerToggle,
   PortalContent,
   SelectOne
 } from '@fibo-ui/cdk';
-import {LucideAngularModule} from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { FormFieldControl } from '../form/form-field-control';
+import {TextField} from '../form/fields/text-field';
 
 export interface SelectItem {
   label: string;
@@ -15,62 +17,65 @@ export interface SelectItem {
 }
 
 @Component({
-  selector: 'button[fiboSelect]',
+  selector: 'fibo-select',
   imports: [
     PortalContent,
     Popover,
     DataList,
     SelectOne,
     LucideAngularModule,
-    Option
+    Option,
+    FormFieldControl,
+    PopoverTriggerToggle,
+    TextField
   ],
   hostDirectives: [PopoverTrigger],
 
   host: {
-    'type': 'button',
-    'class': 'w-full group fibo-form-field px-3 py-1 relative flex flex-col justify-center text-left',
-    '[attr.aria-disabled]': 'disabled() || null',
-    '[attr.aria-required]': 'required() || null',
-    '[attr.data-error]': 'invalid() && touched() || null',
-    '[disabled]': 'disabled()',
-    '(keydown.enter)': 'trigger.open()',
-    '(keydown.escape)': 'trigger.close()',
-    '(click)': 'trigger.open()',
-    '[style.pointer-events]': "disabled() ? 'none' : 'auto'",
+    'class': 'block',
   },
   template: `
-    @if (label()) {
-      <span class="block text-xs fibo-form-field-label">{{ label() }}</span>
-    }
-    <div class="text-sm" [class.from-field-placeholder]="!selectedLabel()">
-      {{ selectedLabel() || placeholder() }}
-    </div>
-    <div class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary">
-      <lucide-icon name="chevron-down" size="16"></lucide-icon>
-    </div>
 
-    <ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
-      <div fiboPopover    [trigger]="trigger" [matchWidth]="true"
-           fiboDataList   (optionTriggered)="trigger.close()"
-           fiboSelectOne  [(value)]="value"
-           class="fibo-popover py-1 px-1 rounded-md"
-      >
-        <div class="max-h-70 overflow-y-auto">
+    <fibo-form-field-control
+      fiboPopoverTriggerToggle
+      [label]="label()"
+      [required]="required()"
+      [disabled]="disabled()"
+      [invalid]="invalid()"
+      [touched]="touched()"
+      [errors]="errors()"
+      [clearValue]="clearValue()"
+      [(value)]="value"
+      iconEnd="chevron-down"
+    >
+      <div class="text-sm" [class.from-field-placeholder]="!selectedLabel()">
+        {{ selectedLabel() || placeholder() }}
+      </div>
+
+      <div *fiboPortalContent="let trigger"
+           fiboPopover [trigger]="trigger" [matchWidth]="true"
+           fiboDataList (optionTriggered)="trigger.close()"
+           fiboSelectOne [(value)]="value"
+           class="popover-container">
           @for (item of items(); track item.value) {
             <a fiboOption [value]="item.value"
-               class="datalist-item py-1 px-2 rounded-md relative group text-sm">
-              <span class="block truncate font-normal">{{ item.label }}</span>
+               class="datalist-item">
+              {{ item.label }}
             </a>
           }
-        </div>
       </div>
-    </ng-template>
+    </fibo-form-field-control>
+
+    @if (invalid() && touched() && errors().length > 0) {
+      <div class="form-field-error">
+        {{ errors()[0].message }}
+      </div>
+    }
   `
 })
-export class Select implements FormValueControl<string|number|null> {
-  trigger = inject(PopoverTrigger)
+export class Select implements FormValueControl<string | number | null> {
 
-  value = model<string|number|null>(null)
+  value = model<string | number | null>(null)
   required = input(false)
   disabled = input(false)
   touched = input(false)
@@ -81,6 +86,7 @@ export class Select implements FormValueControl<string|number|null> {
   items = input<SelectItem[]>([])
   label = input<string>('')
   placeholder = input<string>('Select')
+  clearValue = input<string | number | null | undefined>(undefined)
 
   selectedLabel = computed(() => {
     const currentValue = this.value();
