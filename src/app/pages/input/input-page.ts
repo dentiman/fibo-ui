@@ -21,9 +21,9 @@ import {UsageDemo} from '../../common/usage-demo';
         <app-usage-demo [codeBlocks]="codeBlocks">
           <div class="mx-auto w-70 space-y-4 p-8">
             <form class="space-y-4">
-              <div fiboFormField class="group fibo-form-field px-3 py-1 flex flex-col justify-center">
-                <label class="block text-xs fibo-form-field-label">Username</label>
-                <input [formField]="userForm.username" type="text" placeholder="Enter username" class="w-full appearance-none outline-none text-sm focus:outline-0" />
+              <div fiboFormField class="text-field-control flex flex-col justify-center">
+                <label class="form-field-label">Username</label>
+                <input [formField]="userForm.username" type="text" placeholder="Enter username" class="text-field-input" />
               </div>
             </form>
           </div>

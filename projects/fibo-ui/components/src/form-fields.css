@@ -1,0 +1,208 @@
+@layer components {
+    .text-field-control {
+        text-align: left;
+        min-height: 2.25rem;
+        /* min-h-9 */
+        cursor: default;
+        border-radius: 0.375rem;
+        /* rounded-md */
+        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        /* shadow-xs */
+        padding: 0.25rem 0.75rem;
+        /* px-3 py-1 */
+
+        outline-width: 1px;
+        outline-style: solid;
+        outline-offset: -1px;
+
+        transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 200ms;
+
+        /* Colors */
+        background-color: oklch(1 0 0);
+        color: oklch(0.145 0 0);
+        outline-color: rgb(0 0 0 / 0.13);
+        /* black/13 */
+
+        /* Focus within */
+        &:focus-within {
+            outline-color: rgb(0 0 0 / 0.18);
+            /* black/18 */
+        }
+
+
+
+        /* Using [data-theme="dark"] as defined in global styles */
+        [data-theme="dark"] & {
+            background-color: oklch(30% 2% 253deg);
+            color: #fafafa;
+            outline-color: rgb(255 255 255 / 0.04);
+        }
+
+        [data-theme="dark"] &:focus-within {
+            outline-color: rgb(255 255 255 / 0.05);
+        }
+
+        /* Error State */
+        &[data-error] {
+            outline-color: rgb(185 28 28 / 0.15);
+            /* red-700/15 */
+        }
+
+        [data-theme="dark"] &[data-error] {
+            outline-color: rgb(252 165 165 / 0.10);
+            /* red-300/10 */
+        }
+
+
+
+        /* Disabled State (aria-disabled) */
+        &[aria-disabled="true"],
+        &:disabled {
+            box-shadow: none;
+            background-color: transparent;
+            color: rgb(75 85 99);
+            /* gray-600 */
+            cursor: not-allowed;
+            outline-color: rgb(0 0 0 / 0.08);
+            /* black/8 */
+
+            background-image: repeating-linear-gradient(45deg, rgb(0 0 0 / 0.01), rgb(0 0 0 / 0.01) 10px, rgb(0 0 0 / 0.03) 10px, rgb(0 0 0 / 0.03) 20px);
+        }
+
+        [data-theme="dark"] &[aria-disabled="true"],
+        [data-theme="dark"] &:disabled {
+            color: rgb(82 82 82);
+            /* neutral-600 */
+            outline-color: rgb(255 255 255 / 0.04);
+            /* white/4 */
+            background-image: repeating-linear-gradient(45deg, rgb(255 255 255 / 0.01), rgb(255 255 255 / 0.01) 10px, rgb(255 255 255 / 0.03) 10px, rgb(255 255 255 / 0.03) 20px);
+        }
+
+
+    }
+
+    .text-field-input {
+        font-size: 0.875rem;
+        /* text-sm */
+        line-height: 1.25rem;
+        background-color: transparent;
+        /* bg-transparent */
+        outline: none;
+        /* outline-none */
+        border: none;
+        /* border-none */
+        padding: 0;
+        /* p-0 */
+        width: 100%;
+        /* w-full */
+
+        transition-property: color;
+        /* transition-colors */
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 200ms;
+
+        &::placeholder {
+            transition-property: color;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 200ms;
+            color: rgb(156 163 175);
+            /* text-gray-400 */
+        }
+
+        [data-theme="dark"] &::placeholder {
+            color: rgb(115 115 115);
+            /* neutral-500 */
+        }
+
+        /* Error Styles (input specific) */
+        &[data-error]::placeholder {
+            color: oklch(0.62 0.192 20);
+        }
+
+        [data-theme="dark"] &[data-error]::placeholder {
+            color: rgb(248 113 113);
+            /* red-400 */
+        }
+
+
+
+        /* Handling the group-aria-disabled equivalent for input's text */
+        /* Currently in text-field.ts: group-aria-disabled:text-gray-400 */
+        &:disabled {
+            color: rgb(156 163 175);
+            /* text-gray-400 */
+        }
+
+        [data-theme="dark"] &:disabled {
+            color: rgb(115 115 115);
+            /* neutral-500 */
+        }
+
+        &:disabled::placeholder {
+            color: rgb(156 163 175);
+            /* text-gray-400 */
+        }
+
+        [data-theme="dark"] &:disabled::placeholder {
+            color: rgb(115 115 115);
+            /* neutral-500 */
+        }
+    }
+
+    .form-field-label {
+        font-size: 0.75rem;
+        /* text-xs */
+        line-height: 1rem;
+        display: block;
+        /* block */
+
+        transition-property: color;
+        /* transition-colors */
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 200ms;
+        /* duration-200 */
+
+        color: rgb(75 85 99);
+        /* text-gray-600 */
+
+        [data-theme="dark"] & {
+            color: rgb(156 163 175);
+            /* text-gray-400 */
+        }
+    }
+
+    /* Contextual styles when inside .text-field-control */
+
+    /* Focus Within */
+    .text-field-control:focus-within .form-field-label {
+        color: rgb(59 130 246);
+        /* text-blue-500 */
+    }
+
+    [data-theme="dark"] .text-field-control:focus-within .form-field-label {
+        color: oklch(0.71 0.11 240);
+    }
+
+    /* Disabled (aria-disabled) */
+    .text-field-control[aria-disabled="true"] .form-field-label {
+        color: rgb(156 163 175);
+        /* text-gray-400 */
+    }
+
+    [data-theme="dark"] .text-field-control[aria-disabled="true"] .form-field-label {
+        color: rgb(115 115 115);
+        /* text-neutral-500 */
+    }
+
+    /* Error state */
+    .text-field-control[data-error] .form-field-label {
+        color: oklch(0.62 0.192 20);
+    }
+
+    [data-theme="dark"] .text-field-control[data-error] .form-field-label {
+        color: rgb(248 113 113);
+        /* text-red-400 */
+    }
+}

@@ -9,6 +9,7 @@
 /* Option 2: Import only specific parts (for more control) */
 @import "../projects/fibo-ui/components/src/theme.css" layer(theme);
 @import "../projects/fibo-ui/components/src/buttons.css";
+@import "../projects/fibo-ui/components/src/form-fields.css";
 @import "../projects/fibo-ui/components/src/components.css" layer(components);
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));

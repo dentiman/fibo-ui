@@ -1,7 +1,7 @@
-import {Component, computed} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import { DataList, SelectOne} from '@fibo-ui/cdk';
-import { SideMenu} from '@fibo-ui/components';
+import { Component, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DataList, SelectOne } from '@fibo-ui/cdk';
+import { SideMenu } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-root-nav',
@@ -105,6 +105,10 @@ export class RootNavComponent {
           {
             label: 'Form Example',
             url: '/form-example',
+          },
+          {
+            label: 'Components Fields Form',
+            url: '/components-fields-form',
           },
           {
             label: 'Loading Spin',

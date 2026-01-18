@@ -1,12 +1,11 @@
-import {Component, input, inject, model} from '@angular/core';
-import {FormValueControl, ValidationError, WithOptionalField} from '@angular/forms/signals';
-import {PopoverTrigger} from '../../popover/popover-trigger';
+import { Directive, input, inject, model } from '@angular/core';
+import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
+import { PopoverTrigger } from '../../popover/popover-trigger';
 
-@Component({
+@Directive({
   selector: 'button[fiboFormFieldTrigger]',
   hostDirectives: [PopoverTrigger],
   standalone: true,
-  template: '<ng-content />',
   host: {
     'type': 'button',
     '[attr.aria-disabled]': 'disabled() || null',
@@ -20,6 +19,7 @@ import {PopoverTrigger} from '../../popover/popover-trigger';
   }
 })
 export class FormFieldTrigger implements FormValueControl<any> {
+
   popoverTrigger = inject(PopoverTrigger);
   value = model<unknown>()
   required = input(false)

@@ -35,6 +35,8 @@ export * from './lib/datepicker/calendar/calendar-date-range-selection-model';
 
 // Form components and interfaces
 export * from './lib/select/select';
+export * from './lib/form/fields/text-field';
+export * from './lib/form/form-field-ui-control.directive';
 
 
 export * from './lib/menu/menu-item.type';
