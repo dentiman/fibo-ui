@@ -1,8 +1,7 @@
 import { Component, signal, ChangeDetectionStrategy, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormField, form, required, disabled } from '@angular/forms/signals';
-import { TextField, Select, MultiSelect } from '@fibo-ui/components';
-import { FormFieldDirective } from '@fibo-ui/cdk';
+import {TextField, Select, MultiSelect, DatePickerField} from '@fibo-ui/components';
 import { citiesChoices } from '../../common/form-data-example';
 
 interface UserProfile {
@@ -12,6 +11,7 @@ interface UserProfile {
   phone: string;
   roles: string[] | null;
   city: string | null;
+  birthday: string;
 }
 
 @Component({
@@ -22,7 +22,8 @@ interface UserProfile {
     TextField,
     Select,
     MultiSelect,
-    FormField
+    FormField,
+    DatePickerField
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -47,7 +48,6 @@ interface UserProfile {
 
         <fibo-text-field
           iconStart="chevron-right"
-          label="Email"
           placeholder="example@mail.com"
           [formField]="userProfileForm.email">
         </fibo-text-field>
@@ -73,6 +73,12 @@ interface UserProfile {
                 [formField]="userProfileForm.city">
         </fibo-select>
 
+        <fibo-datepicker
+                label="Birthday"
+                placeholder="YYYY-MM-DD"
+                [formField]="userProfileForm.birthday">
+        </fibo-datepicker>
+
         <button type="submit" class="btn btn-primary" [disabled]="!userProfileForm().valid()">Submit</button>
       </form>
 
@@ -95,6 +101,7 @@ export class ComponentsFieldsFormComponent {
     phone: '',
     roles: [],
     city: null,
+    birthday: '',
   });
 
   roles = [
@@ -112,6 +119,7 @@ export class ComponentsFieldsFormComponent {
     required(patch.phone, { message: 'Phone is required' });
     required(patch.roles, { message: 'Roles are required' });
     required(patch.city, { message: 'City is required' });
+    required(patch.birthday, { message: 'Birthday is required' });
     disabled(patch.phone)
   })
 

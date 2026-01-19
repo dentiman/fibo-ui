@@ -1,8 +1,8 @@
 ```html
 
 <button type="button" fiboFormFieldTrigger [field]="userForm.skills"
-        class="w-full group fibo-form-field px-3 py-1 relative block text-left">
-    <label class="block text-xs fibo-form-field-label">Skills</label>
+        class="w-full group form-field-control relative text-left">
+    <label class="form-field-label">Skills</label>
     <span class="w-full flex flex-wrap gap-x-1 gap-y-1">
     @for (value of user().skills; track value) {
       <div class="flex items-center gap-1 btn btn-sm">

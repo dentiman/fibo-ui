@@ -38,8 +38,8 @@ import { UsageDemo } from '../../common/usage-demo';
             <form class="space-y-4">
 
               <div fiboFormField fiboPopoverTriggerClick
-                   class="group  fibo-form-field  px-3 py-1 flex flex-col justify-center relative">
-                <label class="block text-xs fibo-form-field-label">Birth Date</label>
+                   class="group form-field-control relative">
+                <label class="form-field-label">Birth Date</label>
                 <input
                   type="text"
                   [formField]="userForm.birthDate"
@@ -69,8 +69,8 @@ import { UsageDemo } from '../../common/usage-demo';
           <div class="mx-auto w-70 space-y-4 p-8">
             <form class="space-y-4">
               <div fiboFormField fiboPopoverTriggerClick
-                   class="group content-center fibo-form-field px-3 py-1 relative">
-                <label class="block text-xs fibo-form-field-label">Date Range</label>
+                   class="group content-center form-field-control relative">
+                <label class="form-field-label">Date Range</label>
                 <div class="flex items-center gap-1">
                   <input
                     type="text"

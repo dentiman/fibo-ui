@@ -1,8 +1,8 @@
-import {Component, ChangeDetectionStrategy, signal} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormField, form, required} from '@angular/forms/signals';
-import {FormFieldDirective} from '@fibo-ui/cdk';
-import {UsageDemo} from '../../common/usage-demo';
+import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormField, form, required } from '@angular/forms/signals';
+import { FormFieldDirective } from '@fibo-ui/cdk';
+import { UsageDemo } from '../../common/usage-demo';
 
 @Component({
   selector: 'app-input-page',
@@ -21,7 +21,7 @@ import {UsageDemo} from '../../common/usage-demo';
         <app-usage-demo [codeBlocks]="codeBlocks">
           <div class="mx-auto w-70 space-y-4 p-8">
             <form class="space-y-4">
-              <div fiboFormField class="text-field-control flex flex-col justify-center">
+              <div fiboFormField class="form-field-control">
                 <label class="form-field-label">Username</label>
                 <input [formField]="userForm.username" type="text" placeholder="Enter username" class="text-field-input" />
               </div>

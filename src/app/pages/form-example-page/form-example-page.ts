@@ -60,15 +60,15 @@ interface UserProfile {
       <form class="space-y-5">
         <!-- Username and First Name -->
         <div class="flex gap-3">
-          <div fiboFormField class="group fibo-form-field px-3 py-1 flex flex-col justify-center">
-            <label class="block text-xs fibo-form-field-label">Name</label>
+          <div fiboFormField class="group form-field-control">
+            <label class="form-field-label">Name</label>
             <input [formField]="userProfileForm.username" type="text" placeholder="Name"
                    class="w-full appearance-none outline-none text-sm focus:outline-0"/>
           </div>
 
           <div fiboFormField
-               class="group content-center fibo-form-field px-3 py-1 flex flex-col justify-center relative ">
-            <label for="name" class="block text-xs fibo-form-field-label">First Name</label>
+               class="group content-center form-field-control relative ">
+            <label for="name" class="form-field-label">First Name</label>
             <input [formField]="userProfileForm.firstName" type="text" placeholder="Name"
                    class="w-full appearance-none outline-none text-sm   focus:outline-0"/>
             <div class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 hidden
@@ -82,9 +82,9 @@ interface UserProfile {
         </div>
 
         <button type="button" fiboFormField fiboPopoverTriggerClick
-                class="w-full group fibo-form-field px-3 py-1 flex flex-col justify-center relative  text-left">
+                class="w-full group form-field-control relative  text-left">
           <input type="hidden" [formField]="userProfileForm.userRole">
-          <span class="block text-xs fibo-form-field-label">City</span>
+          <span class="form-field-label">City</span>
           @let city = userProfile().city;
           <div class="text-sm" [class.from-field-placeholder]="!city">{{ city || 'Select City' }}</div>
           <ng-template fiboPortalContent let-trigger>
@@ -108,8 +108,8 @@ interface UserProfile {
 
 
         <button type="button" fiboFormFieldTrigger [formField]="userProfileForm.userRole"
-                class="w-full group fibo-form-field px-3 py-1 flex flex-col justify-center relative text-left">
-          <label class="block text-xs fibo-form-field-label">User Role</label>
+                class="w-full group form-field-control relative text-left">
+          <label class="form-field-label">User Role</label>
           @let role = userProfile().userRole;
           <div class="text-sm" [class.from-field-placeholder]="!role">{{ role || 'Select Role' }}</div>
           <div class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2">
@@ -131,38 +131,38 @@ interface UserProfile {
         </button>
 
         <!-- Email -->
-        <div fiboFormField class="group fibo-form-field px-3 py-1 flex flex-col justify-center">
-          <label class="block text-xs fibo-form-field-label">Email</label>
+        <div fiboFormField class="group form-field-control">
+          <label class="form-field-label">Email</label>
           <input [formField]="userProfileForm.email" type="email" placeholder="Enter email address"
                  class="w-full appearance-none outline-none text-sm focus:outline-0"/>
         </div>
 
         <!-- Password -->
-        <div fiboFormField class="group fibo-form-field px-3 py-1 flex flex-col justify-center">
-          <label class="block text-xs fibo-form-field-label">Password</label>
+        <div fiboFormField class="group form-field-control">
+          <label class="form-field-label">Password</label>
           <input [formField]="userProfileForm.password" type="password" placeholder="Enter password"
                  class="w-full appearance-none outline-none text-sm focus:outline-0"/>
         </div>
 
         <!-- Confirm Password -->
-        <div fiboFormField class="group fibo-form-field px-3 py-1 flex flex-col justify-center">
-          <label class="block text-xs fibo-form-field-label">Confirm Password</label>
+        <div fiboFormField class="group form-field-control">
+          <label class="form-field-label">Confirm Password</label>
           <input [formField]="userProfileForm.confirmPassword" type="password" placeholder="Confirm your password"
                  class="w-full appearance-none outline-none text-sm focus:outline-0"/>
         </div>
 
 
         <!-- Age -->
-        <div fiboFormField class="group fibo-form-field px-3 py-1 flex flex-col justify-center">
-          <label class="block text-xs fibo-form-field-label">Age</label>
+        <div fiboFormField class="group form-field-control">
+          <label class="form-field-label">Age</label>
           <input [formField]="userProfileForm.age" type="number" placeholder="Enter your age"
                  class="w-full appearance-none outline-none text-sm focus:outline-0"/>
         </div>
 
         <!-- Birth Date -->
         <div fiboFormField fiboPopoverTriggerClick
-             class="group fibo-form-field px-3 py-1 flex flex-col justify-center relative">
-          <label class="block text-xs fibo-form-field-label">Birth Date</label>
+             class="group form-field-control relative">
+          <label class="form-field-label">Birth Date</label>
           <input
             type="text"
             [formField]="userProfileForm.birthDate"
@@ -179,8 +179,8 @@ interface UserProfile {
         </div>
 
         <!-- Website -->
-        <div fiboFormField class="group fibo-form-field px-3 py-1 flex flex-col justify-center">
-          <label class="block text-xs fibo-form-field-label">Website</label>
+        <div fiboFormField class="group form-field-control">
+          <label class="form-field-label">Website</label>
           <input [formField]="userProfileForm.website" type="url" placeholder="Enter website URL"
                  class="w-full appearance-none outline-none text-sm focus:outline-0"/>
         </div>
@@ -188,8 +188,8 @@ interface UserProfile {
 
         <!-- Skills (multiple) -->
         <button type="button" fiboFormFieldTrigger [formField]="userProfileForm.skills"
-                class="w-full group fibo-form-field px-3 py-1 flex flex-col justify-center relative text-left">
-          <label class="block text-xs fibo-form-field-label">Skills</label>
+                class="w-full group form-field-control relative text-left">
+          <label class="form-field-label">Skills</label>
           <span class="w-full flex flex-wrap gap-x-1 gap-y-1">
             @for (value of userProfile().skills; track value) {
               <div class="flex items-center gap-1 btn btn-sm">
@@ -230,8 +230,8 @@ interface UserProfile {
 
 
         <!-- Phone -->
-        <div fiboFormField class="group fibo-form-field px-3 py-1 flex flex-col justify-center">
-          <label class="block text-xs fibo-form-field-label">Phone Number</label>
+        <div fiboFormField class="group form-field-control">
+          <label class="form-field-label">Phone Number</label>
           <input [formField]="userProfileForm.phone" type="tel" placeholder="Enter phone number"
                  class="w-full appearance-none outline-none text-sm focus:outline-0"/>
         </div>

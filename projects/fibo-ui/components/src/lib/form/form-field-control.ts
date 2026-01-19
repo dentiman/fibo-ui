@@ -18,9 +18,9 @@ import { LucideAngularModule } from 'lucide-angular';
     @if (iconStart()) {
       <lucide-icon [name]="iconStart()" size="16" class="form-field-icon shrink-0"></lucide-icon>
     }
-    <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
+    <div class="flex flex-col justify-center flex-1 min-w-0 gap-0 ">
       @if (label()) {
-        <label [for]="id()" class="form-field-label">{{ label() }}</label>
+        <label [for]="id()" class="form-field-label mt-1">{{ label() }}</label>
       }
       <ng-content></ng-content>
     </div>

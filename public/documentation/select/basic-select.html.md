@@ -1,8 +1,8 @@
 ```html
 
 <button type="button" fiboFormFieldTrigger [field]="userForm.role"
-        class="w-full group fibo-form-field px-3 py-1 flex flex-col justify-center relative text-left">
-    <label class="block text-xs fibo-form-field-label">User Role</label>
+        class="w-full group form-field-control relative text-left">
+    <label class="form-field-label">User Role</label>
     @let role = user().role;
     <div class="text-sm" [class.from-field-placeholder]="!role">{{ role || 'Select Role' }}</div>
     <div class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2">

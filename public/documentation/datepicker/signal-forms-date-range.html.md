@@ -1,8 +1,8 @@
 ```html
 
 <form class="space-y-4">
-    <div fiboFormField fiboPopoverTriggerClick class="group content-center fibo-form-field px-3 py-1 relative">
-        <label class="block text-xs fibo-form-field-label">Date Range</label>
+    <div fiboFormField fiboPopoverTriggerClick class="group form-field-control relative">
+        <label class="form-field-label">Date Range</label>
         <div class="flex items-center gap-1">
             <input
                     type="text"

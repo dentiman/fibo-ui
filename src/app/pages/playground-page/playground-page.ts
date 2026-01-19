@@ -49,8 +49,8 @@ import { Checkbox } from '@fibo-ui/components';
               <div fiboFormField
                    fiboPopoverTriggerClick
                    #userTrigger="PopoverTrigger"
-                   class="group content-center fibo-form-field px-3 py-1 rounded-full inline-block relative">
-                  <span class="block text-xs fibo-form-field-label">User:</span>
+                   class="group content-center form-field-control rounded-full inline-block relative">
+                  <span class="form-field-label">User:</span>
                   <span class="text-sm text-nowrap">{{ getSelectedUserLabel() || 'Any' }}</span>
                   <lucide-icon name="chevron-down" size="16"
                                class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
@@ -72,8 +72,8 @@ import { Checkbox } from '@fibo-ui/components';
 
               <!-- Search Input -->
               <div fiboFormField
-                   class="group content-center fibo-form-field px-3 py-1 rounded-full inline-block w-60">
-                  <span class="block text-xs fibo-form-field-label">User Search:</span>
+                   class="group content-center form-field-control rounded-full inline-block w-60">
+                  <span class="form-field-label">User Search:</span>
                   <input
                           fiboInput
                           type="text"
@@ -86,8 +86,8 @@ import { Checkbox } from '@fibo-ui/components';
               <div fiboFormField
                    fiboPopoverTriggerClick
                    #dateTrigger="PopoverTrigger"
-                   class="group content-center fibo-form-field px-3 py-1 rounded-full inline-block w-46 relative">
-                  <span class="block text-xs fibo-form-field-label">Date:</span>
+                   class="group content-center form-field-control rounded-full inline-block w-46 relative">
+                  <span class="form-field-label">Date:</span>
                   <input
                           fiboInput
                           type="text"
@@ -109,8 +109,8 @@ import { Checkbox } from '@fibo-ui/components';
               <div fiboFormField
                    fiboPopoverTriggerClick
                    #usersTrigger="PopoverTrigger"
-                   class="group content-center fibo-form-field px-3 py-1 rounded-full inline-block relative min-w-40">
-                  <span class="block text-xs fibo-form-field-label">Users:</span>
+                   class="group content-center form-field-control rounded-full inline-block relative min-w-40">
+                  <span class="form-field-label">Users:</span>
                   <span class="w-full flex flex-wrap gap-x-1 gap-y-1">
             @for (value of selectedUsers(); track value) {
                 <div class="flex items-center gap-1 btn btn-sm">
@@ -153,7 +153,7 @@ import { Checkbox } from '@fibo-ui/components';
           <div class="flex flex-row justify-start space-x-1">
               <!-- Text Input -->
               <div fiboFormField
-                   class="group content-center fibo-form-field px-3 py-1 w-60">
+                   class="group content-center form-field-control w-60">
                   <input
                           fiboInput
                           type="text"
@@ -165,7 +165,7 @@ import { Checkbox } from '@fibo-ui/components';
 
               <!-- Email Input -->
               <div fiboFormField
-                   class="group content-center fibo-form-field px-3 py-1 rounded-full inline-block w-60">
+                   class="group content-center form-field-control rounded-full inline-block w-60">
                   <input
                           fiboInput
                           type="email"
@@ -176,7 +176,7 @@ import { Checkbox } from '@fibo-ui/components';
 
               <!-- Age Input -->
               <div fiboFormField
-                   class="group content-center fibo-form-field px-3 py-1 rounded-full inline-block w-60">
+                   class="group content-center form-field-control rounded-full inline-block w-60">
                   <input
                           fiboInput
                           type="number"
@@ -193,8 +193,8 @@ import { Checkbox } from '@fibo-ui/components';
                   <div fiboFormField
                        fiboPopoverTriggerClick
                        #statusTrigger="PopoverTrigger"
-                       class="group content-center fibo-form-field px-3 py-1 w-60 relative">
-                      <span class="block text-xs fibo-form-field-label">Status:</span>
+                       class="group content-center form-field-control w-60 relative">
+                      <span class="form-field-label">Status:</span>
                       <span class="text-sm">{{ getStatusLabel(statusSelect()) || 'Select status' }}</span>
                       <lucide-icon name="chevron-down" size="16"
                                    class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
@@ -218,8 +218,8 @@ import { Checkbox } from '@fibo-ui/components';
               <div fiboFormField
                    fiboPopoverTriggerClick
                    #categoryTrigger="PopoverTrigger"
-                   class="group content-center fibo-form-field px-3 py-1 rounded-full inline-block w-60 relative">
-                  <span class="block text-xs fibo-form-field-label">Category:</span>
+                   class="group content-center form-field-control rounded-full inline-block w-60 relative">
+                  <span class="form-field-label">Category:</span>
                   <span class="text-sm">{{ getCategoryLabel(categorySelect()) || 'Select category' }}</span>
                   <lucide-icon name="chevron-down" size="16"
                                class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>

@@ -29,16 +29,16 @@ export * from './lib/notification/notification';
 export * from './lib/notification/notifier';
 
 
-export * from './lib/datepicker/calendar/calendar';
-export * from './lib/datepicker/calendar/calendar-date-selection-model';
-export * from './lib/datepicker/calendar/calendar-date-range-selection-model';
+export * from './lib/calendar/calendar';
+export * from './lib/calendar/calendar-date-selection-model';
+export * from './lib/calendar/calendar-date-range-selection-model';
 
 // Form components and interfaces
 export * from './lib/select/select';
 export * from './lib/select/multi-select';
 export * from './lib/form/fields/text-field';
+export * from './lib/form/fields/datepicker-field';
 export * from './lib/form/form-field-control';
-export * from './lib/form/form-field-ui-control.directive';
 
 
 export * from './lib/menu/menu-item.type';
