@@ -1,3 +1,5 @@
+import type {MenuItemType} from '@fibo-ui/components';
+
 export  const citiesChoices = [
     { value: 'Louisville', label: 'Louisville' },
     { value: 'Memphis', label: 'Memphis' },
@@ -68,4 +70,119 @@ export const usersChoices: User[] = [
   { id: 22, email: 'jessica@example.com', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face', value: 22, label: 'Jessica Ramirez', name: 'Jessica Ramirez', phoneNumber: '555-0122', speciality: 'Product', isDisabled: false },
   { id: 23, email: 'anthony@example.com', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face', value: 23, label: 'Anthony Torres', name: 'Anthony Torres', phoneNumber: '555-0123', speciality: 'QA', isDisabled: false },
   { id: 24, email: 'michael@example.com', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face', value: 24, label: 'Michael Flores', name: 'Michael Flores', phoneNumber: '555-0124', speciality: 'Security', isDisabled: false }
+];
+
+export const developerSkillsMenuItems: MenuItemType[] = [
+  {
+    label: 'Developer Skills',
+    icon: 'code',
+    children: [
+      {
+        label: 'Frontend',
+        icon: 'layout-template',
+        children: [
+          {
+            label: 'Angular',
+            icon: 'component',
+            children: [
+              { label: 'Standalone Components', url: '/menu', icon: 'file' },
+              { label: 'Signals', url: '/menu', icon: 'settings', badge: 'New' },
+              { label: 'Routing', url: '/menu', icon: 'panel-right' },
+            ],
+          },
+          {
+            label: 'UX & UI',
+            icon: 'file-text',
+            children: [
+              { label: 'Accessibility', url: '/menu', icon: 'check' },
+              { label: 'Design Systems', url: '/menu', icon: 'folder' },
+              { label: 'Performance', url: '/menu', icon: 'search' },
+            ],
+          },
+        ],
+      },
+      {
+        label: 'Backend',
+        icon: 'server',
+        children: [
+          {
+            label: 'API Design',
+            icon: 'panel-right',
+            children: [
+              { label: 'REST', url: '/menu', icon: 'list' },
+              { label: 'GraphQL', url: '/menu', icon: 'search' },
+              { label: 'Versioning', url: '/menu', icon: 'chevrons-right' },
+            ],
+          },
+          {
+            label: 'Auth & Security',
+            icon: 'shield-check',
+            children: [
+              { label: 'OAuth2 / OIDC', url: '/menu', icon: 'user-check' },
+              { label: 'JWT', url: '/menu', icon: 'lock' },
+              { label: 'RBAC', url: '/menu', icon: 'user' },
+            ],
+          },
+          {
+            label: 'Databases',
+            icon: 'database',
+            children: [
+              { label: 'PostgreSQL', url: '/menu', icon: 'database' },
+              { label: 'Redis', url: '/menu', icon: 'database' },
+              { label: 'MongoDB', url: '/menu', icon: 'database', disabled: true, badge: 'Soon' },
+            ],
+          },
+        ],
+      },
+      {
+        label: 'DevOps',
+        icon: 'cloud',
+        children: [
+          {
+            label: 'Containers',
+            icon: 'container',
+            children: [
+              { label: 'Docker', url: '/menu', icon: 'terminal' },
+              { label: 'Compose', url: '/menu', icon: 'terminal' },
+            ],
+          },
+          {
+            label: 'CI / CD',
+            icon: 'git-branch',
+            children: [
+              { label: 'Pipelines', url: '/menu', icon: 'git-branch' },
+              { label: 'Release Automation', url: '/menu', icon: 'settings' },
+            ],
+          },
+          {
+            label: 'Observability',
+            icon: 'search',
+            children: [
+              { label: 'Logs', url: '/menu', icon: 'file-text' },
+              { label: 'Metrics', url: '/menu', icon: 'circle' },
+              { label: 'Alerts', url: '/menu', icon: 'bell' },
+            ],
+          },
+        ],
+      },
+      {
+        label: 'Quality',
+        icon: 'bug',
+        children: [
+          { label: 'Unit Testing', url: '/menu', icon: 'check' },
+          { label: 'E2E Testing', url: '/menu', icon: 'search' },
+          { label: 'Code Review', url: '/menu', icon: 'message-square' },
+        ],
+      },
+      {
+        label: 'Tooling',
+        icon: 'wrench',
+        children: [
+          { label: 'CLI', url: '/menu', icon: 'terminal' },
+          { label: 'Linting', url: '/menu', icon: 'check' },
+          { label: 'Formatting', url: '/menu', icon: 'file-text' },
+        ],
+      },
+    ],
+  },
 ];

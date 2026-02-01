@@ -43,6 +43,7 @@ export class Popover implements OnInit, OnDestroy {
     }
   }
   onFocusOut(event: FocusEvent) {
+    console.log(event)
     const relatedTarget = event.relatedTarget as Node;
     if(!relatedTarget) return;
     if (this.trigger().element.contains(relatedTarget) || this.element.nativeElement.contains(relatedTarget)) {

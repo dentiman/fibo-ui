@@ -4,11 +4,10 @@ import {
   PopoverTriggerToggle, PortalContent,
   SelectOne
 } from '@fibo-ui/cdk';
-import { MenuItem,
-  PopoverMenu,
-} from '@fibo-ui/components';
+import {MenuItem, PopoverMenu, type MenuItemType} from '@fibo-ui/components';
 import {RouterLink} from '@angular/router';
 import {UsageDemo} from '../../common/usage-demo';
+import {developerSkillsMenuItems} from '../../common/form-data-example';
 
 @Component({
   imports: [
@@ -48,88 +47,30 @@ export class MenuPageComponent {
       label: 'Fruits',
       icon: 'apple',
       children: [
-        { label: 'Apple', value: 'apple', icon: 'circle' },
-        { label: 'Banana', value: 'banana', icon: 'circle' },
-        { label: 'Orange', value: 'orange', icon: 'circle' },
+        { label: 'Apple', value: 'apple' },
+        { label: 'Banana', value: 'banana' },
+        { label: 'Orange', value: 'orange' },
       ],
     },
     {
       label: 'Vegetables',
       icon: 'leaf',
       children: [
-        { label: 'Carrot', value: 'carrot', icon: 'circle' },
-        { label: 'Broccoli', value: 'broccoli', icon: 'circle' },
-        { label: 'Tomato', value: 'tomato', icon: 'circle' },
+        { label: 'Carrot', value: 'carrot' },
+        { label: 'Broccoli', value: 'broccoli' },
+        { label: 'Tomato', value: 'tomato' },
       ],
     },
-    { label: 'Water', value: 'water', icon: 'droplet' },
-    { label: 'Juice', value: 'juice', icon: 'cup-soda' },
+    { label: 'Water', value: 'water' },
+    { label: 'Juice', value: 'juice' },
   ]);
 
   onTriggerClick() {
     alert('Menu trigger clicked!');
   }
 
-  items = computed(() => {
-    return [
-      {
-        label: 'Components',
-        icon: 'folder',
-        children: [
-          {
-            label: 'Select',
-            icon: 'folder',
-            children: [
-              { label: 'Single', url: '/menu', icon: 'check' },
-              { label: 'Multiple', url: '/menu', icon: 'list' },
-              { label: 'Autocomplete', url: '/menu', icon: 'search' },
-            ],
-          },
-          {
-            label: 'Popovers',
-            icon: 'folder',
-            children: [
-              { label: 'Menu', url: '/menu', icon: 'panel-right' },
-              { label: 'Dialog', url: '/menu', icon: 'message-square' },
-              { label: 'Confirmation', url: '/menu', icon: 'shield-check' },
-            ],
-          },
-          {
-            label: 'Inputs',
-            icon: 'folder',
-            children: [
-              {
-                label: 'Text',
-                icon: 'file-text',
-                children: [
-                  { label: 'Basic', url: '/menu', icon: 'dot' },
-                  { label: 'With Icon', url: '/menu', icon: 'dot' },
-                ],
-              },
-              {
-                label: 'Datepicker',
-                icon: 'calendar',
-                children: [
-                  { label: 'Single', url: '/menu', icon: 'dot' },
-                  { label: 'Range', url: '/menu', icon: 'dot' },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      { label: 'Alert on Click', callback: this.onTriggerClick, icon: 'bell' },
-      {
-        label: 'Settings',
-        icon: 'settings',
-        children: [
-          { label: 'Profile', url: '/menu', icon: 'user' },
-          { label: 'Security', url: '/menu', icon: 'lock' },
-        ],
-      },
-    ];
-  });
+  items = computed((): MenuItemType[] => [
+    ...developerSkillsMenuItems,
+  ]);
 }
-
-
 

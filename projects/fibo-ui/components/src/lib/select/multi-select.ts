@@ -40,7 +40,7 @@ import { SelectItem } from './select';
       [errors]="errors()"
       [(value)]="value"
     >
-      <div class="w-full flex flex-wrap gap-x-1 gap-y-1 py-0.5 -mx-1">
+      <div class="w-full flex flex-wrap gap-x-1 gap-y-1  -mx-1">
         @for (item of selectedItems(); track item.value) {
           <div class="flex items-center gap-1 btn btn-sm h-6 px-1.5 min-w-0 ">
             <span class="truncate flex-1 text-xs font-medium">{{ item.label }}</span>
