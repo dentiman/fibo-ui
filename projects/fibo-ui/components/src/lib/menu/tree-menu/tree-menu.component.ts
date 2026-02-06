@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit, TemplateRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NavigationEnd, Router, RouterLink} from '@angular/router';
-import {MenuItemType} from './menu-item.type';
+import {MenuItemType} from '../menu-item.type';
 import {Option, SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {LucideAngularModule} from 'lucide-angular';

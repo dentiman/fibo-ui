@@ -4,7 +4,7 @@ import {Popover, DataList, Option, PortalContent} from '@fibo-ui/cdk';
 import {RouterLink} from '@angular/router';
 import {PopoverSubmenuTrigger} from './popover-submenu-trigger';
 import {MenuPanel} from './menu-panel';
-import {MenuItemType} from './menu-item.type';
+import {MenuItemType} from '../menu-item.type';
 import {LucideAngularModule} from 'lucide-angular';
 
 
