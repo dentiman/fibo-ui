@@ -6,7 +6,7 @@ import {ChangeDetectionStrategy} from '@angular/core';
 import {DataList, SelectOne} from '@fibo-ui/cdk';
 
 @Component({
-  selector: 'app-side-menu-page',
+  selector: 'app-tree-menu-page',
   standalone: true,
   imports: [CommonModule, TreeMenu, DataList, SelectOne],
   template: `
@@ -15,7 +15,7 @@ import {DataList, SelectOne} from '@fibo-ui/cdk';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SideMenuPage {
+export class TreeMenuPage {
   menuItems = input<MenuItemType[]>([
     // Title item
     {
@@ -124,8 +124,8 @@ export class SideMenuPage {
       icon: 'folder'
     },
     {
-      label: 'Side Menu',
-      url: '/side-menu',
+      label: 'Tree Menu',
+      url: '/tree-menu',
       icon: 'folder'
     },
     {

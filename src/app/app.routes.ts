@@ -15,7 +15,7 @@ import { ComponentsFieldsFormComponent } from './pages/components-fields-form/co
 import { CheckboxPageComponent } from './pages/checkbox/checkbox-page';
 import { LoadingSpinPageComponent } from './pages/loading-spin/loading-spin-page';
 import { PlaygroundPageComponent } from './pages/playground-page/playground-page';
-import { SideMenuPage } from './pages/side-menu/side-menu-page';
+import { TreeMenuPage } from './pages/tree-menu/tree-menu-page';
 import { ThemeDemoComponent } from './pages/theme-demo/theme-demo';
 import { ListboxPageComponent } from './pages/listbox/listbox-page';
 import { ButtonDemoPageComponent } from './pages/button-demo/button-demo-page';
@@ -89,8 +89,8 @@ export const routes: Routes = [
         component: PlaygroundPageComponent
       },
       {
-        path: 'side-menu',
-        component: SideMenuPage
+        path: 'tree-menu',
+        component: TreeMenuPage
       },
       {
         path: 'theme-demo',

@@ -123,8 +123,8 @@ export class RootNavComponent {
             url: '/popup-playground',
           },
           {
-            label: 'Side Menu',
-            url: '/side-menu',
+            label: 'Tree Menu',
+            url: '/tree-menu',
           },
           {
             label: 'Theme Demo',
