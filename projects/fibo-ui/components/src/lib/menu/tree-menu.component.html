@@ -1,14 +1,13 @@
 <ul role="list" class="space-y-0">
   @let showChain= removeChainFromLevel() === null || removeChainFromLevel() !== level();
-  @let textIndentPx = level() * 16;
+  @let textIndentPx = level() * 22;
   @let totalItems= items().length;
-  @let canCollapse = collapsable();
   @for (item of items(); track idx; let idx = $index) {
 
     @if(item.disabled) {
       <li class="relative flex gap-x-1">
         @if (showChain) {
-          <fibo-side-menu-chain
+          <fibo-tree-menu-chain
             [index]="$index"
             [isGroup]="true"
             [style.--fibo-chain-offset]="textIndentPx + 'px'"
@@ -24,88 +23,50 @@
         </div>
       </li>
     } @else if (item.children) {
-
-      @if(canCollapse) {
-        <li class="relative"
-            fiboCollapseSubmenuItem [items]="item.children"
-            #collapseSubmenuItem="fiboCollapseSubmenuItem"
-            #dataListItem="Option"
-        >
-          <div class="flex gap-x-1">
-            @if (showChain) {
-              <fibo-side-menu-chain
-                (click)="collapseSubmenuItem.toggle()"
-                [index]="$index"
-                [isGroup]="true"
-                [isActive]="dataListItem.isActive()"
-                [collapsable]="true"
-                [collapsed]="collapseSubmenuItem.expanded()"
-                [style.--fibo-chain-offset]="textIndentPx + 'px'"
-                [totalItems]="totalItems"/>
-            } @else {
-              <div class="flex-none size-6"></div>
-            }
-
-            <div class="flex flex-col flex-auto py-0.5">
-              <button class="text-sm cursor-pointer text-left text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-400"
-                      (click)="collapseSubmenuItem.toggle()">
-                <span class="grid" [style.gridTemplateColumns]="textIndentPx + 'px 1fr'">
-                  <span aria-hidden="true"></span>
-                  <span class="inline-flex items-center gap-2">
-                    <lucide-icon name="folder" size="14" class="shrink-0" aria-hidden="true"></lucide-icon>
-                    <span>{{ item.label }}</span>
-                  </span>
-                </span>
-              </button>
-            </div>
-          </div>
-
-          @if(collapseSubmenuItem.expanded()) {
-            <div class="mt-1">
-              <fibo-side-menu
-                [removeChainFromLevel]="removeChainFromLevel()"
-                [level]="level()+1"
-                [collapsable]="canCollapse"
-                [menuContent]="item.content"
-                [items]="item.children"/>
-            </div>
+      <li class="relative"
+          fiboCollapseSubmenuItem [items]="item.children"
+          #collapseSubmenuItem="fiboCollapseSubmenuItem"
+          #dataListItem="Option"
+      >
+        <div class="flex gap-x-1">
+          @if (showChain) {
+            <fibo-tree-menu-chain
+              (click)="collapseSubmenuItem.toggle()"
+              [index]="$index"
+              [isGroup]="true"
+              [isActive]="dataListItem.isActive()"
+              [collapsable]="true"
+              [collapsed]="collapseSubmenuItem.expanded()"
+              [style.--fibo-chain-offset]="textIndentPx + 'px'"
+              [totalItems]="totalItems"/>
+          } @else {
+            <div class="flex-none size-6"></div>
           }
-        </li>
 
-      } @else {
-        <!--  not clickable group   -->
-        <li class="relative">
-          <div class="flex gap-x-1">
-            @if (showChain) {
-              <fibo-side-menu-chain
-                [index]="$index"
-                [isGroup]="true"
-                [collapsable]="canCollapse"
-                [style.--fibo-chain-offset]="textIndentPx + 'px'"
-                [totalItems]="totalItems"/>
-            } @else {
-              <div class="flex-none size-6"></div>
-            }
-
-            <div class="flex flex-col flex-auto py-0.5 text-sm text-foreground-tertiary">
-              <div class="grid" [style.gridTemplateColumns]="textIndentPx + 'px 1fr'">
+          <div class="flex flex-col flex-auto py-0.5">
+            <button class="text-sm cursor-pointer text-left text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-400"
+                    (click)="collapseSubmenuItem.toggle()">
+              <span class="grid" [style.gridTemplateColumns]="textIndentPx + 'px 1fr'">
                 <span aria-hidden="true"></span>
-                <span>{{ item.label }}</span>
-              </div>
-            </div>
+                <span class="inline-flex items-center gap-2">
+                  <lucide-icon name="folder" size="14" class="shrink-0" aria-hidden="true"></lucide-icon>
+                  <span>{{ item.label }}</span>
+                </span>
+              </span>
+            </button>
           </div>
+        </div>
 
-          <div class="mt-1">
-            <fibo-side-menu
+        @if(collapseSubmenuItem.expanded()) {
+          <div >
+            <fibo-tree-menu
               [removeChainFromLevel]="removeChainFromLevel()"
               [level]="level()+1"
-              [collapsable]="false"
               [menuContent]="item.content"
               [items]="item.children"/>
           </div>
-        </li>
-
-      }
+        }
+      </li>
 
     } @else {
       @if (item.url) {
@@ -120,12 +81,12 @@
              #dataListItem="Option"
           >
             @if (showChain) {
-            <fibo-side-menu-chain
+            <fibo-tree-menu-chain
               [index]="$index"
               [totalItems]="totalItems"
               [isActive]="dataListItem.isActive()"
               [style.--fibo-chain-offset]="textIndentPx + 'px'"
-            ></fibo-side-menu-chain>
+            ></fibo-tree-menu-chain>
             } @else {
               <div class="flex-none size-6"></div>
             }
@@ -151,12 +112,12 @@
              #dataListItem="Option"
           >
             @if (showChain) {
-            <fibo-side-menu-chain
+            <fibo-tree-menu-chain
               [index]="$index"
               [totalItems]="totalItems"
               [isActive]="dataListItem.isActive()"
               [style.--fibo-chain-offset]="textIndentPx + 'px'"
-            ></fibo-side-menu-chain>
+            ></fibo-tree-menu-chain>
             } @else {
               <div class="flex-none size-6"></div>
             }
@@ -182,12 +143,12 @@
              #dataListItem="Option"
           >
             @if (showChain) {
-            <fibo-side-menu-chain
+            <fibo-tree-menu-chain
               [index]="$index"
               [totalItems]="totalItems"
               [isActive]="dataListItem.isActive()"
               [style.--fibo-chain-offset]="textIndentPx + 'px'"
-            ></fibo-side-menu-chain>
+            ></fibo-tree-menu-chain>
             } @else {
               <div class="flex-none size-6"></div>
             }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {LucideAngularModule} from 'lucide-angular';
 
 @Component({
-  selector: 'fibo-side-menu-chain',
+  selector: 'fibo-tree-menu-chain',
   standalone: true,
   imports: [CommonModule, LucideAngularModule],
   template: `
@@ -44,7 +44,7 @@ import {LucideAngularModule} from 'lucide-angular';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SideMenuChain {
+export class TreeMenuChain {
 
   index = input<number>(0);
   isGroup = input<boolean>(false);
