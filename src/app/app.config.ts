@@ -51,7 +51,13 @@ import {
   Sun,
   Monitor,
   CalendarDays,
-  CalendarRange
+  CalendarRange,
+  TextCursorInput,
+  ToggleLeft,
+  Loader,
+  MousePointerClick,
+  Layers,
+  SquareMousePointer,
 } from 'lucide-angular';
 
 const icons = {
@@ -101,6 +107,12 @@ const icons = {
   Terminal,
   User,
   Wrench,
+  TextCursorInput,
+  ToggleLeft,
+  Loader,
+  MousePointerClick,
+  Layers,
+  SquareMousePointer,
 };
 
 export const appConfig: ApplicationConfig = {

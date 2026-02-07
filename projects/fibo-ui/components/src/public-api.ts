@@ -19,6 +19,8 @@ export * from './lib/menu/popover-menu/menu-item';
 export * from './lib/menu/popover-menu/menu-panel';
 export * from './lib/menu/tree-menu/tree-menu.component';
 export * from './lib/menu/tree-menu/tree-menu-chain.component';
+export * from './lib/menu/side-menu/side-menu-group';
+export * from './lib/menu/side-menu/side-menu-item';
 
 
 export * from './lib/confirmation/confirmation';
