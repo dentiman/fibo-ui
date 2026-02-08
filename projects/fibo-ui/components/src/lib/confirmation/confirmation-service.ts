@@ -1,5 +1,4 @@
-import {computed, Injectable, signal} from '@angular/core';
-import {TemplateRef} from '@angular/core';
+import {computed, Injectable, signal, TemplateRef} from '@angular/core';
 
 export type ConfirmationContent = {
   title: string;
