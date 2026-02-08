@@ -49,7 +49,7 @@
               <span class="grid" [style.gridTemplateColumns]="textIndentPx + 'px 1fr'">
                 <span aria-hidden="true"></span>
                 <span class="inline-flex items-center gap-2">
-                  <lucide-icon name="folder" size="14" class="shrink-0" aria-hidden="true"></lucide-icon>
+                  <lucide-icon [name]="item.icon || 'folder'" size="14" class="shrink-0" aria-hidden="true"></lucide-icon>
                   <span>{{ item.label }}</span>
                 </span>
               </span>
@@ -96,7 +96,12 @@
           group-aria-selected:text-foreground">
               <div class="grid" [style.gridTemplateColumns]="textIndentPx + 'px 1fr'">
                 <span aria-hidden="true"></span>
-                <span>{{ item.label }}</span>
+                <span class="inline-flex items-center gap-2">
+                  @if (item.icon) {
+                    <lucide-icon [name]="item.icon" size="14" class="shrink-0 text-foreground-tertiary" aria-hidden="true" />
+                  }
+                  <span>{{ item.label }}</span>
+                </span>
               </div>
             </div>
           </a>
@@ -128,7 +133,12 @@
           group-aria-selected:font-semibold">
               <div class="grid" [style.gridTemplateColumns]="textIndentPx + 'px 1fr'">
                 <span aria-hidden="true"></span>
-                <span>{{ item.label }}</span>
+                <span class="inline-flex items-center gap-2">
+                  @if (item.icon) {
+                    <lucide-icon [name]="item.icon" size="14" class="shrink-0 text-foreground-tertiary" aria-hidden="true" />
+                  }
+                  <span>{{ item.label }}</span>
+                </span>
               </div>
             </div>
           </button>
@@ -159,7 +169,12 @@
           group-aria-selected:font-semibold">
               <div class="grid" [style.gridTemplateColumns]="textIndentPx + 'px 1fr'">
                 <span aria-hidden="true"></span>
-                <span>{{ item.label }}</span>
+                <span class="inline-flex items-center gap-2">
+                  @if (item.icon) {
+                    <lucide-icon [name]="item.icon" size="14" class="shrink-0 text-foreground-tertiary" aria-hidden="true" />
+                  }
+                  <span>{{ item.label }}</span>
+                </span>
               </div>
             </div>
           </button>
