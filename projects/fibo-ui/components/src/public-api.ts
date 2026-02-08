@@ -23,6 +23,10 @@ export * from './lib/menu/side-menu/side-menu-group';
 export * from './lib/menu/side-menu/side-menu-item';
 
 
+export * from './lib/drawer/drawer-trigger';
+export * from './lib/drawer/drawer-service';
+export * from './lib/drawer/drawer';
+
 export * from './lib/confirmation/confirmation';
 export * from './lib/confirmation/confirmation-service';
 export * from './lib/confirmation/confirmation-trigger';

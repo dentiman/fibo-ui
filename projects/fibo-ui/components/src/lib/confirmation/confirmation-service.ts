@@ -1,5 +1,5 @@
-import {computed, Injectable, linkedSignal, signal, TemplateRef} from '@angular/core';
-
+import {computed, Injectable, signal} from '@angular/core';
+import {TemplateRef} from '@angular/core';
 
 export type ConfirmationContent = {
   title: string;
@@ -21,16 +21,8 @@ export class ConfirmationService {
   config = signal<ConfirmationConfig | null>(null);
   isOpen = computed(() => !!this.config());
 
-  isVisible = linkedSignal({
-    source: this.isOpen,
-    computation: (isOpen) => isOpen
-  })
-
-  open(config: ConfirmationConfig | null = null) {
+  open(config: ConfirmationConfig) {
     this.config.set(config);
-    if(config) {
-      this.config.set(config);
-    }
   }
 
   confirm() {
@@ -43,10 +35,6 @@ export class ConfirmationService {
   }
 
   close() {
-    this.isVisible.set(false);
-    setTimeout(
-      () => {
-        this.config.set(null);
-      }, 300);
+    this.config.set(null);
   }
 }

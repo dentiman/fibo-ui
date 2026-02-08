@@ -22,6 +22,7 @@ import { ButtonDemoPageComponent } from './pages/button-demo/button-demo-page';
 import { CdkDataListPageComponent } from './pages/cdk/data-list-page';
 import { CdkPopoverPageComponent } from './pages/cdk/popover-page';
 import { TablePageComponent } from './pages/grids/table-page/table-page';
+import { DrawerPageComponent } from './pages/drawer-page/drawer-page';
 
 export const routes: Routes = [
   {
@@ -51,6 +52,10 @@ export const routes: Routes = [
       {
         path: 'dialog',
         component: DialogPageComponent
+      },
+      {
+        path: 'drawer',
+        component: DrawerPageComponent
       },
       {
         path: 'confirmation',

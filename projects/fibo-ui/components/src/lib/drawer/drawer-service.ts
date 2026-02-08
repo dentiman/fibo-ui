@@ -3,7 +3,7 @@ import {computed, Injectable, signal, TemplateRef} from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class DialogService {
+export class DrawerService {
 
   content = signal<TemplateRef<unknown> | null>(null);
 

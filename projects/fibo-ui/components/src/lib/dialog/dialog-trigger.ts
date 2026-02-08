@@ -1,12 +1,9 @@
-import {Directive, ElementRef, inject, input, model, signal, TemplateRef} from '@angular/core';
+import {Directive, inject, input, TemplateRef} from '@angular/core';
 import {DialogService} from './dialog-service';
-import {DialogConfig} from './modal-state';
-
 
 @Directive({
   selector: '[fiboDialogTrigger]',
   exportAs: 'FiboDialogTrigger',
-  standalone: true,
   host: {
     '(click)': 'open()'
   }
@@ -14,10 +11,9 @@ import {DialogConfig} from './modal-state';
 export class DialogTrigger {
   dialog = inject(DialogService);
   content = input.required<TemplateRef<unknown>>({alias: 'fiboDialogTrigger'});
-  config = input<DialogConfig|null>(null,{alias:'fiboDialogConfig'});
 
   open() {
-    this.dialog.open(this.content(),this.config())
+    this.dialog.open(this.content())
   }
 
 }

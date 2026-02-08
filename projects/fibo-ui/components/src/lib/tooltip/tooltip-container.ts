@@ -1,18 +1,46 @@
-import { Component, computed, effect, ElementRef, inject, input, TemplateRef, viewChild } from '@angular/core';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import {Component, computed, inject, TemplateRef, ViewEncapsulation} from '@angular/core';
+import {NgTemplateOutlet} from '@angular/common';
 import {PopoverArrow, PopoverPosition} from '@fibo-ui/cdk';
 import {TooltipService} from './tooltip-service';
-import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'fibo-tooltip-container',
-  standalone: true,
   imports: [
     NgTemplateOutlet,
     PopoverPosition,
     PopoverArrow,
-    CommonModule
   ],
   templateUrl: './tooltip-container.html',
+  encapsulation: ViewEncapsulation.None,
+  styles: `
+    .tooltip-enter {
+      animation: tooltip-in 150ms ease-out;
+    }
+    .tooltip-leave {
+      animation: tooltip-out 100ms ease-in forwards;
+    }
+
+    @keyframes tooltip-in {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    @keyframes tooltip-out {
+      from {
+        opacity: 1;
+        transform: scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+    }
+  `,
 })
 export class TooltipContainer {
   tooltipService = inject(TooltipService);
@@ -27,5 +55,4 @@ export class TooltipContainer {
       ? (this.tooltipService.tooltipRef()?.content as TemplateRef<any>)
       : null
   );
-
 }
