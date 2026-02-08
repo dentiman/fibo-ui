@@ -1,59 +1,211 @@
-# FiboUi
+# Fibo UI
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.6.
+Angular UI component library monorepo — two publishable packages and a demo application.
 
-## Development server
+Built with **Angular 21**, **Tailwind CSS 4**, **TypeScript 5.9** (strict mode), and **zoneless change detection**.
 
-To start a local development server, run:
+## Packages
 
-```bash
-ng serve
-```
+| Package | Version | Description |
+|---|---|---|
+| [`@fibo-ui/cdk`](./projects/fibo-ui/cdk) | 0.0.9 | Core Development Kit — low-level directives, utilities, and base controls (popover, portal, data-list, form-field, selection models) |
+| [`@fibo-ui/components`](./projects/fibo-ui/components) | 0.1.11 | UI Components — built on top of CDK (form fields, select, menu, dialog, table, calendar, notification, tooltip, and more) |
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+**Build dependency chain:** `@fibo-ui/cdk` → `@fibo-ui/components` → demo app.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Getting Started
 
 ```bash
-ng generate --help
+npm install
+npm start          # Dev server at http://localhost:4200
 ```
 
-## Building
+## Commands
 
-To build the project run:
+| Command | Description |
+|---|---|
+| `npm start` | Start dev server (http://localhost:4200) |
+| `npm run build` | Build all projects (CDK → Components → App) |
+| `npm run build:prod` | Production build |
+| `npm test` | Run app unit tests (Karma + Jasmine) |
+| `ng test @fibo-ui/cdk` | Run CDK library tests |
+| `ng test @fibo-ui/components` | Run Components library tests |
+| `ng build @fibo-ui/cdk` | Build CDK library only |
+| `ng build @fibo-ui/components` | Build Components library only |
+
+## Project Structure
+
+```
+├── src/                              # Demo application
+│   ├── app/
+│   │   ├── pages/                    # Component demo pages (one per component)
+│   │   ├── common/                   # Shared services (theme, code highlighting)
+│   │   └── layout/                   # App shell, navigation
+│   └── styles.css                    # Global styles + library CSS imports
+│
+├── projects/fibo-ui/
+│   ├── cdk/                          # @fibo-ui/cdk
+│   │   └── src/lib/
+│   │       ├── popover/              # Popover + PopoverTrigger (Floating UI)
+│   │       ├── portal/              # PortalRegistry, PortalContent, PortalOutlet
+│   │       ├── data-list/           # DataList, Option, SelectOne, SelectMulti
+│   │       ├── form/                # FormFieldDirective, FormFieldTrigger, FiboInput
+│   │       ├── common/              # IsEmpty, RandomId
+│   │       └── utils/               # Property utilities
+│   │
+│   └── components/                   # @fibo-ui/components
+│       └── src/
+│           ├── lib/
+│           │   ├── form/            # TextField, DatePickerField, FormFieldControl
+│           │   ├── select/          # Select, MultiSelect
+│           │   ├── calendar/        # Calendar, DateSelectionModel, DateRangeSelectionModel
+│           │   ├── menu/            # PopoverMenu, TreeMenu, MenuItem, MenuPanel
+│           │   ├── dialog/          # FiboDialog, DialogTrigger, DialogService
+│           │   ├── notification/    # Notification, Notifier service
+│           │   ├── confirmation/    # Confirmation, ConfirmationTrigger, ConfirmationService
+│           │   ├── tooltip/         # Tooltip directive, TooltipService
+│           │   ├── table/           # Table, FiboColumn, FiboTableRow
+│           │   ├── data-list/       # Listbox
+│           │   ├── checkbox/        # Checkbox
+│           │   ├── switch/          # Switch
+│           │   └── loading-spin/    # LoadingSpin
+│           ├── theme.css            # CSS custom properties (light + dark)
+│           ├── buttons.css          # Button classes
+│           ├── components.css       # Component utility classes
+│           └── form-fields.css      # Form field classes
+```
+
+## Architecture
+
+### CDK Layer (`@fibo-ui/cdk`)
+
+Behavior-only primitives with no styling. Components library builds on these.
+
+- **Popover system** — `PopoverTrigger` (click/toggle variants) manages open state, `Popover` handles positioning via `@floating-ui/dom` and click-outside dismissal, `PopoverPosition` computes placement
+- **Portal system** — `PortalContent` directive marks template content, `PortalOutlet` renders it at a different DOM location, `PortalRegistry` connects them. Used by all floating UI (menus, selects, dialogs)
+- **DataList + Selection** — `DataList` manages a list of `Option` directives with keyboard navigation (arrow keys, active state tracking). `SelectOne` and `SelectMulti` are selection model directives that plug into any DataList. Used by Select, Menu, Table, Listbox
+- **Form field directives** — `FormFieldDirective` tracks form state (touched, invalid, dirty, errors) via content projection. `FormFieldTrigger` extends PopoverTrigger for dropdown form fields
+
+### Components Layer (`@fibo-ui/components`)
+
+Styled components composed from CDK primitives.
+
+- **Form components** implement `FormValueControl<T>` interface — `value`, `required`, `disabled`, `touched`, `invalid`, `dirty`, `errors` signals. Integrates with `@angular/forms/signals` via `[formField]` binding
+- **Menu system** — `PopoverMenu` uses CDK's DataList + Popover for floating menus with nested submenus. `TreeMenu` renders hierarchical collapsible navigation with active URL detection
+- **Dialog** — `DialogTrigger` directive opens modal/drawer via `DialogService`. Supports `'dialog'` and `'drawer'` modes
+- **Notification** — `Notifier` service manages a signal-based stack of toasts with auto-dismiss timers
+
+### Styling
+
+Components ship CSS files as package exports:
+
+```css
+@import '@fibo-ui/components/theme';        /* CSS custom properties */
+@import '@fibo-ui/components/buttons';       /* .btn, .btn-primary, etc. */
+@import '@fibo-ui/components/components';    /* .datalist-item, .fibo-card, etc. */
+```
+
+Dark mode uses `data-theme="dark"` attribute on `<html>`. All CSS custom properties switch automatically.
+
+Icons: [Lucide Angular](https://lucide.dev/guide/packages/lucide-angular) — tree-shakeable, registered in `app.config.ts`.
+
+## Component Usage Examples
+
+### Form Fields with Signal Forms
+
+```typescript
+import { signal } from '@angular/core';
+import { form, required } from '@angular/forms/signals';
+
+userModel = signal({ username: '', birthDate: '' });
+userForm = form(this.userModel, (path) => {
+  required(path.username, { message: 'Username is required' });
+});
+```
+
+```html
+<fibo-text-field [formField]="userForm.username" label="Username" />
+<fibo-datepicker [formField]="userForm.birthDate" label="Birth Date" />
+```
+
+### Select (CDK composition)
+
+```html
+<button fiboFormFieldTrigger [formField]="userForm.role" class="form-field-control">
+  <label class="form-field-label">Role</label>
+  <div>{{ user().role || 'Select Role' }}</div>
+
+  <div *fiboPortalContent="let trigger"
+       fiboPopover [trigger]="trigger" [matchWidth]="true"
+       fiboDataList (optionTriggered)="trigger.close()"
+       fiboSelectOne [(value)]="userForm.role().value"
+       class="popover-container">
+    @for (role of roles; track role) {
+      <a fiboOption [value]="role" class="datalist-item">{{ role }}</a>
+    }
+  </div>
+</button>
+```
+
+### Dialog
+
+```html
+<button [fiboDialogTrigger]="content">Open Dialog</button>
+<button [fiboDialogTrigger]="content" [fiboDialogConfig]="{ mode: 'drawer' }">Open Drawer</button>
+
+<ng-template #content>
+  <div>Dialog body here</div>
+</ng-template>
+```
+
+### Popover Menu
+
+```html
+<button #trigger="PopoverTrigger" fiboPopoverTriggerToggle>Menu</button>
+<ng-template [(isOpen)]="trigger.isOpen" fiboPortalContent>
+  <fibo-menu [items]="menuItems" [trigger]="trigger" placement="bottom-start" />
+</ng-template>
+```
+
+### Table with Sort and Selection
+
+```html
+<fibo-table [dataSource]="users()" fiboDataList fiboSelectMulti [(value)]="selected" [(sort)]="sort">
+  <div *fiboColumn="'name'; source: users(); isSortable: true; let user">
+    {{ user.name }}
+  </div>
+  <span *fiboColumn="'email'; header: 'Email'; source: users(); let user">
+    {{ user.email }}
+  </span>
+</fibo-table>
+```
+
+### Notifications
+
+```typescript
+private notifier = inject(Notifier);
+
+this.notifier.success('Saved!');
+this.notifier.error('Failed.', 0);       // 0 = no auto-dismiss
+this.notifier.warning('Warning!', 8);     // 8 seconds
+```
+
+### Tooltip
+
+```html
+<button [fiboTooltip]="'Save changes'" placement="top">Save</button>
+```
+
+For complete API reference and all component examples, see the [`@fibo-ui/components` README](./projects/fibo-ui/components/README.md).
+
+## Publishing
 
 ```bash
-ng build
+ng build @fibo-ui/cdk && ng build @fibo-ui/components
+cd dist/fibo-ui/cdk && npm publish
+cd dist/fibo-ui/components && npm publish
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## License
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+MIT
