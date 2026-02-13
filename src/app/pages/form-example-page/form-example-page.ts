@@ -1,8 +1,9 @@
 import { Component, signal, ChangeDetectionStrategy, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormField, form, required } from '@angular/forms/signals';
-import { Calendar, CalendarDateSelectionModel } from '@fibo-ui/components';
+import { Calendar } from '@fibo-ui/components';
 import {
+  SelectDate,
   DataList,
   Option,
   Popover,
@@ -50,7 +51,7 @@ interface UserProfile {
     LucideAngularModule,
     Checkbox,
     Calendar,
-    CalendarDateSelectionModel,
+    SelectDate,
     FormFieldTrigger,
     FormsModule
   ],
@@ -177,7 +178,7 @@ interface UserProfile {
                        class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
           <fibo-calendar *fiboPortalContent="let trigger"
                          fiboPopover [trigger]="trigger"
-                         fiboCalendarDate [(value)]="userProfileForm.birthDate().value"
+                         fiboSelectDate [(value)]="userProfileForm.birthDate().value"
                          (optionTriggered)="trigger.close()"
                          class="popover-container"/>
         </div>

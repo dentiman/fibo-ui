@@ -2,7 +2,7 @@
 import {ChangeDetectionStrategy, Component, computed, effect, model, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Field, form} from '@angular/forms/signals';
-import {FormField, Calendar, CalendarDateRangeSelectionModel, DateRange} from '@fibo-ui/components';
+import {FormField, Calendar, SelectDateRange, DateRange} from '@fibo-ui/components';
 import {
     FiboInput,
     Popover,
@@ -22,7 +22,7 @@ import {FieldLabel} from '@fibo-ui/components';
         PortalContent,
         PopoverTrigger,
         Calendar,
-        CalendarDateRangeSelectionModel,
+        SelectDateRange,
         FieldLabel
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,

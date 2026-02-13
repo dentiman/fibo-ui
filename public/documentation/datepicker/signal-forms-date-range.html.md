@@ -21,7 +21,7 @@
         </div>
         <ng-template fiboPortalContent let-trigger>
             <fibo-calendar fiboPopover [trigger]="trigger"
-                           fiboCalendarDateRange [(value)]="calendarDateRange"
+                           fiboSelectDateRange [(value)]="calendarDateRange"
                            class="popover-container rounded-md"
             />
         </ng-template>

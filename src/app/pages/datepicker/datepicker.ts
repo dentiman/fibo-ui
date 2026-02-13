@@ -1,8 +1,10 @@
 import { Component, ChangeDetectionStrategy, signal, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormField, form } from '@angular/forms/signals';
-import { Calendar, CalendarDateSelectionModel, CalendarDateRangeSelectionModel } from '@fibo-ui/components';
+import { Calendar } from '@fibo-ui/components';
 import {
+  SelectDateRange,
+  SelectDate,
   Popover,
   PopoverTriggerClick,
   PortalContent,
@@ -22,8 +24,8 @@ import { UsageDemo } from '../../common/usage-demo';
     PortalContent,
     PopoverTriggerClick,
     Calendar,
-    CalendarDateSelectionModel,
-    CalendarDateRangeSelectionModel,
+    SelectDate,
+    SelectDateRange,
     LucideAngularModule,
     UsageDemo
   ],
@@ -34,29 +36,27 @@ import { UsageDemo } from '../../common/usage-demo';
       <div>
         <h2 class="text-foreground">Datepicker with Signal Forms</h2>
         <app-usage-demo [codeBlocks]="datepickerCodeBlocks">
-          <div class="mx-auto w-70 space-y-4 p-8">
+          <div class="container mx-auto p-4 w-[350px]">
             <form class="space-y-4">
-
               <div fiboFormField fiboPopoverTriggerClick
-                   class="group form-field-control relative">
-                <label class="form-field-label">Birth Date</label>
-                <input
-                  type="text"
-                  [formField]="userForm.birthDate"
-                  placeholder="YYYY-MM-DD"
-                  class="w-full appearance-none outline-none text-sm focus:outline-0"/>
-                <div class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2">
-                  <lucide-icon name="calendar-days" size="16" class="text-foreground-tertiary"></lucide-icon>
+                   class="form-field-control flex items-center gap-2">
+                <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
+                  <label class="form-field-label mt-1">Birth Date</label>
+                  <input
+                    type="text"
+                    [formField]="userForm.birthDate"
+                    placeholder="YYYY-MM-DD"
+                    class="text-field-input"/>
                 </div>
+                <lucide-icon name="calendar-days" size="16"
+                             class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
 
                 <fibo-calendar *fiboPortalContent="let trigger"
                                fiboPopover [trigger]="trigger"
-                               fiboCalendarDate [(value)]="userForm.birthDate().value"
+                               fiboSelectDate [(value)]="userForm.birthDate().value"
                                (optionTriggered)="trigger.close()"
                                class="popover-container"/>
-
               </div>
-
             </form>
           </div>
         </app-usage-demo>
@@ -66,30 +66,31 @@ import { UsageDemo } from '../../common/usage-demo';
       <div>
         <h2 class="text-foreground">Date Range Picker with Signal Forms</h2>
         <app-usage-demo [codeBlocks]="dateRangeCodeBlocks">
-          <div class="mx-auto w-70 space-y-4 p-8">
+          <div class="container mx-auto p-4 w-[350px]">
             <form class="space-y-4">
               <div fiboFormField fiboPopoverTriggerClick
-                   class="group content-center form-field-control relative">
-                <label class="form-field-label">Date Range</label>
-                <div class="flex items-center gap-1">
-                  <input
-                    type="text"
-                    [formField]="dateRangeForm.startDate"
-                    placeholder="YYYY-MM-DD"
-                    class="w-19 appearance-none outline-none text-sm placeholder:text-xs focus:outline-0"/>
-                  <span class="flex items-center mx-1 text-gray-400 text-center">-</span>
-                  <input
-                    type="text"
-                    [formField]="dateRangeForm.endDate"
-                    placeholder="YYYY-MM-DD"
-                    class="w-full pl-1 appearance-none outline-none text-sm placeholder:text-xs focus:outline-0"/>
+                   class="form-field-control flex items-center gap-2">
+                <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
+                  <label class="form-field-label mt-1">Date Range</label>
+                  <div class="flex items-center gap-2">
+                    <input
+                      type="text"
+                      [formField]="dateRangeForm.startDate"
+                      placeholder="YYYY-MM-DD"
+                      class="text-field-input min-w-0 flex-1"/>
+                    <span class="from-field-placeholder text-sm shrink-0">-</span>
+                    <input
+                      type="text"
+                      [formField]="dateRangeForm.endDate"
+                      placeholder="YYYY-MM-DD"
+                      class="text-field-input min-w-0 flex-1"/>
+                  </div>
                 </div>
-                <div class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2">
-                  <lucide-icon name="calendar-range" size="16" class="text-foreground-tertiary"></lucide-icon>
-                </div>
+                <lucide-icon name="calendar-range" size="16"
+                             class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
                 <fibo-calendar *fiboPortalContent="let trigger"
                                fiboPopover [trigger]="trigger"
-                               fiboCalendarDateRange [(value)]="calendarDateRange"
+                               fiboSelectDateRange [(value)]="calendarDateRange"
                                class="popover-container"/>
               </div>
             </form>

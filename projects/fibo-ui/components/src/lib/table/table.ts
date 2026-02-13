@@ -9,11 +9,8 @@ import {
   model
 } from '@angular/core';
 import {CommonModule, NgTemplateOutlet} from '@angular/common';
-import {FiboColumn} from './column';
-import {FiboColumnHeader} from './column-header';
-import {FiboTableRow} from './table-row';
-import {Option, SelectMulti, SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
-import {Checkbox} from '../checkbox/checkbox';
+import {FiboColumn, Option, SelectMulti, SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
+import {Checkbox} from '../form-controls/checkbox/checkbox';
 
 // TODO:: need implement checkbox multiselect outside table component
 @Component({
@@ -192,5 +189,4 @@ export class Table<T> {
     return row[key];
   }
 }
-
 

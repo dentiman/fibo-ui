@@ -1,9 +1,17 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormField, form } from '@angular/forms/signals';
-import { Checkbox, MultiSelect } from '@fibo-ui/components';
+import { Checkbox } from '@fibo-ui/components';
 import { UsageDemo } from '../../common/usage-demo';
 import { LucideAngularModule } from 'lucide-angular';
+import {
+  DataList,
+  FormFieldTrigger,
+  Option,
+  Popover,
+  PortalContent,
+  SelectMulti
+} from '@fibo-ui/cdk';
 
 interface UserModel {
   skills: string[];
@@ -13,8 +21,16 @@ interface UserModel {
   selector: 'app-multiple-select-page',
   standalone: true,
   imports: [
+    CommonModule,
     FormField,
-    MultiSelect,
+    FormFieldTrigger,
+    DataList,
+    Popover,
+    PortalContent,
+    SelectMulti,
+    Option,
+    LucideAngularModule,
+    Checkbox,
     UsageDemo
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,13 +38,53 @@ interface UserModel {
     <div class="px-4 flex flex-col space-y-12">
       <h2 class="text-foreground">Basic multiple select</h2>
       <app-usage-demo [codeBlocks]="codeBlocks">
-        <div class="mx-auto w-90 p-8">
-          <fibo-multi-select
-            label="Skills"
-            [items]="skillsItems"
-            [formField]="userForm.skills"
-          >
-          </fibo-multi-select>
+        <div class="container mx-auto p-4 w-[350px]">
+          <form class="space-y-5">
+            <button type="button" fiboFormFieldTrigger [formField]="userForm.skills"
+                    class="w-full form-field-control flex items-center gap-2 text-left">
+              <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
+                <label class="form-field-label mt-1">Skills</label>
+                <span class="w-full flex flex-wrap gap-x-1 gap-y-1">
+                  @for (value of user().skills; track value) {
+                    <div class="flex items-center gap-1 btn btn-sm">
+                      <span class="truncate flex-1 text-xs font-medium">{{ value }}</span>
+                      <button type="button"
+                              class="rounded-full cursor-pointer flex-shrink-0 btn-text"
+                              (click)="removeSkill(value); $event.stopPropagation()"
+                              (keydown)="$event.stopPropagation()">
+                        <lucide-icon name="x" size="14"></lucide-icon>
+                      </button>
+                    </div>
+                  }
+                  @if (user().skills.length === 0) {
+                    <div class="from-field-placeholder text-sm">Select Skills</div>
+                  }
+                </span>
+              </div>
+              <lucide-icon name="chevron-down" size="16"
+                           class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
+              <div *fiboPortalContent="let trigger"
+                   fiboPopover [trigger]="trigger" [matchWidth]="true"
+                   fiboDataList
+                   fiboSelectMulti [(value)]="userForm.skills().value"
+                   class="popover-container">
+                @if (skillsItems.length === 0) {
+                  <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
+                }
+                @for (item of skillsItems; track item.value) {
+                  <a fiboOption [value]="item.value" #option="Option"
+                     class="datalist-item items-center">
+                    <fibo-checkbox [checked]="option.isSelected()">{{ item.label }}</fibo-checkbox>
+                  </a>
+                }
+              </div>
+            </button>
+          </form>
+
+          <div class="mt-8 p-4 rounded">
+            <h2 class="text-xl font-bold mb-2">user:</h2>
+            <pre class="whitespace-pre-wrap">{{ user() | json }}</pre>
+          </div>
         </div>
       </app-usage-demo>
     </div>

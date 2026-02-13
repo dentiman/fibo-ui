@@ -1,7 +1,7 @@
 import {Component, inject, input, TemplateRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DataList, SelectMulti, Option, SELECTION_MODEL, SelectionModel, safeProp} from '@fibo-ui/cdk';
-import {Checkbox} from '../../checkbox/checkbox';
+import {Checkbox} from '../../form-controls/checkbox/checkbox';
 
 @Component({
   selector: 'fibo-listbox',

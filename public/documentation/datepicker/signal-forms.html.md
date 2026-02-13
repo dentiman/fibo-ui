@@ -13,7 +13,7 @@
         </div>
         <ng-template fiboPortalContent let-trigger>
             <fibo-calendar fiboPopover [trigger]="trigger"
-                           fiboCalendarDate [(value)]="userForm.birthDate().value"
+                           fiboSelectDate [(value)]="userForm.birthDate().value"
                            (optionTriggered)="trigger.close()"
                            class="popover-container rounded-md"
             />

@@ -8,7 +8,8 @@ import {
   viewChildren
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FiboColumn, Table} from '@fibo-ui/components';
+import {FiboColumn} from '@fibo-ui/cdk';
+import {Table} from '@fibo-ui/components';
 import {User, usersChoices} from '../../../common/form-data-example';
 import {DataList, SelectMulti} from '@fibo-ui/cdk';
 
@@ -52,5 +53,3 @@ export class TablePageComponent {
   sort = signal({ sortBy: 'name', sortOrder: 'asc' });
 
 }
-
-

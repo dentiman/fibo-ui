@@ -6,13 +6,13 @@
 export * from './lib/loading-spin/loading-spin';
 
 // Popover components
-export * from './lib/dialog/dialog-trigger';
-export * from './lib/dialog/dialog-service';
-export * from './lib/dialog/dialog';
+export * from './lib/overlay/dialog/dialog-trigger';
+export * from './lib/overlay/dialog/dialog-service';
+export * from './lib/overlay/dialog/dialog';
 
-export * from './lib/tooltip/tooltip-container';
-export * from './lib/tooltip/tooltip-service';
-export * from './lib/tooltip/tooltip';
+export * from './lib/overlay/tooltip/tooltip-container';
+export * from './lib/overlay/tooltip/tooltip-service';
+export * from './lib/overlay/tooltip/tooltip';
 
 export * from './lib/menu/popover-menu/popover-menu';
 export * from './lib/menu/popover-menu/menu-item';
@@ -23,37 +23,32 @@ export * from './lib/menu/side-menu/side-menu-group';
 export * from './lib/menu/side-menu/side-menu-item';
 
 
-export * from './lib/drawer/drawer-trigger';
-export * from './lib/drawer/drawer-service';
-export * from './lib/drawer/drawer';
+export * from './lib/overlay/drawer/drawer-trigger';
+export * from './lib/overlay/drawer/drawer-service';
+export * from './lib/overlay/drawer/drawer';
 
-export * from './lib/confirmation/confirmation';
-export * from './lib/confirmation/confirmation-service';
-export * from './lib/confirmation/confirmation-trigger';
+export * from './lib/overlay/confirmation/confirmation';
+export * from './lib/overlay/confirmation/confirmation-service';
+export * from './lib/overlay/confirmation/confirmation-trigger';
 
-export * from './lib/notification/notification';
-export * from './lib/notification/notifier';
+export * from './lib/overlay/notification/notification';
+export * from './lib/overlay/notification/notifier';
 
 
-export * from './lib/calendar/calendar';
-export * from './lib/calendar/calendar-date-selection-model';
-export * from './lib/calendar/calendar-date-range-selection-model';
+export * from './lib/form-controls/calendar/calendar';
 
 // Form components and interfaces
-export * from './lib/select/select';
-export * from './lib/select/multi-select';
-export * from './lib/form/fields/text-field';
-export * from './lib/form/fields/datepicker-field';
-export * from './lib/form/form-field-control';
+export * from './lib/form-controls/select/select';
+export * from './lib/form-controls/select/multi-select';
+export * from './lib/form-controls/fields/text-field';
+export * from './lib/form-controls/fields/datepicker-field';
+export * from './lib/form-controls/form/form-field-control';
 
 
 export * from './lib/menu/menu-item.type';
-export * from './lib/switch/switch';
-export * from './lib/checkbox/checkbox';
+export * from './lib/form-controls/switch/switch';
+export * from './lib/form-controls/checkbox/checkbox';
 
 // Data List components
 export * from './lib/data-list/listbox/listbox';
 export * from './lib/table/table';
-export * from './lib/table/column-header';
-export * from './lib/table/column';
-export * from './lib/table/table-row';

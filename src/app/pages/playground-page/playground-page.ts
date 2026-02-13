@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Calendar, CalendarDateSelectionModel } from '@fibo-ui/components';
+import { Calendar } from '@fibo-ui/components';
 import {
+  SelectDate,
   DataList,
   FiboInput,
   Option,
@@ -38,7 +39,7 @@ import { Checkbox } from '@fibo-ui/components';
     LucideAngularModule,
     Checkbox,
     Calendar,
-    CalendarDateSelectionModel
+    SelectDate
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -100,7 +101,7 @@ import { Checkbox } from '@fibo-ui/components';
                                class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
                   <fibo-calendar *fiboPortalContent="let trigger"
                                  fiboPopover [trigger]="trigger"
-                                 fiboCalendarDate [(value)]="createdAfter"
+                                 fiboSelectDate [(value)]="createdAfter"
                                  (optionTriggered)="trigger.close()"
                                  class="popover-container"/>
               </div>

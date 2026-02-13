@@ -207,13 +207,13 @@ Date picker calendar with single-date and date-range selection models.
 #### Single Date
 
 ```html
-<fibo-calendar fiboCalendarDate [(value)]="selectedDate" />
+<fibo-calendar fiboSelectDate [(value)]="selectedDate" />
 ```
 
 #### Date Range
 
 ```html
-<fibo-calendar fiboCalendarDateRange [(value)]="dateRange" />
+<fibo-calendar fiboSelectDateRange [(value)]="dateRange" />
 ```
 
 Where `dateRange` is `{ startDate: string, endDate: string }`.
