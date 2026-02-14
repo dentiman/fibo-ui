@@ -1,13 +1,2 @@
-import {TemplateRef} from '@angular/core';
-
-export type MenuItemType = {
-  label: string;
-  url?: string;
-  icon?: any;
-  badge?: string | number;
-  children?: MenuItemType[];
-  disabled?: boolean;
-  content?: TemplateRef<any>;
-  callback?: () => void;
-  value?: any;
-}
+// Re-export from CDK for backwards compatibility
+export type { MenuItemType } from '@fibo-ui/cdk';

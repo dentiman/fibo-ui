@@ -2,21 +2,18 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  contentChildren,
-  effect,
   inject,
   input,
-  model,
 } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { SideMenuItem } from './side-menu-item';
-import { DataList, Option } from '@fibo-ui/cdk';
+import { DataList, Expandable, ExpandOnSelection } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'side-menu-group',
   imports: [LucideAngularModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  hostDirectives: [DataList],
+  hostDirectives: [DataList, Expandable, ExpandOnSelection],
   host: {
     class: 'block',
   },
@@ -68,23 +65,19 @@ import { DataList, Option } from '@fibo-ui/cdk';
 export class SideMenuGroup {
   label = input('');
   icon = input('');
-  expanded = model(true);
 
+  private expandable = inject(Expandable);
   private parentGroup = inject(SideMenuGroup, { optional: true, skipSelf: true });
 
-  private options = contentChildren(Option, { descendants: true });
+  // Expose for template compatibility
+  expanded = this.expandable.expanded;
+  toggle = this.expandable.toggle;
 
+  // Keep level logic — component-specific
   level = computed((): number => (this.parentGroup ? this.parentGroup.level() + 1 : 0));
 
   constructor() {
-    effect(() => {
-      if (this.options().some((opt) => opt.isSelected())) {
-        this.expanded.set(true);
-      }
-    });
-  }
-
-  toggle() {
-    this.expanded.set(!this.expanded());
+    // Override default expanded value to true
+    this.expanded.set(true);
   }
 }

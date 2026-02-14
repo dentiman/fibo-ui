@@ -1,6 +1,6 @@
 @for (item of items(); track idx; let idx = $index) {
   @if (item.children || item.content) {
-    <button fiboSubmenuTrigger [disabled]="!!item.disabled" #menuItemTrigger="PopoverTrigger"
+    <button fiboSubmenuTrigger [disabled]="!!item.disabled" #menuItemTrigger="submenuTrigger"
             class="datalist-item py-1 px-2 w-full rounded-md  items-center  group text-sm"
     >
       @if (item?.icon) {
@@ -22,7 +22,7 @@
     <ng-template fiboPortalContent [(isOpen)]="menuItemTrigger.isOpen">
       <fibo-menu
         (closeParent)="closeMenuWithParent()"
-        [trigger]="menuItemTrigger"
+        [trigger]="menuItemTrigger.popoverTrigger"
         [offset]="1"
         placement="right-start"
         [menuContent]="item.content"

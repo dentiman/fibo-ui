@@ -1,9 +1,7 @@
 import {Component, computed, inject, input, output, TemplateRef, viewChildren} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Popover, DataList, Option, PortalContent} from '@fibo-ui/cdk';
+import {Popover, DataList, Option, PortalContent, SubmenuPanel, SubmenuTrigger} from '@fibo-ui/cdk';
 import {RouterLink} from '@angular/router';
-import {PopoverSubmenuTrigger} from './popover-submenu-trigger';
-import {MenuPanel} from './menu-panel';
 import {MenuItemType} from '../menu-item.type';
 import {LucideAngularModule} from 'lucide-angular';
 
@@ -12,7 +10,7 @@ import {LucideAngularModule} from 'lucide-angular';
   selector: 'fibo-menu',
   standalone: true,
   hostDirectives: [
-    MenuPanel,
+    SubmenuPanel,
     {
       directive: Popover,
       inputs: ['trigger']
@@ -22,7 +20,7 @@ import {LucideAngularModule} from 'lucide-angular';
     'class': 'popover-container  group min-w-40',
     '(keydown.arrowleft)': 'focusToTrigger($event)'
   },
-  imports: [CommonModule, Option, PopoverSubmenuTrigger, RouterLink, LucideAngularModule, PortalContent],
+  imports: [CommonModule, Option, SubmenuTrigger, RouterLink, LucideAngularModule, PortalContent],
   templateUrl: './popover-menu.html',
 })
 export class PopoverMenu {
@@ -33,7 +31,7 @@ export class PopoverMenu {
 
   itemsHaveIcons = computed(() => this.items()?.some((item) => !!item.icon));
 
-  submenuItems = viewChildren(PopoverSubmenuTrigger);
+  submenuItems = viewChildren(SubmenuTrigger);
 
   closeParent = output()
 
