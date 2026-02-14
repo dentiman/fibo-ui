@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit, TemplateRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {NavigationEnd, Router, RouterLink} from '@angular/router';
+import {isActive, NavigationEnd, Router, RouterLink} from '@angular/router';
 import {MenuItemType} from '../menu-item.type';
 import {Option, SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -49,12 +49,12 @@ export class TreeMenu implements OnInit {
   }
 
   private findActiveUrlItem(item: MenuItemType): MenuItemType | undefined {
-    if (item.url && this.router.isActive(item.url, {
-      paths: 'exact', // Use 'subset' for partial matches
+    if (item.url && isActive(item.url, this.router, {
+      paths: 'exact',
       queryParams: 'ignored',
       fragment: 'ignored',
-      matrixParams: 'ignored'
-    })) {
+      matrixParams: 'ignored',
+    })()) {
       return item;
     }
     if (item.children) {

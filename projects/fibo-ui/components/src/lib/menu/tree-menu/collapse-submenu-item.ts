@@ -1,5 +1,5 @@
 import {DestroyRef, Directive, inject, input, model, OnInit} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
+import {isActive, NavigationEnd, Router} from '@angular/router';
 import {Option} from '@fibo-ui/cdk';
 import {MenuItemType} from '../menu-item.type';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -44,12 +44,12 @@ export class CollapseSubmenuItem implements OnInit {
   }
 
   private hasActiveUrl(item: MenuItemType): boolean {
-    if (item.url && this.router.isActive(item.url, {
-      paths: 'exact', // Use 'subset' for partial matches
+    if (item.url && isActive(item.url, this.router, {
+      paths: 'exact',
       queryParams: 'ignored',
       fragment: 'ignored',
-      matrixParams: 'ignored'
-    })) {
+      matrixParams: 'ignored',
+    })()) {
       return true;
     }
     if (item.children) {

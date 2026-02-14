@@ -1,0 +1,19 @@
+@if (state.isOpen()) {
+  <div class="fixed inset-0 z-10"
+       animate.enter="drawer-enter"
+       animate.leave="drawer-leave">
+
+    <div (click)="state.close()"
+         class="drawer-backdrop fixed inset-0 bg-black/30 dark:bg-black/50">
+    </div>
+
+    <div class="drawer-panel pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+      <div class="pointer-events-auto w-screen max-w-md shadow-xl">
+        <div class="flex h-full flex-col overflow-y-scroll bg-background dark:outline dark:-outline-offset-1 dark:outline-white/8">
+          <ng-container *ngTemplateOutlet="state.content()"></ng-container>
+        </div>
+      </div>
+    </div>
+
+  </div>
+}
