@@ -1,8 +1,9 @@
 import {DestroyRef, Directive, inject, input, model, OnInit} from '@angular/core';
-import {isActive, NavigationEnd, Router} from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
 import {Option} from '@fibo-ui/cdk';
 import {MenuItemType} from '../menu-item.type';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {hasActiveMenuUrl} from '../menu-active-route.utils';
 
 @Directive({
   selector: '[fiboCollapseSubmenuItem]',
@@ -38,23 +39,8 @@ export class CollapseSubmenuItem implements OnInit {
 
 
   private updateActiveStates() {
-    if (this.items().some(item => this.hasActiveUrl(item))) {
+    if (hasActiveMenuUrl(this.items(), this.router)) {
       this.expanded.set(true);
     }
   }
-
-  private hasActiveUrl(item: MenuItemType): boolean {
-    if (item.url && isActive(item.url, this.router, {
-      paths: 'exact',
-      queryParams: 'ignored',
-      fragment: 'ignored',
-      matrixParams: 'ignored',
-    })()) {
-      return true;
-    }
-    if (item.children) {
-      return item.children.some(child => this.hasActiveUrl(child));
-    }
-    return false;
-  };
 }

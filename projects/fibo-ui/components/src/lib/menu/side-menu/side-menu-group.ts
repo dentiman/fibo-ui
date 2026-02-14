@@ -1,9 +1,9 @@
 import {
-  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
   computed,
   contentChildren,
+  effect,
   inject,
   input,
   model,
@@ -63,7 +63,7 @@ import { SideMenuItem } from './side-menu-item';
     }
   `,
 })
-export class SideMenuGroup implements AfterContentInit {
+export class SideMenuGroup {
   label = input('');
   icon = input('');
   expanded = model(true);
@@ -74,10 +74,12 @@ export class SideMenuGroup implements AfterContentInit {
 
   level = computed((): number => (this.parentGroup ? this.parentGroup.level() + 1 : 0));
 
-  ngAfterContentInit() {
-    if (this.menuItems().some((item) => item.active())) {
-      this.expanded.set(true);
-    }
+  constructor() {
+    effect(() => {
+      if (this.menuItems().some((item) => item.active())) {
+        this.expanded.set(true);
+      }
+    });
   }
 
   toggle() {

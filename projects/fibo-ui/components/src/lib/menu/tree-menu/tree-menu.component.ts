@@ -1,12 +1,13 @@
 import {ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit, TemplateRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {isActive, NavigationEnd, Router, RouterLink} from '@angular/router';
+import {NavigationEnd, Router, RouterLink} from '@angular/router';
 import {MenuItemType} from '../menu-item.type';
 import {Option, SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {LucideAngularModule} from 'lucide-angular';
 import {CollapseSubmenuItem} from './collapse-submenu-item';
 import {TreeMenuChain} from './tree-menu-chain.component';
+import {findActiveMenuItemByUrl} from '../menu-active-route.utils';
 
 @Component({
   selector: 'fibo-tree-menu',
@@ -40,33 +41,10 @@ export class TreeMenu implements OnInit {
 
 
   private updateActiveStates() {
-    this.items().forEach(item => {
-      const activeUrlItem = this.findActiveUrlItem(item);
-      if (activeUrlItem && this.selectionModel) {
-        this.selectionModel.select(activeUrlItem);
-      }
-    });
+    const activeUrlItem = findActiveMenuItemByUrl(this.items(), this.router);
+    if (activeUrlItem && this.selectionModel) {
+      this.selectionModel.select(activeUrlItem);
+    }
   }
-
-  private findActiveUrlItem(item: MenuItemType): MenuItemType | undefined {
-    if (item.url && isActive(item.url, this.router, {
-      paths: 'exact',
-      queryParams: 'ignored',
-      fragment: 'ignored',
-      matrixParams: 'ignored',
-    })()) {
-      return item;
-    }
-    if (item.children) {
-      // @ts-ignore
-      item.children.forEach(item => {
-        const activeUrlItem = this.findActiveUrlItem(item);
-        if (activeUrlItem) {
-          return activeUrlItem;
-        }
-      });
-    }
-    return undefined;
-  };
 
 }
