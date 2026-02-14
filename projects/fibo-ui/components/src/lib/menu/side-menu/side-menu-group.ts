@@ -10,11 +10,13 @@ import {
 } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { SideMenuItem } from './side-menu-item';
+import { DataList, Option } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'side-menu-group',
   imports: [LucideAngularModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  hostDirectives: [DataList],
   host: {
     class: 'block',
   },
@@ -70,13 +72,13 @@ export class SideMenuGroup {
 
   private parentGroup = inject(SideMenuGroup, { optional: true, skipSelf: true });
 
-  menuItems = contentChildren(SideMenuItem, { descendants: true });
+  private options = contentChildren(Option, { descendants: true });
 
   level = computed((): number => (this.parentGroup ? this.parentGroup.level() + 1 : 0));
 
   constructor() {
     effect(() => {
-      if (this.menuItems().some((item) => item.active())) {
+      if (this.options().some((opt) => opt.isSelected())) {
         this.expanded.set(true);
       }
     });

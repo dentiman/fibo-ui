@@ -31,7 +31,7 @@
     </ng-template>
   } @else {
     @if (item.url) {
-      <a fiboOption [disabled]="!!item.disabled" (itemTrigger)="closeMenuWithParent()" [routerLink]="item.url"
+      <a fiboOption [value]="item" [disabled]="!!item.disabled" (itemTrigger)="closeMenuWithParent()" [routerLink]="item.url"
          class="datalist-item py-1 px-2 rounded-md relative group text-sm">
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
       </a>

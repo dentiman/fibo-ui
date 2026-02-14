@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TreeMenu, MenuItemType } from '@fibo-ui/components';
 import { ChangeDetectionStrategy } from '@angular/core';
-import { DataList, SelectOne } from '@fibo-ui/cdk';
+import { DataList, RouterSelectOne } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'app-tree-menu-page',
-  imports: [CommonModule, TreeMenu, DataList, SelectOne],
+  imports: [CommonModule, TreeMenu, DataList, RouterSelectOne],
   template: `
-    <fibo-tree-menu fiboDataList [items]="menuItems"></fibo-tree-menu>
+    <fibo-tree-menu fiboDataList fiboRouterSelectOne [items]="menuItems"></fibo-tree-menu>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

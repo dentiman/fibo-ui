@@ -4,32 +4,26 @@ import {
   computed,
   inject,
   input,
-  signal,
 } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { SideMenuGroup } from './side-menu-group';
+import { Option } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'side-menu-item',
-  imports: [RouterLink, RouterLinkActive, LucideAngularModule],
+  imports: [RouterLink, LucideAngularModule, Option],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block',
   },
   template: `
     <a
+      fiboOption
+      [value]="url()"
       [routerLink]="url()"
-      routerLinkActive
-      [routerLinkActiveOptions]="{
-        paths: 'exact',
-        queryParams: 'ignored',
-        fragment: 'ignored',
-        matrixParams: 'ignored'
-      }"
-      #rla="routerLinkActive"
-      (isActiveChange)="active.set($event)"
-      [attr.aria-selected]="rla.isActive || null"
+      #opt="Option"
+      [attr.aria-selected]="opt.isSelected() || null"
       [class.relative]="isNested()"
       class="group flex items-center gap-x-3 rounded-md py-1 px-2 text-sm cursor-pointer
         text-foreground-secondary hover:bg-black/3 dark:hover:bg-white/4 hover:text-foreground
@@ -39,7 +33,7 @@ import { SideMenuGroup } from './side-menu-group';
         <div class="absolute top-0 left-2 flex w-4 justify-center h-full">
           <div
             class="w-px bg-gray-300 dark:bg-neutral-700/60 "
-            [class.bg-blue-500]="rla.isActive"
+            [class.bg-blue-500]="opt.isSelected()"
           ></div>
         </div>
         <div class="relative flex size-4 flex-none items-center justify-center">
@@ -66,8 +60,6 @@ export class SideMenuItem {
   url = input('');
 
   private parentGroup = inject(SideMenuGroup, { optional: true });
-
-  active = signal(false);
 
   private level = computed(() => (this.parentGroup ? this.parentGroup.level() : 0));
   isNested = computed(() => this.level() > 0);
