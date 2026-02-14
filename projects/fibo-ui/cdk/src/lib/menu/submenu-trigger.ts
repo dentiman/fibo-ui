@@ -56,14 +56,10 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const current = this.panel.submenuTriggers();
-    if (!current.includes(this)) {
-      this.panel.submenuTriggers.set([...current, this]);
-    }
+    this.panel.registerSubmenuTrigger(this);
   }
 
   ngOnDestroy() {
-    const current = this.panel.submenuTriggers();
-    this.panel.submenuTriggers.set(current.filter(t => t !== this));
+    this.panel.unregisterSubmenuTrigger(this);
   }
 }

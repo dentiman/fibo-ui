@@ -2,6 +2,7 @@ import { DestroyRef, Directive, inject, InjectionToken, input, signal } from '@a
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { debounceTime, filter } from 'rxjs';
 import { DataList } from '../data-list/data-list';
+import { Popover } from '../popover/popover';
 import { SubmenuTrigger } from './submenu-trigger';
 
 /**
@@ -28,6 +29,9 @@ export const SUBMENU_PANEL = new InjectionToken<SubmenuPanel>('SubmenuPanel');
  */
 @Directive({
   selector: '[fiboSubmenuPanel]',
+  host: {
+    '(keydown.arrowleft)': 'focusToTrigger($event)',
+  },
   hostDirectives: [
     {
       directive: DataList,
@@ -38,6 +42,7 @@ export const SUBMENU_PANEL = new InjectionToken<SubmenuPanel>('SubmenuPanel');
 })
 export class SubmenuPanel {
   dataList = inject(DataList);
+  private popover = inject(Popover, { self: true, optional: true });
   private destroyRef = inject(DestroyRef);
 
   /** Registry of child submenu triggers */
@@ -45,6 +50,35 @@ export class SubmenuPanel {
 
   /** Delay in milliseconds before opening submenu on hover (default 300ms) */
   openDelay = input(300);
+
+  registerSubmenuTrigger(trigger: SubmenuTrigger) {
+    const currentTriggers = this.submenuTriggers();
+    if (!currentTriggers.includes(trigger)) {
+      this.submenuTriggers.set([...currentTriggers, trigger]);
+    }
+  }
+
+  unregisterSubmenuTrigger(trigger: SubmenuTrigger) {
+    const currentTriggers = this.submenuTriggers();
+    this.submenuTriggers.set(currentTriggers.filter(current => current !== trigger));
+  }
+
+  closeAllSubmenus() {
+    this.submenuTriggers().forEach(trigger => {
+      trigger.popoverTrigger.close();
+    });
+  }
+
+  focusToTrigger(event: Event) {
+    if (!this.popover?.trigger().isListItem) {
+      return;
+    }
+
+    this.popover.trigger().element.focus();
+    this.dataList.resetActiveOption();
+    event.stopPropagation();
+    this.closeAllSubmenus();
+  }
 
   constructor() {
     // Instant close when active item changes

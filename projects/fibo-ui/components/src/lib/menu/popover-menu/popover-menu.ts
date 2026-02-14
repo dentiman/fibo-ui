@@ -1,6 +1,6 @@
-import {Component, computed, inject, input, output, TemplateRef, viewChildren} from '@angular/core';
+import {Component, computed, inject, input, output, TemplateRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Popover, DataList, Option, PortalContent, SubmenuPanel, SubmenuTrigger} from '@fibo-ui/cdk';
+import {Popover, Option, PortalContent, SubmenuPanel, SubmenuTrigger} from '@fibo-ui/cdk';
 import {RouterLink} from '@angular/router';
 import {MenuItemType} from '../menu-item.type';
 import {LucideAngularModule} from 'lucide-angular';
@@ -18,7 +18,6 @@ import {LucideAngularModule} from 'lucide-angular';
   ],
   host: {
     'class': 'popover-container  group min-w-40',
-    '(keydown.arrowleft)': 'focusToTrigger($event)'
   },
   imports: [CommonModule, Option, SubmenuTrigger, RouterLink, LucideAngularModule, PortalContent],
   templateUrl: './popover-menu.html',
@@ -26,31 +25,14 @@ import {LucideAngularModule} from 'lucide-angular';
 export class PopoverMenu {
   items = input<MenuItemType[]>();
   menuContent = input<TemplateRef<any>>()
-  dataList = inject(DataList);
   popover = inject(Popover);
 
   itemsHaveIcons = computed(() => this.items()?.some((item) => !!item.icon));
-
-  submenuItems = viewChildren(SubmenuTrigger);
 
   closeParent = output()
 
   closeMenuWithParent() {
     this.popover.close();
     this.closeParent.emit()
-  }
-
-
-  focusToTrigger(event: Event) {
-    if (this.popover.trigger().isListItem) {
-      this.popover.trigger().element.focus();
-      this.dataList.resetActiveOption();
-      event.stopPropagation();
-      this.submenuItems()
-        .forEach(item => {
-          item.popoverTrigger.close()
-        });
-
-    }
   }
 }
