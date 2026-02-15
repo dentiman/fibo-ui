@@ -1,10 +1,11 @@
 import {Component, computed, signal, viewChild} from '@angular/core';
 import {
   DataList,
+  Popover,
   PopoverTriggerToggle, PortalContent,
   SelectOne
 } from '@fibo-ui/cdk';
-import {MenuItem, PopoverMenu, type MenuItemType} from '@fibo-ui/components';
+import {MenuItem, Menu, type MenuItemType} from '@fibo-ui/components';
 import {RouterLink} from '@angular/router';
 import {UsageDemo} from '../../common/usage-demo';
 import {developerSkillsMenuItems} from '../../common/form-data-example';
@@ -13,7 +14,8 @@ import {developerSkillsMenuItems} from '../../common/form-data-example';
   imports: [
     RouterLink,
     PopoverTriggerToggle,
-    PopoverMenu,
+    Popover,
+    Menu,
     MenuItem,
     DataList,
     UsageDemo,
@@ -73,4 +75,3 @@ export class MenuPageComponent {
     ...developerSkillsMenuItems,
   ]);
 }
-

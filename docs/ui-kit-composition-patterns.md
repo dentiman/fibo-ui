@@ -155,7 +155,7 @@ flowchart TD
 
 ## 9.2. Каскадное меню
 
-- `PopoverMenu` + `MenuPanel` + internal `PopoverSubmenuTrigger` + nested portal content.
+- `Menu` + `MenuPanel` + internal `PopoverSubmenuTrigger` + nested portal content.
 
 ## 9.3. Value-selection menu
 

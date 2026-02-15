@@ -1,5 +1,5 @@
 import {Directive, inject, input} from '@angular/core';
-import {PopoverMenu} from './popover-menu';
+import {Menu} from './menu';
 import {Option} from '@fibo-ui/cdk';
 
 
@@ -13,9 +13,9 @@ import {Option} from '@fibo-ui/cdk';
   }],
   host: {
     'class': 'menu-item',
-    '(itemTrigger)': 'menu.closeMenuWithParent()'
+    '(itemTrigger)': 'menu.menuPanel.closeMenuWithParent()'
   }
 })
 export class MenuItem {
-  menu = inject(PopoverMenu)
+  menu = inject(Menu)
 }

@@ -105,7 +105,7 @@ flowchart LR
 
 1. Form controls: `TextField`, `DatePickerField`, `FormFieldControl`, `Select`, `MultiSelect`, `Checkbox`, `Switch`, `Calendar`.
 2. Overlay: `FiboDialog`, `DialogService`, `DialogTrigger`, `FiboDrawer`, `DrawerService`, `DrawerTrigger`, `FiboConfirmation`, `ConfirmationService`, `ConfirmationTrigger`, `Notification`, `Notifier`, `Tooltip`, `TooltipService`, `TooltipContainer`.
-3. Navigation/menu: `PopoverMenu`, `MenuItem`, `MenuPanel`, `TreeMenu`, `TreeMenuChain`, `SideMenuGroup`, `SideMenuItem`, `MenuItemType`.
+3. Navigation/menu: `Menu`, `MenuItem`, `MenuPanel`, `TreeMenu`, `TreeMenuChain`, `SideMenuGroup`, `SideMenuItem`, `MenuItemType`.
 4. Data display: `Listbox`, `Table`, `LoadingSpin`.
 
 ## 7. Внутренние (неэкспортируемые) строительные блоки

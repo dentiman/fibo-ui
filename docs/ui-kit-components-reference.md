@@ -392,7 +392,7 @@ last_updated: 2026-02-14
 }
 ```
 
-## 3.2. `PopoverMenu`
+## 3.2. `Menu`
 
 - kind: component
 - selector: `fibo-menu`

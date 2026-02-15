@@ -60,9 +60,12 @@ export class PopoverTrigger {
     // Check if focus is moving to the popover container (rendered in portal outlet)
     const popoverElement = this.popover()?.element.nativeElement;
     const isMovingToPopover = popoverElement?.contains(relatedTarget);
+    const relatedElement =
+      relatedTarget instanceof Element ? relatedTarget : relatedTarget.parentElement;
+    const isMovingToAnyPopover = !!relatedElement?.closest('.fibo-popover-container');
 
     // Don't close if focus is moving within the control element or to the popover
-    if (controlElement.contains(relatedTarget) || isMovingToPopover) {
+    if (controlElement.contains(relatedTarget) || isMovingToPopover || isMovingToAnyPopover) {
       return;
     }
 

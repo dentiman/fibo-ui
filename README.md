@@ -59,7 +59,7 @@ npm start          # Dev server at http://localhost:4200
 │           │   ├── form/            # TextField, DatePickerField, FormFieldControl
 │           │   ├── select/          # Select, MultiSelect
 │           │   ├── calendar/        # Calendar, DateSelectionModel, DateRangeSelectionModel
-│           │   ├── menu/            # PopoverMenu, TreeMenu, MenuItem, MenuPanel
+│           │   ├── menu/            # Menu, TreeMenu, MenuItem, MenuPanel
 │           │   ├── dialog/          # FiboDialog, DialogTrigger, DialogService
 │           │   ├── notification/    # Notification, Notifier service
 │           │   ├── confirmation/    # Confirmation, ConfirmationTrigger, ConfirmationService
@@ -91,7 +91,7 @@ Behavior-only primitives with no styling. Components library builds on these.
 Styled components composed from CDK primitives.
 
 - **Form components** implement `FormValueControl<T>` interface — `value`, `required`, `disabled`, `touched`, `invalid`, `dirty`, `errors` signals. Integrates with `@angular/forms/signals` via `[formField]` binding
-- **Menu system** — `PopoverMenu` uses CDK's DataList + Popover for floating menus with nested submenus. `TreeMenu` renders hierarchical collapsible navigation with active URL detection
+- **Menu system** — `Menu` uses CDK's DataList + Popover for floating menus with nested submenus. `TreeMenu` renders hierarchical collapsible navigation with active URL detection
 - **Dialog** — `DialogTrigger` directive opens modal/drawer via `DialogService`. Supports `'dialog'` and `'drawer'` modes
 - **Notification** — `Notifier` service manages a signal-based stack of toasts with auto-dismiss timers
 

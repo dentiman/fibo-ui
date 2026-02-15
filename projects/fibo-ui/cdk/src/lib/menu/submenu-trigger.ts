@@ -1,24 +1,24 @@
 import { Directive, inject, OnDestroy, OnInit } from '@angular/core';
 import { Option } from '../data-list/option.directive';
 import { PopoverTrigger } from '../popover/popover-trigger';
-import { SUBMENU_PANEL } from './submenu-panel';
+import { MENU_PANEL } from './menu-panel';
 
 /**
  * Directive that creates a submenu trigger with popover behavior.
  *
  * **Requirements:**
- * - Parent element must have `fiboSubmenuPanel` directive
+ * - Parent element must have `fiboMenuPanel` directive
  *
  * Features:
  * - Composes Option + PopoverTrigger via hostDirectives
- * - Registers in parent SubmenuPanel on init
+ * - Registers in parent MenuPanel on init
  * - Unregisters on destroy
  * - Keyboard support: Enter/Escape to open/close, ArrowRight to navigate into submenu
  * - Click to open
  *
  * Usage:
  * ```html
- * <div fiboSubmenuPanel>
+ * <div fiboMenuPanel>
  *   <button fiboSubmenuTrigger [disabled]="false">
  *     Menu Item
  *   </button>
@@ -45,7 +45,7 @@ import { SUBMENU_PANEL } from './submenu-panel';
 export class SubmenuTrigger implements OnInit, OnDestroy {
   popoverTrigger = inject(PopoverTrigger);
   option = inject(Option);
-  private panel = inject(SUBMENU_PANEL);
+  private panel = inject(MENU_PANEL);
 
   // Expose PopoverTrigger's isOpen for template binding
   get isOpen() {

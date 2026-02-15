@@ -30,7 +30,7 @@ export * from './lib/table/table-row';
 export * from './lib/menu/expandable';
 export * from './lib/menu/expand-on-selection';
 export * from './lib/menu/expand-on-route';
-export * from './lib/menu/submenu-panel';
+export * from './lib/menu/menu-panel';
 export * from './lib/menu/submenu-trigger';
 export * from './lib/menu/menu-item.type';
 export * from './lib/menu/menu-active-route.utils';

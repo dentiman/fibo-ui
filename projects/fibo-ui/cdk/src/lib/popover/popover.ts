@@ -43,10 +43,16 @@ export class Popover implements OnInit, OnDestroy {
     }
   }
   onFocusOut(event: FocusEvent) {
-    console.log(event)
     const relatedTarget = event.relatedTarget as Node;
     if(!relatedTarget) return;
-    if (this.trigger().element.contains(relatedTarget) || this.element.nativeElement.contains(relatedTarget)) {
+    const relatedElement =
+      relatedTarget instanceof Element ? relatedTarget : relatedTarget.parentElement;
+    const isMovingToPopover = !!relatedElement?.closest('.fibo-popover-container');
+    if (
+      this.trigger().element.contains(relatedTarget) ||
+      this.element.nativeElement.contains(relatedTarget) ||
+      isMovingToPopover
+    ) {
       return
 
     }

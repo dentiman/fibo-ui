@@ -3,7 +3,7 @@
   Select Option: {{ selectedValue() || 'None' }}
 </button>
 <ng-template [(isOpen)]="valueMenu.isOpen" fiboPortalContent>
-  <fibo-menu [items]="valueItems()"
+  <fibo-menu fiboPopover [items]="valueItems()"
              [trigger]="valueMenu"
              fiboSelectOne [(value)]="selectedValue"
              placement="bottom-start">

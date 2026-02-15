@@ -337,7 +337,7 @@ items: MenuItemType[] = [
 ```html
 <button #trigger="PopoverTrigger" fiboPopoverTriggerToggle>Open Menu</button>
 <ng-template [(isOpen)]="trigger.isOpen" fiboPortalContent>
-  <fibo-menu [items]="items" [trigger]="trigger" placement="bottom-start" />
+  <fibo-menu fiboPopover [items]="items" [trigger]="trigger" placement="bottom-start" />
 </ng-template>
 ```
 
@@ -346,7 +346,7 @@ items: MenuItemType[] = [
 ```html
 <button #menu="PopoverTrigger" fiboPopoverTriggerToggle>Menu</button>
 @if (menu.isOpen()) {
-  <fibo-menu [trigger]="menu">
+  <fibo-menu fiboPopover [trigger]="menu">
     <a fiboMenuItem class="datalist-item" routerLink="/page1">Page 1</a>
     <a fiboMenuItem class="datalist-item" routerLink="/page2">Page 2</a>
   </fibo-menu>
@@ -356,7 +356,7 @@ items: MenuItemType[] = [
 **Menu with selection:**
 
 ```html
-<fibo-menu [items]="items" [trigger]="trigger" fiboSelectOne [(value)]="selectedValue" />
+<fibo-menu fiboPopover [items]="items" [trigger]="trigger" fiboSelectOne [(value)]="selectedValue" />
 ```
 
 #### Tree Menu
