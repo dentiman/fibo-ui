@@ -1,0 +1,143 @@
+import {Component, signal} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {SelectMulti, SelectOne} from '@fibo-ui/cdk';
+import {User, usersChoices} from "../../../common/form-data-example";
+import {Listbox} from '@fibo-ui/components';
+
+@Component({
+  selector: 'app-listbox-page',
+  standalone: true,
+  imports: [
+    CommonModule,
+    Listbox,
+    SelectOne,
+    SelectMulti,
+  ],
+  template: `
+<div class="p-6">
+  <h1 class="text-2xl font-bold mb-6">Listbox Component Demo</h1>
+
+  <div class="space-y-8">
+
+    <!-- Single Selection Listbox -->
+    <div class="space-y-4">
+      <h2 class="text-xl font-semibold">Single Selection Listbox</h2>
+      <div class="grid grid-cols-1 gap-6">
+        <div>
+          <label class="block text-sm font-medium mb-2">Single Selection</label>
+          <div class="fibo-card">
+            <fibo-listbox
+              [items]="users"
+              [valueProp]="valueProp"
+              [labelProp]="labelProp"
+              fiboSelectOne [(value)]="singleSelectionValue">
+            </fibo-listbox>
+          </div>
+          <div class="mt-2 text-sm text-gray-600">
+            Selected: {{ singleSelectionValue() }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Multiple Selection Listbox -->
+    <div class="space-y-4">
+      <h2 class="text-xl font-semibold">Multiple Selection Listbox</h2>
+      <div class="grid grid-cols-1 gap-6">
+        <div>
+          <label class="block text-sm font-medium mb-2">Multiple Selection</label>
+          <div class="fibo-card">
+            <fibo-listbox
+              [items]="users"
+              [valueProp]="valueProp"
+              [labelProp]="labelProp"
+              fiboSelectMulti [(value)]="multipleSelectionValue">
+            </fibo-listbox>
+          </div>
+          <div class="mt-2 text-sm text-gray-600">
+            Selected: {{ multipleSelectionValue()?.length || 0 }} items
+          </div>
+          <div class="mt-2 space-x-2">
+            <button type="button" (click)="selectAll()"
+                    class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600">
+              Select All
+            </button>
+            <button type="button" (click)="deselectAll()"
+                    class="px-3 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600">
+              Deselect All
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disabled Listbox -->
+    <div class="space-y-4">
+      <h2 class="text-xl font-semibold">Disabled Listbox</h2>
+      <div class="grid grid-cols-1 gap-6">
+        <div>
+          <label class="block text-sm font-medium mb-2">Disabled State</label>
+          <div class="fibo-card">
+            <fibo-listbox
+              [items]="users"
+              [valueProp]="valueProp"
+              [labelProp]="labelProp"
+              [disabled]="true"
+              fiboSelectOne [(value)]="disabledValue">
+            </fibo-listbox>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Actions -->
+    <div class="flex space-x-4">
+      <button type="button" (click)="clearSelections()"
+              class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+        Clear All
+      </button>
+    </div>
+
+  </div>
+</div>
+  `,
+})
+export class ListboxPageComponent {
+  // Use shared user data for all fields
+  users = usersChoices;
+
+  // Properties for the listbox
+  valueProp: keyof User = 'id';
+  labelProp: keyof User = 'name';
+
+  // Selection values
+  singleSelectionValue = signal<number | null>(null);
+  multipleSelectionValue = signal<number[]>([]);
+  disabledValue = signal<number | null>(3);
+
+  // Method to clear selections
+  clearSelections() {
+    this.singleSelectionValue.set(null);
+    this.multipleSelectionValue.set([]);
+    this.disabledValue.set(3);
+  }
+
+  // Method to select all items (for multiple selection)
+  selectAll() {
+    this.multipleSelectionValue.set(this.users.map(user => user.id));
+  }
+
+  // Method to deselect all items (for multiple selection)
+  deselectAll() {
+    this.multipleSelectionValue.set([]);
+  }
+
+  // Method to get selected name
+  getSelectedName(value: any): string {
+    if (!value) return 'None';
+    const user = this.users.find(u => u.id === value);
+    return user?.name || 'None';
+  }
+}

@@ -1,0 +1,75 @@
+import { Component } from '@angular/core';
+import { LoadingSpin } from '@fibo-ui/components';
+
+@Component({
+  selector: 'app-loading-spin',
+  imports: [
+    LoadingSpin
+  ],
+  template: `
+<div class="p-6 space-y-6">
+  <div>
+    <h1 class="text-2xl font-bold text-foreground mb-4">Loading Spin Component</h1>
+    <p class="text-foreground-secondary mb-6">A customizable loading spinner component using CSS divs.</p>
+  </div>
+
+  <div class="space-y-8">
+    <!-- Default Loading Spin -->
+    <div>
+      <h2 class="text-lg font-semibold text-foreground mb-3">Default Loading Spin</h2>
+      <div class="flex items-center space-x-4">
+        <fibo-loading-spin></fibo-loading-spin>
+      </div>
+    </div>
+
+    <!-- Different Sizes -->
+    <div>
+      <h2 class="text-lg font-semibold text-foreground mb-3">Different Sizes</h2>
+      <div class="flex items-center space-x-4">
+        <fibo-loading-spin class="w-4 h-4 text-blue-500"></fibo-loading-spin>
+        <span class="text-sm text-foreground-secondary">Small (w-4 h-4)</span>
+      </div>
+      <div class="flex items-center space-x-4 mt-2">
+        <fibo-loading-spin class="w-8 h-8 text-green-500"></fibo-loading-spin>
+        <span class="text-sm text-foreground-secondary">Medium (w-8 h-8)</span>
+      </div>
+      <div class="flex items-center space-x-4 mt-2">
+        <fibo-loading-spin class="w-12 h-12 text-purple-500"></fibo-loading-spin>
+        <span class="text-sm text-foreground-secondary">Large (w-12 h-12)</span>
+      </div>
+    </div>
+
+    <!-- Different Colors -->
+    <div>
+      <h2 class="text-lg font-semibold text-foreground mb-3">Different Colors</h2>
+      <div class="flex items-center space-x-4">
+        <fibo-loading-spin class="w-8 h-8 text-red-500"></fibo-loading-spin>
+        <span class="text-sm text-foreground-secondary">Red</span>
+      </div>
+      <div class="flex items-center space-x-4 mt-2">
+        <fibo-loading-spin class="w-8 h-8 text-orange-500"></fibo-loading-spin>
+        <span class="text-sm text-foreground-secondary">Orange</span>
+      </div>
+      <div class="flex items-center space-x-4 mt-2">
+        <fibo-loading-spin class="w-8 h-8 text-indigo-500"></fibo-loading-spin>
+        <span class="text-sm text-foreground-secondary">Indigo</span>
+      </div>
+    </div>
+
+    <!-- Usage Examples -->
+    <div>
+      <h2 class="text-lg font-semibold text-foreground mb-3">Usage Examples</h2>
+      <div class="fibo-card p-4 rounded-lg">
+        <h3 class="text-md font-medium text-foreground mb-2">Basic Usage:</h3>
+        <pre class="text-sm text-foreground fibo-card p-3 rounded"><code>&lt;fibo-loading-spin&gt;&lt;/fibo-loading-spin&gt;</code></pre>
+
+        <h3 class="text-md font-medium text-foreground mb-2 mt-4">With Custom Size and Color:</h3>
+        <pre class="text-sm text-foreground fibo-card p-3 rounded"><code>&lt;fibo-loading-spin class="w-8 h-8 text-blue-500"&gt;&lt;/fibo-loading-spin&gt;</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+  `,
+})
+export class LoadingSpinPageComponent {
+}
