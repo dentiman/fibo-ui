@@ -4,6 +4,8 @@ import { SelectPageComponent } from './pages/select/select-page';
 import { TooltipPageComponent } from './pages/tooltip/tooltip-page';
 import { MultipleSelectPageComponent } from './pages/multiple/multiple-select-page';
 import { MenuPageComponent } from './pages/menu/menu-page';
+import { MenuOneLevelPageComponent } from './pages/menu-one-level/menu-one-level-page';
+import { MenuMultiLevelDataDrivenPageComponent } from './pages/menu-multi-level-data-driven/menu-multi-level-data-driven-page';
 import { DialogPageComponent } from './pages/dialog-page/dialog-page';
 import { ConfirmationPageComponent } from './pages/confirmation-page/confirmation-page';
 import { NotificationPageComponent } from './pages/notification-page/notification-page';
@@ -48,6 +50,14 @@ export const routes: Routes = [
       {
         path: 'menu',
         component: MenuPageComponent
+      },
+      {
+        path: 'menu-one-level',
+        component: MenuOneLevelPageComponent
+      },
+      {
+        path: 'menu-multi-level-data-driven',
+        component: MenuMultiLevelDataDrivenPageComponent
       },
       {
         path: 'dialog',
