@@ -41,12 +41,12 @@ flowchart TD
 
 ## 2.2. Где используется
 
-1. `src/app/pages/select/select-page.ts`
-2. `src/app/pages/multiple/multiple-select-page.ts`
-3. `src/app/pages/datepicker/datepicker.ts`
-4. `src/app/pages/menu/menu-page.ts`
-5. `src/app/pages/form-example-page/form-example-page.ts`
-6. `src/app/pages/playground-page/playground-page.ts`
+1. `src/app/pages/components/form-controls/select-page.ts`
+2. `src/app/pages/components/form-controls/multiple-select-page.ts`
+3. `src/app/pages/components/form-controls/datepicker.ts`
+4. `src/app/pages/components/overlays/menu-page.ts`
+5. `src/app/pages/components/examples/form-example-page.ts`
+6. `src/app/pages/components/examples/playground-page.ts`
 
 ## 3. Dialog: service -> trigger -> root component
 
@@ -63,7 +63,7 @@ flowchart TD
 1. `projects/fibo-ui/components/src/lib/overlay/dialog/dialog-trigger.ts`
 2. `projects/fibo-ui/components/src/lib/overlay/dialog/dialog-service.ts`
 3. `projects/fibo-ui/components/src/lib/overlay/dialog/dialog.ts`
-4. `src/app/pages/dialog-page/dialog-page.ts`
+4. `src/app/pages/components/overlays/dialog-page.ts`
 
 ## 4. Drawer: service -> trigger -> root component
 
@@ -78,7 +78,7 @@ flowchart TD
 1. `projects/fibo-ui/components/src/lib/overlay/drawer/drawer-trigger.ts`
 2. `projects/fibo-ui/components/src/lib/overlay/drawer/drawer-service.ts`
 3. `projects/fibo-ui/components/src/lib/overlay/drawer/drawer.ts`
-4. `src/app/pages/drawer-page/drawer-page.ts`
+4. `src/app/pages/components/overlays/drawer-page.ts`
 
 ## 5. Confirmation: directive event bridge + service state
 
@@ -95,7 +95,7 @@ flowchart TD
 1. `projects/fibo-ui/components/src/lib/overlay/confirmation/confirmation-trigger.ts`
 2. `projects/fibo-ui/components/src/lib/overlay/confirmation/confirmation-service.ts`
 3. `projects/fibo-ui/components/src/lib/overlay/confirmation/confirmation.ts`
-4. `src/app/pages/confirmation-page/confirmation-page.ts`
+4. `src/app/pages/components/overlays/confirmation-page.ts`
 
 ## 6. Notification: imperative service + passive renderer
 
@@ -110,7 +110,7 @@ flowchart TD
 
 1. `projects/fibo-ui/components/src/lib/overlay/notification/notifier.ts`
 2. `projects/fibo-ui/components/src/lib/overlay/notification/notification.ts`
-3. `src/app/pages/notification-page/notification-page.ts`
+3. `src/app/pages/components/overlays/notification-page.ts`
 
 ## 7. Tooltip: directive trigger + service + floating container
 
@@ -126,7 +126,7 @@ flowchart TD
 1. `projects/fibo-ui/components/src/lib/overlay/tooltip/tooltip.ts`
 2. `projects/fibo-ui/components/src/lib/overlay/tooltip/tooltip-service.ts`
 3. `projects/fibo-ui/components/src/lib/overlay/tooltip/tooltip-container.ts`
-4. `src/app/pages/tooltip/tooltip-page.ts`
+4. `src/app/pages/components/overlays/tooltip-page.ts`
 
 ## 8. Select/Datepicker as composition templates
 
@@ -173,19 +173,19 @@ flowchart TD
 ## 10.2. Где смотреть
 
 1. `projects/fibo-ui/components/src/lib/table/table.ts`
-2. `src/app/pages/grids/table-page/table-page.ts`
+2. `src/app/pages/components/data-display/table-page.ts`
 
 ## 11. Form patterns
 
 ## 11.1. Low-level (CDK-first)
 
 - `fiboFormField` / `fiboFormFieldTrigger` + native input + CDK primitives.
-- Пример: `src/app/pages/form-example-page/form-example-page.ts`.
+- Пример: `src/app/pages/components/examples/form-example-page.ts`.
 
 ## 11.2. High-level (Components-first)
 
 - `fibo-text-field`, `fibo-select`, `fibo-multi-select`, `fibo-datepicker` c `[formField]`.
-- Пример: `src/app/pages/components-fields-form/components-fields-form.ts`.
+- Пример: `src/app/pages/components/examples/components-fields-form.ts`.
 
 ## 12. Рекомендуемый порядок выбора подхода
 

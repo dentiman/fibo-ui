@@ -4,7 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { RootNavComponent } from './root-nav';
 import { TooltipContainer } from '@fibo-ui/components';
 import { ThemeToggleComponent } from '../common/theme-toggle';
-import {FormExamplePageComponent} from '../pages/form-example-page/form-example-page';
+import { FormExamplePageComponent } from '../pages/components/examples/form-example-page';
 import { NgOptimizedImage } from '@angular/common';
 
 @Component({
