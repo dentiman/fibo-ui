@@ -9,13 +9,13 @@ import {
   model
 } from '@angular/core';
 import {CommonModule, NgTemplateOutlet} from '@angular/common';
-import {FiboColumn, Option, SelectMulti, SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
+import {FiboColumn, DataListItem, SelectMulti, SELECTION_MODEL, SelectionModel} from '@fibo-ui/cdk';
 import {Checkbox} from '../form-controls/checkbox/checkbox';
 
 // TODO:: need implement checkbox multiselect outside table component
 @Component({
   selector: 'fibo-table',
-  imports: [CommonModule, NgTemplateOutlet, Checkbox, Option],
+  imports: [CommonModule, NgTemplateOutlet, Checkbox, DataListItem],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'fibo-table block w-full overflow-x-auto',
@@ -77,8 +77,8 @@ import {Checkbox} from '../form-controls/checkbox/checkbox';
           <tr>
             @if (hasMultipleSelectionModel) {
               <td class="px-1 text-sm whitespace-nowrap text-foreground-secondary">
-                <a fiboOption [value]="row"
-                   #item="Option">
+                <a fiboDataListItem [value]="row"
+                   #item="DataListItem">
                   <fibo-checkbox
                     [readonly]="true"
                     [checked]="item.isSelected()"

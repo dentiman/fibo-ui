@@ -1,5 +1,5 @@
 import { Directive, inject } from '@angular/core';
-import { Expandable, ExpandOnRoute, Option } from '@fibo-ui/cdk';
+import { Expandable, ExpandOnRoute, DataListItem } from '@fibo-ui/cdk';
 
 /**
  * Directive for collapsible submenu items in TreeMenu.
@@ -7,14 +7,14 @@ import { Expandable, ExpandOnRoute, Option } from '@fibo-ui/cdk';
  * Uses composable CDK directives:
  * - Expandable: Base expand/collapse state
  * - ExpandOnRoute: Auto-expand when child routes are active
- * - Option: Data list item behavior
+ * - DataListItem: Data list item behavior
  */
 @Directive({
   selector: '[fiboCollapseSubmenuItem]',
   exportAs: 'fiboCollapseSubmenuItem',
   hostDirectives: [
     {
-      directive: Option,
+      directive: DataListItem,
       inputs: ['disabled'],
     },
     Expandable,

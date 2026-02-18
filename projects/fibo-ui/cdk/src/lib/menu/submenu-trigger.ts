@@ -1,5 +1,5 @@
 import { Directive, inject, OnDestroy, OnInit } from '@angular/core';
-import { Option } from '../data-list/option.directive';
+import { DataListItem } from '../data-list/data-list-item.directive';
 import { PopoverTrigger } from '../popover/popover-trigger';
 import { MENU_PANEL } from './menu-panel';
 
@@ -10,7 +10,7 @@ import { MENU_PANEL } from './menu-panel';
  * - Parent element must have `fiboMenuPanel` directive
  *
  * Features:
- * - Composes Option + PopoverTrigger via hostDirectives
+ * - Composes DataListItem + PopoverTrigger via hostDirectives
  * - Registers in parent MenuPanel on init
  * - Unregisters on destroy
  * - Keyboard support: Enter/Escape to open/close, ArrowRight to navigate into submenu
@@ -30,7 +30,7 @@ import { MENU_PANEL } from './menu-panel';
   exportAs: 'submenuTrigger',
   hostDirectives: [
     {
-      directive: Option,
+      directive: DataListItem,
       inputs: ['disabled'],
     },
     PopoverTrigger,
@@ -44,7 +44,7 @@ import { MENU_PANEL } from './menu-panel';
 })
 export class SubmenuTrigger implements OnInit, OnDestroy {
   popoverTrigger = inject(PopoverTrigger);
-  option = inject(Option);
+  option = inject(DataListItem);
   private panel = inject(MENU_PANEL);
 
   // Expose PopoverTrigger's isOpen for template binding

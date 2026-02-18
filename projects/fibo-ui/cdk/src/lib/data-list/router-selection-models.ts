@@ -31,7 +31,7 @@ export class RouterSelectOne<T> implements SelectionModel<T> {
   // Internal state - tracks current URL to trigger reactivity
   private _currentUrl = signal<string>(this.router.url);
 
-  // Public value signal - triggers Option.isSelected recomputation
+  // Public value signal - triggers DataListItem.isSelected recomputation
   value = computed(() => this._currentUrl());
 
   lastSelection = computed(() => {

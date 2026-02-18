@@ -8,21 +8,21 @@ import {
 import { RouterLink } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { SideMenuGroup } from './side-menu-group';
-import { Option } from '@fibo-ui/cdk';
+import { DataListItem } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'side-menu-item',
-  imports: [RouterLink, LucideAngularModule, Option],
+  imports: [RouterLink, LucideAngularModule, DataListItem],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block',
   },
   template: `
     <a
-      fiboOption
+      fiboDataListItem
       [value]="url()"
       [routerLink]="url()"
-      #opt="Option"
+      #opt="DataListItem"
       [attr.aria-selected]="opt.isSelected() || null"
       [class.relative]="isNested()"
       class="group flex items-center gap-x-3 rounded-md py-1 px-2 text-sm cursor-pointer

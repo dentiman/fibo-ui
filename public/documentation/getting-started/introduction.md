@@ -25,10 +25,10 @@ FormFieldControl      — visual shell: label, icons, error state
    └─ PortalContent   — escapes DOM stacking context
       └─ Popover      — floating positioning via @floating-ui/dom
          └─ DataList  — keyboard navigation, active-item tracking
-            └─ SelectOne + Option × N  — selection model
+            └─ SelectOne + DataListItem × N  — selection model
 ```
 
-Every layer is replaceable independently. Swap `SelectOne` for `SelectMulti` to get a multi-select. Swap `SelectOne` for `RouterSelectOne` and the same `Option` directive navigates routes. Swap the inner list for a `Calendar` and you have a date picker — sharing the same popover and keyboard infrastructure.
+Every layer is replaceable independently. Swap `SelectOne` for `SelectMulti` to get a multi-select. Swap `SelectOne` for `RouterSelectOne` and the same `DataListItem` directive navigates routes. Swap the inner list for a `Calendar` and you have a date picker — sharing the same popover and keyboard infrastructure.
 
 ### Signals-first, zoneless
 
@@ -36,13 +36,13 @@ Every piece of state is a `signal()`, `model()`, or `computed()`. All components
 
 ### Accessibility by default
 
-ARIA is built into the CDK primitives, not bolted on at the component layer. `DataList` manages `aria-activedescendant` and keyboard navigation. `Option` sets `aria-selected` and `aria-disabled`. `PopoverTrigger` wires `aria-expanded` and `aria-controls`. Every styled component inherits correct behaviour automatically because it is built on these primitives.
+ARIA is built into the CDK primitives, not bolted on at the component layer. `DataList` manages `aria-activedescendant` and keyboard navigation. `DataListItem` sets `aria-selected` and `aria-disabled`. `PopoverTrigger` wires `aria-expanded` and `aria-controls`. Every styled component inherits correct behaviour automatically because it is built on these primitives.
 
 ### Polymorphic selection via dependency injection
 
-The `SELECTION_MODEL` injection token decouples *what is selectable* from *how selection works*. The same `[fiboOption]` directive operates inside a dropdown, a calendar, a table, a sidebar menu — because it only ever calls `selectionModel.select(value)` and never cares about the semantics behind it.
+The `SELECTION_MODEL` injection token decouples *what is selectable* from *how selection works*. The same `[fiboDataListItem]` directive operates inside a dropdown, a calendar, a table, a sidebar menu — because it only ever calls `selectionModel.select(value)` and never cares about the semantics behind it.
 
-> Provide a custom class that implements `SelectionModel<T>` and any `DataList` + `Option` tree immediately gains your selection behaviour.
+> Provide a custom class that implements `SelectionModel<T>` and any `DataList` + `DataListItem` tree immediately gains your selection behaviour.
 
 ## Who Is It For
 

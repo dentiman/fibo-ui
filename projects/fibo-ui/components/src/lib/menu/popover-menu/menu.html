@@ -31,20 +31,20 @@
 
   } @else {
     @if (item.url) {
-      <a fiboOption [value]="item" [disabled]="!!item.disabled" (itemTrigger)="menuPanel.closeMenuWithParent()"
+      <a fiboDataListItem [value]="item" [disabled]="!!item.disabled" (itemTrigger)="menuPanel.closeMenuWithParent()"
          [routerLink]="item.url"
          class="datalist-item ">
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
       </a>
     } @else if (item.callback) {
       <a class="datalist-item py-1 px-2 rounded-md relative group text-sm"
-         fiboOption [disabled]="!!item.disabled"
+         fiboDataListItem [disabled]="!!item.disabled"
          (itemTrigger)="item.callback(); menuPanel.closeMenuWithParent()">
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
       </a>
     } @else if (item.value !== undefined) {
       <a class="datalist-item py-1 px-2 rounded-md relative group text-sm"
-         fiboOption [disabled]="!!item.disabled"
+         fiboDataListItem [disabled]="!!item.disabled"
          [value]="item.value"
          (itemTrigger)="menuPanel.closeMenuWithParent()">
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>

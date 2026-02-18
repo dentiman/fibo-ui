@@ -1,6 +1,6 @@
 import {Component, inject, input, TemplateRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {DataList, SelectMulti, Option, SELECTION_MODEL, SelectionModel, safeProp} from '@fibo-ui/cdk';
+import {DataList, SelectMulti, DataListItem, SELECTION_MODEL, SelectionModel, safeProp} from '@fibo-ui/cdk';
 import {Checkbox} from '../../form-controls/checkbox/checkbox';
 
 @Component({
@@ -8,12 +8,12 @@ import {Checkbox} from '../../form-controls/checkbox/checkbox';
   imports: [
     CommonModule,
     Checkbox,
-    Option
+    DataListItem
   ],
   hostDirectives: [{
     directive: DataList,
     inputs: ['disabled','trigger'],
-    outputs: ['optionTriggered'],
+    outputs: ['itemTriggered'],
   }],
   templateUrl: './listbox.html',
   host: {

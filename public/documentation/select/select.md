@@ -21,11 +21,11 @@ Select
 
   <div *fiboPortalContent="let trigger"
        fiboPopover [trigger]="trigger" [matchWidth]="true"
-       fiboDataList (optionTriggered)="trigger.close()"
+       fiboDataList (itemTriggered)="trigger.close()"
        fiboSelectOne [(value)]="userForm.role().value"
        class="popover-container">
     @for (role of userRoles; track role) {
-      <a fiboOption [value]="role" class="datalist-item">
+      <a fiboDataListItem [value]="role" class="datalist-item">
         <span class="block truncate font-normal">{{ role }}</span>
       </a>
     }
@@ -39,7 +39,7 @@ Select
   imports: [
     FormField, FormFieldTrigger, DataList,
     Popover, PortalContent, SelectOne,
-    Option, LucideAngularModule,
+    DataListItem, LucideAngularModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '...',

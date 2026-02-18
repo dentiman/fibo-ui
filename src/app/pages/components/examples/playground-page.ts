@@ -57,7 +57,7 @@ import { Checkbox } from '@fibo-ui/components';
                                class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
                   <ng-template fiboPortalContent [(isOpen)]="userTrigger.isOpen">
                       <div fiboPopover [trigger]="userTrigger" [matchWidth]="false"
-                           fiboDataList (optionTriggered)="userTrigger.close()"
+                           fiboDataList (itemTriggered)="userTrigger.close()"
                            fiboSelectOne [(value)]="userSelectValue"
                            class="popover-container w-60"
                       >
@@ -102,7 +102,7 @@ import { Checkbox } from '@fibo-ui/components';
                   <fibo-calendar *fiboPortalContent="let trigger"
                                  fiboPopover [trigger]="trigger"
                                  fiboSelectDate [(value)]="createdAfter"
-                                 (optionTriggered)="trigger.close()"
+                                 (itemTriggered)="trigger.close()"
                                  class="popover-container"/>
               </div>
 
@@ -201,7 +201,7 @@ import { Checkbox } from '@fibo-ui/components';
                                    class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
                       <ng-template fiboPortalContent [(isOpen)]="statusTrigger.isOpen">
                           <div fiboPopover [trigger]="statusTrigger" [matchWidth]="false"
-                               fiboDataList (optionTriggered)="statusTrigger.close()"
+                               fiboDataList (itemTriggered)="statusTrigger.close()"
                                fiboSelectOne [(value)]="statusSelect"
                                class="popover-container w-60"
                           >
@@ -226,7 +226,7 @@ import { Checkbox } from '@fibo-ui/components';
                                class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
                   <ng-template fiboPortalContent [(isOpen)]="categoryTrigger.isOpen">
                       <div fiboPopover [trigger]="categoryTrigger" [matchWidth]="false"
-                           fiboDataList (optionTriggered)="categoryTrigger.close()"
+                           fiboDataList (itemTriggered)="categoryTrigger.close()"
                            fiboSelectOne [(value)]="categorySelect"
                            class="popover-container w-60"
                       >

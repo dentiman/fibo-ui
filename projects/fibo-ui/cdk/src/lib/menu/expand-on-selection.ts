@@ -1,9 +1,9 @@
 import { contentChildren, Directive, effect, inject } from '@angular/core';
-import { Option } from '../data-list/option.directive';
+import { DataListItem } from '../data-list/data-list-item.directive';
 import { Expandable } from './expandable';
 
 /**
- * Directive that automatically expands when any descendant Option is selected.
+ * Directive that automatically expands when any descendant DataListItem is selected.
  *
  * **Requirements:**
  * - Host element must have `fiboExpandable` directive
@@ -12,8 +12,8 @@ import { Expandable } from './expandable';
  * Usage:
  * ```html
  * <div fiboExpandable fiboExpandOnSelection>
- *   <div fiboOption [value]="1">Option 1</div>
- *   <div fiboOption [value]="2">Option 2</div>
+ *   <div fiboDataListItem [value]="1">DataListItem 1</div>
+ *   <div fiboDataListItem [value]="2">DataListItem 2</div>
  * </div>
  * ```
  *
@@ -24,7 +24,7 @@ import { Expandable } from './expandable';
 })
 export class ExpandOnSelection {
   private expandable = inject(Expandable);
-  private options = contentChildren(Option, { descendants: true });
+  private options = contentChildren(DataListItem, { descendants: true });
 
   constructor() {
     effect(() => {

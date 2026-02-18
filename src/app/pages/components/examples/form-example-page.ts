@@ -90,7 +90,7 @@ interface UserProfile {
 
           <div *fiboPortalContent="let trigger"
                fiboPopover [trigger]="trigger" [matchWidth]="true"
-               fiboDataList (optionTriggered)="trigger.close()"
+               fiboDataList (itemTriggered)="trigger.close()"
                fiboSelectOne [(value)]="userProfileForm.city().value"
                class="popover-container">
             @for (c of cities; track c.value) {
@@ -114,7 +114,7 @@ interface UserProfile {
 
           <div *fiboPortalContent="let trigger"
                fiboPopover [trigger]="trigger" [matchWidth]="true"
-               fiboDataList (optionTriggered)="trigger.close()"
+               fiboDataList (itemTriggered)="trigger.close()"
                fiboSelectOne [(value)]="userProfileForm.userRole().value"
                class="popover-container">
               @for (role of userRoles; track role) {
@@ -179,7 +179,7 @@ interface UserProfile {
           <fibo-calendar *fiboPortalContent="let trigger"
                          fiboPopover [trigger]="trigger"
                          fiboSelectDate [(value)]="userProfileForm.birthDate().value"
-                         (optionTriggered)="trigger.close()"
+                         (itemTriggered)="trigger.close()"
                          class="popover-container"/>
         </div>
 

@@ -26,7 +26,7 @@
       <li class="relative"
           fiboCollapseSubmenuItem [items]="item.children"
           #collapseSubmenuItem="fiboCollapseSubmenuItem"
-          #dataListItem="Option"
+          #dataListItem="DataListItem"
       >
         <div class="flex gap-x-1">
           @if (showChain) {
@@ -76,9 +76,9 @@
            dark:aria-selected:bg-white/8
             aria-selected:bg-black/6
            aria-selected:text-white"
-             fiboOption [value]="item"
+             fiboDataListItem [value]="item"
              [routerLink]="item.url"
-             #dataListItem="Option"
+             #dataListItem="DataListItem"
           >
             @if (showChain) {
             <fibo-tree-menu-chain
@@ -112,9 +112,9 @@
           <button class="relative flex gap-x-2 group cursor-pointer text-left
              aria-selected:rounded-md
            aria-selected:text-white"
-             fiboOption [value]="item"
+             fiboDataListItem [value]="item"
              (click)="item.callback!()"
-             #dataListItem="Option"
+             #dataListItem="DataListItem"
           >
             @if (showChain) {
             <fibo-tree-menu-chain
@@ -149,8 +149,8 @@
           <button class="relative flex gap-x-2 group cursor-pointer text-left
              aria-selected:rounded-md
            aria-selected:text-white"
-             fiboOption [value]="item.value"
-             #dataListItem="Option"
+             fiboDataListItem [value]="item.value"
+             #dataListItem="DataListItem"
           >
             @if (showChain) {
             <fibo-tree-menu-chain

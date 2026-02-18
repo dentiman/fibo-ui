@@ -21,18 +21,18 @@ FormFieldControl  ← visual shell (label, icons, errors)
       └─ Popover + PopoverPosition  ← floating positioning
          └─ DataList  ← keyboard navigation over items
             └─ SelectOne  ← single-value selection model
-               └─ Option × N  ← individual selectable items
+               └─ DataListItem × N  ← individual selectable items
 ```
 
-Every layer is replaceable. Need multi-select? Swap `SelectOne` for `SelectMulti`. Need a date picker instead of a list? Keep `PopoverTrigger` + `PortalContent` + `Popover`, swap the inner content for `Calendar` + `SelectDate`. Need navigation instead of selection? Use `RouterSelectOne` and the same `Option` directive now navigates routes.
+Every layer is replaceable. Need multi-select? Swap `SelectOne` for `SelectMulti`. Need a date picker instead of a list? Keep `PopoverTrigger` + `PortalContent` + `Popover`, swap the inner content for `Calendar` + `SelectDate`. Need navigation instead of selection? Use `RouterSelectOne` and the same `DataListItem` directive now navigates routes.
 
 ---
 
 #### 2. Polymorphic Selection via Dependency Injection
 
-The `SELECTION_MODEL` injection token is the heart of the library. It decouples *what is selectable* (Options inside a DataList) from *how selection behaves* (SelectOne, SelectMulti, SelectDate, RouterSelectOne, or your own implementation).
+The `SELECTION_MODEL` injection token is the heart of the library. It decouples *what is selectable* (DataListItems inside a DataList) from *how selection behaves* (SelectOne, SelectMulti, SelectDate, RouterSelectOne, or your own implementation).
 
-The same `[fiboOption]` directive works inside a dropdown, a calendar, a table row, a sidebar menu, or a set of tabs — because it never cares about the selection semantics, only about calling `selectionModel.select(value)` when triggered.
+The same `[fiboDataListItem]` directive works inside a dropdown, a calendar, a table row, a sidebar menu, or a set of tabs — because it never cares about the selection semantics, only about calling `selectionModel.select(value)` when triggered.
 
 ---
 
@@ -49,7 +49,7 @@ This means:
 
 #### 4. Accessibility by Default
 
-Accessibility is not an afterthought added at the component layer — it is embedded in the CDK primitives. `DataList` manages `aria-activedescendant` and keyboard navigation. `Option` sets `aria-selected` and `aria-disabled` via host bindings. `PopoverTrigger` connects `aria-controls` and `aria-expanded`. `Expandable` manages `aria-expanded`. Because every styled component is built on these primitives, it inherits correct ARIA behaviour automatically.
+Accessibility is not an afterthought added at the component layer — it is embedded in the CDK primitives. `DataList` manages `aria-activedescendant` and keyboard navigation. `DataListItem` sets `aria-selected` and `aria-disabled` via host bindings. `PopoverTrigger` connects `aria-controls` and `aria-expanded`. `Expandable` manages `aria-expanded`. Because every styled component is built on these primitives, it inherits correct ARIA behaviour automatically.
 
 ---
 
@@ -59,7 +59,7 @@ State is expressed through `data-*` and `aria-*` attributes on elements, not thr
 
 ```html
 <!-- Instead of class="option option--selected option--active" -->
-<a fiboOption aria-selected="true" data-active="" class="datalist-item">…</a>
+<a fiboDataListItem aria-selected="true" data-active="" class="datalist-item">…</a>
 ```
 
 This makes styles readable (`[aria-selected="true"]`, `[data-error]`), removes the CSS specificity battles of BEM, and naturally maps to Tailwind's `aria-selected:` variant.
@@ -80,7 +80,7 @@ Floating content (dropdowns, menus, tooltips) is rendered through a lightweight 
 │  Select, TextField, Calendar, Table, Menu…    │
 ├──────────────────────────────────────────────┤
 │  @fibo-ui/cdk  (headless, composable)         │
-│  DataList, Option, SelectOne, Popover,        │
+│  DataList, DataListItem, SelectOne, Popover,  │
 │  PortalContent, FormFieldDirective…           │
 └──────────────────────────────────────────────┘
 ```
@@ -114,7 +114,7 @@ Explains the mental model before diving into components. Adapted from Radix UI a
 | Page | Description |
 |------|-------------|
 | **Overview** | CDK vs Components layer, composition philosophy, when to use each |
-| **Data List & Options** | The `DataList` + `Option` primitive: how options register, keyboard navigation, active state |
+| **Data List & Items** | The `DataList` + `DataListItem` primitive: how items register, keyboard navigation, active state |
 | **Selection Models** | `SelectOne`, `SelectMulti`, `RouterSelectOne`, `SelectDate`, `SelectDateRange`, `SELECTION_MODEL` token, implementing your own |
 | **Popover & Portal** | `PopoverTrigger`, `PortalContent`, `PortalRegistry`, `PortalOutletComponent`, `PopoverPosition`, `@floating-ui/dom` |
 | **Form Integration** | `FormValueControl<T>`, `FormCheckboxControl`, `FormFieldDirective`, `FormFieldControl`, signal forms binding pattern |
@@ -198,8 +198,8 @@ Low-level API reference for library authors and advanced users building their ow
 
 | Page | Description |
 |------|-------------|
-| **DataList** | Directive API, keyboard events, `activeOption` signal, `optionTriggered` output |
-| **Option** | Directive API, `value` input, `disabled`, self-registration pattern |
+| **DataList** | Directive API, keyboard events, `activeOption` signal, `itemTriggered` output |
+| **DataListItem** | Directive API, `value` input, `disabled`, self-registration pattern |
 | **SelectOne / SelectMulti** | API, `value` model, `compareFn`, `isSelected()` |
 | **RouterSelectOne** | API, how `router.isActive()` is used, query params |
 | **PopoverTrigger** | `isOpen` signal, `open()`, `close()`, `toggle()`, focus delegation |

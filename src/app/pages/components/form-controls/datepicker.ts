@@ -54,7 +54,7 @@ import { UsageDemo } from '../../../common/usage-demo';
                 <fibo-calendar *fiboPortalContent="let trigger"
                                fiboPopover [trigger]="trigger"
                                fiboSelectDate [(value)]="userForm.birthDate().value"
-                               (optionTriggered)="trigger.close()"
+                               (itemTriggered)="trigger.close()"
                                class="popover-container"/>
               </div>
             </form>

@@ -1,7 +1,7 @@
 import { Component, computed, input, model } from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
 import {
-  DataList, Option,
+  DataList, DataListItem,
   Popover,
   PopoverTrigger, PopoverTriggerToggle,
   PortalContent,
@@ -20,7 +20,7 @@ import { SelectItem } from './select';
     DataList,
     SelectMulti,
     LucideAngularModule,
-    Option,
+    DataListItem,
     FormFieldControl,
     PopoverTriggerToggle,
     Checkbox
@@ -63,7 +63,7 @@ import { SelectItem } from './select';
            fiboSelectMulti [(value)]="value"
            class="popover-container">
           @for (item of items(); track item.value) {
-            <a fiboOption [value]="item.value" #option="Option"
+            <a fiboDataListItem [value]="item.value" #option="DataListItem"
                class="datalist-item items-center">
               <fibo-checkbox [readonly]="true" [checked]="option.isSelected()">
                 {{ item.label }}

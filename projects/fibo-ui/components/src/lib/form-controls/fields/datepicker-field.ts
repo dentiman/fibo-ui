@@ -47,7 +47,7 @@ import { Calendar } from '../calendar/calendar';
       <fibo-calendar *fiboPortalContent="let trigger"
                      fiboPopover [trigger]="trigger"
                      fiboSelectDate [(value)]="value"
-                     (optionTriggered)="trigger.close()"
+                     (itemTriggered)="trigger.close()"
                      class="popover-container"/>
     </fibo-form-field-control>
 

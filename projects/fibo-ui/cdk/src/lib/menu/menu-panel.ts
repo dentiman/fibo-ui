@@ -2,7 +2,7 @@ import { DestroyRef, Directive, inject, InjectionToken, input, output, signal } 
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { DataList } from '../data-list/data-list';
 import { Popover } from '../popover/popover';
-import { Option } from '../data-list/option.directive';
+import { DataListItem } from '../data-list/data-list-item.directive';
 import { SubmenuTrigger } from './submenu-trigger';
 
 /**
@@ -83,7 +83,7 @@ export class MenuPanel {
     }
 
     this.popover.trigger().element.focus();
-    this.dataList.resetActiveOption();
+    this.dataList.resetActiveDataListItem();
     event.stopPropagation();
     this.closeAllSubmenus();
   }
@@ -92,17 +92,17 @@ export class MenuPanel {
     this.destroyRef.onDestroy(() => this.clearTimeouts());
 
     // Open/close submenu with symmetric delay when active option changes
-    toObservable(this.dataList.activeOption)
+    toObservable(this.dataList.activeDataListItem)
       .pipe(
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(activeItem => {
-        this.handleActiveOptionChange(activeItem);
+        this.handleActiveDataListItemChange(activeItem);
       });
   }
 
-  private handleActiveOptionChange(activeItem: Option | null) {
-    const activeTrigger = this.findTriggerByOption(activeItem);
+  private handleActiveDataListItemChange(activeItem: DataListItem | null) {
+    const activeTrigger = this.findTriggerByDataListItem(activeItem);
     const openTrigger = this.submenuTriggers().find(trigger => trigger.popoverTrigger.isOpen());
 
     if (activeTrigger && openTrigger && activeTrigger !== openTrigger) {
@@ -122,7 +122,7 @@ export class MenuPanel {
     this.clearOpenTimeout();
   }
 
-  private findTriggerByOption(option: Option | null) {
+  private findTriggerByDataListItem(option: DataListItem | null) {
     if (!option) {
       return undefined;
     }

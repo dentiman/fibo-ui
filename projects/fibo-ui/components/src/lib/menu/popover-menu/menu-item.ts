@@ -1,13 +1,13 @@
 import {Directive, inject, input} from '@angular/core';
 import {Menu} from './menu';
-import {Option} from '@fibo-ui/cdk';
+import {DataListItem} from '@fibo-ui/cdk';
 
 
 @Directive({
   selector: '[fiboMenuItem]',
   standalone: true,
   hostDirectives: [{
-    directive: Option,
+    directive: DataListItem,
     inputs: ['disabled'],
     outputs: ['itemTrigger']
   }],

@@ -39,7 +39,7 @@ import { UsageDemo } from '../../../common/usage-demo';
 
           <ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
             <div fiboPopover [trigger]="trigger"
-                 fiboDataList (optionTriggered)="trigger.close()"
+                 fiboDataList (itemTriggered)="trigger.close()"
                  class="popover-container min-w-40">
               <a fiboOption [routerLink]="'/'" class="datalist-item">
                 Single Select

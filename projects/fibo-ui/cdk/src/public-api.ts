@@ -19,7 +19,7 @@ export * from './lib/utils/property.utils';
 
 // Data List Directives
 export * from './lib/data-list/data-list';
-export * from './lib/data-list/option.directive';
+export * from './lib/data-list/data-list-item.directive';
 export * from './lib/data-list/selection-models';
 export * from './lib/data-list/router-selection-models';
 export * from './lib/table/column';

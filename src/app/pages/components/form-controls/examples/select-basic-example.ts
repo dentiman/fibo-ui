@@ -54,7 +54,7 @@ interface UserModel {
           [trigger]="trigger"
           [matchWidth]="true"
           fiboDataList
-          (optionTriggered)="trigger.close()"
+          (itemTriggered)="trigger.close()"
           fiboSelectOne
           [(value)]="userForm.role().value"
           class="popover-container"

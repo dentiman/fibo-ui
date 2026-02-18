@@ -14,7 +14,7 @@
         <ng-template fiboPortalContent let-trigger>
             <fibo-calendar fiboPopover [trigger]="trigger"
                            fiboSelectDate [(value)]="userForm.birthDate().value"
-                           (optionTriggered)="trigger.close()"
+                           (itemTriggered)="trigger.close()"
                            class="popover-container rounded-md"
             />
         </ng-template>

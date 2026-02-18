@@ -1,7 +1,7 @@
 import { Component, computed, inject, input, model, viewChild } from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
 import {
-  DataList, Option,
+  DataList, DataListItem,
   Popover,
   PopoverTrigger, PopoverTriggerToggle,
   PortalContent,
@@ -23,7 +23,7 @@ export interface SelectItem {
     DataList,
     SelectOne,
     LucideAngularModule,
-    Option,
+    DataListItem,
     FormFieldControl,
     PopoverTriggerToggle
   ],
@@ -52,11 +52,11 @@ export interface SelectItem {
 
       <div *fiboPortalContent="let trigger"
            fiboPopover [trigger]="trigger" [matchWidth]="true"
-           fiboDataList (optionTriggered)="trigger.close()"
+           fiboDataList (itemTriggered)="trigger.close()"
            fiboSelectOne [(value)]="value"
            class="popover-container">
           @for (item of items(); track item.value) {
-            <a fiboOption [value]="item.value"
+            <a fiboDataListItem [value]="item.value"
                class="datalist-item">
               {{ item.label }}
             </a>

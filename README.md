@@ -137,7 +137,7 @@ userForm = form(this.userModel, (path) => {
 
   <div *fiboPortalContent="let trigger"
        fiboPopover [trigger]="trigger" [matchWidth]="true"
-       fiboDataList (optionTriggered)="trigger.close()"
+       fiboDataList (itemTriggered)="trigger.close()"
        fiboSelectOne [(value)]="userForm.role().value"
        class="popover-container">
     @for (role of roles; track role) {

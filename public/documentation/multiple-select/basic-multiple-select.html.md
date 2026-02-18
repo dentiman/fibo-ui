@@ -21,7 +21,7 @@
   </span>
     <div *fiboPortalContent="let trigger"
          fiboPopover [trigger]="trigger" [matchWidth]="true"
-         fiboDataList (optionTriggered)="trigger.close()"
+         fiboDataList (itemTriggered)="trigger.close()"
          fiboSelectMulti [(value)]="userForm.skills().value"
          class="popover-container py-1 px-1 rounded-md">
         <div class="max-h-70 overflow-y-auto">
@@ -29,7 +29,7 @@
             <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
             }
             @for (skill of skills; track skill) {
-            <a fiboOption [value]="skill" #option="Option"
+            <a fiboDataListItem [value]="skill" #option="DataListItem"
                class="datalist-item py-1 px-2 rounded-md relative group text-sm items-center">
                 <fibo-checkbox
                         [checked]="option.isSelected()">{{ skill }}

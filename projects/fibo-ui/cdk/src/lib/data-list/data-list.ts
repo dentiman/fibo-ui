@@ -1,6 +1,6 @@
 import {Directive, effect, ElementRef, inject, InjectionToken, input, model, output, signal,} from '@angular/core';
 import {PopoverTrigger} from '../popover/popover-trigger';
-import {Option} from './option.directive';
+import {DataListItem} from './data-list-item.directive';
 
 export const DATA_LIST = new InjectionToken<DataList>('DataList');
 
@@ -11,7 +11,7 @@ let nextDataListId = 0;
   exportAs: 'DataList',
   standalone: true,
   host: {
-    '(mouseleave)': 'resetActiveOption()',
+    '(mouseleave)': 'resetActiveDataListItem()',
     '(keydown)': 'onKeydown($event)',
   },
   // providers: [
@@ -28,46 +28,46 @@ export class DataList {
 
   trigger = input<PopoverTrigger>()
 
-  optionTriggered = output<Event>();
+  itemTriggered = output<Event>();
 
-  options = model<Option[]>([]);
+  options = model<DataListItem[]>([]);
 
   id = `data-list-${nextDataListId++}`;
 
-  protected _activeOption = signal<Option | null>(null);
+  protected _activeDataListItem = signal<DataListItem | null>(null);
 
-  activeOption = this._activeOption.asReadonly();
+  activeDataListItem = this._activeDataListItem.asReadonly();
 
   constructor() {
     effect(() => {
       this.options();
-      this._activeOption.set(null);
+      this._activeDataListItem.set(null);
     });
   }
 
-  registerOption(option: Option) {
-    const currentOptions = this.options();
-    if (!currentOptions.includes(option)) {
-      this.options.set([...currentOptions, option]);
+  registerDataListItem(option: DataListItem) {
+    const currentDataListItems = this.options();
+    if (!currentDataListItems.includes(option)) {
+      this.options.set([...currentDataListItems, option]);
     }
   }
 
-  unregisterOption(option: Option) {
-    const currentOptions = this.options();
-    this.options.set(currentOptions.filter(opt => opt !== option));
+  unregisterDataListItem(option: DataListItem) {
+    const currentDataListItems = this.options();
+    this.options.set(currentDataListItems.filter(opt => opt !== option));
   }
 
 
-  setActiveOption(option: Option | null) {
-    this._activeOption.set(option);
+  setActiveDataListItem(option: DataListItem | null) {
+    this._activeDataListItem.set(option);
   }
 
-  findNextOption(
-    currentOption: Option | null
-  ): Option | null {
+  findNextDataListItem(
+    currentDataListItem: DataListItem | null
+  ): DataListItem | null {
     const optionsArray = this.options();
     // @ts-ignore
-    const currentIndex = optionsArray.indexOf(currentOption);
+    const currentIndex = optionsArray.indexOf(currentDataListItem);
 
     // Start from the next option after current
     let nextIndex = currentIndex + 1;
@@ -91,12 +91,12 @@ export class DataList {
     return optionsArray[0] || null;
   }
 
-  findPreviousOption(
-    currentOption: Option | null
-  ): Option | null {
+  findPreviousDataListItem(
+    currentDataListItem: DataListItem | null
+  ): DataListItem | null {
     const optionsArray = this.options();
     // @ts-ignore
-    const currentIndex = optionsArray.indexOf(currentOption);
+    const currentIndex = optionsArray.indexOf(currentDataListItem);
 
     // Start from the previous option before current
     let prevIndex = currentIndex - 1;
@@ -125,18 +125,18 @@ export class DataList {
 
   navigateNext(event: any) {
     const targetIsInput = event.target instanceof HTMLInputElement;
-    this.setActiveOption(this.findNextOption(this._activeOption()));
+    this.setActiveDataListItem(this.findNextDataListItem(this._activeDataListItem()));
     event.preventDefault();
-    if (!targetIsInput) this._activeOption()?.element.focus();
-    this._activeOption()?.element.scrollIntoView({block: 'nearest', behavior: 'smooth'})
+    if (!targetIsInput) this._activeDataListItem()?.element.focus();
+    this._activeDataListItem()?.element.scrollIntoView({block: 'nearest', behavior: 'smooth'})
   }
 
   navigatePrev(event:Event) {
     const targetIsInput = event.target instanceof HTMLInputElement;
-    this.setActiveOption(this.findPreviousOption(this._activeOption()));
+    this.setActiveDataListItem(this.findPreviousDataListItem(this._activeDataListItem()));
     event.preventDefault();
-    if (!targetIsInput) this._activeOption()?.element.focus();
-    this._activeOption()?.element.scrollIntoView({block: 'nearest', behavior: 'smooth'})
+    if (!targetIsInput) this._activeDataListItem()?.element.focus();
+    this._activeDataListItem()?.element.scrollIntoView({block: 'nearest', behavior: 'smooth'})
   }
 
 
@@ -144,22 +144,22 @@ export class DataList {
     const targetIsInput = event.target instanceof HTMLInputElement;
     switch (event.key) {
       case 'ArrowDown':
-        this.setActiveOption(this.findNextOption(this._activeOption()));
+        this.setActiveDataListItem(this.findNextDataListItem(this._activeDataListItem()));
         event.preventDefault();
-        if (!targetIsInput) this._activeOption()?.element.focus();
-        this._activeOption()?.element.scrollIntoView({block: 'nearest', behavior: 'smooth'})
+        if (!targetIsInput) this._activeDataListItem()?.element.focus();
+        this._activeDataListItem()?.element.scrollIntoView({block: 'nearest', behavior: 'smooth'})
 
         event.stopPropagation();
         break;
       case 'ArrowUp':
-        this.setActiveOption(this.findPreviousOption(this._activeOption()));
+        this.setActiveDataListItem(this.findPreviousDataListItem(this._activeDataListItem()));
         event.preventDefault();
-        if (!targetIsInput) this._activeOption()?.element.focus();
-        this._activeOption()?.element.scrollIntoView({block: 'nearest', behavior: 'smooth'})
+        if (!targetIsInput) this._activeDataListItem()?.element.focus();
+        this._activeDataListItem()?.element.scrollIntoView({block: 'nearest', behavior: 'smooth'})
         event.stopPropagation();
         break;
       case 'Enter':
-        this._activeOption()?.triggerSelection(event);
+        this._activeDataListItem()?.triggerSelection(event);
         event.stopPropagation();
         break;
       case 'Escape':
@@ -173,8 +173,8 @@ export class DataList {
 
   }
 
-  resetActiveOption() {
-    this._activeOption.set(null);
+  resetActiveDataListItem() {
+    this._activeDataListItem.set(null);
   }
 
 
