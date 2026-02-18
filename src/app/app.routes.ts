@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { AppLayoutComponent } from './layout/app-layout';
+import { InstallationPageComponent } from './pages/getting-started/installation-page';
+import { IntroductionPageComponent } from './pages/getting-started/introduction-page';
 import { CdkDataListPageComponent } from './pages/cdk/data-list-page';
 import { CdkPopoverPageComponent } from './pages/cdk/popover-page';
 import { ButtonDemoPageComponent } from './pages/components/data-display/button-demo-page';
@@ -34,6 +36,14 @@ export const routes: Routes = [
       {
         path: '',
         component: SelectPageComponent
+      },
+      {
+        path: 'getting-started/introduction',
+        component: IntroductionPageComponent,
+      },
+      {
+        path: 'getting-started/installation',
+        component: InstallationPageComponent,
       },
       {
         path: 'input',

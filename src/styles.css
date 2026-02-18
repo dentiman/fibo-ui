@@ -5,6 +5,7 @@
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities);
 
+@plugin "@tailwindcss/typography";
 
 /* Option 2: Import only specific parts (for more control) */
 @import "../projects/fibo-ui/components/src/theme.css" layer(theme);
@@ -16,7 +17,6 @@
 
 
 @layer base {
-  /* Reset и базовые стили */
   html {
     color-scheme: light;
   }
@@ -36,7 +36,6 @@
     border-radius: var(--radius-sm);
   }
 
-  /* Light theme scrollbar thumb */
   html:not([data-theme="dark"]) ::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.2);
     border-radius: var(--radius-sm);
@@ -47,7 +46,6 @@
     border-radius: var(--radius-sm);
   }
 
-  /* Dark theme scrollbar thumb */
   [data-theme="dark"] ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.2);
     border-radius: var(--radius-sm);
@@ -58,26 +56,135 @@
     border-radius: var(--radius-sm);
   }
 
-  /* Базовые стили для HTML элементов */
-  h1, h2, h3, h4, h5, h6 {
+  /* Global headings — scoped to NOT override .prose (prose manages its own typography) */
+  :not(.prose) > h1,
+  :not(.prose) > h2,
+  :not(.prose) > h3,
+  :not(.prose) > h4,
+  :not(.prose) > h5,
+  :not(.prose) > h6 {
     color: white;
     @apply font-semibold;
   }
 
-  h1 { @apply text-3xl; }
-  h2 { @apply text-2xl; }
-  h3 { @apply text-xl; }
-  h4 { @apply text-lg; }
-  h5 { @apply text-base; }
-  h6 { @apply text-sm; }
-
+  :not(.prose) > h1 { @apply text-3xl; }
+  :not(.prose) > h2 { @apply text-2xl; }
+  :not(.prose) > h3 { @apply text-xl; }
+  :not(.prose) > h4 { @apply text-lg; }
+  :not(.prose) > h5 { @apply text-base; }
+  :not(.prose) > h6 { @apply text-sm; }
 }
 
 
 
 
 @layer components {
-  /* Shiki syntax highlighting styles */
+  /* =============================================
+     Prose — mapped to fibo-ui design tokens
+     @tailwindcss/typography CSS custom properties
+     ============================================= */
+  .prose {
+    /* Light theme */
+    --tw-prose-body:           var(--foreground);
+    --tw-prose-headings:       var(--foreground);
+    --tw-prose-lead:           var(--foreground-secondary);
+    --tw-prose-links:          var(--color-primary-600);
+    --tw-prose-bold:           var(--foreground);
+    --tw-prose-counters:       var(--foreground-secondary);
+    --tw-prose-bullets:        var(--foreground-tertiary);
+    --tw-prose-hr:             var(--color-gray-200);
+    --tw-prose-quotes:         var(--foreground-secondary);
+    --tw-prose-quote-borders:  var(--color-primary-400);
+    --tw-prose-captions:       var(--foreground-secondary);
+    --tw-prose-code:           var(--foreground);
+    --tw-prose-pre-code:       var(--foreground);
+    --tw-prose-pre-bg:         var(--color-gray-50);
+    --tw-prose-th-borders:     var(--color-gray-300);
+    --tw-prose-td-borders:     var(--color-gray-200);
+
+    /* Dark theme (applied via dark:prose-invert) */
+    --tw-prose-invert-body:          var(--foreground);
+    --tw-prose-invert-headings:      var(--foreground);
+    --tw-prose-invert-lead:          var(--foreground-secondary);
+    --tw-prose-invert-links:         var(--color-primary-400);
+    --tw-prose-invert-bold:          var(--foreground);
+    --tw-prose-invert-counters:      var(--foreground-secondary);
+    --tw-prose-invert-bullets:       var(--foreground-tertiary);
+    --tw-prose-invert-hr:            var(--border-lite);
+    --tw-prose-invert-quotes:        var(--foreground-secondary);
+    --tw-prose-invert-quote-borders: var(--color-primary-dark-400);
+    --tw-prose-invert-captions:      var(--foreground-secondary);
+    --tw-prose-invert-code:          var(--foreground);
+    --tw-prose-invert-pre-code:      var(--foreground);
+    --tw-prose-invert-pre-bg:        var(--background-secondary);
+    --tw-prose-invert-th-borders:    var(--border-lite);
+    --tw-prose-invert-td-borders:    var(--border-primary);
+  }
+
+  /* Code blocks — let Shiki handle colors, just set container shape */
+  .prose pre {
+    border-radius: var(--radius-md, 6px);
+    border: 1px solid var(--color-gray-200);
+  }
+
+  [data-theme="dark"] .prose pre {
+    border-color: var(--border-primary);
+  }
+
+  /* Inline code — softer background pill */
+  .prose :not(pre) > code {
+    background-color: var(--color-gray-100);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-sm, 4px);
+    padding: 0.125em 0.35em;
+    font-size: 0.875em;
+  }
+
+  .prose :not(pre) > code::before,
+  .prose :not(pre) > code::after {
+    content: none;
+  }
+
+  [data-theme="dark"] .prose :not(pre) > code {
+    background-color: var(--background-secondary);
+    border-color: var(--border-primary);
+  }
+
+  /* Blockquote — accent left border, subtle background */
+  .prose blockquote {
+    background-color: color-mix(in oklch, var(--color-primary-500) 6%, transparent);
+    border-left-color: var(--color-primary-500);
+    border-radius: 0 var(--radius-sm, 4px) var(--radius-sm, 4px) 0;
+    padding-block: 0.75em;
+    font-style: normal;
+  }
+
+  .prose blockquote p:first-of-type::before,
+  .prose blockquote p:last-of-type::after {
+    content: none;
+  }
+
+  [data-theme="dark"] .prose blockquote {
+    background-color: color-mix(in oklch, var(--color-primary-dark-400) 8%, transparent);
+    border-left-color: var(--color-primary-dark-400);
+  }
+
+  /* Table — clean borders using design tokens */
+  .prose table {
+    width: 100%;
+  }
+
+  .prose thead th {
+    background-color: var(--color-gray-50);
+  }
+
+  [data-theme="dark"] .prose thead th {
+    background-color: var(--background-secondary);
+  }
+
+  /* =============================================
+     Shiki syntax highlighting
+     ============================================= */
   .shiki {
     background: transparent !important;
     margin: 0;

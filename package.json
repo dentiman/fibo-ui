@@ -31,6 +31,7 @@
     "@angular/router": "^21.1.0",
     "@floating-ui/dom": "^1.7.3",
     "@tailwindcss/postcss": "^4.1.12",
+    "@tailwindcss/typography": "^0.5.19",
     "date-fns": "^4.1.0",
     "lucide-angular": "^0.539.0",
     "ngxtension": "^5.1.0",

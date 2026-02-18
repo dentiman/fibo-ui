@@ -4,7 +4,7 @@ Select
 
 ## Basic Usage
 
-<docs-example name="select-basic"></docs-example>
+:::example select-basic
 
 ```html {example="select-basic"}
 <button type="button" fiboFormFieldTrigger [formField]="userForm.role"
@@ -52,4 +52,3 @@ export class SelectBasicExample {
 ```
 
 ## API
-

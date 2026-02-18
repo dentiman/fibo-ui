@@ -12,7 +12,7 @@ import {
 
 export type DocRenderResult = {
   html: SafeHtml;
-  examples: Map<string, { lang: string; code: string; highlighted: SafeHtml }[]>;
+  examples: Map<string, { lang: string; code: string; highlighted: string }[]>;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -57,7 +57,7 @@ export class ShikiHighlighterService {
 
         const examples = new Map<
           string,
-          { lang: string; code: string; highlighted: SafeHtml }[]
+          { lang: string; code: string; highlighted: string }[]
         >();
 
         if (env.examples) {
@@ -72,7 +72,7 @@ export class ShikiHighlighterService {
                 return {
                   lang: block.lang,
                   code: block.code,
-                  highlighted: this.sanitizer.bypassSecurityTrustHtml(h),
+                  highlighted: h,
                 };
               })
             );

@@ -12,7 +12,6 @@ import {
   input,
   computed,
 } from '@angular/core';
-import { SafeHtml } from '@angular/platform-browser';
 import { ShikiHighlighterService } from '../shiki-highlighter.service';
 import { EXAMPLE_REGISTRY } from './example-registry';
 
@@ -59,7 +58,7 @@ export class DocViewer {
   }
 
   private mountExamples(
-    examples: Map<string, { lang: string; code: string; highlighted: SafeHtml }[]>
+    examples: Map<string, { lang: string; code: string; highlighted: string }[]>
   ): void {
     this.destroyComponents();
 
@@ -105,7 +104,7 @@ export class DocViewer {
         const showBlock = (index: number) => {
           codeContainer.innerHTML = '';
           const div = document.createElement('div');
-          div.innerHTML = codeBlocks[index].highlighted as unknown as string;
+          div.innerHTML = codeBlocks[index].highlighted;
           codeContainer.appendChild(div);
 
           tabBar.querySelectorAll('button').forEach((btn, i) => {
