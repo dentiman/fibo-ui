@@ -164,7 +164,7 @@ For full control, compose with CDK directives directly:
        fiboSelectOne [(value)]="userForm.role().value"
        class="popover-container">
     @for (role of roles; track role) {
-      <a fiboOption [value]="role" class="datalist-item">{{ role }}</a>
+      <a fiboDataListItem [value]="role" class="datalist-item">{{ role }}</a>
     }
   </div>
 </button>

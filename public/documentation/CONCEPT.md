@@ -198,7 +198,7 @@ Low-level API reference for library authors and advanced users building their ow
 
 | Page | Description |
 |------|-------------|
-| **DataList** | Directive API, keyboard events, `activeOption` signal, `itemTriggered` output |
+| **DataList** | Directive API, keyboard events, `activeDataListItem` signal, `itemTriggered` output |
 | **DataListItem** | Directive API, `value` input, `disabled`, self-registration pattern |
 | **SelectOne / SelectMulti** | API, `value` model, `compareFn`, `isSelected()` |
 | **RouterSelectOne** | API, how `router.isActive()` is used, query params |

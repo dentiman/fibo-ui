@@ -7,7 +7,7 @@ import { LucideAngularModule } from 'lucide-angular';
 import {
   DataList,
   FormFieldTrigger,
-  Option,
+  DataListItem,
   Popover,
   PortalContent,
   SelectMulti
@@ -28,7 +28,7 @@ interface UserModel {
     Popover,
     PortalContent,
     SelectMulti,
-    Option,
+    DataListItem,
     LucideAngularModule,
     Checkbox,
     UsageDemo
@@ -72,7 +72,7 @@ interface UserModel {
                   <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
                 }
                 @for (item of skillsItems; track item.value) {
-                  <a fiboOption [value]="item.value" #option="Option"
+                  <a fiboDataListItem [value]="item.value" #option="DataListItem"
                      class="datalist-item items-center">
                     <fibo-checkbox [checked]="option.isSelected()">{{ item.label }}</fibo-checkbox>
                   </a>

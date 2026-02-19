@@ -2,7 +2,7 @@ import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormField, form } from '@angular/forms/signals';
 import {
   DataList,
-  Option,
+  DataListItem,
   Popover,
   PortalContent,
   SelectOne,
@@ -23,7 +23,7 @@ interface UserModel {
     Popover,
     PortalContent,
     SelectOne,
-    Option,
+    DataListItem,
     LucideAngularModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,7 +60,7 @@ interface UserModel {
           class="popover-container"
         >
           @for (role of userRoles; track role) {
-            <a fiboOption [value]="role" class="datalist-item">
+            <a fiboDataListItem [value]="role" class="datalist-item">
               <span class="block truncate font-normal">{{ role }}</span>
             </a>
           }

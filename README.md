@@ -48,7 +48,7 @@ npm start          # Dev server at http://localhost:4200
 │   │   └── src/lib/
 │   │       ├── popover/              # Popover + PopoverTrigger (Floating UI)
 │   │       ├── portal/              # PortalRegistry, PortalContent, PortalOutlet
-│   │       ├── data-list/           # DataList, Option, SelectOne, SelectMulti
+│   │       ├── data-list/           # DataList, DataListItem, SelectOne, SelectMulti
 │   │       ├── form/                # FormFieldDirective, FormFieldTrigger, FiboInput
 │   │       ├── common/              # IsEmpty, RandomId
 │   │       └── utils/               # Property utilities
@@ -83,7 +83,7 @@ Behavior-only primitives with no styling. Components library builds on these.
 
 - **Popover system** — `PopoverTrigger` (click/toggle variants) manages open state, `Popover` handles positioning via `@floating-ui/dom` and click-outside dismissal, `PopoverPosition` computes placement
 - **Portal system** — `PortalContent` directive marks template content, `PortalOutlet` renders it at a different DOM location, `PortalRegistry` connects them. Used by all floating UI (menus, selects, dialogs)
-- **DataList + Selection** — `DataList` manages a list of `Option` directives with keyboard navigation (arrow keys, active state tracking). `SelectOne` and `SelectMulti` are selection model directives that plug into any DataList. Used by Select, Menu, Table, Listbox
+- **DataList + Selection** — `DataList` manages a list of `DataListItem` directives with keyboard navigation (arrow keys, active state tracking). `SelectOne` and `SelectMulti` are selection model directives that plug into any DataList. Used by Select, Menu, Table, Listbox
 - **Form field directives** — `FormFieldDirective` tracks form state (touched, invalid, dirty, errors) via content projection. `FormFieldTrigger` extends PopoverTrigger for dropdown form fields
 
 ### Components Layer (`@fibo-ui/components`)
@@ -141,7 +141,7 @@ userForm = form(this.userModel, (path) => {
        fiboSelectOne [(value)]="userForm.role().value"
        class="popover-container">
     @for (role of roles; track role) {
-      <a fiboOption [value]="role" class="datalist-item">{{ role }}</a>
+      <a fiboDataListItem [value]="role" class="datalist-item">{{ role }}</a>
     }
   </div>
 </button>

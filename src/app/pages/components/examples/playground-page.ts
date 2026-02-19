@@ -6,7 +6,7 @@ import {
   SelectDate,
   DataList,
   FiboInput,
-  Option,
+  DataListItem,
   Popover,
   PopoverTrigger,
   PopoverTriggerClick,
@@ -34,7 +34,7 @@ import { Checkbox } from '@fibo-ui/components';
     PopoverTriggerClick,
     SelectOne,
     SelectMulti,
-    Option,
+    DataListItem,
     PopoverTrigger,
     LucideAngularModule,
     Checkbox,
@@ -62,7 +62,7 @@ import { Checkbox } from '@fibo-ui/components';
                            class="popover-container w-60"
                       >
                               @for (item of items(); track getUserId(item)) {
-                                  <a fiboOption [value]="getUserId(item)"
+                                  <a fiboDataListItem [value]="getUserId(item)"
                                      class="datalist-item">
                                       <span class="block truncate font-normal">{{ getUserLabel(item) }}</span>
                                   </a>
@@ -137,7 +137,7 @@ import { Checkbox } from '@fibo-ui/components';
                            class="popover-container w-60"
                       >
                               @for (item of items(); track getUserId(item)) {
-                                  <a fiboOption [value]="getUserId(item)" #option="Option"
+                                  <a fiboDataListItem [value]="getUserId(item)" #option="DataListItem"
                                      class="datalist-item items-center">
                                       <fibo-checkbox [checked]="option.isSelected()">{{ getUserLabel(item) }}
                                       </fibo-checkbox>
@@ -206,7 +206,7 @@ import { Checkbox } from '@fibo-ui/components';
                                class="popover-container w-60"
                           >
                                   @for (item of statusItems; track item.value) {
-                                      <a fiboOption [value]="item.value"
+                                      <a fiboDataListItem [value]="item.value"
                                          class="datalist-item">
                                           <span class="block truncate font-normal">{{ item.label }}</span>
                                       </a>
@@ -231,7 +231,7 @@ import { Checkbox } from '@fibo-ui/components';
                            class="popover-container w-60"
                       >
                               @for (item of categoryItems; track item.value) {
-                                  <a fiboOption [value]="item.value"
+                                  <a fiboDataListItem [value]="item.value"
                                      class="datalist-item">
                                       <span class="block truncate font-normal">{{ item.label }}</span>
                                   </a>

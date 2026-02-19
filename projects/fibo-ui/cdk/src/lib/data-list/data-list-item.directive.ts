@@ -33,7 +33,7 @@ export class DataListItem<T = any> implements OnInit, OnDestroy {
   value = input<T|undefined>(undefined);
 
   isActive: Signal<boolean> = computed(() => {
-    return this === this.dataList.activeOption();
+    return this === this.dataList.activeDataListItem();
   });
 
   get isMultiple() {
@@ -69,14 +69,14 @@ export class DataListItem<T = any> implements OnInit, OnDestroy {
   }
 
   setActive() {
-    this.dataList.setActiveOption(this);
+    this.dataList.setActiveDataListItem(this);
   }
 
   ngOnInit() {
-    this.dataList.registerOption(this);
+    this.dataList.registerDataListItem(this);
   }
 
   ngOnDestroy() {
-    this.dataList.unregisterOption(this);
+    this.dataList.unregisterDataListItem(this);
   }
 }

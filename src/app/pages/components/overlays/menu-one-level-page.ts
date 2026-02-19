@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   DataList,
-  Option,
+  DataListItem,
   Popover,
   PopoverTriggerToggle,
   PortalContent,
@@ -19,7 +19,7 @@ import { UsageDemo } from '../../../common/usage-demo';
     Popover,
     PortalContent,
     DataList,
-    Option,
+    DataListItem,
     RouterLink,
     UsageDemo,
   ],
@@ -41,13 +41,13 @@ import { UsageDemo } from '../../../common/usage-demo';
             <div fiboPopover [trigger]="trigger"
                  fiboDataList (itemTriggered)="trigger.close()"
                  class="popover-container min-w-40">
-              <a fiboOption [routerLink]="'/'" class="datalist-item">
+              <a fiboDataListItem [routerLink]="'/'" class="datalist-item">
                 Single Select
               </a>
-              <a fiboOption [routerLink]="'/select-multiple'" class="datalist-item">
+              <a fiboDataListItem [routerLink]="'/select-multiple'" class="datalist-item">
                 Multiple Select
               </a>
-              <a fiboOption [routerLink]="'/datepicker'" class="datalist-item">
+              <a fiboDataListItem [routerLink]="'/datepicker'" class="datalist-item">
                 Datepicker
               </a>
             </div>

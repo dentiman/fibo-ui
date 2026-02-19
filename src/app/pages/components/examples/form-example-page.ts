@@ -5,7 +5,7 @@ import { Calendar } from '@fibo-ui/components';
 import {
   SelectDate,
   DataList,
-  Option,
+  DataListItem,
   Popover,
   PopoverTriggerClick,
   PortalContent,
@@ -47,7 +47,7 @@ interface UserProfile {
     PopoverTriggerClick,
     SelectOne,
     SelectMulti,
-    Option,
+    DataListItem,
     LucideAngularModule,
     Checkbox,
     Calendar,
@@ -94,7 +94,7 @@ interface UserProfile {
                fiboSelectOne [(value)]="userProfileForm.city().value"
                class="popover-container">
             @for (c of cities; track c.value) {
-              <a fiboOption [value]="c.value" class="datalist-item">
+              <a fiboDataListItem [value]="c.value" class="datalist-item">
                 <span class="block truncate font-normal">{{ c.label }}</span>
               </a>
             }
@@ -118,7 +118,7 @@ interface UserProfile {
                fiboSelectOne [(value)]="userProfileForm.userRole().value"
                class="popover-container">
               @for (role of userRoles; track role) {
-                <a fiboOption [value]="role"
+                <a fiboDataListItem [value]="role"
                    class="datalist-item">
                   <span class="block truncate font-normal">{{ role }}</span>
                 </a>
@@ -226,7 +226,7 @@ interface UserProfile {
               <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
             }
             @for (item of skills; track getSkillValue(item)) {
-              <a fiboOption [value]="getSkillValue(item)" #option="Option"
+              <a fiboDataListItem [value]="getSkillValue(item)" #option="DataListItem"
                  class="datalist-item items-center">
                 <fibo-checkbox
                   [checked]="option.isSelected()">{{ getSkillLabel(item) }}
