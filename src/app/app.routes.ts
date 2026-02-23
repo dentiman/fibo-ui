@@ -4,17 +4,20 @@ import { InstallationPageComponent } from './pages/getting-started/installation-
 import { IntroductionPageComponent } from './pages/getting-started/introduction-page';
 import { CdkDataListPageComponent } from './pages/cdk/data-list-page';
 import { CdkPopoverPageComponent } from './pages/cdk/popover-page';
+import { CdkSelectionModelPageComponent } from './pages/cdk/selection-model-page';
 import { ButtonDemoPageComponent } from './pages/components/data-display/button-demo-page';
 import { ListboxPageComponent } from './pages/components/data-display/listbox-page';
 import { LoadingSpinPageComponent } from './pages/components/data-display/loading-spin-page';
 import { TablePageComponent } from './pages/components/data-display/table-page';
 import { ComponentsFieldsFormComponent } from './pages/components/examples/components-fields-form';
-import { FormExamplePageComponent } from './pages/components/examples/form-example-page';
+import { FormExample } from './pages/components/form-controls/examples/form-example';
 import { PlaygroundPageComponent } from './pages/components/examples/playground-page';
 import { ThemeDemoComponent } from './pages/components/examples/theme-demo';
 import { TreeMenuPage } from './pages/components/examples/tree-menu-page';
 import { CheckboxPageComponent } from './pages/components/form-controls/checkbox/checkbox-page';
 import { DatepickerPageComponent } from './pages/components/form-controls/datepicker';
+import { DatepickerRangePageComponent } from './pages/components/form-controls/datepicker-range';
+import { FormFieldControlPageComponent } from './pages/components/form-controls/form-field-control-page';
 import { InputPageComponent } from './pages/components/form-controls/input-page';
 import { MultipleSelectPageComponent } from './pages/components/form-controls/multiple-select-page';
 import { SelectPageComponent } from './pages/components/form-controls/select-page';
@@ -22,8 +25,6 @@ import { SwitchPageComponent } from './pages/components/form-controls/switch/swi
 import { ConfirmationPageComponent } from './pages/components/overlays/confirmation-page';
 import { DialogPageComponent } from './pages/components/overlays/dialog-page';
 import { DrawerPageComponent } from './pages/components/overlays/drawer-page';
-import { MenuMultiLevelDataDrivenPageComponent } from './pages/components/overlays/menu-multi-level-data-driven-page';
-import { MenuOneLevelPageComponent } from './pages/components/overlays/menu-one-level-page';
 import { MenuPageComponent } from './pages/components/overlays/menu-page';
 import { NotificationPageComponent } from './pages/components/overlays/notification-page';
 import { TooltipPageComponent } from './pages/components/overlays/tooltip-page';
@@ -46,6 +47,10 @@ export const routes: Routes = [
         component: InstallationPageComponent,
       },
       {
+        path: 'form-field-control',
+        component: FormFieldControlPageComponent
+      },
+      {
         path: 'input',
         component: InputPageComponent
       },
@@ -60,14 +65,6 @@ export const routes: Routes = [
       {
         path: 'menu',
         component: MenuPageComponent
-      },
-      {
-        path: 'menu-one-level',
-        component: MenuOneLevelPageComponent
-      },
-      {
-        path: 'menu-multi-level-data-driven',
-        component: MenuMultiLevelDataDrivenPageComponent
       },
       {
         path: 'dialog',
@@ -90,8 +87,12 @@ export const routes: Routes = [
         component: DatepickerPageComponent
       },
       {
+        path: 'datepicker-range',
+        component: DatepickerRangePageComponent
+      },
+      {
         path: 'form-example',
-        component: FormExamplePageComponent
+        component: FormExample
       },
       {
         path: 'components-fields-form',
@@ -138,6 +139,7 @@ export const routes: Routes = [
         children: [
           { path: 'data-list', component: CdkDataListPageComponent },
           { path: 'popover', component: CdkPopoverPageComponent },
+          { path: 'selection-model', component: CdkSelectionModelPageComponent },
           { path: '', pathMatch: 'full', redirectTo: 'data-list' }
         ]
       }

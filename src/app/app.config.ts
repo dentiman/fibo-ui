@@ -4,11 +4,14 @@ import { provideHttpClient } from '@angular/common/http';
 
 import { routes } from './app.routes';
 import {
+  ArrowRight,
   Apple,
   Briefcase,
   Bell,
+  BookOpen,
   Bug,
   Calendar,
+  CheckSquare,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -27,12 +30,14 @@ import {
   Container,
   CupSoda,
   Database,
+  DollarSign,
   Droplet,
   Check,
   Component,
   LUCIDE_ICONS,
   LucideIconProvider,
   Leaf,
+  Mail,
   LayoutTemplate,
   List,
   Menu,
@@ -60,10 +65,14 @@ import {
   LogOut,
   MousePointerClick,
   Layers,
+  MapPin,
   SquareMousePointer,
+  Info,
+  Package,
 } from 'lucide-angular';
 
 const icons = {
+  ArrowRight,
   File,
   House,
   Menu,
@@ -86,9 +95,11 @@ const icons = {
   Apple,
   Briefcase,
   Bell,
+  BookOpen,
   Bug,
   Calendar,
   Check,
+  CheckSquare,
   Circle,
   Cloud,
   Code,
@@ -96,6 +107,7 @@ const icons = {
   Container,
   CupSoda,
   Database,
+  DollarSign,
   Droplet,
   FileText,
   GitBranch,
@@ -103,6 +115,7 @@ const icons = {
   Leaf,
   List,
   Lock,
+  Mail,
   MessageSquare,
   Dot,
   PanelRight,
@@ -118,7 +131,10 @@ const icons = {
   LogOut,
   MousePointerClick,
   Layers,
+  MapPin,
   SquareMousePointer,
+  Info,
+  Package,
 };
 
 export const appConfig: ApplicationConfig = {

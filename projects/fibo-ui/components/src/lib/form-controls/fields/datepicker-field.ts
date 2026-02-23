@@ -50,13 +50,7 @@ import { Calendar } from '../calendar/calendar';
                      (itemTriggered)="trigger.close()"
                      class="popover-container"/>
     </fibo-form-field-control>
-
-    @if (invalid() && touched() && errors().length > 0) {
-      <div class="form-field-error mr-3">
-        {{ errors()[0].message }}
-      </div>
-    }
-  `
+`
 })
 export class DatePickerField implements FormValueControl<string> {
     static nextId = 0;

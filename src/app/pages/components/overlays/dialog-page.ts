@@ -1,18 +1,18 @@
 import {Component} from '@angular/core';
 import {DialogTrigger} from '@fibo-ui/components';
-import {FormExamplePageComponent} from '../examples/form-example-page';
+import { FormExample } from '../form-controls/examples/form-example';
 
 @Component({
   imports: [
     DialogTrigger,
-    FormExamplePageComponent
+    FormExample
   ],
   template: `
 <button class="btn" [fiboDialogTrigger]="content">Open Dialog</button>
 
 <ng-template #content>
   <div class="overflow-hidden overflow-y-auto">
-    <app-form-example-page></app-form-example-page>
+    <form-example />
   </div>
 </ng-template>
 

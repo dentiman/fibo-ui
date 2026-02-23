@@ -57,7 +57,7 @@ export class ShikiHighlighterService {
 
         const examples = new Map<
           string,
-          { lang: string; code: string; highlighted: string }[]
+          { lang: string; code: string; highlighted: string; title?: string }[]
         >();
 
         if (env.examples) {
@@ -73,6 +73,7 @@ export class ShikiHighlighterService {
                   lang: block.lang,
                   code: block.code,
                   highlighted: h,
+                  title: block.title,
                 };
               })
             );

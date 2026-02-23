@@ -32,14 +32,12 @@ import { SelectItem } from './select';
   template: `
     <fibo-form-field-control
       fiboPopoverTriggerToggle
-      [label]="label()"
-      [required]="required()"
-      [disabled]="disabled()"
-      [invalid]="invalid()"
-      [touched]="touched()"
-      [errors]="errors()"
+      [label]="label()" iconEnd="chevron-down"
       [(value)]="value"
-    >
+      [required]="required()" [disabled]="disabled()"
+      [invalid]="invalid()" [touched]="touched()"
+      [errors]="errors()">
+
       <div class="w-full flex flex-wrap gap-x-1 gap-y-1  -mx-1">
         @for (item of selectedItems(); track item.value) {
           <div class="flex items-center gap-1 btn btn-sm h-6 px-1.5 min-w-0 ">
@@ -72,13 +70,7 @@ import { SelectItem } from './select';
           }
       </div>
     </fibo-form-field-control>
-
-    @if (invalid() && touched() && errors().length > 0) {
-      <div class="form-field-error">
-        {{ errors()[0].message }}
-      </div>
-    }
-  `
+`
 })
 export class MultiSelect implements FormValueControl<(string | number)[] | null> {
 

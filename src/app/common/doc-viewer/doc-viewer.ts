@@ -58,7 +58,7 @@ export class DocViewer {
   }
 
   private mountExamples(
-    examples: Map<string, { lang: string; code: string; highlighted: string }[]>
+    examples: Map<string, { lang: string; code: string; highlighted: string; title?: string }[]>
   ): void {
     this.destroyComponents();
 
@@ -115,7 +115,7 @@ export class DocViewer {
         codeBlocks.forEach((block, i) => {
           const btn = document.createElement('button');
           btn.className = 'btn btn-sm rounded-full';
-          btn.textContent = block.lang;
+          btn.textContent = block.title || block.lang;
           btn.addEventListener('click', () => showBlock(i));
           tabBar.appendChild(btn);
         });

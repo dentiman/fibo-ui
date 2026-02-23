@@ -1,23 +1,19 @@
-import {Component} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {BasicCheckboxExampleComponent} from './content/basic-checkbox-example';
-import {CheckboxExampleComponent} from './content/checkbox-example';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { DocViewer } from '../../../../common/doc-viewer/doc-viewer';
+import { EXAMPLE_REGISTRY } from '../../../../common/doc-viewer/example-registry';
+import { CheckboxBasicExample } from './examples/checkbox-basic-example';
+import { CheckboxSignalFormsExample } from './examples/checkbox-signal-forms-example';
+
+const EXAMPLES = new Map<string, any>([
+  ['checkbox-basic', CheckboxBasicExample],
+  ['checkbox-signal-forms', CheckboxSignalFormsExample],
+]);
 
 @Component({
   selector: 'app-checkbox-page',
-  standalone: true,
-  imports: [
-    CommonModule,
-    BasicCheckboxExampleComponent,
-    CheckboxExampleComponent,
-  ],
-  template: `
-<div class="px-4 flex flex-col space-y-12">
-  <app-checkbox-basic></app-checkbox-basic>
-  <app-checkbox></app-checkbox>
-</div>
-  `,
+  imports: [DocViewer],
+  providers: [{ provide: EXAMPLE_REGISTRY, useValue: EXAMPLES }],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `<doc-viewer docUrl="/documentation/checkbox/checkbox.md" />`,
 })
-export class CheckboxPageComponent {
-
-}
+export class CheckboxPageComponent {}

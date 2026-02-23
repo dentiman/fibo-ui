@@ -1,6 +1,6 @@
 import type MarkdownIt from 'markdown-it';
 
-export type ExtractedBlock = { lang: string; code: string };
+export type ExtractedBlock = { lang: string; code: string; title?: string };
 export type ExtractedExamples = Map<string, ExtractedBlock[]>;
 const EXAMPLE_DIRECTIVE_RE = /^:::example\s+([A-Za-z0-9_-]+)\s*$/;
 
@@ -41,19 +41,28 @@ export function extractExamplesPlugin(md: MarkdownIt): void {
   md.renderer.rules.fence = (tokens, idx, options, env, self) => {
     const token = tokens[idx];
     const info = token.info.trim();
-    const match = info.match(/^(\w+)\s*\{example="([^"]+)"\}/);
+    const match = info.match(/^(\w+)\s*\{([^}]+)\}/);
 
     if (!match) {
       return defaultFence(tokens, idx, options, env, self);
     }
 
-    const [, lang, name] = match;
+    const [, lang, attrs] = match;
+    const exampleMatch = attrs.match(/example="([^"]+)"/);
+    if (!exampleMatch) {
+      return defaultFence(tokens, idx, options, env, self);
+    }
+
+    const name = exampleMatch[1];
+    const titleMatch = attrs.match(/title="([^"]+)"/);
+    const title = titleMatch?.[1];
+
     const examples: ExtractedExamples = (env.examples ??= new Map());
 
     if (!examples.has(name)) {
       examples.set(name, []);
     }
-    examples.get(name)!.push({ lang, code: token.content });
+    examples.get(name)!.push({ lang, code: token.content, title });
 
     return '';
   };

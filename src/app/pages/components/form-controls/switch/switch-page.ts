@@ -1,26 +1,21 @@
-import {Component} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {BasicSwitchExampleComponent} from './content/basic-switch-example';
-import {SwitchSizesExampleComponent} from './content/switch-sizes-example';
-import {SwitchExampleComponent} from './content/switch-example';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { DocViewer } from '../../../../common/doc-viewer/doc-viewer';
+import { EXAMPLE_REGISTRY } from '../../../../common/doc-viewer/example-registry';
+import { SwitchBasicExample } from './examples/switch-basic-example';
+import { SwitchSizesExample } from './examples/switch-sizes-example';
+import { SwitchSignalFormsExample } from './examples/switch-signal-forms-example';
+
+const EXAMPLES = new Map<string, any>([
+  ['switch-basic', SwitchBasicExample],
+  ['switch-sizes', SwitchSizesExample],
+  ['switch-signal-forms', SwitchSignalFormsExample],
+]);
 
 @Component({
   selector: 'app-switch-page',
-  standalone: true,
-  imports: [
-    CommonModule,
-    BasicSwitchExampleComponent,
-    SwitchSizesExampleComponent,
-    SwitchExampleComponent,
-  ],
-  template: `
-<div class="px-4 flex flex-col space-y-12">
-  <app-switch-basic></app-switch-basic>
-  <app-switch-sizes></app-switch-sizes>
-  <app-switch></app-switch>
-</div>
-  `,
+  imports: [DocViewer],
+  providers: [{ provide: EXAMPLE_REGISTRY, useValue: EXAMPLES }],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `<doc-viewer docUrl="/documentation/switch/switch.md" />`,
 })
-export class SwitchPageComponent {
-
-}
+export class SwitchPageComponent {}

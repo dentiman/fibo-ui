@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, model, viewChild } from '@angular/core';
+import { Component, computed, input, model } from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
 import {
   DataList, DataListItem,
@@ -36,18 +36,14 @@ export interface SelectItem {
 
     <fibo-form-field-control
       fiboPopoverTriggerToggle
-      [label]="label()"
-      [required]="required()"
-      [disabled]="disabled()"
-      [invalid]="invalid()"
-      [touched]="touched()"
-      [errors]="errors()"
-      [clearValue]="clearValue()"
-      [(value)]="value"
-      iconEnd="chevron-down"
-    >
-      <div class="text-sm" [class.from-field-placeholder]="!selectedLabel()">
-        {{ selectedLabel() || placeholder() }}
+      [label]="label()" iconEnd="chevron-down"
+      [(value)]="value" [clearValue]="clearValue()"
+      [required]="required()" [disabled]="disabled()"
+      [invalid]="invalid()" [touched]="touched()"
+      [errors]="errors()">
+
+      <div class="text-sm" [class.from-field-placeholder]="!selectedValue()">
+        {{ selectedValue() || placeholder() }}
       </div>
 
       <div *fiboPortalContent="let trigger"
@@ -55,21 +51,14 @@ export interface SelectItem {
            fiboDataList (itemTriggered)="trigger.close()"
            fiboSelectOne [(value)]="value"
            class="popover-container">
-          @for (item of items(); track item.value) {
-            <a fiboDataListItem [value]="item.value"
-               class="datalist-item">
-              {{ item.label }}
-            </a>
-          }
+        @for (item of items(); track item.value) {
+          <a fiboDataListItem [value]="item.value" class="datalist-item">
+            {{ item.label }}
+          </a>
+        }
       </div>
     </fibo-form-field-control>
-
-    @if (invalid() && touched() && errors().length > 0) {
-      <div class="form-field-error">
-        {{ errors()[0].message }}
-      </div>
-    }
-  `
+`
 })
 export class Select implements FormValueControl<string | number | null> {
 
@@ -86,7 +75,7 @@ export class Select implements FormValueControl<string | number | null> {
   placeholder = input<string>('Select')
   clearValue = input<string | number | null | undefined>(undefined)
 
-  selectedLabel = computed(() => {
+  selectedValue = computed(() => {
     const currentValue = this.value();
     if (currentValue === null) return null;
     const item = this.items().find(item => item.value === currentValue);

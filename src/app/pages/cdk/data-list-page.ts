@@ -1,17 +1,16 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { DocViewer } from '../../common/doc-viewer/doc-viewer';
+import { EXAMPLE_REGISTRY } from '../../common/doc-viewer/example-registry';
+import { CdkDataListItemsBasicExample } from './examples/cdk-data-list-items-basic-example';
+
+const EXAMPLES = new Map<string, any>([['cdk-data-list-items-basic', CdkDataListItemsBasicExample]]);
 
 @Component({
   selector: 'app-cdk-data-list-page',
+  imports: [DocViewer],
+  providers: [{ provide: EXAMPLE_REGISTRY, useValue: EXAMPLES }],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
-  template: `
-    <div class="page">
-      <h1>CDK: Data List</h1>
-      <p>В разработке.</p>
-    </div>
-  `,
+  template: `<doc-viewer docUrl="/documentation/cdk/data-list.md" />`,
 })
 export class CdkDataListPageComponent {}
-
 

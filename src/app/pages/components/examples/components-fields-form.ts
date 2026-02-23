@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormField, form, required, disabled } from '@angular/forms/signals';
 import {TextField, Select, MultiSelect, DatePickerField} from '@fibo-ui/components';
 import { citiesChoices } from '../../../common/form-data-example';
+import { FormExampleTemplatedFields } from '../form-controls/examples/form-example-templated-fileds';
 
 interface UserProfile {
   firstName: string;
@@ -23,7 +24,8 @@ interface UserProfile {
     Select,
     MultiSelect,
     FormField,
-    DatePickerField
+    DatePickerField,
+    FormExampleTemplatedFields,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -91,6 +93,8 @@ interface UserProfile {
       </div>
 
     </div>
+
+    <form-example-templated-fields />
   `
 })
 export class ComponentsFieldsFormComponent {
