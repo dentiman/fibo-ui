@@ -5,24 +5,22 @@ import {
 import {ClickOutside} from 'ngxtension/click-outside';
 import {PopoverPosition} from './popover-position';
 import {PopoverTrigger} from './popover-trigger';
-import {DataList} from '../data-list/data-list';
 
 @Directive({
   selector: '[fiboPopover]',
-  standalone: true,
   hostDirectives: [
     {
-      directive:  PopoverPosition,
-      inputs: ['placement', 'matchWidth','trigger','referenceElement','offset']
+      directive: PopoverPosition,
+      inputs: ['placement', 'matchWidth', 'trigger', 'referenceElement', 'offset']
     },
     {
-      directive:  ClickOutside,
+      directive: ClickOutside,
       outputs: ['clickOutside']
     }
   ],
 
   host: {
-     class: 'fibo-popover-container',
+    class: 'fibo-popover-container',
     '(clickOutside)': 'clickOutsideHandle($event)',
     '(focusout)': 'onFocusOut($event)',
   },
@@ -30,9 +28,7 @@ import {DataList} from '../data-list/data-list';
 export class Popover implements OnInit, OnDestroy {
 
   element = inject(ElementRef);
-  // call by trigger for navigate
-  dataList = inject(DataList,{self:true,optional:true});
-  trigger = input.required<PopoverTrigger>()
+  trigger = input.required<PopoverTrigger>();
 
   close() {
     this.trigger().close();

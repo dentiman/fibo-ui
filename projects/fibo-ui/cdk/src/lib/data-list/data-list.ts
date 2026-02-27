@@ -1,4 +1,4 @@
-import {Directive, effect, ElementRef, inject, InjectionToken, input, model, output, signal,} from '@angular/core';
+import {Directive, effect, ElementRef, inject, InjectionToken, input, model, output, signal} from '@angular/core';
 import {PopoverTrigger} from '../popover/popover-trigger';
 import {DataListItem} from './data-list-item.directive';
 
@@ -26,7 +26,7 @@ export class DataList {
   disabled = input(false);
   elementRef = inject(ElementRef<HTMLElement>)
 
-  trigger = input<PopoverTrigger>()
+  trigger = model<PopoverTrigger>()
 
   itemTriggered = output<Event>();
 
@@ -42,6 +42,15 @@ export class DataList {
     effect(() => {
       this.options();
       this._activeDataListItem.set(null);
+    });
+
+    // Register as keydown delegate on the trigger for keyboard navigation
+    effect((onCleanup) => {
+      const trigger = this.trigger();
+      if (trigger) {
+        trigger.keydownDelegate.set(this);
+        onCleanup(() => trigger.keydownDelegate.set(null));
+      }
     });
   }
 

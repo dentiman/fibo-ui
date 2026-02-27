@@ -1,4 +1,4 @@
-import { Component, computed, input, model } from '@angular/core';
+import { Component, computed, inject, input, model } from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
 import {
   DataList, DataListItem,
@@ -55,11 +55,11 @@ import { SelectItem } from './select';
         }
       </div>
 
-      <div *fiboPortalContent="let trigger"
-           fiboPopover [trigger]="trigger" [matchWidth]="true"
-           fiboDataList
-           fiboSelectMulti [(value)]="value"
-           class="popover-container">
+      <ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
+        <div fiboPopover [trigger]="trigger" [matchWidth]="true"
+             fiboDataList
+             fiboSelectMulti [(value)]="value"
+             class="popover-container">
           @for (item of items(); track item.value) {
             <a fiboDataListItem [value]="item.value" #option="DataListItem"
                class="datalist-item items-center">
@@ -68,11 +68,13 @@ import { SelectItem } from './select';
               </fibo-checkbox>
             </a>
           }
-      </div>
+        </div>
+      </ng-template>
     </fibo-form-field-control>
 `
 })
 export class MultiSelect implements FormValueControl<(string | number)[] | null> {
+  trigger = inject(PopoverTrigger);
 
   value = model<(string | number)[] | null>(null)
   required = input(false)

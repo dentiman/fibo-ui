@@ -99,11 +99,12 @@ import { Checkbox } from '@fibo-ui/components';
                           class="w-full appearance-none outline-none text-sm focus:outline-0"/>
                   <lucide-icon name="calendar-days" size="16"
                                class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
-                  <fibo-calendar *fiboPortalContent="let trigger"
-                                 fiboPopover [trigger]="trigger"
-                                 fiboSelectDate [(value)]="createdAfter"
-                                 (itemTriggered)="trigger.close()"
-                                 class="popover-container"/>
+                  <ng-template fiboPortalContent [(isOpen)]="dateTrigger.isOpen">
+                      <fibo-calendar fiboPopover [trigger]="dateTrigger"
+                                     fiboSelectDate [(value)]="createdAfter"
+                                     (itemTriggered)="dateTrigger.close()"
+                                     class="popover-container"/>
+                  </ng-template>
               </div>
 
               <!-- Multiple Select Users -->

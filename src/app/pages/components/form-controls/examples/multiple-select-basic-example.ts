@@ -14,6 +14,7 @@ import { LucideAngularModule } from 'lucide-angular';
         <button
           type="button"
           fiboFormFieldTrigger
+          #trigger="PopoverTrigger"
           [formField]="userForm.skills"
           class="w-full form-field-control flex items-center gap-2 text-left"
         >
@@ -39,19 +40,20 @@ import { LucideAngularModule } from 'lucide-angular';
             </span>
           </div>
           <lucide-icon name="chevron-down" size="16" class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
-          <div
-            *fiboPortalContent="let trigger"
-            fiboPopover [trigger]="trigger" [matchWidth]="true"
-            fiboDataList
-            fiboSelectMulti [(value)]="userForm.skills().value"
-            class="popover-container"
-          >
-            @for (item of skillsItems; track item.value) {
-              <a fiboDataListItem [value]="item.value" #option="DataListItem" class="datalist-item items-center">
-                <fibo-checkbox [checked]="option.isSelected()">{{ item.label }}</fibo-checkbox>
-              </a>
-            }
-          </div>
+          <ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
+            <div
+              fiboPopover [trigger]="trigger" [matchWidth]="true"
+              fiboDataList
+              fiboSelectMulti [(value)]="userForm.skills().value"
+              class="popover-container"
+            >
+              @for (item of skillsItems; track item.value) {
+                <a fiboDataListItem [value]="item.value" #option="DataListItem" class="datalist-item items-center">
+                  <fibo-checkbox [checked]="option.isSelected()">{{ item.label }}</fibo-checkbox>
+                </a>
+              }
+            </div>
+          </ng-template>
         </button>
       </form>
     </div>

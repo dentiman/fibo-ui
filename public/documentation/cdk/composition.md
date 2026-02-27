@@ -18,23 +18,20 @@ Complete directive/component dependency graph for `@fibo-ui/cdk` and `@fibo-ui/c
 ## 1. Portal System
 
 ```
-PortalContent ──inject(opt)──▶ PopoverTrigger    ← COUPLING TO REMOVE
-    │
+PortalContent
     ├── inject ──▶ PortalRegistry
     ├── inject ──▶ TemplateRef
-    └── model: isOpen  ←→  sync with trigger.isOpen (2 effects)
+    └── model: isOpen (bound via [(isOpen)]="trigger.isOpen" in templates)
 
 PortalOutlet ──inject──▶ PortalRegistry
-    └── renders: openPortalsList → ngTemplateOutlet with context {$implicit: trigger}
+    └── renders: openPortalsList → ngTemplateOutlet
 
 PortalRegistry (root service)
-    └── signal: Map<id, {templateRef, trigger}>
+    └── signal: Map<id, {templateRef}>
 ```
 
-**Issues:**
-- PortalContent imports PopoverTrigger → portal coupled to popover
-- Two sync effects for isOpen → fragile bidirectional state
-- PortalRegistry stores trigger → unnecessary
+**Design:** Portal is a generic infrastructure layer with no knowledge of popover or trigger.
+The `isOpen` model is two-way bound to `trigger.isOpen` at the template level.
 
 ---
 
@@ -45,8 +42,9 @@ PopoverTrigger
     ├── inject(opt, self) ──▶ DataListItem   (checks if trigger is a list item)
     ├── signal: isOpen
     ├── signal: popover → Popover (set by Popover.ngOnInit)
+    ├── signal: keydownDelegate → KeydownDelegate | null
     ├── host: [tabindex], [aria-expanded], (keydown), (focusout)
-    └── onKeydown → delegates to popover().dataList.onKeydown()
+    └── onKeydown → delegates to keydownDelegate()?.onKeydown()
 
 PopoverTriggerClick ──hostDir──▶ PopoverTrigger
     ├── inject ──▶ PopoverTrigger
@@ -58,7 +56,6 @@ PopoverTriggerToggle ──hostDir──▶ PopoverTrigger
 
 Popover ──hostDir──▶ PopoverPosition (inputs: placement, matchWidth, trigger, referenceElement, offset)
         ──hostDir──▶ ClickOutside (outputs: clickOutside)
-    ├── inject(opt, self) ──▶ DataList
     ├── input(required): trigger → PopoverTrigger
     ├── ngOnInit: trigger.popover.set(this)
     └── ngOnDestroy: trigger.popover.set(null)
@@ -73,7 +70,8 @@ PopoverArrow
     └── inject ──▶ PopoverPosition (reads position signal)
 ```
 
-**Key chain:** `PopoverTrigger.onKeydown()` → `this.popover()` → `Popover.dataList` → `DataList.onKeydown()`
+**Key chain:** `PopoverTrigger.onKeydown()` → `this.keydownDelegate()` → `DataList.onKeydown()`
+DataList registers itself as `trigger.keydownDelegate` via an effect when its `trigger` model is set.
 
 ---
 
@@ -82,7 +80,8 @@ PopoverArrow
 ```
 DataList
     ├── provides: { DATA_LIST: self }
-    ├── input: trigger → PopoverTrigger (for Escape → close + focus)
+    ├── model: trigger → PopoverTrigger (for Escape → close + focus)
+    │     └── effect: registers self as trigger.keydownDelegate
     ├── model: options → DataListItem[]
     ├── signal: activeDataListItem
     ├── output: itemTriggered
@@ -129,7 +128,7 @@ SubmenuTrigger ──hostDir──▶ DataListItem (inputs: disabled)
     ├── inject ──▶ MENU_PANEL (parent MenuPanel)
     ├── ngOnInit: panel.registerSubmenuTrigger(this)
     ├── ngOnDestroy: panel.unregisterSubmenuTrigger(this)
-    └── host: enter → open, escape → close, ArrowRight → navigate into submenu
+    └── host: enter → open, escape → close, ArrowRight → keydownDelegate.navigateNext
 
 Expandable
     └── model: expanded (boolean)
@@ -324,12 +323,6 @@ TreeMenuChain [fibo-tree-menu-chain]
 ---
 
 ## 11. Known Coupling Issues
-
-### Portal ↔ Popover coupling
-- `PortalContent` imports and injects `PopoverTrigger`
-- `PortalRegistry` stores `PopoverTrigger` reference
-- `PortalOutlet` passes trigger as template context
-- **Fix:** Remove trigger from portal system, use `[(isOpen)]="trigger.isOpen"` binding
 
 ### Dialog: two mechanisms
 - `FiboDialog` — portal-based, `PortalContent` + `PortalOutlet`

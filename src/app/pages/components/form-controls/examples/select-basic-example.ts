@@ -32,6 +32,7 @@ interface UserModel {
       <button
         type="button"
         fiboFormFieldTrigger
+        #trigger="PopoverTrigger"
         [formField]="userForm.role"
         class="w-full form-field-control flex items-center gap-2 text-left"
       >
@@ -48,23 +49,24 @@ interface UserModel {
           class="form-field-icon form-field-icon-end shrink-0"
         ></lucide-icon>
 
-        <div
-          *fiboPortalContent="let trigger"
-          fiboPopover
-          [trigger]="trigger"
-          [matchWidth]="true"
-          fiboDataList
-          (itemTriggered)="trigger.close()"
-          fiboSelectOne
-          [(value)]="userForm.role().value"
-          class="popover-container"
-        >
-          @for (role of userRoles; track role) {
-            <a fiboDataListItem [value]="role" class="datalist-item">
-              <span class="block truncate font-normal">{{ role }}</span>
-            </a>
-          }
-        </div>
+        <ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
+          <div
+            fiboPopover
+            [trigger]="trigger"
+            [matchWidth]="true"
+            fiboDataList
+            (itemTriggered)="trigger.close()"
+            fiboSelectOne
+            [(value)]="userForm.role().value"
+            class="popover-container"
+          >
+            @for (role of userRoles; track role) {
+              <a fiboDataListItem [value]="role" class="datalist-item">
+                <span class="block truncate font-normal">{{ role }}</span>
+              </a>
+            }
+          </div>
+        </ng-template>
       </button>
     </div>
   `,

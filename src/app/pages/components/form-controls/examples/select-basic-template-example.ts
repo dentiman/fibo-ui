@@ -31,6 +31,7 @@ interface UserModel {
     <div class="mx-auto w-90 p-8">
       <fibo-form-field-control
         fiboPopoverTriggerToggle
+        #trigger="PopoverTrigger"
         [formField]="userForm.role"
         label="User Role" iconEnd="chevron-down">
 
@@ -38,17 +39,18 @@ interface UserModel {
           {{ roleLabel() || 'Select Role' }}
         </div>
 
-        <div *fiboPortalContent="let trigger"
-             fiboPopover [trigger]="trigger" [matchWidth]="true"
-             fiboDataList (itemTriggered)="trigger.close()"
-             fiboSelectOne [(value)]="userForm.role().value"
-             class="popover-container">
-          @for (item of roles; track item.value) {
-            <a fiboDataListItem [value]="item.value" class="datalist-item">
-              {{ item.label }}
-            </a>
-          }
-        </div>
+        <ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
+          <div fiboPopover [trigger]="trigger" [matchWidth]="true"
+               fiboDataList (itemTriggered)="trigger.close()"
+               fiboSelectOne [(value)]="userForm.role().value"
+               class="popover-container">
+            @for (item of roles; track item.value) {
+              <a fiboDataListItem [value]="item.value" class="datalist-item">
+                {{ item.label }}
+              </a>
+            }
+          </div>
+        </ng-template>
       </fibo-form-field-control>
     </div>
   `,

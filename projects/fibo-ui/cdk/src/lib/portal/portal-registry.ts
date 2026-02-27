@@ -1,11 +1,9 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
-import { PopoverTrigger } from '../popover/popover-trigger';
 
 export interface PortalEntry {
   id: string;
   templateRef: TemplateRef<any>;
-  trigger: PopoverTrigger | null;
 }
 
 @Injectable({
@@ -20,10 +18,10 @@ export class PortalRegistry {
     return Array.from(this.openPortals().values());
   });
 
-  register(id: string, templateRef: TemplateRef<any>, trigger: PopoverTrigger | null = null): void {
+  register(id: string, templateRef: TemplateRef<any>): void {
     this.openPortals.update(map => {
       const newMap = new Map(map);
-      newMap.set(id, { id, templateRef, trigger });
+      newMap.set(id, { id, templateRef });
       return newMap;
     });
   }

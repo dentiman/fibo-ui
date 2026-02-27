@@ -1,12 +1,15 @@
-import {Directive, ElementRef, inject, Input, input, model, signal} from '@angular/core';
+import {Directive, ElementRef, inject, signal} from '@angular/core';
 import {DataListItem} from '../data-list/data-list-item.directive';
 import {Popover} from './popover';
 
+export interface KeydownDelegate {
+  onKeydown(e: KeyboardEvent): void;
+  navigateNext?(e: Event): void;
+}
 
 @Directive({
   selector: '[fiboPopoverTrigger]',
   exportAs: 'PopoverTrigger',
-  standalone: true,
   host: {
     '[attr.tabindex]': 'isListItem ? null : "0"',
     '[attr.aria-expanded]': 'isOpen() || null',
@@ -15,12 +18,14 @@ import {Popover} from './popover';
   }
 })
 export class PopoverTrigger {
-  isListItem = !!inject(DataListItem,{optional:true,self:true} );
+  isListItem = !!inject(DataListItem, {optional: true, self: true});
   element = inject(ElementRef<HTMLElement>).nativeElement;
   isOpen = signal(false);
 
-  //set  when popover is open
-  popover = signal<Popover|null>(null)
+  //set when popover is open
+  popover = signal<Popover | null>(null);
+
+  keydownDelegate = signal<KeydownDelegate | null>(null);
 
   toggle  () {
     if(this.isOpen()) {
@@ -44,9 +49,9 @@ export class PopoverTrigger {
     }
   }
 
-  onKeydown(event: KeyboardEvent): void  {
-    if(!this.isListItem) {
-      this.popover()?.dataList?.onKeydown(event)
+  onKeydown(event: KeyboardEvent): void {
+    if (!this.isListItem) {
+      this.keydownDelegate()?.onKeydown(event);
     }
   }
 

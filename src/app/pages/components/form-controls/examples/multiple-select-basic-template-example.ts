@@ -33,6 +33,7 @@ interface UserModel {
   template: `
     <div class="mx-auto w-90 p-8">
       <fibo-form-field-control fiboPopoverTriggerToggle
+        #trigger="PopoverTrigger"
         [formField]="userForm.skills"
         label="Skills" iconEnd="chevron-down">
 
@@ -53,20 +54,21 @@ interface UserModel {
           }
         </div>
 
-        <div *fiboPortalContent="let trigger"
-             fiboPopover [trigger]="trigger" [matchWidth]="true"
-             fiboDataList
-             fiboSelectMulti [(value)]="userForm.skills().value"
-             class="popover-container">
-          @for (item of skillItems; track item.value) {
-            <a fiboDataListItem [value]="item.value" #option="DataListItem"
-               class="datalist-item items-center">
-              <fibo-checkbox [readonly]="true" [checked]="option.isSelected()">
-                {{ item.label }}
-              </fibo-checkbox>
-            </a>
-          }
-        </div>
+        <ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
+          <div fiboPopover [trigger]="trigger" [matchWidth]="true"
+               fiboDataList
+               fiboSelectMulti [(value)]="userForm.skills().value"
+               class="popover-container">
+            @for (item of skillItems; track item.value) {
+              <a fiboDataListItem [value]="item.value" #option="DataListItem"
+                 class="datalist-item items-center">
+                <fibo-checkbox [readonly]="true" [checked]="option.isSelected()">
+                  {{ item.label }}
+                </fibo-checkbox>
+              </a>
+            }
+          </div>
+        </ng-template>
       </fibo-form-field-control>
     </div>
   `,

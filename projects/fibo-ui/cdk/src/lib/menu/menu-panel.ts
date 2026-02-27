@@ -1,4 +1,4 @@
-import { DestroyRef, Directive, inject, InjectionToken, input, output, signal } from '@angular/core';
+import { DestroyRef, Directive, effect, inject, InjectionToken, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { DataList } from '../data-list/data-list';
 import { Popover } from '../popover/popover';
@@ -90,6 +90,16 @@ export class MenuPanel {
 
   constructor() {
     this.destroyRef.onDestroy(() => this.clearTimeouts());
+
+    // Wire DataList trigger from Popover's trigger for keyboard delegation
+    if (this.popover) {
+      effect(() => {
+        const trigger = this.popover!.trigger();
+        if (trigger) {
+          this.dataList.trigger.set(trigger);
+        }
+      });
+    }
 
     // Open/close submenu with symmetric delay when active option changes
     toObservable(this.dataList.activeDataListItem)

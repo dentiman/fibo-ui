@@ -38,7 +38,7 @@ import { MENU_PANEL } from './menu-panel';
   host: {
     '(keydown.enter)': 'popoverTrigger.open()',
     '(keydown.escape)': 'popoverTrigger.close()',
-    '(keydown.arrowright)': 'popoverTrigger.popover()?.dataList?.navigateNext($event)',
+    '(keydown.arrowright)': 'popoverTrigger.keydownDelegate()?.navigateNext?.($event)',
     '(click)': 'popoverTrigger.open()',
   },
 })

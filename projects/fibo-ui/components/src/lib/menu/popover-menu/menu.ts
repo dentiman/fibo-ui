@@ -8,7 +8,6 @@ import {LucideAngularModule} from 'lucide-angular';
 
 @Component({
   selector: 'fibo-menu',
-  standalone: true,
   hostDirectives: [
     {
       directive: MenuPanel,

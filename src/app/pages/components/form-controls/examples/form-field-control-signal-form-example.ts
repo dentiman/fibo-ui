@@ -39,6 +39,7 @@ interface ContactData {
       </fibo-form-field-control>
 
       <fibo-form-field-control fiboPopoverTriggerToggle
+        #trigger="PopoverTrigger"
         [formField]="contactForm.role"
         label="Role" iconEnd="chevron-down">
 
@@ -46,17 +47,18 @@ interface ContactData {
           {{ roleLabel() || 'Select role' }}
         </div>
 
-        <div *fiboPortalContent="let trigger"
-             fiboPopover [trigger]="trigger" [matchWidth]="true"
-             fiboDataList (itemTriggered)="trigger.close()"
-             fiboSelectOne [(value)]="contactForm.role().value"
-             class="popover-container">
-          @for (item of roles; track item.value) {
-            <a fiboDataListItem [value]="item.value" class="datalist-item">
-              {{ item.label }}
-            </a>
-          }
-        </div>
+        <ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
+          <div fiboPopover [trigger]="trigger" [matchWidth]="true"
+               fiboDataList (itemTriggered)="trigger.close()"
+               fiboSelectOne [(value)]="contactForm.role().value"
+               class="popover-container">
+            @for (item of roles; track item.value) {
+              <a fiboDataListItem [value]="item.value" class="datalist-item">
+                {{ item.label }}
+              </a>
+            }
+          </div>
+        </ng-template>
       </fibo-form-field-control>
 
       <button
