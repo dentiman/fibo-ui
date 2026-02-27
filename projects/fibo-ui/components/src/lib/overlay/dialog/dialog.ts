@@ -1,7 +1,9 @@
 import {ChangeDetectionStrategy, Component, effect, model, signal, ViewEncapsulation} from '@angular/core';
+import {FocusTrap} from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-dialog',
+  imports: [FocusTrap],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -13,10 +15,11 @@ import {ChangeDetectionStrategy, Component, effect, model, signal, ViewEncapsula
            [class]="'dialog-backdrop fixed inset-0' + (firstDialog() ? ' bg-black/30 dark:bg-black/50' : '')">
       </div>
 
-      <div tabindex="0"
+      <div fiboFocusTrap
            class="flex min-h-full items-end justify-center text-center focus:outline-none sm:items-center sm:p-0 py-4">
         <div class="dialog-content relative max-h-[90vh] overflow-y-auto rounded-lg bg-background text-left shadow-xl sm:p-2 dark:outline
-              dark:-outline-offset-1 dark:outline-white/8 my-4">
+              dark:-outline-offset-1 dark:outline-white/8 my-4"
+             role="dialog" aria-modal="true">
           <ng-content />
         </div>
       </div>

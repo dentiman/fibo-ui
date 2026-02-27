@@ -1,10 +1,11 @@
 import {Component, inject, ViewEncapsulation} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
+import {FocusTrap} from '@fibo-ui/cdk';
 import {DrawerService} from './drawer-service';
 
 @Component({
   selector: 'fibo-drawer',
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, FocusTrap],
   templateUrl: './drawer.html',
   encapsulation: ViewEncapsulation.None,
   styles: `

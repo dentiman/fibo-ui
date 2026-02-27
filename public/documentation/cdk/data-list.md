@@ -78,6 +78,53 @@ export class CdkDataListItemsBasicExample {
 }
 ```
 
+## Integration with PopoverTrigger
+
+`DataList` is designed to work together with `PopoverTrigger` for dropdown-style components (Select, Menu, etc.).
+
+### How it works
+
+When a `PopoverTrigger` opens a popover that contains a `DataList`, keyboard events on the **trigger element** are automatically delegated to the `DataList` inside the popover:
+
+```
+User presses ArrowDown on trigger
+  → PopoverTrigger.onKeydown()
+    → popover.dataList.onKeydown()
+      → DataList navigates to next item
+```
+
+This means the user can navigate the list **without moving focus** into the popover — focus stays on the trigger while arrows control the list.
+
+### Connecting trigger and DataList
+
+Pass the `trigger` input to `DataList` so that Escape returns focus to the trigger and closes the popover:
+
+```html
+<button fiboPopoverTriggerToggle #trigger="PopoverTrigger">
+  Open list
+</button>
+
+<ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
+  <div fiboPopover [trigger]="trigger"
+       fiboDataList [trigger]="trigger"
+       fiboSelectOne [(value)]="selected"
+       (itemTriggered)="trigger.close()"
+       class="popover-container">
+    @for (item of items; track item.value) {
+      <button fiboDataListItem [value]="item.value" class="datalist-item">
+        {{ item.label }}
+      </button>
+    }
+  </div>
+</ng-template>
+```
+
+Key points:
+- `fiboPopover [trigger]="trigger"` — positions the popover relative to the trigger and registers itself in `trigger.popover`, enabling the keydown delegation chain
+- `fiboDataList [trigger]="trigger"` — enables Escape to close and return focus
+- `(itemTriggered)="trigger.close()"` — closes popover on selection
+- `PopoverTrigger` adds `tabindex="0"` to the host element automatically, so even non-focusable elements (like custom components) become keyboard-accessible
+
 ## API Snapshot
 
 - `fiboDataList`

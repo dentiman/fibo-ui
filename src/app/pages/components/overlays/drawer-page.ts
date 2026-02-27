@@ -1,20 +1,14 @@
-import {Component} from '@angular/core';
-import {DrawerTrigger} from '@fibo-ui/components';
-import {FormExamplePageComponent} from '../examples/form-example-page';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { DocViewer } from '../../../common/doc-viewer/doc-viewer';
+import { EXAMPLE_REGISTRY } from '../../../common/doc-viewer/example-registry';
+import { DrawerBasicExample } from './examples/drawer-basic-example';
+
+const EXAMPLES = new Map<string, any>([['drawer-basic', DrawerBasicExample]]);
 
 @Component({
-  imports: [
-    DrawerTrigger,
-    FormExamplePageComponent
-  ],
-  template: `
-    <button class="btn" [fiboDrawerTrigger]="content">Open Drawer</button>
-
-    <ng-template #content>
-      <div class="overflow-hidden overflow-y-auto">
-        <app-form-example-page></app-form-example-page>
-      </div>
-    </ng-template>
-  `,
+  imports: [DocViewer],
+  providers: [{ provide: EXAMPLE_REGISTRY, useValue: EXAMPLES }],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `<doc-viewer docUrl="/documentation/drawer/drawer.md" />`,
 })
 export class DrawerPageComponent {}

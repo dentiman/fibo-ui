@@ -8,6 +8,7 @@ import {Popover} from './popover';
   exportAs: 'PopoverTrigger',
   standalone: true,
   host: {
+    '[attr.tabindex]': 'isListItem ? null : "0"',
     '[attr.aria-expanded]': 'isOpen() || null',
     '(keydown)': 'onKeydown($event)',
     '(focusout)': 'onFocusOut($event)',
