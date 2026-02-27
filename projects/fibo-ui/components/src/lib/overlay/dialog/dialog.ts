@@ -1,12 +1,28 @@
-import {Component, inject, ViewEncapsulation} from '@angular/core';
-import {NgTemplateOutlet} from '@angular/common';
-import {DialogService} from './dialog-service';
+import {ChangeDetectionStrategy, Component, effect, model, signal, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'fibo-dialog',
-  imports: [NgTemplateOutlet],
-  templateUrl: './dialog.html',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <div class="fixed inset-0 z-50"
+         animate.enter="dialog-enter"
+         animate.leave="dialog-leave">
+
+      <div (click)="isOpen.set(false)"
+           [class]="'dialog-backdrop fixed inset-0' + (firstDialog() ? ' bg-black/30 dark:bg-black/50' : '')">
+      </div>
+
+      <div tabindex="0"
+           class="flex min-h-full items-end justify-center text-center focus:outline-none sm:items-center sm:p-0 py-4">
+        <div class="dialog-content relative max-h-[90vh] overflow-y-auto rounded-lg bg-background text-left shadow-xl sm:p-2 dark:outline
+              dark:-outline-offset-1 dark:outline-white/8 my-4">
+          <ng-content />
+        </div>
+      </div>
+
+    </div>
+  `,
   styles: `
     /* Enter */
     .dialog-enter {
@@ -61,5 +77,24 @@ import {DialogService} from './dialog-service';
   `,
 })
 export class FiboDialog {
-  state = inject(DialogService);
+  private static openCount = 0;
+
+  isOpen = model(false);
+  firstDialog = signal(false);
+
+  constructor() {
+    effect((onCleanup) => {
+      if (this.isOpen()) {
+        this.firstDialog.set(FiboDialog.openCount === 0);
+        FiboDialog.openCount++;
+        document.documentElement.style.overflow = 'hidden';
+        onCleanup(() => {
+          FiboDialog.openCount = Math.max(0, FiboDialog.openCount - 1);
+          if (FiboDialog.openCount === 0) {
+            document.documentElement.style.overflow = '';
+          }
+        });
+      }
+    });
+  }
 }
