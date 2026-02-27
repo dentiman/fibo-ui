@@ -5,6 +5,7 @@ import { IntroductionPageComponent } from './pages/getting-started/introduction-
 import { CdkDataListPageComponent } from './pages/cdk/data-list-page';
 import { CdkPopoverPageComponent } from './pages/cdk/popover-page';
 import { CdkSelectionModelPageComponent } from './pages/cdk/selection-model-page';
+import { CdkCompositionPageComponent } from './pages/cdk/composition-page';
 import { ButtonDemoPageComponent } from './pages/components/data-display/button-demo-page';
 import { ListboxPageComponent } from './pages/components/data-display/listbox-page';
 import { LoadingSpinPageComponent } from './pages/components/data-display/loading-spin-page';
@@ -140,6 +141,7 @@ export const routes: Routes = [
           { path: 'data-list', component: CdkDataListPageComponent },
           { path: 'popover', component: CdkPopoverPageComponent },
           { path: 'selection-model', component: CdkSelectionModelPageComponent },
+          { path: 'composition', component: CdkCompositionPageComponent },
           { path: '', pathMatch: 'full', redirectTo: 'data-list' }
         ]
       }

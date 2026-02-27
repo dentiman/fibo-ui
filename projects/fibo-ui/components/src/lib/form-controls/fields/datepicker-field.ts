@@ -48,7 +48,7 @@ import { Calendar } from '../calendar/calendar';
                      fiboPopover [trigger]="trigger"
                      fiboSelectDate [(value)]="value"
                      (itemTriggered)="trigger.close()"
-                     class="popover-container"/>
+                     class="popover-container"/>и
     </fibo-form-field-control>
 `
 })

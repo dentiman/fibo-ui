@@ -68,6 +68,7 @@ import {
   MapPin,
   SquareMousePointer,
   Info,
+  Network,
   Package,
 } from 'lucide-angular';
 
@@ -134,6 +135,7 @@ const icons = {
   MapPin,
   SquareMousePointer,
   Info,
+  Network,
   Package,
 };
 
