@@ -1,11 +1,10 @@
 import { Injectable, InjectionToken, computed, signal, untracked } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
-export type OverlayCategory = 'popover' | 'menu' | 'dialog' | 'drawer' | 'tooltip';
+export type OverlayCategory = 'popover' | 'menu' | 'dialog' | 'tooltip';
 
 const BASE_Z_INDEX: Record<OverlayCategory, number> = {
   dialog: 500,
-  drawer: 500,
   popover: 1000,
   menu: 1000,
   tooltip: 2000,

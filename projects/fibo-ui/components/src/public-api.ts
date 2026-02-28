@@ -6,9 +6,8 @@
 export * from './lib/loading-spin/loading-spin';
 
 // Popover components
-export * from './lib/overlay/dialog/dialog-trigger';
-export * from './lib/overlay/dialog/dialog-service';
 export * from './lib/overlay/dialog/dialog';
+export * from './lib/overlay/dialog/drawer';
 
 export * from './lib/overlay/tooltip/tooltip-container';
 export * from './lib/overlay/tooltip/tooltip-service';
@@ -20,10 +19,6 @@ export * from './lib/menu/tree-menu/tree-menu.component';
 export * from './lib/menu/side-menu/side-menu-group';
 export * from './lib/menu/side-menu/side-menu-item';
 
-
-export * from './lib/overlay/drawer/drawer-trigger';
-export * from './lib/overlay/drawer/drawer-service';
-export * from './lib/overlay/drawer/drawer';
 
 export * from './lib/overlay/confirmation/confirmation';
 export * from './lib/overlay/confirmation/confirmation-service';

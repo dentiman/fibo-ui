@@ -222,32 +222,26 @@ Where `dateRange` is `{ startDate: string, endDate: string }`.
 
 ---
 
-### Dialog
+### Dialog / Drawer
 
-Modal dialog and drawer. Controlled via `DialogTrigger` directive or `DialogService`.
-
-#### With directive
+Dialog and drawer use the same trigger flow via shared overlay outlet.
 
 ```html
-<button [fiboDialogTrigger]="dialogContent">Open Dialog</button>
-<button [fiboDialogTrigger]="dialogContent" [fiboDialogConfig]="{ mode: 'drawer' }">Open Drawer</button>
+<button fiboPopoverTriggerClick overlayCategory="dialog" [content]="dialogTpl">Open Dialog</button>
+<button fiboPopoverTriggerClick overlayCategory="dialog" [content]="drawerTpl">Open Drawer</button>
 
-<ng-template #dialogContent>
-  <div>Dialog body</div>
+<ng-template #dialogTpl>
+  <fibo-dialog>
+    <div>Dialog body</div>
+  </fibo-dialog>
+</ng-template>
+
+<ng-template #drawerTpl>
+  <fibo-drawer>
+    <div>Drawer body</div>
+  </fibo-drawer>
 </ng-template>
 ```
-
-#### With service
-
-```typescript
-private dialogService = inject(DialogService);
-
-open(template: TemplateRef<unknown>) {
-  this.dialogService.open(template);
-}
-```
-
-**Modes:** `'dialog'` (default centered modal), `'drawer'` (side panel)
 
 ---
 

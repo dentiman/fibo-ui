@@ -195,13 +195,12 @@ Common usage pattern now:
 ```html
 <router-outlet />
 <fibo-tooltip-container />
-<fibo-drawer />
 <fibo-confirmation />
 <fibo-notification />
 <fibo-overlay-outlet />
 ```
 
-`OverlayOutlet` is the render target for portal-based overlays (Select, Menu, DatePicker, any component using `PopoverTrigger + contentTemplate`).
+`OverlayOutlet` is the render target for portal-based overlays (Select, Menu, DatePicker, Dialog, Drawer, and any component using `PopoverTrigger + contentTemplate`).
 
 ---
 
@@ -218,14 +217,13 @@ Portal plumbing no longer uses a token-based owner contract.
 
 ## 9. Current Coupling Notes
 
-### Dialog still has two patterns
+### Dialog and Drawer use one pattern
 
-- `FiboDialog` is used in portal-driven flows (via trigger template composition).
-- `DialogService + DialogTrigger` service flow still exists in code.
-- Root service-rendered `<fibo-dialog>` is currently not active in `app.html`.
+- `FiboDialog` and `FiboDrawer` are both used in portal-driven flows (via trigger template composition).
+- Opening uses `PopoverTrigger` with `overlayCategory="dialog"` and renders through `<fibo-overlay-outlet>`.
 
 ### Overlay layer remains mixed
 
-- Portal-driven: Select, MultiSelect, Menu, DatePicker, custom popovers.
-- Service-driven: Drawer, Tooltip, Confirmation, Notification.
+- Portal-driven: Select, MultiSelect, Menu, DatePicker, Dialog, Drawer, custom popovers.
+- Service-driven: Tooltip, Confirmation, Notification.
 - This is acceptable, but conventions should stay explicit per component.

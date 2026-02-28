@@ -152,7 +152,7 @@ ngOnDestroy() {
 
 ### 1.5 Интеграция в Drawer
 
-Файл: `projects/fibo-ui/components/src/lib/overlay/drawer/drawer.html`
+Файл: `projects/fibo-ui/components/src/lib/overlay/dialog/drawer.ts`
 
 **Текущий код:**
 ```html
@@ -352,7 +352,7 @@ export class PopoverPosition {
 1. Создать `projects/fibo-ui/cdk/src/lib/a11y/focus-trap.ts`
 2. Экспортировать из public API CDK
 3. Применить в `FiboDialog` (inline template)
-4. Применить в `FiboDrawer` (drawer.html)
+4. Применить в `FiboDrawer` (inline template in `overlay/dialog/drawer.ts`)
 5. Проверить: Tab зацикливается внутри Dialog/Drawer, фокус возвращается при закрытии
 
 ### Фаза 2: autoUpdate (CDK)

@@ -169,8 +169,8 @@ The most important category — the components developers reach for most often. 
 | **Menu (Dropdown)** | `fibo-menu` with `MenuItemType[]` data model: icons, submenus, disabled items, separators |
 | **Context Menu** | Right-click triggered `Menu` |
 | **Tooltip** | `[fiboTooltip]` with string and TemplateRef content, delay configuration |
-| **Dialog** | `DialogService`, `DialogTrigger`, `fibo-dialog`: header/footer slots, sizes, custom content |
-| **Drawer** | `DrawerService`, `DrawerTrigger`, `fibo-drawer`: placement (left/right/top/bottom) |
+| **Dialog** | `fiboPopoverTriggerClick` + `overlayCategory="dialog"` + `fibo-dialog`: centered modal shell with shared portal flow |
+| **Drawer** | `fiboPopoverTriggerClick` + `overlayCategory="dialog"` + `fibo-drawer`: dialog-layer drawer shell with shared portal flow |
 | **Confirmation** | `ConfirmationService`, `[confirm]` directive, `fibo-confirmation`: config object vs custom template |
 | **Notifications** | `Notifier` service: `success()`, `error()`, `warning()`, `info()`, auto-dismiss, custom duration |
 | **Popover (CDK)** | Raw CDK popover primitives for building custom floating content |

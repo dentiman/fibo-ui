@@ -93,8 +93,6 @@ import { RouterOutlet } from '@angular/router';
 import {
   Notification,
   FiboConfirmation,
-  FiboDialog,
-  FiboDrawer,
   TooltipContainer,
 } from '@fibo-ui/components';
 import { OverlayOutletComponent } from '@fibo-ui/cdk';
@@ -104,8 +102,6 @@ import { OverlayOutletComponent } from '@fibo-ui/cdk';
   imports: [
     RouterOutlet,
     TooltipContainer,
-    FiboDialog,
-    FiboDrawer,
     FiboConfirmation,
     Notification,
     OverlayOutletComponent,
@@ -120,8 +116,6 @@ export class App {}
 ```html
 <router-outlet />
 <fibo-tooltip-container />
-<fibo-dialog />
-<fibo-drawer />
 <fibo-confirmation />
 <fibo-notification />
 <fibo-overlay-outlet />
@@ -133,8 +127,6 @@ Each element serves a distinct role:
 | --- | --- |
 | `<fibo-overlay-outlet>` | Renders all open dropdown and popover portals outside their DOM origin |
 | `<fibo-tooltip-container>` | Renders the active tooltip using floating positioning |
-| `<fibo-dialog>` | Renders the modal dialog driven by `DialogService` |
-| `<fibo-drawer>` | Renders the side drawer driven by `DrawerService` |
 | `<fibo-confirmation>` | Renders the confirmation dialog driven by `ConfirmationService` |
 | `<fibo-notification>` | Renders the toast stack driven by `Notifier` service |
 

@@ -1,12 +1,35 @@
-import {Component, inject, ViewEncapsulation} from '@angular/core';
-import {NgTemplateOutlet} from '@angular/common';
-import {FocusTrap} from '@fibo-ui/cdk';
-import {DrawerService} from './drawer-service';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  ViewEncapsulation,
+} from '@angular/core';
+import { FocusTrap, OVERLAY_REF } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-drawer',
-  imports: [NgTemplateOutlet, FocusTrap],
-  templateUrl: './drawer.html',
+  imports: [FocusTrap],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <div class="fixed inset-0"
+         animate.enter="drawer-enter"
+         animate.leave="drawer-leave">
+
+      <div (click)="close()"
+           [class]="'drawer-backdrop fixed inset-0' + (firstDrawer ? ' bg-black/30 dark:bg-black/50' : '')">
+      </div>
+
+      <div class="drawer-panel pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10"
+           role="dialog" aria-modal="true">
+        <div fiboFocusTrap class="pointer-events-auto w-screen max-w-md shadow-xl focus:outline-none">
+          <div class="flex h-full flex-col overflow-y-scroll bg-background dark:outline dark:-outline-offset-1 dark:outline-white/8">
+            <ng-content />
+          </div>
+        </div>
+      </div>
+
+    </div>
+  `,
   encapsulation: ViewEncapsulation.None,
   styles: `
     /* Enter */
@@ -50,5 +73,11 @@ import {DrawerService} from './drawer-service';
   `,
 })
 export class FiboDrawer {
-  state = inject(DrawerService);
+  private overlayRef = inject(OVERLAY_REF);
+
+  firstDrawer = this.overlayRef.firstInCategory;
+
+  close() {
+    this.overlayRef.close();
+  }
 }

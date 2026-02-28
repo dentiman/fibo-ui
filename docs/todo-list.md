@@ -2,8 +2,7 @@
 
 ## P1
 
-- Прод-сборка падает по budget (`initial > 1MB`), из-за этого `npm run build` в production завершается ошибкой.
-  - Референс: [/Users/dentiman/dev/projects/fibo-stack/fibo-ui/angular.json:30](/Users/dentiman/dev/projects/fibo-stack/fibo-ui/angular.json:30)
+
 
 - A11y: `Tooltip` работает только через `mouseenter/mouseleave`, нет keyboard parity (`focus/blur`) и связки для screen readers.
   - Референс: [/Users/dentiman/dev/projects/fibo-stack/fibo-ui/projects/fibo-ui/components/src/lib/overlay/tooltip/tooltip.ts:10](/Users/dentiman/dev/projects/fibo-stack/fibo-ui/projects/fibo-ui/components/src/lib/overlay/tooltip/tooltip.ts:10)
