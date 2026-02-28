@@ -2,6 +2,7 @@ import { Directive, ElementRef, effect, inject, input, signal, TemplateRef } fro
 import { DataListItem } from '../data-list/data-list-item.directive';
 import { Popover } from './popover';
 import { PortalRegistry } from '../portal/portal-registry';
+import { OVERLAY_CONTEXT, OverlayKind, OverlayRegistry } from '../overlay/overlay-registry';
 
 export interface KeydownDelegate {
   onKeydown(e: KeyboardEvent): void;
@@ -22,6 +23,7 @@ export class PopoverTrigger {
   isListItem = !!inject(DataListItem, { optional: true, self: true });
   element = inject(ElementRef<HTMLElement>).nativeElement;
   isOpen = signal(false);
+  overlayKind = input<OverlayKind>('popover', { alias: 'fiboOverlayKind' });
 
   contentTemplate = input<TemplateRef<any>>();
 
@@ -31,14 +33,24 @@ export class PopoverTrigger {
   keydownDelegate = signal<KeydownDelegate | null>(null);
 
   private portalRegistry = inject(PortalRegistry);
+  private overlayRegistry = inject(OverlayRegistry);
+  private parentOverlayContext = inject(OVERLAY_CONTEXT, { optional: true });
   private portalId = 'portal-' + Math.random().toString(36).substring(2, 10);
+  readonly overlayId = 'overlay-' + Math.random().toString(36).substring(2, 10);
 
   constructor() {
     effect(onCleanup => {
       const template = this.contentTemplate();
       if (this.isOpen() && template) {
         this.portalRegistry.register(this.portalId, template, { $implicit: this });
-        onCleanup(() => this.portalRegistry.unregister(this.portalId));
+        this.overlayRegistry.register(this.overlayId, {
+          kind: this.overlayKind(),
+          parentId: this.parentOverlayContext?.overlayId ?? null,
+        });
+        onCleanup(() => {
+          this.portalRegistry.unregister(this.portalId);
+          this.overlayRegistry.unregister(this.overlayId);
+        });
       }
     });
   }
@@ -97,7 +109,7 @@ export class PopoverTrigger {
   selector: '[fiboPopoverTriggerClick]',
   hostDirectives: [{
     directive: PopoverTrigger,
-    inputs: ['contentTemplate'],
+    inputs: ['contentTemplate', 'fiboOverlayKind'],
   }],
   host: {
     '(keydown.enter)': 'popoverTrigger.open()',
@@ -113,7 +125,7 @@ export class PopoverTriggerClick {
   selector: '[fiboPopoverTriggerToggle]',
   hostDirectives: [{
     directive: PopoverTrigger,
-    inputs: ['contentTemplate'],
+    inputs: ['contentTemplate', 'fiboOverlayKind'],
   }],
   host: {
     '(keydown.escape)': 'popoverTrigger.close()',

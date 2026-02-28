@@ -35,7 +35,7 @@ import { MENU_PANEL } from './menu-panel';
     },
     {
       directive: PopoverTrigger,
-      inputs: ['contentTemplate'],
+      inputs: ['contentTemplate', 'fiboOverlayKind'],
     },
   ],
   host: {

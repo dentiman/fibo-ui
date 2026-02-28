@@ -1,13 +1,21 @@
-import {ChangeDetectionStrategy, Component, effect, model, signal, ViewEncapsulation} from '@angular/core';
-import {FocusTrap} from '@fibo-ui/cdk';
+import {ChangeDetectionStrategy, Component, computed, effect, forwardRef, inject, model, signal, ViewEncapsulation} from '@angular/core';
+import {FocusTrap, OVERLAY_CONTEXT, OverlayContext, OverlayRegistry} from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-dialog',
   imports: [FocusTrap],
+  providers: [
+    {
+      provide: OVERLAY_CONTEXT,
+      useFactory: (dialog: FiboDialog): OverlayContext => ({overlayId: dialog.overlayId}),
+      deps: [forwardRef(() => FiboDialog)],
+    },
+  ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="fixed inset-0 z-50"
+    <div class="fixed inset-0"
+         [style.z-index]="overlayZIndex() ?? null"
          animate.enter="dialog-enter"
          animate.leave="dialog-leave">
 
@@ -81,18 +89,28 @@ import {FocusTrap} from '@fibo-ui/cdk';
 })
 export class FiboDialog {
   private static openCount = 0;
+  private overlayRegistry = inject(OverlayRegistry);
+  private parentOverlayContext = inject(OVERLAY_CONTEXT, { optional: true });
 
   isOpen = model(false);
   firstDialog = signal(false);
+  readonly overlayId = 'overlay-' + Math.random().toString(36).substring(2, 10);
+  overlayZIndex = computed(() => this.overlayRegistry.zIndex(this.overlayId));
 
   constructor() {
     effect((onCleanup) => {
       if (this.isOpen()) {
         this.firstDialog.set(FiboDialog.openCount === 0);
         FiboDialog.openCount++;
+        this.overlayRegistry.register(this.overlayId, {
+          kind: 'modal',
+          parentId: this.parentOverlayContext?.overlayId ?? null,
+          blocking: true,
+        });
         document.documentElement.style.overflow = 'hidden';
         onCleanup(() => {
           FiboDialog.openCount = Math.max(0, FiboDialog.openCount - 1);
+          this.overlayRegistry.unregister(this.overlayId);
           if (FiboDialog.openCount === 0) {
             document.documentElement.style.overflow = '';
           }

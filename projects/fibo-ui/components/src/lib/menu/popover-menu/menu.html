@@ -1,6 +1,6 @@
 @for (item of items(); track idx; let idx = $index) {
   @if (item.children || item.content) {
-    <button fiboSubmenuTrigger [contentTemplate]="subTpl" [disabled]="!!item.disabled"
+    <button fiboSubmenuTrigger [contentTemplate]="subTpl" [fiboOverlayKind]="'menu'" [disabled]="!!item.disabled"
             class="datalist-item py-1 px-2 w-full rounded-md  items-center  group text-sm"
     >
       @if (item?.icon) {

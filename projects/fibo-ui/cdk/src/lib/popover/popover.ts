@@ -1,10 +1,11 @@
 import {
-  Directive, ElementRef, inject,
+  computed, Directive, ElementRef, inject,
   input, OnDestroy, OnInit,
 } from '@angular/core';
 import {ClickOutside} from 'ngxtension/click-outside';
 import {PopoverPosition} from './popover-position';
 import {PopoverTrigger} from './popover-trigger';
+import { OverlayRegistry } from '../overlay/overlay-registry';
 
 @Directive({
   selector: '[fiboPopover]',
@@ -21,6 +22,7 @@ import {PopoverTrigger} from './popover-trigger';
 
   host: {
     class: 'fibo-popover-container',
+    '[style.z-index]': 'overlayZIndex() ?? null',
     '(clickOutside)': 'clickOutsideHandle($event)',
     '(focusout)': 'onFocusOut($event)',
   },
@@ -29,6 +31,8 @@ export class Popover implements OnInit, OnDestroy {
 
   element = inject(ElementRef);
   trigger = input.required<PopoverTrigger>();
+  private overlayRegistry = inject(OverlayRegistry);
+  overlayZIndex = computed(() => this.overlayRegistry.zIndex(this.trigger().overlayId));
 
   close() {
     this.trigger().close();
