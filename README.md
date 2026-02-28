@@ -47,7 +47,7 @@ npm start          # Dev server at http://localhost:4200
 │   ├── cdk/                          # @fibo-ui/cdk
 │   │   └── src/lib/
 │   │       ├── popover/              # Popover + PopoverTrigger (Floating UI)
-│   │       ├── portal/              # PortalRegistry, PortalContent, PortalOutlet
+│   │       ├── portal/              # OverlayRegistry, PortalContent, OverlayOutlet
 │   │       ├── data-list/           # DataList, DataListItem, SelectOne, SelectMulti
 │   │       ├── form/                # FormFieldDirective, FormFieldTrigger, FiboInput
 │   │       ├── common/              # IsEmpty, RandomId
@@ -82,7 +82,7 @@ npm start          # Dev server at http://localhost:4200
 Behavior-only primitives with no styling. Components library builds on these.
 
 - **Popover system** — `PopoverTrigger` (click/toggle variants) manages open state, `Popover` handles positioning via `@floating-ui/dom` and click-outside dismissal, `PopoverPosition` computes placement
-- **Portal system** — `PortalContent` directive marks template content, `PortalOutlet` renders it at a different DOM location, `PortalRegistry` connects them. Used by all floating UI (menus, selects, dialogs)
+- **Portal system** — `PortalContent` directive marks template content, `OverlayOutlet` renders it at a different DOM location, `OverlayRegistry` connects them. Used by all floating UI (menus, selects, dialogs)
 - **DataList + Selection** — `DataList` manages a list of `DataListItem` directives with keyboard navigation (arrow keys, active state tracking). `SelectOne` and `SelectMulti` are selection model directives that plug into any DataList. Used by Select, Menu, Table, Listbox
 - **Form field directives** — `FormFieldDirective` tracks form state (touched, invalid, dirty, errors) via content projection. `FormFieldTrigger` extends PopoverTrigger for dropdown form fields
 

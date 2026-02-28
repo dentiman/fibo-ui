@@ -13,7 +13,7 @@ import { LucideAngularModule } from 'lucide-angular';
       <form class="space-y-5">
         <button
           type="button"
-          fiboFormFieldTrigger [contentTemplate]="skillsTpl"
+          fiboFormFieldTrigger [content]="skillsTpl"
           [formField]="userForm.skills"
           class="w-full form-field-control flex items-center gap-2 text-left"
         >

@@ -44,7 +44,7 @@ import { Checkbox } from '@fibo-ui/components';
           <div class="flex flex-row justify-start space-x-1">
               <!-- User Select -->
               <div fiboFormField
-                   fiboPopoverTriggerClick [contentTemplate]="userTpl"
+                   fiboPopoverTriggerClick [content]="userTpl"
                    class="group content-center form-field-control rounded-full inline-block relative">
                   <span class="form-field-label">User:</span>
                   <span class="text-sm text-nowrap">{{ getSelectedUserLabel() || 'Any' }}</span>
@@ -80,7 +80,7 @@ import { Checkbox } from '@fibo-ui/components';
 
               <!-- Datepicker -->
               <div fiboFormField
-                   fiboPopoverTriggerClick [contentTemplate]="dateTpl"
+                   fiboPopoverTriggerClick [content]="dateTpl"
                    class="group content-center form-field-control rounded-full inline-block w-46 relative">
                   <span class="form-field-label">Date:</span>
                   <input
@@ -94,7 +94,7 @@ import { Checkbox } from '@fibo-ui/components';
                                class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
               </div>
               <ng-template #dateTpl let-trigger>
-                  <fibo-calendar fiboPopover [trigger]="trigger"
+                  <fibo-calendar fiboPopover
                                  fiboSelectDate [(value)]="createdAfter"
                                  (itemTriggered)="trigger.close()"
                                  class="popover-container"/>
@@ -102,7 +102,7 @@ import { Checkbox } from '@fibo-ui/components';
 
               <!-- Multiple Select Users -->
               <div fiboFormField
-                   fiboPopoverTriggerClick [contentTemplate]="usersTpl"
+                   fiboPopoverTriggerClick [content]="usersTpl"
                    class="group content-center form-field-control rounded-full inline-block relative min-w-40">
                   <span class="form-field-label">Users:</span>
                   <span class="w-full flex flex-wrap gap-x-1 gap-y-1">
@@ -185,7 +185,7 @@ import { Checkbox } from '@fibo-ui/components';
               <div class="overflow-hidden rounded-lg border-2 border-dashed border-border p-4">
                   <div class="text-xs text-foreground-secondary mb-2">Container with overflow-hidden:</div>
                   <div fiboFormField
-                       fiboPopoverTriggerClick [contentTemplate]="statusTpl"
+                       fiboPopoverTriggerClick [content]="statusTpl"
                        class="group content-center form-field-control w-60 relative">
                       <span class="form-field-label">Status:</span>
                       <span class="text-sm">{{ getStatusLabel(statusSelect()) || 'Select status' }}</span>
@@ -209,7 +209,7 @@ import { Checkbox } from '@fibo-ui/components';
               </div>
 
               <div fiboFormField
-                   fiboPopoverTriggerClick [contentTemplate]="categoryTpl"
+                   fiboPopoverTriggerClick [content]="categoryTpl"
                    class="group content-center form-field-control rounded-full inline-block w-60 relative">
                   <span class="form-field-label">Category:</span>
                   <span class="text-sm">{{ getCategoryLabel(categorySelect()) || 'Select category' }}</span>

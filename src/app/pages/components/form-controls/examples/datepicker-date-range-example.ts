@@ -16,7 +16,7 @@ import { Calendar, FormFieldControl } from '@fibo-ui/components';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto w-90 p-8">
-      <fibo-form-field-control fiboPopoverTriggerClick [contentTemplate]="calTpl"
+      <fibo-form-field-control fiboPopoverTriggerClick [content]="calTpl"
         label="Date Range" iconEnd="calendar-range">
 
         <div class="flex items-center gap-2">
@@ -30,7 +30,7 @@ import { Calendar, FormFieldControl } from '@fibo-ui/components';
         </div>
       </fibo-form-field-control>
       <ng-template #calTpl let-trigger>
-        <fibo-calendar fiboPopover [trigger]="trigger"
+        <fibo-calendar fiboPopover
                        fiboSelectDateRange [(value)]="calendarDateRange"
                        class="popover-container" />
       </ng-template>

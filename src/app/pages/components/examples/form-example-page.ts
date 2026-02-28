@@ -76,7 +76,7 @@ interface UserProfile {
           </div>
         </div>
 
-        <button type="button" fiboFormFieldTrigger [contentTemplate]="cityTpl"
+        <button type="button" fiboFormFieldTrigger [content]="cityTpl"
                 [formField]="userProfileForm.city"
                 class="w-full form-field-control flex items-center gap-2 text-left">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
@@ -101,7 +101,7 @@ interface UserProfile {
         </ng-template>
 
 
-        <button type="button" fiboFormFieldTrigger [contentTemplate]="roleTpl"
+        <button type="button" fiboFormFieldTrigger [content]="roleTpl"
                 [formField]="userProfileForm.userRole"
                 class="w-full form-field-control flex items-center gap-2 text-left">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
@@ -164,7 +164,7 @@ interface UserProfile {
         </div>
 
         <!-- Birth Date -->
-        <div fiboFormField fiboPopoverTriggerClick [contentTemplate]="birthCalTpl"
+        <div fiboFormField fiboPopoverTriggerClick [content]="birthCalTpl"
              class="form-field-control flex items-center gap-2">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
             <label class="form-field-label mt-1">Birth Date</label>
@@ -178,7 +178,7 @@ interface UserProfile {
                        class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
         </div>
         <ng-template #birthCalTpl let-trigger>
-          <fibo-calendar fiboPopover [trigger]="trigger"
+          <fibo-calendar fiboPopover
                          fiboSelectDate [(value)]="userProfileForm.birthDate().value"
                          (itemTriggered)="trigger.close()"
                          class="popover-container"/>
@@ -195,7 +195,7 @@ interface UserProfile {
 
 
         <!-- Skills (multiple) -->
-        <button type="button" fiboFormFieldTrigger [contentTemplate]="skillsTpl"
+        <button type="button" fiboFormFieldTrigger [content]="skillsTpl"
                 [formField]="userProfileForm.skills"
                 class="w-full form-field-control flex items-center gap-2 text-left">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">

@@ -68,7 +68,7 @@ This makes styles readable (`[aria-selected="true"]`, `[data-error]`), removes t
 
 #### 6. Portal System Without Overhead
 
-Floating content (dropdowns, menus, tooltips) is rendered through a lightweight portal system (`PortalContent` + `PortalRegistry` + `PortalOutletComponent`) that is fully signal-driven. No dependency on Angular CDK Overlay. The trigger controls a signal; `PortalContent` watches it and registers/unregisters a `TemplateRef`; `PortalOutletComponent` at the app root renders whatever is registered. Simple, predictable, zero magic.
+Floating content (dropdowns, menus, tooltips) is rendered through a lightweight portal system (`PortalContent` + `OverlayRegistry` + `OverlayOutletComponent`) that is fully signal-driven. No dependency on Angular CDK Overlay. The trigger controls a signal; `PortalContent` watches it and registers/unregisters a `TemplateRef`; `OverlayOutletComponent` at the app root renders whatever is registered. Simple, predictable, zero magic.
 
 ---
 
@@ -116,7 +116,7 @@ Explains the mental model before diving into components. Adapted from Radix UI a
 | **Overview** | CDK vs Components layer, composition philosophy, when to use each |
 | **Data List & Items** | The `DataList` + `DataListItem` primitive: how items register, keyboard navigation, active state |
 | **Selection Models** | `SelectOne`, `SelectMulti`, `RouterSelectOne`, `SelectDate`, `SelectDateRange`, `SELECTION_MODEL` token, implementing your own |
-| **Popover & Portal** | `PopoverTrigger`, `PortalContent`, `PortalRegistry`, `PortalOutletComponent`, `PopoverPosition`, `@floating-ui/dom` |
+| **Popover & Portal** | `PopoverTrigger`, `PortalContent`, `OverlayRegistry`, `OverlayOutletComponent`, `PopoverPosition`, `@floating-ui/dom` |
 | **Form Integration** | `FormValueControl<T>`, `FormCheckboxControl`, `FormFieldDirective`, `FormFieldControl`, signal forms binding pattern |
 
 ---
@@ -203,7 +203,7 @@ Low-level API reference for library authors and advanced users building their ow
 | **SelectOne / SelectMulti** | API, `value` model, `compareFn`, `isSelected()` |
 | **RouterSelectOne** | API, how `router.isActive()` is used, query params |
 | **PopoverTrigger** | `isOpen` signal, `open()`, `close()`, `toggle()`, focus delegation |
-| **PortalContent / PortalOutlet** | Template portal pattern, `PortalRegistry`, multiple portals |
+| **PortalContent / PortalOutlet** | Template portal pattern, `OverlayRegistry`, multiple portals |
 | **PopoverPosition** | `placement` input, `offset`, `matchWidth`, `@floating-ui/dom` integration |
 | **Expandable** | `expanded` model, `toggle()`, `aria-expanded` |
 | **MenuPanel / SubmenuTrigger** | Submenu coordination, open/close delays |

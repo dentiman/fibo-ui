@@ -29,7 +29,7 @@ interface UserModel {
     <div class="mx-auto w-90 p-8">
       <button
         type="button"
-        fiboFormFieldTrigger [contentTemplate]="selectTpl"
+        fiboFormFieldTrigger [content]="selectTpl"
         [formField]="userForm.role"
         class="w-full form-field-control flex items-center gap-2 text-left"
       >

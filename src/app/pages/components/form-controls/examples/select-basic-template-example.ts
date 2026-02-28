@@ -28,7 +28,7 @@ interface UserModel {
   template: `
     <div class="mx-auto w-90 p-8">
       <fibo-form-field-control
-        fiboPopoverTriggerToggle [contentTemplate]="roleTpl"
+        fiboPopoverTriggerToggle [content]="roleTpl"
         [formField]="userForm.role"
         label="User Role" iconEnd="chevron-down">
 

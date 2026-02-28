@@ -12,12 +12,12 @@ Most UI libraries have a single monolithic overlay system that couples positioni
 
 ```
 PopoverTrigger          — owns the isOpen signal; provides PORTAL_OWNER token;
-    │                     registers/unregisters template in PortalRegistry when isOpen changes
+    │                     registers/unregisters template in OverlayRegistry when isOpen changes
     │
     ├─ PortalContent    — auto-discovers trigger via PORTAL_OWNER DI token;
     │       │            passes its TemplateRef to the trigger
     │       │
-    │   PortalRegistry  — root-level signal Map of open portals (with context)
+    │   OverlayRegistry  — root-level signal Map of open portals (with context)
     │       │
     │   PortalOutlet    — placed once at app root; renders every registered TemplateRef
     │                     with context ({$implicit: trigger})
@@ -39,7 +39,7 @@ The standard approach in Angular is the CDK `Overlay` module — a powerful but 
 
 ### Escaping Stacking Contexts
 
-The core problem portals solve: a `<div class="overflow-hidden">` parent clips any `position: absolute` child, making dropdowns disappear. The portal system renders floating content as a sibling of `<fibo-portal-outlet>` at the app root — completely outside the component tree that triggered it.
+The core problem portals solve: a `<div class="overflow-hidden">` parent clips any `position: absolute` child, making dropdowns disappear. The portal system renders floating content as a sibling of `<fibo-overlay-outlet>` at the app root — completely outside the component tree that triggered it.
 
 ```
 Component tree                     Rendered DOM
@@ -52,9 +52,9 @@ Component tree                     Rendered DOM
   </button>
 </card>
 
-<fibo-portal-outlet>               <fibo-portal-outlet>
+<fibo-overlay-outlet>               <fibo-overlay-outlet>
   <!-- renders here -->              <div fiboPopover>…</div>  ← here ✓
-</fibo-portal-outlet>              </fibo-portal-outlet>
+</fibo-overlay-outlet>              </fibo-overlay-outlet>
 ```
 
 ---
@@ -237,7 +237,7 @@ All three expose the same `PopoverTrigger` directive via `exportAs: 'PopoverTrig
 The portal system is ~150 lines of signals code. No scroll strategies, no backdrop factory, no `OverlayContainer` singleton to style.
 
 **2. Escapes stacking contexts reliably**
-`PortalOutletComponent` is placed once at the app root. Floating content renders outside any `overflow: hidden` or `transform` ancestor that would otherwise clip it.
+`OverlayOutletComponent` is placed once at the app root. Floating content renders outside any `overflow: hidden` or `transform` ancestor that would otherwise clip it.
 
 **3. Fully composable**
 `PopoverTrigger + PortalContent + Popover` is the minimal kernel. Add `DataList` for keyboard navigation. Add `SelectOne` for selection semantics. Add `DataListItem` for individual items. None of these layers know about each other — they communicate through Angular's DI.
@@ -252,7 +252,7 @@ The portal system is ~150 lines of signals code. No scroll strategies, no backdr
 `PopoverPosition` uses `ResizeObserver` on both the trigger and the floating element, plus a `window resize` listener. The popover follows its trigger when the layout shifts.
 
 **7. Multiple portals simultaneously**
-`PortalRegistry` is a `Map<id, PortalEntry>`. Multiple popovers can be open at the same time (e.g., a menu with a submenu), each rendered independently through `PortalOutletComponent`.
+`OverlayRegistry` is a `Map<id, OverlayEntry>`. Multiple popovers can be open at the same time (e.g., a menu with a submenu), each rendered independently through `OverlayOutletComponent`.
 
 ---
 
@@ -301,13 +301,13 @@ Standalone positioning directive — use directly when you need positioning with
 
 Same inputs as `Popover`: `trigger`, `placement`, `offset`, `matchWidth`, `referenceElement`.
 
-### PortalRegistry
+### OverlayRegistry
 
 Root-level service (`providedIn: 'root'`).
 
 | Member | Type | Description |
 |---|---|---|
-| `openPortalsList` | `Signal<PortalEntry[]>` | Computed list of currently open portals |
+| `openPortalsList` | `Signal<OverlayEntry[]>` | Computed list of currently open portals |
 | `register(id, templateRef, context?)` | method | Called by `PopoverTrigger` when opening |
 | `unregister(id)` | method | Called by `PopoverTrigger` effect cleanup when closing |
 

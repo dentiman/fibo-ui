@@ -21,7 +21,7 @@ interface PopoverAction {
   template: `
     <section class="mx-auto w-full max-w-xl p-6">
       <div class="flex items-center gap-3">
-        <button type="button" #trigger="PopoverTrigger" fiboPopoverTriggerToggle [contentTemplate]="popoverTpl"
+        <button type="button" #trigger="PopoverTrigger" fiboPopoverTriggerToggle [content]="popoverTpl"
                 class="btn btn-primary">
           Toggle popover
         </button>

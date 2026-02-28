@@ -8,7 +8,7 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto w-80 p-8">
-      <button class="btn btn-primary" fiboPopoverTriggerToggle [contentTemplate]="menuTpl">
+      <button class="btn btn-primary" fiboPopoverTriggerToggle [content]="menuTpl">
         User Profile
       </button>
       <ng-template #menuTpl let-trigger>

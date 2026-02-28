@@ -8,13 +8,13 @@ import { LucideAngularModule } from 'lucide-angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mx-auto w-full max-w-xl p-6 flex gap-4 items-center">
-      <button type="button" #triggerRef="PopoverTrigger" fiboPopoverTriggerToggle [contentTemplate]="cardTpl"
+      <button type="button" #triggerRef="PopoverTrigger" fiboPopoverTriggerToggle [content]="cardTpl"
               class="btn btn-secondary flex items-center gap-2">
         <lucide-icon name="user" size="16" />
         Alex Johnson
       </button>
       <ng-template #cardTpl let-trigger>
-        <div fiboPopover [trigger]="trigger" placement="bottom-start" [offset]="8"
+        <div fiboPopover placement="bottom-start" [offset]="8"
              class="popover-container p-4 w-72 flex flex-col gap-3">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center shrink-0">

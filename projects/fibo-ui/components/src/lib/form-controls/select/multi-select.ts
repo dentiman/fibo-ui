@@ -29,7 +29,7 @@ import { SelectItem } from './select';
   },
   template: `
     <fibo-form-field-control
-      fiboPopoverTriggerToggle [contentTemplate]="multiSelectTpl"
+      fiboPopoverTriggerToggle [content]="multiSelectTpl"
       [label]="label()" iconEnd="chevron-down"
       [(value)]="value"
       [required]="required()" [disabled]="disabled()"

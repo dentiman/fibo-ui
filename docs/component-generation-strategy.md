@@ -66,7 +66,7 @@ last_updated: 2026-02-14
 5. `notification`
 6. `tooltip`
 
-Причина: overlay-слой требует правильной root-интеграции (`fibo-*-container`, `fibo-portal-outlet`).
+Причина: overlay-слой требует правильной root-интеграции (`fibo-*-container`, `fibo-overlay-outlet`).
 
 ## Этап 3
 

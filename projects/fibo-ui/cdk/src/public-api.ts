@@ -49,6 +49,6 @@ export * from './lib/date/select-date-range';
 // A11y Directives
 export * from './lib/a11y/focus-trap';
 
-// Portal Components and Services
-export * from './lib/portal/portal-registry';
-export * from './lib/portal/portal-outlet.component';
+// Overlay Components and Services
+export * from './lib/portal/overlay-registry';
+export * from './lib/portal/overlay-outlet';

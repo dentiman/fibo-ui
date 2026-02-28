@@ -1,17 +1,16 @@
 import {
   Directive, ElementRef, inject,
-  input, OnDestroy, OnInit,
 } from '@angular/core';
 import {ClickOutside} from 'ngxtension/click-outside';
 import {PopoverPosition} from './popover-position';
-import {PopoverTrigger} from './popover-trigger';
+import {OVERLAY_REF} from '../portal/overlay-registry';
 
 @Directive({
   selector: '[fiboPopover]',
   hostDirectives: [
     {
       directive: PopoverPosition,
-      inputs: ['placement', 'matchWidth', 'trigger', 'referenceElement', 'offset']
+      inputs: ['placement', 'matchWidth', 'referenceElement', 'offset']
     },
     {
       directive: ClickOutside,
@@ -21,44 +20,21 @@ import {PopoverTrigger} from './popover-trigger';
 
   host: {
     class: 'fibo-popover-container',
-    '(clickOutside)': 'clickOutsideHandle($event)',
-    '(focusout)': 'onFocusOut($event)',
+    '(clickOutside)': 'clickOutsideHandle($event)'
   },
 })
-export class Popover implements OnInit, OnDestroy {
+export class Popover {
 
   element = inject(ElementRef);
-  trigger = input.required<PopoverTrigger>();
+  private overlayRef = inject(OVERLAY_REF);
 
   close() {
-    this.trigger().close();
+    this.overlayRef.close();
   }
-  clickOutsideHandle( event: Event ) {
-    if(!this.trigger().element.contains(event.target as Node)) {
-      this.trigger().close();
+  clickOutsideHandle(event: Event) {
+    const referenceElement = this.overlayRef.referenceElement;
+    if (referenceElement && !referenceElement.contains(event.target as Node)) {
+      this.overlayRef.close();
     }
   }
-  onFocusOut(event: FocusEvent) {
-    const relatedTarget = event.relatedTarget as Node;
-    if(!relatedTarget) return;
-    const relatedElement =
-      relatedTarget instanceof Element ? relatedTarget : relatedTarget.parentElement;
-    const isMovingToPopover = !!relatedElement?.closest('.fibo-popover-container');
-    if (
-      this.trigger().element.contains(relatedTarget) ||
-      this.element.nativeElement.contains(relatedTarget) ||
-      isMovingToPopover
-    ) {
-      return
-
-    }
-    this.trigger().close();
-  }
-  ngOnInit(): void {
-     this.trigger().popover.set(this);
-  }
-  ngOnDestroy(): void {
-    this.trigger().popover.set(null);
-  }
-
 }

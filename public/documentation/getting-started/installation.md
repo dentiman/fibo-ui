@@ -97,7 +97,7 @@ import {
   FiboDrawer,
   TooltipContainer,
 } from '@fibo-ui/components';
-import { PortalOutletComponent } from '@fibo-ui/cdk';
+import { OverlayOutletComponent } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'app-root',
@@ -108,7 +108,7 @@ import { PortalOutletComponent } from '@fibo-ui/cdk';
     FiboDrawer,
     FiboConfirmation,
     Notification,
-    PortalOutletComponent,
+    OverlayOutletComponent,
   ],
   templateUrl: './app.html',
 })
@@ -124,21 +124,21 @@ export class App {}
 <fibo-drawer />
 <fibo-confirmation />
 <fibo-notification />
-<fibo-portal-outlet />
+<fibo-overlay-outlet />
 ```
 
 Each element serves a distinct role:
 
 | Element | Purpose |
 | --- | --- |
-| `<fibo-portal-outlet>` | Renders all open dropdown and popover portals outside their DOM origin |
+| `<fibo-overlay-outlet>` | Renders all open dropdown and popover portals outside their DOM origin |
 | `<fibo-tooltip-container>` | Renders the active tooltip using floating positioning |
 | `<fibo-dialog>` | Renders the modal dialog driven by `DialogService` |
 | `<fibo-drawer>` | Renders the side drawer driven by `DrawerService` |
 | `<fibo-confirmation>` | Renders the confirmation dialog driven by `ConfirmationService` |
 | `<fibo-notification>` | Renders the toast stack driven by `Notifier` service |
 
-> If you are using **CDK only**, add `<fibo-portal-outlet>` and import `PortalOutletComponent`. All other overlay containers are part of `@fibo-ui/components` and can be omitted.
+> If you are using **CDK only**, add `<fibo-overlay-outlet>` and import `OverlayOutletComponent`. All other overlay containers are part of `@fibo-ui/components` and can be omitted.
 
 ## Verify the Setup
 

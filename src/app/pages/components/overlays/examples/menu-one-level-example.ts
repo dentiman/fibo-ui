@@ -8,7 +8,7 @@ import { RouterLink } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto w-90 p-8">
-      <button type="button" class="btn btn-primary" fiboPopoverTriggerToggle [contentTemplate]="menuTpl">
+      <button type="button" class="btn btn-primary" fiboPopoverTriggerToggle [content]="menuTpl">
         Menu (1 level)
       </button>
       <ng-template #menuTpl let-trigger>

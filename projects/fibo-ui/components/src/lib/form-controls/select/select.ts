@@ -33,7 +33,7 @@ export interface SelectItem {
   template: `
 
     <fibo-form-field-control
-      fiboPopoverTriggerToggle [contentTemplate]="selectTpl"
+      fiboPopoverTriggerToggle [content]="selectTpl"
       [label]="label()" iconEnd="chevron-down"
       [(value)]="value" [clearValue]="clearValue()"
       [required]="required()" [disabled]="disabled()"

@@ -49,7 +49,7 @@ interface RegistrationData {
       </fibo-form-field-control>
 
       <fibo-form-field-control
-        fiboPopoverTriggerToggle [contentTemplate]="positionTpl"
+        fiboPopoverTriggerToggle [content]="positionTpl"
         [formField]="registrationForm.position"
         label="Position" iconEnd="chevron-down">
 
@@ -70,7 +70,7 @@ interface RegistrationData {
         </div>
       </ng-template>
 
-      <fibo-form-field-control fiboPopoverTriggerClick [contentTemplate]="calTpl"
+      <fibo-form-field-control fiboPopoverTriggerClick [content]="calTpl"
         [formField]="registrationForm.birthDate"
         label="Birth Date" iconEnd="calendar-days" [clearValue]="''">
 
@@ -78,13 +78,13 @@ interface RegistrationData {
                placeholder="YYYY-MM-DD" class="text-field-input" />
       </fibo-form-field-control>
       <ng-template #calTpl let-trigger>
-        <fibo-calendar fiboPopover [trigger]="trigger"
+        <fibo-calendar fiboPopover
                        fiboSelectDate [(value)]="registrationForm.birthDate().value"
                        (itemTriggered)="trigger.close()"
                        class="popover-container" />
       </ng-template>
 
-      <fibo-form-field-control fiboPopoverTriggerToggle [contentTemplate]="skillsTpl"
+      <fibo-form-field-control fiboPopoverTriggerToggle [content]="skillsTpl"
         [formField]="registrationForm.skills"
         label="Skills" iconEnd="chevron-down">
 

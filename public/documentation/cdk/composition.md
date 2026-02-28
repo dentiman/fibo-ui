@@ -22,14 +22,14 @@ PopoverTrigger
     ├── input: contentTemplate → TemplateRef<any>
     ├── signal: isOpen
     ├── effect: isOpen && contentTemplate
-    │     └── register/unregister in PortalRegistry
+    │     └── register/unregister in OverlayRegistry
     │         with context: {$implicit: this}
     └── owns portal lifecycle
 
-PortalRegistry (root service)
+OverlayRegistry (root service)
     └── signal: Map<id, { templateRef, context? }>
 
-PortalOutlet ──inject──▶ PortalRegistry
+OverlayOutlet ──inject──▶ OverlayRegistry
     └── renders openPortalsList via ngTemplateOutlet
 ```
 
@@ -51,7 +51,7 @@ The ownership link is now explicit through `[contentTemplate]` input on trigger 
 PopoverTrigger
     ├── input: contentTemplate
     ├── inject(opt, self) ──▶ DataListItem (detect list-item host)
-    ├── inject ──▶ PortalRegistry
+    ├── inject ──▶ OverlayRegistry
     ├── signal: isOpen
     ├── signal: popover → Popover | null
     ├── signal: keydownDelegate → KeydownDelegate | null
@@ -182,7 +182,7 @@ Menu [fibo-menu] ──hostDir──▶ MenuPanel
 Common usage pattern now:
 
 ```html
-<button fiboPopoverTriggerToggle [contentTemplate]="menuTpl">Open</button>
+<button fiboPopoverTriggerToggle [content]="menuTpl">Open</button>
 <ng-template #menuTpl let-trigger>
   <fibo-menu fiboPopover [trigger]="trigger" [items]="items" />
 </ng-template>
@@ -198,10 +198,10 @@ Common usage pattern now:
 <fibo-drawer />
 <fibo-confirmation />
 <fibo-notification />
-<fibo-portal-outlet />
+<fibo-overlay-outlet />
 ```
 
-`PortalOutlet` is the render target for portal-based overlays (Select, Menu, DatePicker, any component using `PopoverTrigger + contentTemplate`).
+`OverlayOutlet` is the render target for portal-based overlays (Select, Menu, DatePicker, any component using `PopoverTrigger + contentTemplate`).
 
 ---
 

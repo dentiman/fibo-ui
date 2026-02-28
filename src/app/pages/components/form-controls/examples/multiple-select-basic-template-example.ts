@@ -30,7 +30,7 @@ interface UserModel {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto w-90 p-8">
-      <fibo-form-field-control fiboPopoverTriggerToggle [contentTemplate]="skillsTpl"
+      <fibo-form-field-control fiboPopoverTriggerToggle [content]="skillsTpl"
         [formField]="userForm.skills"
         label="Skills" iconEnd="chevron-down">
 

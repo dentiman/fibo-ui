@@ -16,7 +16,7 @@ import {
   offset, Placement,
 } from '@floating-ui/dom';
 import { PopoverArrow } from './popover-arrow';
-import { PopoverTrigger } from './popover-trigger';
+import { OVERLAY_REF } from '../portal/overlay-registry';
 
 @Directive({
   selector: '[fiboPopoverPosition]',
@@ -31,11 +31,10 @@ import { PopoverTrigger } from './popover-trigger';
 })
 export class PopoverPosition {
   referenceElement = input<HTMLElement>();
-  trigger = input<PopoverTrigger>();
+  private overlayRef = inject(OVERLAY_REF, { optional: true });
 
   realReferenceElement = computed(() => {
-    if (this.referenceElement()) return this.referenceElement();
-    return this.trigger()?.element;
+    return this.referenceElement() ?? this.overlayRef?.referenceElement;
   });
 
   matchWidth = input<boolean>(false);

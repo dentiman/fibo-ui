@@ -35,7 +35,7 @@ import { MENU_PANEL } from './menu-panel';
     },
     {
       directive: PopoverTrigger,
-      inputs: ['contentTemplate'],
+      inputs: ['content'],
     },
   ],
   host: {
@@ -59,6 +59,7 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.popoverTrigger.overlayCategory.set('menu');
     this.panel.registerSubmenuTrigger(this);
   }
 

@@ -1,6 +1,6 @@
 @for (item of items(); track idx; let idx = $index) {
   @if (item.children || item.content) {
-    <button fiboSubmenuTrigger [contentTemplate]="subTpl" [disabled]="!!item.disabled"
+    <button fiboSubmenuTrigger [content]="subTpl" [disabled]="!!item.disabled"
             class="datalist-item py-1 px-2 w-full rounded-md  items-center  group text-sm"
     >
       @if (item?.icon) {
@@ -21,7 +21,6 @@
     <ng-template #subTpl let-trigger>
       <fibo-menu
         fiboPopover
-        (closeParent)="menuPanel.closeMenuWithParent()"
         [trigger]="trigger"
         [offset]="1"
         placement="right-start"
@@ -32,7 +31,7 @@
 
   } @else {
     @if (item.url) {
-      <a fiboDataListItem [value]="item" [disabled]="!!item.disabled" (itemTrigger)="menuPanel.closeMenuWithParent()"
+      <a fiboDataListItem [value]="item" [disabled]="!!item.disabled" (itemTrigger)="menuPanel.closeAll()"
          [routerLink]="item.url"
          class="datalist-item ">
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
@@ -40,14 +39,14 @@
     } @else if (item.callback) {
       <a class="datalist-item py-1 px-2 rounded-md relative group text-sm"
          fiboDataListItem [disabled]="!!item.disabled"
-         (itemTrigger)="item.callback(); menuPanel.closeMenuWithParent()">
+         (itemTrigger)="item.callback(); menuPanel.closeAll()">
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
       </a>
     } @else if (item.value !== undefined) {
       <a class="datalist-item py-1 px-2 rounded-md relative group text-sm"
          fiboDataListItem [disabled]="!!item.disabled"
          [value]="item.value"
-         (itemTrigger)="menuPanel.closeMenuWithParent()">
+         (itemTrigger)="menuPanel.closeAll()">
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
       </a>
     }

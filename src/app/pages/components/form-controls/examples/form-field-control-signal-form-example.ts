@@ -36,7 +36,7 @@ interface ContactData {
                type="text" placeholder="Enter full name" class="text-field-input" />
       </fibo-form-field-control>
 
-      <fibo-form-field-control fiboPopoverTriggerToggle [contentTemplate]="roleTpl"
+      <fibo-form-field-control fiboPopoverTriggerToggle [content]="roleTpl"
         [formField]="contactForm.role"
         label="Role" iconEnd="chevron-down">
 

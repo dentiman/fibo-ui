@@ -18,7 +18,7 @@ import { Calendar } from '../calendar/calendar';
     },
     template: `
     <fibo-form-field-control
-      fiboPopoverTriggerClick [contentTemplate]="calendarTpl"
+      fiboPopoverTriggerClick [content]="calendarTpl"
       [id]="id()"
       [label]="label()"
       [iconStart]="iconStart()"
@@ -44,7 +44,7 @@ import { Calendar } from '../calendar/calendar';
     </fibo-form-field-control>
 
     <ng-template #calendarTpl let-trigger>
-      <fibo-calendar fiboPopover [trigger]="trigger"
+      <fibo-calendar fiboPopover
                      fiboSelectDate [(value)]="value"
                      (itemTriggered)="trigger.close()"
                      class="popover-container"/>

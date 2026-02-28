@@ -1,5 +1,10 @@
-import {ChangeDetectionStrategy, Component, effect, model, signal, ViewEncapsulation} from '@angular/core';
-import {FocusTrap} from '@fibo-ui/cdk';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  ViewEncapsulation,
+} from '@angular/core';
+import { FocusTrap, OVERLAY_REF } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-dialog',
@@ -7,12 +12,12 @@ import {FocusTrap} from '@fibo-ui/cdk';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="fixed inset-0 z-50"
+    <div class="fixed inset-0"
          animate.enter="dialog-enter"
          animate.leave="dialog-leave">
 
-      <div (click)="isOpen.set(false)"
-           [class]="'dialog-backdrop fixed inset-0' + (firstDialog() ? ' bg-black/30 dark:bg-black/50' : '')">
+      <div (click)="close()"
+           [class]="'dialog-backdrop fixed inset-0' + (firstDialog ? ' bg-black/30 dark:bg-black/50' : '')">
       </div>
 
       <div fiboFocusTrap
@@ -80,24 +85,11 @@ import {FocusTrap} from '@fibo-ui/cdk';
   `,
 })
 export class FiboDialog {
-  private static openCount = 0;
+  private overlayRef = inject(OVERLAY_REF);
 
-  isOpen = model(false);
-  firstDialog = signal(false);
+  firstDialog = this.overlayRef.firstInCategory;
 
-  constructor() {
-    effect((onCleanup) => {
-      if (this.isOpen()) {
-        this.firstDialog.set(FiboDialog.openCount === 0);
-        FiboDialog.openCount++;
-        document.documentElement.style.overflow = 'hidden';
-        onCleanup(() => {
-          FiboDialog.openCount = Math.max(0, FiboDialog.openCount - 1);
-          if (FiboDialog.openCount === 0) {
-            document.documentElement.style.overflow = '';
-          }
-        });
-      }
-    });
+  close() {
+    this.overlayRef.close();
   }
 }

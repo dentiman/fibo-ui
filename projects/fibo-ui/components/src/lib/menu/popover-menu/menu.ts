@@ -8,12 +8,7 @@ import {LucideAngularModule} from 'lucide-angular';
 
 @Component({
   selector: 'fibo-menu',
-  hostDirectives: [
-    {
-      directive: MenuPanel,
-      outputs: ['closeParent'],
-    },
-  ],
+  hostDirectives: [MenuPanel],
   host: {
     'class': 'popover-container  group min-w-40',
   },

@@ -1,9 +1,9 @@
-import { DestroyRef, Directive, effect, inject, InjectionToken, input, output, signal } from '@angular/core';
+import { DestroyRef, Directive, inject, InjectionToken, input, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { DataList } from '../data-list/data-list';
-import { Popover } from '../popover/popover';
 import { DataListItem } from '../data-list/data-list-item.directive';
 import { SubmenuTrigger } from './submenu-trigger';
+import { OverlayRegistry } from '../portal/overlay-registry';
 
 /**
  * Injection token for parent MenuPanel.
@@ -41,7 +41,7 @@ export const MENU_PANEL = new InjectionToken<MenuPanel>('MenuPanel');
 })
 export class MenuPanel {
   dataList = inject(DataList);
-  private popover = inject(Popover, { self: true, optional: true });
+  private registry = inject(OverlayRegistry);
   private destroyRef = inject(DestroyRef);
   private openTimeout: ReturnType<typeof setTimeout> | undefined;
   private closeTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -51,7 +51,6 @@ export class MenuPanel {
 
   /** Delay in milliseconds before opening submenu on hover (default 300ms) */
   openDelay = input(300);
-  closeParent = output<void>();
 
   registerSubmenuTrigger(trigger: SubmenuTrigger) {
     const currentTriggers = this.submenuTriggers();
@@ -72,17 +71,17 @@ export class MenuPanel {
     });
   }
 
-  closeMenuWithParent() {
-    this.popover?.close();
-    this.closeParent.emit();
+  closeAll() {
+    this.registry.closeAllByCategory('menu');
   }
 
   focusToTrigger(event: Event) {
-    if (!this.popover?.trigger().isListItem) {
+    const trigger = this.dataList.trigger();
+    if (!trigger?.isListItem) {
       return;
     }
 
-    this.popover.trigger().element.focus();
+    trigger.element.focus();
     this.dataList.resetActiveDataListItem();
     event.stopPropagation();
     this.closeAllSubmenus();
@@ -90,16 +89,6 @@ export class MenuPanel {
 
   constructor() {
     this.destroyRef.onDestroy(() => this.clearTimeouts());
-
-    // Wire DataList trigger from Popover's trigger for keyboard delegation
-    if (this.popover) {
-      effect(() => {
-        const trigger = this.popover!.trigger();
-        if (trigger) {
-          this.dataList.trigger.set(trigger);
-        }
-      });
-    }
 
     // Open/close submenu with symmetric delay when active option changes
     toObservable(this.dataList.activeDataListItem)
