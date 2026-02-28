@@ -6,7 +6,6 @@ import {
   Popover,
   PopoverTriggerClick,
   PopoverTriggerToggle,
-  PortalContent,
   SelectDate,
   SelectMulti,
   SelectOne,
@@ -28,7 +27,6 @@ interface RegistrationData {
     FormFieldControl,
     PopoverTriggerToggle,
     PopoverTriggerClick,
-    PortalContent,
     Popover,
     DataList,
     DataListItem,
@@ -51,44 +49,42 @@ interface RegistrationData {
       </fibo-form-field-control>
 
       <fibo-form-field-control
-        fiboPopoverTriggerToggle
+        fiboPopoverTriggerToggle [contentTemplate]="positionTpl"
         [formField]="registrationForm.position"
         label="Position" iconEnd="chevron-down">
 
         <div class="text-sm" [class.from-field-placeholder]="!positionLabel()">
           {{ positionLabel() || 'Select position' }}
         </div>
-
-        <ng-template fiboPortalContent let-trigger>
-          <div fiboPopover [trigger]="trigger" [matchWidth]="true"
-               fiboDataList (itemTriggered)="trigger.close()"
-               fiboSelectOne [(value)]="registrationForm.position().value"
-               class="popover-container">
-            @for (item of positions; track item.value) {
-              <a fiboDataListItem [value]="item.value" class="datalist-item">
-                {{ item.label }}
-              </a>
-            }
-          </div>
-        </ng-template>
       </fibo-form-field-control>
+      <ng-template #positionTpl let-trigger>
+        <div fiboPopover [trigger]="trigger" [matchWidth]="true"
+             fiboDataList (itemTriggered)="trigger.close()"
+             fiboSelectOne [(value)]="registrationForm.position().value"
+             class="popover-container">
+          @for (item of positions; track item.value) {
+            <a fiboDataListItem [value]="item.value" class="datalist-item">
+              {{ item.label }}
+            </a>
+          }
+        </div>
+      </ng-template>
 
-      <fibo-form-field-control fiboPopoverTriggerClick
+      <fibo-form-field-control fiboPopoverTriggerClick [contentTemplate]="calTpl"
         [formField]="registrationForm.birthDate"
         label="Birth Date" iconEnd="calendar-days" [clearValue]="''">
 
         <input [formField]="registrationForm.birthDate"
                placeholder="YYYY-MM-DD" class="text-field-input" />
-
-        <ng-template fiboPortalContent let-trigger>
-          <fibo-calendar fiboPopover [trigger]="trigger"
-                         fiboSelectDate [(value)]="registrationForm.birthDate().value"
-                         (itemTriggered)="trigger.close()"
-                         class="popover-container" />
-        </ng-template>
       </fibo-form-field-control>
+      <ng-template #calTpl let-trigger>
+        <fibo-calendar fiboPopover [trigger]="trigger"
+                       fiboSelectDate [(value)]="registrationForm.birthDate().value"
+                       (itemTriggered)="trigger.close()"
+                       class="popover-container" />
+      </ng-template>
 
-      <fibo-form-field-control fiboPopoverTriggerToggle
+      <fibo-form-field-control fiboPopoverTriggerToggle [contentTemplate]="skillsTpl"
         [formField]="registrationForm.skills"
         label="Skills" iconEnd="chevron-down">
 
@@ -108,23 +104,22 @@ interface RegistrationData {
             <div class="from-field-placeholder text-sm ml-1">Select skills</div>
           }
         </div>
-
-        <ng-template fiboPortalContent let-trigger>
-          <div fiboPopover [trigger]="trigger" [matchWidth]="true"
-               fiboDataList
-               fiboSelectMulti [(value)]="registrationForm.skills().value"
-               class="popover-container">
-            @for (item of skillItems; track item.value) {
-              <a fiboDataListItem [value]="item.value" #option="DataListItem"
-                 class="datalist-item items-center">
-                <fibo-checkbox [readonly]="true" [checked]="option.isSelected()">
-                  {{ item.label }}
-                </fibo-checkbox>
-              </a>
-            }
-          </div>
-        </ng-template>
       </fibo-form-field-control>
+      <ng-template #skillsTpl let-trigger>
+        <div fiboPopover [trigger]="trigger" [matchWidth]="true"
+             fiboDataList
+             fiboSelectMulti [(value)]="registrationForm.skills().value"
+             class="popover-container">
+          @for (item of skillItems; track item.value) {
+            <a fiboDataListItem [value]="item.value" #option="DataListItem"
+               class="datalist-item items-center">
+              <fibo-checkbox [readonly]="true" [checked]="option.isSelected()">
+                {{ item.label }}
+              </fibo-checkbox>
+            </a>
+          }
+        </div>
+      </ng-template>
 
       <button
         type="button"

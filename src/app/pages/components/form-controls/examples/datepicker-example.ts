@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormField, form } from '@angular/forms/signals';
-import { SelectDate, Popover, PopoverTriggerClick, PortalContent } from '@fibo-ui/cdk';
+import { SelectDate, Popover, PopoverTriggerClick } from '@fibo-ui/cdk';
 import { Calendar, FormFieldControl } from '@fibo-ui/components';
 
 @Component({
@@ -9,7 +9,6 @@ import { Calendar, FormFieldControl } from '@fibo-ui/components';
     FormField,
     FormFieldControl,
     PopoverTriggerClick,
-    PortalContent,
     Popover,
     Calendar,
     SelectDate,
@@ -17,20 +16,19 @@ import { Calendar, FormFieldControl } from '@fibo-ui/components';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto w-90 p-8">
-      <fibo-form-field-control fiboPopoverTriggerClick
+      <fibo-form-field-control fiboPopoverTriggerClick [contentTemplate]="calTpl"
         [formField]="userForm.birthDate"
         label="Birth Date" iconEnd="calendar-days" [clearValue]="''">
 
         <input [formField]="userForm.birthDate"
                placeholder="YYYY-MM-DD" class="text-field-input" />
-
-        <ng-template fiboPortalContent let-trigger>
-          <fibo-calendar fiboPopover [trigger]="trigger"
-                         fiboSelectDate [(value)]="userForm.birthDate().value"
-                         (itemTriggered)="trigger.close()"
-                         class="popover-container" />
-        </ng-template>
       </fibo-form-field-control>
+      <ng-template #calTpl let-trigger>
+        <fibo-calendar fiboPopover [trigger]="trigger"
+                       fiboSelectDate [(value)]="userForm.birthDate().value"
+                       (itemTriggered)="trigger.close()"
+                       class="popover-container" />
+      </ng-template>
     </div>
   `,
 })

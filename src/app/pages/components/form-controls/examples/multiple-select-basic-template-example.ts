@@ -5,7 +5,6 @@ import {
   DataListItem,
   Popover,
   PopoverTriggerToggle,
-  PortalContent,
   SelectMulti,
 } from '@fibo-ui/cdk';
 import { Checkbox, FormFieldControl, SelectItem } from '@fibo-ui/components';
@@ -21,7 +20,6 @@ interface UserModel {
     FormField,
     FormFieldControl,
     PopoverTriggerToggle,
-    PortalContent,
     Popover,
     DataList,
     DataListItem,
@@ -32,7 +30,7 @@ interface UserModel {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto w-90 p-8">
-      <fibo-form-field-control fiboPopoverTriggerToggle
+      <fibo-form-field-control fiboPopoverTriggerToggle [contentTemplate]="skillsTpl"
         [formField]="userForm.skills"
         label="Skills" iconEnd="chevron-down">
 
@@ -52,23 +50,22 @@ interface UserModel {
             <div class="from-field-placeholder text-sm ml-1">Select skills</div>
           }
         </div>
-
-        <ng-template fiboPortalContent let-trigger>
-          <div fiboPopover [trigger]="trigger" [matchWidth]="true"
-               fiboDataList
-               fiboSelectMulti [(value)]="userForm.skills().value"
-               class="popover-container">
-            @for (item of skillItems; track item.value) {
-              <a fiboDataListItem [value]="item.value" #option="DataListItem"
-                 class="datalist-item items-center">
-                <fibo-checkbox [readonly]="true" [checked]="option.isSelected()">
-                  {{ item.label }}
-                </fibo-checkbox>
-              </a>
-            }
-          </div>
-        </ng-template>
       </fibo-form-field-control>
+      <ng-template #skillsTpl let-trigger>
+        <div fiboPopover [trigger]="trigger" [matchWidth]="true"
+             fiboDataList
+             fiboSelectMulti [(value)]="userForm.skills().value"
+             class="popover-container">
+          @for (item of skillItems; track item.value) {
+            <a fiboDataListItem [value]="item.value" #option="DataListItem"
+               class="datalist-item items-center">
+              <fibo-checkbox [readonly]="true" [checked]="option.isSelected()">
+                {{ item.label }}
+              </fibo-checkbox>
+            </a>
+          }
+        </div>
+      </ng-template>
     </div>
   `,
 })

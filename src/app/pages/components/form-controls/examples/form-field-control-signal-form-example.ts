@@ -5,7 +5,6 @@ import {
   DataListItem,
   Popover,
   PopoverTriggerToggle,
-  PortalContent,
   SelectOne,
 } from '@fibo-ui/cdk';
 import { FormFieldControl, SelectItem } from '@fibo-ui/components';
@@ -21,7 +20,6 @@ interface ContactData {
     FormField,
     FormFieldControl,
     PopoverTriggerToggle,
-    PortalContent,
     Popover,
     DataList,
     DataListItem,
@@ -38,27 +36,26 @@ interface ContactData {
                type="text" placeholder="Enter full name" class="text-field-input" />
       </fibo-form-field-control>
 
-      <fibo-form-field-control fiboPopoverTriggerToggle
+      <fibo-form-field-control fiboPopoverTriggerToggle [contentTemplate]="roleTpl"
         [formField]="contactForm.role"
         label="Role" iconEnd="chevron-down">
 
         <div class="text-sm" [class.from-field-placeholder]="!roleLabel()">
           {{ roleLabel() || 'Select role' }}
         </div>
-
-        <ng-template fiboPortalContent let-trigger>
-          <div fiboPopover [trigger]="trigger" [matchWidth]="true"
-               fiboDataList (itemTriggered)="trigger.close()"
-               fiboSelectOne [(value)]="contactForm.role().value"
-               class="popover-container">
-            @for (item of roles; track item.value) {
-              <a fiboDataListItem [value]="item.value" class="datalist-item">
-                {{ item.label }}
-              </a>
-            }
-          </div>
-        </ng-template>
       </fibo-form-field-control>
+      <ng-template #roleTpl let-trigger>
+        <div fiboPopover [trigger]="trigger" [matchWidth]="true"
+             fiboDataList (itemTriggered)="trigger.close()"
+             fiboSelectOne [(value)]="contactForm.role().value"
+             class="popover-container">
+          @for (item of roles; track item.value) {
+            <a fiboDataListItem [value]="item.value" class="datalist-item">
+              {{ item.label }}
+            </a>
+          }
+        </div>
+      </ng-template>
 
       <button
         type="button"

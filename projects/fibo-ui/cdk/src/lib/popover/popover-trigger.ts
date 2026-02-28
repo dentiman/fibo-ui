@@ -1,7 +1,6 @@
-import { Directive, ElementRef, effect, inject, signal, TemplateRef } from '@angular/core';
+import { Directive, ElementRef, effect, inject, input, signal, TemplateRef } from '@angular/core';
 import { DataListItem } from '../data-list/data-list-item.directive';
 import { Popover } from './popover';
-import { PORTAL_OWNER, PortalOwner } from '../portal/portal-owner';
 import { PortalRegistry } from '../portal/portal-registry';
 
 export interface KeydownDelegate {
@@ -12,7 +11,6 @@ export interface KeydownDelegate {
 @Directive({
   selector: '[fiboPopoverTrigger]',
   exportAs: 'PopoverTrigger',
-  providers: [{ provide: PORTAL_OWNER, useExisting: PopoverTrigger }],
   host: {
     '[attr.tabindex]': 'isListItem ? null : "0"',
     '[attr.aria-expanded]': 'isOpen() || null',
@@ -20,32 +18,29 @@ export interface KeydownDelegate {
     '(focusout)': 'onFocusOut($event)',
   }
 })
-export class PopoverTrigger implements PortalOwner {
+export class PopoverTrigger {
   isListItem = !!inject(DataListItem, { optional: true, self: true });
   element = inject(ElementRef<HTMLElement>).nativeElement;
   isOpen = signal(false);
+
+  contentTemplate = input<TemplateRef<any>>();
 
   //set when popover is open
   popover = signal<Popover | null>(null);
 
   keydownDelegate = signal<KeydownDelegate | null>(null);
 
-  private portalTemplate = signal<TemplateRef<any> | null>(null);
   private portalRegistry = inject(PortalRegistry);
   private portalId = 'portal-' + Math.random().toString(36).substring(2, 10);
 
   constructor() {
     effect(onCleanup => {
-      const template = this.portalTemplate();
+      const template = this.contentTemplate();
       if (this.isOpen() && template) {
         this.portalRegistry.register(this.portalId, template, { $implicit: this });
         onCleanup(() => this.portalRegistry.unregister(this.portalId));
       }
     });
-  }
-
-  setPortalTemplate(templateRef: TemplateRef<any> | null): void {
-    this.portalTemplate.set(templateRef);
   }
 
   toggle() {
@@ -100,7 +95,10 @@ export class PopoverTrigger implements PortalOwner {
 
 @Directive({
   selector: '[fiboPopoverTriggerClick]',
-  hostDirectives: [PopoverTrigger],
+  hostDirectives: [{
+    directive: PopoverTrigger,
+    inputs: ['contentTemplate'],
+  }],
   host: {
     '(keydown.enter)': 'popoverTrigger.open()',
     '(keydown.escape)': 'popoverTrigger.close()',
@@ -113,7 +111,10 @@ export class PopoverTriggerClick {
 
 @Directive({
   selector: '[fiboPopoverTriggerToggle]',
-  hostDirectives: [PopoverTrigger],
+  hostDirectives: [{
+    directive: PopoverTrigger,
+    inputs: ['contentTemplate'],
+  }],
   host: {
     '(keydown.escape)': 'popoverTrigger.close()',
     '(click)': "popoverTrigger.toggle()"

@@ -4,7 +4,10 @@ import { PopoverTrigger } from '../../popover/popover-trigger';
 
 @Directive({
   selector: 'button[fiboFormFieldTrigger]',
-  hostDirectives: [PopoverTrigger],
+  hostDirectives: [{
+    directive: PopoverTrigger,
+    inputs: ['contentTemplate'],
+  }],
   standalone: true,
   host: {
     'type': 'button',

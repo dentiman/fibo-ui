@@ -1,6 +1,6 @@
 @for (item of items(); track idx; let idx = $index) {
   @if (item.children || item.content) {
-    <button fiboSubmenuTrigger [disabled]="!!item.disabled" #sub="submenuTrigger"
+    <button fiboSubmenuTrigger [contentTemplate]="subTpl" [disabled]="!!item.disabled"
             class="datalist-item py-1 px-2 w-full rounded-md  items-center  group text-sm"
     >
       @if (item?.icon) {
@@ -16,19 +16,19 @@
         name="chevron-right"
         class="flex-none text-foreground-secondary  group-data-active:text-foreground size-4 shrink-0"
       ></lucide-icon>
-
-      <ng-template fiboPortalContent let-trigger>
-        <fibo-menu
-          fiboPopover
-          (closeParent)="menuPanel.closeMenuWithParent()"
-          [trigger]="trigger"
-          [offset]="1"
-          placement="right-start"
-          [menuContent]="item.content"
-          [items]="item.children"
-        />
-      </ng-template>
     </button>
+
+    <ng-template #subTpl let-trigger>
+      <fibo-menu
+        fiboPopover
+        (closeParent)="menuPanel.closeMenuWithParent()"
+        [trigger]="trigger"
+        [offset]="1"
+        placement="right-start"
+        [menuContent]="item.content"
+        [items]="item.children"
+      />
+    </ng-template>
 
   } @else {
     @if (item.url) {

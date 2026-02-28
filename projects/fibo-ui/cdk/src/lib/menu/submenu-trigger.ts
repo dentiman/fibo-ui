@@ -33,7 +33,10 @@ import { MENU_PANEL } from './menu-panel';
       directive: DataListItem,
       inputs: ['disabled'],
     },
-    PopoverTrigger,
+    {
+      directive: PopoverTrigger,
+      inputs: ['contentTemplate'],
+    },
   ],
   host: {
     '(keydown.enter)': 'popoverTrigger.open()',

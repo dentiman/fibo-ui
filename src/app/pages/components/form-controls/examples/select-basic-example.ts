@@ -4,7 +4,6 @@ import {
   DataList,
   DataListItem,
   Popover,
-  PortalContent,
   SelectOne,
   FormFieldTrigger,
 } from '@fibo-ui/cdk';
@@ -21,7 +20,6 @@ interface UserModel {
     FormFieldTrigger,
     DataList,
     Popover,
-    PortalContent,
     SelectOne,
     DataListItem,
     LucideAngularModule,
@@ -31,7 +29,7 @@ interface UserModel {
     <div class="mx-auto w-90 p-8">
       <button
         type="button"
-        fiboFormFieldTrigger
+        fiboFormFieldTrigger [contentTemplate]="selectTpl"
         [formField]="userForm.role"
         class="w-full form-field-control flex items-center gap-2 text-left"
       >
@@ -47,26 +45,25 @@ interface UserModel {
           size="16"
           class="form-field-icon form-field-icon-end shrink-0"
         ></lucide-icon>
-
-        <ng-template fiboPortalContent let-trigger>
-          <div
-            fiboPopover
-            [trigger]="trigger"
-            [matchWidth]="true"
-            fiboDataList
-            (itemTriggered)="trigger.close()"
-            fiboSelectOne
-            [(value)]="userForm.role().value"
-            class="popover-container"
-          >
-            @for (role of userRoles; track role) {
-              <a fiboDataListItem [value]="role" class="datalist-item">
-                <span class="block truncate font-normal">{{ role }}</span>
-              </a>
-            }
-          </div>
-        </ng-template>
       </button>
+      <ng-template #selectTpl let-trigger>
+        <div
+          fiboPopover
+          [trigger]="trigger"
+          [matchWidth]="true"
+          fiboDataList
+          (itemTriggered)="trigger.close()"
+          fiboSelectOne
+          [(value)]="userForm.role().value"
+          class="popover-container"
+        >
+          @for (role of userRoles; track role) {
+            <a fiboDataListItem [value]="role" class="datalist-item">
+              <span class="block truncate font-normal">{{ role }}</span>
+            </a>
+          }
+        </div>
+      </ng-template>
     </div>
   `,
 })

@@ -8,7 +8,6 @@ import {
   DataListItem,
   Popover,
   PopoverTriggerClick,
-  PortalContent,
   SelectOne,
   SelectMulti,
   safeProp, FormFieldDirective, FormFieldTrigger
@@ -43,7 +42,6 @@ interface UserProfile {
     FormFieldDirective,
     DataList,
     Popover,
-    PortalContent,
     PopoverTriggerClick,
     SelectOne,
     SelectMulti,
@@ -78,7 +76,7 @@ interface UserProfile {
           </div>
         </div>
 
-        <button type="button" fiboFormFieldTrigger
+        <button type="button" fiboFormFieldTrigger [contentTemplate]="cityTpl"
                 [formField]="userProfileForm.city"
                 class="w-full form-field-control flex items-center gap-2 text-left">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
@@ -88,23 +86,22 @@ interface UserProfile {
           </div>
           <lucide-icon name="chevron-down" size="16"
                        class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
-
-          <ng-template fiboPortalContent let-trigger>
-            <div fiboPopover [trigger]="trigger" [matchWidth]="true"
-                 fiboDataList (itemTriggered)="trigger.close()"
-                 fiboSelectOne [(value)]="userProfileForm.city().value"
-                 class="popover-container">
-              @for (c of cities; track c.value) {
-                <a fiboDataListItem [value]="c.value" class="datalist-item">
-                  <span class="block truncate font-normal">{{ c.label }}</span>
-                </a>
-              }
-            </div>
-          </ng-template>
         </button>
+        <ng-template #cityTpl let-trigger>
+          <div fiboPopover [trigger]="trigger" [matchWidth]="true"
+               fiboDataList (itemTriggered)="trigger.close()"
+               fiboSelectOne [(value)]="userProfileForm.city().value"
+               class="popover-container">
+            @for (c of cities; track c.value) {
+              <a fiboDataListItem [value]="c.value" class="datalist-item">
+                <span class="block truncate font-normal">{{ c.label }}</span>
+              </a>
+            }
+          </div>
+        </ng-template>
 
 
-        <button type="button" fiboFormFieldTrigger
+        <button type="button" fiboFormFieldTrigger [contentTemplate]="roleTpl"
                 [formField]="userProfileForm.userRole"
                 class="w-full form-field-control flex items-center gap-2 text-left">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
@@ -114,21 +111,20 @@ interface UserProfile {
           </div>
           <lucide-icon name="chevron-down" size="16"
                        class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
-
-          <ng-template fiboPortalContent let-trigger>
-            <div fiboPopover [trigger]="trigger" [matchWidth]="true"
-                 fiboDataList (itemTriggered)="trigger.close()"
-                 fiboSelectOne [(value)]="userProfileForm.userRole().value"
-                 class="popover-container">
-              @for (role of userRoles; track role) {
-                <a fiboDataListItem [value]="role"
-                   class="datalist-item">
-                  <span class="block truncate font-normal">{{ role }}</span>
-                </a>
-              }
-            </div>
-          </ng-template>
         </button>
+        <ng-template #roleTpl let-trigger>
+          <div fiboPopover [trigger]="trigger" [matchWidth]="true"
+               fiboDataList (itemTriggered)="trigger.close()"
+               fiboSelectOne [(value)]="userProfileForm.userRole().value"
+               class="popover-container">
+            @for (role of userRoles; track role) {
+              <a fiboDataListItem [value]="role"
+                 class="datalist-item">
+                <span class="block truncate font-normal">{{ role }}</span>
+              </a>
+            }
+          </div>
+        </ng-template>
 
         <!-- Email -->
         <div fiboFormField class="form-field-control flex items-center gap-2">
@@ -168,7 +164,7 @@ interface UserProfile {
         </div>
 
         <!-- Birth Date -->
-        <div fiboFormField fiboPopoverTriggerClick
+        <div fiboFormField fiboPopoverTriggerClick [contentTemplate]="birthCalTpl"
              class="form-field-control flex items-center gap-2">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
             <label class="form-field-label mt-1">Birth Date</label>
@@ -180,13 +176,13 @@ interface UserProfile {
           </div>
           <lucide-icon name="calendar-days" size="16"
                        class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
-          <ng-template fiboPortalContent let-trigger>
-            <fibo-calendar fiboPopover [trigger]="trigger"
-                           fiboSelectDate [(value)]="userProfileForm.birthDate().value"
-                           (itemTriggered)="trigger.close()"
-                           class="popover-container"/>
-          </ng-template>
         </div>
+        <ng-template #birthCalTpl let-trigger>
+          <fibo-calendar fiboPopover [trigger]="trigger"
+                         fiboSelectDate [(value)]="userProfileForm.birthDate().value"
+                         (itemTriggered)="trigger.close()"
+                         class="popover-container"/>
+        </ng-template>
 
         <!-- Website -->
         <div fiboFormField class="form-field-control flex items-center gap-2">
@@ -199,7 +195,7 @@ interface UserProfile {
 
 
         <!-- Skills (multiple) -->
-        <button type="button" fiboFormFieldTrigger
+        <button type="button" fiboFormFieldTrigger [contentTemplate]="skillsTpl"
                 [formField]="userProfileForm.skills"
                 class="w-full form-field-control flex items-center gap-2 text-left">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
@@ -223,25 +219,25 @@ interface UserProfile {
           </div>
           <lucide-icon name="chevron-down" size="16"
                        class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
-          <ng-template fiboPortalContent let-trigger>
-            <div fiboPopover [trigger]="trigger" [matchWidth]="true"
-                 fiboDataList
-                 fiboSelectMulti [(value)]="userProfileForm.skills().value"
-                 class="popover-container">
-              @if (skills.length === 0) {
-                <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
-              }
-              @for (item of skills; track getSkillValue(item)) {
-                <a fiboDataListItem [value]="getSkillValue(item)" #option="DataListItem"
-                   class="datalist-item items-center">
-                  <fibo-checkbox
-                    [checked]="option.isSelected()">{{ getSkillLabel(item) }}
-                  </fibo-checkbox>
-                </a>
-              }
-            </div>
-          </ng-template>
         </button>
+        <ng-template #skillsTpl let-trigger>
+          <div fiboPopover [trigger]="trigger" [matchWidth]="true"
+               fiboDataList
+               fiboSelectMulti [(value)]="userProfileForm.skills().value"
+               class="popover-container">
+            @if (skills.length === 0) {
+              <div class="w-full text-gray-400 text-sm px-3 py-2">No items found</div>
+            }
+            @for (item of skills; track getSkillValue(item)) {
+              <a fiboDataListItem [value]="getSkillValue(item)" #option="DataListItem"
+                 class="datalist-item items-center">
+                <fibo-checkbox
+                  [checked]="option.isSelected()">{{ getSkillLabel(item) }}
+                </fibo-checkbox>
+              </a>
+            }
+          </div>
+        </ng-template>
 
 
         <!-- Phone -->

@@ -4,7 +4,6 @@ import {
   DataList, DataListItem,
   Popover,
   PopoverTrigger, PopoverTriggerToggle,
-  PortalContent,
   SelectOne
 } from '@fibo-ui/cdk';
 import { LucideAngularModule } from 'lucide-angular';
@@ -18,7 +17,6 @@ export interface SelectItem {
 @Component({
   selector: 'fibo-select',
   imports: [
-    PortalContent,
     Popover,
     DataList,
     SelectOne,
@@ -35,7 +33,7 @@ export interface SelectItem {
   template: `
 
     <fibo-form-field-control
-      fiboPopoverTriggerToggle
+      fiboPopoverTriggerToggle [contentTemplate]="selectTpl"
       [label]="label()" iconEnd="chevron-down"
       [(value)]="value" [clearValue]="clearValue()"
       [required]="required()" [disabled]="disabled()"
@@ -45,20 +43,20 @@ export interface SelectItem {
       <div class="text-sm" [class.from-field-placeholder]="!selectedValue()">
         {{ selectedValue() || placeholder() }}
       </div>
-
-      <ng-template fiboPortalContent let-trigger>
-        <div fiboPopover [trigger]="trigger" [matchWidth]="true"
-             fiboDataList (itemTriggered)="trigger.close()"
-             fiboSelectOne [(value)]="value"
-             class="popover-container">
-          @for (item of items(); track item.value) {
-            <a fiboDataListItem [value]="item.value" class="datalist-item">
-              {{ item.label }}
-            </a>
-          }
-        </div>
-      </ng-template>
     </fibo-form-field-control>
+
+    <ng-template #selectTpl let-trigger>
+      <div fiboPopover [trigger]="trigger" [matchWidth]="true"
+           fiboDataList (itemTriggered)="trigger.close()"
+           fiboSelectOne [(value)]="value"
+           class="popover-container">
+        @for (item of items(); track item.value) {
+          <a fiboDataListItem [value]="item.value" class="datalist-item">
+            {{ item.label }}
+          </a>
+        }
+      </div>
+    </ng-template>
 
 `
 })

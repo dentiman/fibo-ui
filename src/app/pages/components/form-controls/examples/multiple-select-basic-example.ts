@@ -1,19 +1,19 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormField, form } from '@angular/forms/signals';
-import { DataList, FormFieldTrigger, DataListItem, Popover, PortalContent, SelectMulti } from '@fibo-ui/cdk';
+import { DataList, FormFieldTrigger, DataListItem, Popover, SelectMulti } from '@fibo-ui/cdk';
 import { Checkbox } from '@fibo-ui/components';
 import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'multiple-select-basic-example',
-  imports: [FormField, FormFieldTrigger, DataList, Popover, PortalContent, SelectMulti, DataListItem, LucideAngularModule, Checkbox],
+  imports: [FormField, FormFieldTrigger, DataList, Popover, SelectMulti, DataListItem, LucideAngularModule, Checkbox],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto p-8 w-[350px]">
       <form class="space-y-5">
         <button
           type="button"
-          fiboFormFieldTrigger
+          fiboFormFieldTrigger [contentTemplate]="skillsTpl"
           [formField]="userForm.skills"
           class="w-full form-field-control flex items-center gap-2 text-left"
         >
@@ -39,21 +39,21 @@ import { LucideAngularModule } from 'lucide-angular';
             </span>
           </div>
           <lucide-icon name="chevron-down" size="16" class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
-          <ng-template fiboPortalContent let-trigger>
-            <div
-              fiboPopover [trigger]="trigger" [matchWidth]="true"
-              fiboDataList
-              fiboSelectMulti [(value)]="userForm.skills().value"
-              class="popover-container"
-            >
-              @for (item of skillsItems; track item.value) {
-                <a fiboDataListItem [value]="item.value" #option="DataListItem" class="datalist-item items-center">
-                  <fibo-checkbox [checked]="option.isSelected()">{{ item.label }}</fibo-checkbox>
-                </a>
-              }
-            </div>
-          </ng-template>
         </button>
+        <ng-template #skillsTpl let-trigger>
+          <div
+            fiboPopover [trigger]="trigger" [matchWidth]="true"
+            fiboDataList
+            fiboSelectMulti [(value)]="userForm.skills().value"
+            class="popover-container"
+          >
+            @for (item of skillsItems; track item.value) {
+              <a fiboDataListItem [value]="item.value" #option="DataListItem" class="datalist-item items-center">
+                <fibo-checkbox [checked]="option.isSelected()">{{ item.label }}</fibo-checkbox>
+              </a>
+            }
+          </div>
+        </ng-template>
       </form>
     </div>
   `,

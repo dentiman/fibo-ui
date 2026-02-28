@@ -1,6 +1,6 @@
 import {Component, computed, inject, input, TemplateRef} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MenuPanel, Popover, DataListItem, PortalContent, SubmenuTrigger} from '@fibo-ui/cdk';
+import {MenuPanel, Popover, DataListItem, SubmenuTrigger} from '@fibo-ui/cdk';
 import {RouterLink} from '@angular/router';
 import {MenuItemType} from '../menu-item.type';
 import {LucideAngularModule} from 'lucide-angular';
@@ -17,7 +17,7 @@ import {LucideAngularModule} from 'lucide-angular';
   host: {
     'class': 'popover-container  group min-w-40',
   },
-  imports: [CommonModule, DataListItem, SubmenuTrigger, RouterLink, LucideAngularModule, PortalContent, Popover],
+  imports: [CommonModule, DataListItem, SubmenuTrigger, RouterLink, LucideAngularModule, Popover],
   templateUrl: './menu.html',
 })
 export class Menu {

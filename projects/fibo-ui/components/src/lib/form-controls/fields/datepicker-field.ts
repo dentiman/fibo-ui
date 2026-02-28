@@ -1,6 +1,6 @@
 import { Component, input, model, signal } from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
-import { SelectDate, Popover, PopoverTriggerClick, PortalContent } from '@fibo-ui/cdk';
+import { SelectDate, Popover, PopoverTriggerClick } from '@fibo-ui/cdk';
 import { FormFieldControl } from '../form/form-field-control';
 import { Calendar } from '../calendar/calendar';
 
@@ -9,7 +9,6 @@ import { Calendar } from '../calendar/calendar';
     imports: [
         FormFieldControl,
         Popover,
-        PortalContent,
         PopoverTriggerClick,
         Calendar,
         SelectDate
@@ -19,7 +18,7 @@ import { Calendar } from '../calendar/calendar';
     },
     template: `
     <fibo-form-field-control
-      fiboPopoverTriggerClick
+      fiboPopoverTriggerClick [contentTemplate]="calendarTpl"
       [id]="id()"
       [label]="label()"
       [iconStart]="iconStart()"
@@ -42,14 +41,14 @@ import { Calendar } from '../calendar/calendar';
         (blur)="onBlur()"
         class="text-field-input"
       />
-
-      <ng-template fiboPortalContent let-trigger>
-        <fibo-calendar fiboPopover [trigger]="trigger"
-                       fiboSelectDate [(value)]="value"
-                       (itemTriggered)="trigger.close()"
-                       class="popover-container"/>
-      </ng-template>
     </fibo-form-field-control>
+
+    <ng-template #calendarTpl let-trigger>
+      <fibo-calendar fiboPopover [trigger]="trigger"
+                     fiboSelectDate [(value)]="value"
+                     (itemTriggered)="trigger.close()"
+                     class="popover-container"/>
+    </ng-template>
 `
 })
 export class DatePickerField implements FormValueControl<string> {
