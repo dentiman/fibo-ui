@@ -14,7 +14,6 @@ import { LucideAngularModule } from 'lucide-angular';
         <button
           type="button"
           fiboFormFieldTrigger
-          #trigger="PopoverTrigger"
           [formField]="userForm.skills"
           class="w-full form-field-control flex items-center gap-2 text-left"
         >
@@ -40,7 +39,7 @@ import { LucideAngularModule } from 'lucide-angular';
             </span>
           </div>
           <lucide-icon name="chevron-down" size="16" class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
-          <ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
+          <ng-template fiboPortalContent let-trigger>
             <div
               fiboPopover [trigger]="trigger" [matchWidth]="true"
               fiboDataList

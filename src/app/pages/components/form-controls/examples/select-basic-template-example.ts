@@ -31,7 +31,6 @@ interface UserModel {
     <div class="mx-auto w-90 p-8">
       <fibo-form-field-control
         fiboPopoverTriggerToggle
-        #trigger="PopoverTrigger"
         [formField]="userForm.role"
         label="User Role" iconEnd="chevron-down">
 
@@ -39,7 +38,7 @@ interface UserModel {
           {{ roleLabel() || 'Select Role' }}
         </div>
 
-        <ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
+        <ng-template fiboPortalContent let-trigger>
           <div fiboPopover [trigger]="trigger" [matchWidth]="true"
                fiboDataList (itemTriggered)="trigger.close()"
                fiboSelectOne [(value)]="userForm.role().value"

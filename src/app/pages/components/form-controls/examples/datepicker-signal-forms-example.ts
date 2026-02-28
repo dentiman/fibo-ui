@@ -11,7 +11,7 @@ import { LucideAngularModule } from 'lucide-angular';
   template: `
     <div class="mx-auto p-8 w-[350px]">
       <form class="space-y-4">
-        <div fiboFormField fiboPopoverTriggerClick #trigger="PopoverTrigger"
+        <div fiboFormField fiboPopoverTriggerClick
              class="form-field-control flex items-center gap-2">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
             <label class="form-field-label mt-1">Birth Date</label>
@@ -23,7 +23,7 @@ import { LucideAngularModule } from 'lucide-angular';
             />
           </div>
           <lucide-icon name="calendar-days" size="16" class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
-          <ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
+          <ng-template fiboPortalContent let-trigger>
             <fibo-calendar
               fiboPopover [trigger]="trigger"
               fiboSelectDate [(value)]="userForm.birthDate().value"

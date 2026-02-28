@@ -1,6 +1,8 @@
-import {Directive, ElementRef, inject, signal} from '@angular/core';
-import {DataListItem} from '../data-list/data-list-item.directive';
-import {Popover} from './popover';
+import { Directive, ElementRef, effect, inject, signal, TemplateRef } from '@angular/core';
+import { DataListItem } from '../data-list/data-list-item.directive';
+import { Popover } from './popover';
+import { PORTAL_OWNER, PortalOwner } from '../portal/portal-owner';
+import { PortalRegistry } from '../portal/portal-registry';
 
 export interface KeydownDelegate {
   onKeydown(e: KeyboardEvent): void;
@@ -10,6 +12,7 @@ export interface KeydownDelegate {
 @Directive({
   selector: '[fiboPopoverTrigger]',
   exportAs: 'PopoverTrigger',
+  providers: [{ provide: PORTAL_OWNER, useExisting: PopoverTrigger }],
   host: {
     '[attr.tabindex]': 'isListItem ? null : "0"',
     '[attr.aria-expanded]': 'isOpen() || null',
@@ -17,8 +20,8 @@ export interface KeydownDelegate {
     '(focusout)': 'onFocusOut($event)',
   }
 })
-export class PopoverTrigger {
-  isListItem = !!inject(DataListItem, {optional: true, self: true});
+export class PopoverTrigger implements PortalOwner {
+  isListItem = !!inject(DataListItem, { optional: true, self: true });
   element = inject(ElementRef<HTMLElement>).nativeElement;
   isOpen = signal(false);
 
@@ -27,25 +30,41 @@ export class PopoverTrigger {
 
   keydownDelegate = signal<KeydownDelegate | null>(null);
 
-  toggle  () {
-    if(this.isOpen()) {
+  private portalTemplate = signal<TemplateRef<any> | null>(null);
+  private portalRegistry = inject(PortalRegistry);
+  private portalId = 'portal-' + Math.random().toString(36).substring(2, 10);
+
+  constructor() {
+    effect(onCleanup => {
+      const template = this.portalTemplate();
+      if (this.isOpen() && template) {
+        this.portalRegistry.register(this.portalId, template, { $implicit: this });
+        onCleanup(() => this.portalRegistry.unregister(this.portalId));
+      }
+    });
+  }
+
+  setPortalTemplate(templateRef: TemplateRef<any> | null): void {
+    this.portalTemplate.set(templateRef);
+  }
+
+  toggle() {
+    if (this.isOpen()) {
       this.close();
     } else {
       this.open();
     }
   }
 
-  open  () {
-    if(!this.isOpen()) {
+  open() {
+    if (!this.isOpen()) {
       this.isOpen.set(true);
-    //  console.log('PopoverTrigger open');
     }
-
   }
-  close () {
-    if(this.isOpen()) {
+
+  close() {
+    if (this.isOpen()) {
       this.isOpen.set(false);
-   //   console.log('PopoverTrigger close');
     }
   }
 
@@ -77,12 +96,10 @@ export class PopoverTrigger {
 
     this.popover()?.close();
   }
-
 }
 
 @Directive({
   selector: '[fiboPopoverTriggerClick]',
-  standalone: true,
   hostDirectives: [PopoverTrigger],
   host: {
     '(keydown.enter)': 'popoverTrigger.open()',
@@ -90,19 +107,18 @@ export class PopoverTrigger {
     '(click)': "popoverTrigger.open()"
   }
 })
-export class PopoverTriggerClick  {
+export class PopoverTriggerClick {
   popoverTrigger = inject(PopoverTrigger);
 }
 
 @Directive({
   selector: '[fiboPopoverTriggerToggle]',
-  standalone: true,
   hostDirectives: [PopoverTrigger],
   host: {
     '(keydown.escape)': 'popoverTrigger.close()',
     '(click)': "popoverTrigger.toggle()"
   }
 })
-export class PopoverTriggerToggle  {
+export class PopoverTriggerToggle {
   popoverTrigger = inject(PopoverTrigger);
 }

@@ -7,21 +7,20 @@ Floating menu component with support for nested items, icons, and badges.
 :::example menu-one-level
 
 ```html {example="menu-one-level"}
-<button type="button" #trigger="PopoverTrigger" class="btn btn-primary" fiboPopoverTriggerToggle>
+<button type="button" class="btn btn-primary" fiboPopoverTriggerToggle>
   Menu (1 level)
+  <ng-template fiboPortalContent let-trigger>
+    <div
+      fiboPopover [trigger]="trigger"
+      fiboDataList (itemTriggered)="trigger.close()"
+      class="popover-container min-w-40"
+    >
+      <a fiboDataListItem [routerLink]="'/'" class="datalist-item">Single Select</a>
+      <a fiboDataListItem [routerLink]="'/select-multiple'" class="datalist-item">Multiple Select</a>
+      <a fiboDataListItem [routerLink]="'/datepicker'" class="datalist-item">Datepicker</a>
+    </div>
+  </ng-template>
 </button>
-
-<ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
-  <div
-    fiboPopover [trigger]="trigger"
-    fiboDataList (itemTriggered)="trigger.close()"
-    class="popover-container min-w-40"
-  >
-    <a fiboDataListItem [routerLink]="'/'" class="datalist-item">Single Select</a>
-    <a fiboDataListItem [routerLink]="'/select-multiple'" class="datalist-item">Multiple Select</a>
-    <a fiboDataListItem [routerLink]="'/datepicker'" class="datalist-item">Datepicker</a>
-  </div>
-</ng-template>
 ```
 
 ```ts {example="menu-one-level"}
@@ -39,18 +38,17 @@ export class MenuOneLevelExample {}
 :::example menu-multi-level
 
 ```html {example="menu-multi-level"}
-<button #trigger="PopoverTrigger" class="btn btn-primary" fiboPopoverTriggerToggle>
+<button class="btn btn-primary" fiboPopoverTriggerToggle>
   User Profile
+  <ng-template fiboPortalContent let-trigger>
+    <fibo-menu
+      fiboPopover
+      [trigger]="trigger"
+      [items]="userProfileMenuItems"
+      placement="bottom-start"
+    ></fibo-menu>
+  </ng-template>
 </button>
-
-<ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
-  <fibo-menu
-    fiboPopover
-    [trigger]="trigger"
-    [items]="userProfileMenuItems"
-    placement="bottom-start"
-  ></fibo-menu>
-</ng-template>
 ```
 
 ```ts {example="menu-multi-level"}

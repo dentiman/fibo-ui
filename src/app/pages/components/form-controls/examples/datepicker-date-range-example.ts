@@ -18,7 +18,6 @@ import { Calendar, FormFieldControl } from '@fibo-ui/components';
   template: `
     <div class="mx-auto w-90 p-8">
       <fibo-form-field-control fiboPopoverTriggerClick
-        #trigger="PopoverTrigger"
         label="Date Range" iconEnd="calendar-range">
 
         <div class="flex items-center gap-2">
@@ -31,7 +30,7 @@ import { Calendar, FormFieldControl } from '@fibo-ui/components';
                  class="text-field-input min-w-0 flex-1" />
         </div>
 
-        <ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
+        <ng-template fiboPortalContent let-trigger>
           <fibo-calendar fiboPopover [trigger]="trigger"
                          fiboSelectDateRange [(value)]="calendarDateRange"
                          class="popover-container" />

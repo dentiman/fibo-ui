@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, model } from '@angular/core';
+import { Component, computed, input, model } from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
 import {
   DataList, DataListItem,
@@ -46,7 +46,7 @@ export interface SelectItem {
         {{ selectedValue() || placeholder() }}
       </div>
 
-      <ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
+      <ng-template fiboPortalContent let-trigger>
         <div fiboPopover [trigger]="trigger" [matchWidth]="true"
              fiboDataList (itemTriggered)="trigger.close()"
              fiboSelectOne [(value)]="value"
@@ -59,11 +59,10 @@ export interface SelectItem {
         </div>
       </ng-template>
     </fibo-form-field-control>
+
 `
 })
 export class Select implements FormValueControl<string | number | null> {
-  trigger = inject(PopoverTrigger);
-
   value = model<string | number | null>(null)
   required = input(false)
   disabled = input(false)

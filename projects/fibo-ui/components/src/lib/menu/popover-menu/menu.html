@@ -17,11 +17,11 @@
         class="flex-none text-foreground-secondary  group-data-active:text-foreground size-4 shrink-0"
       ></lucide-icon>
 
-      <ng-template fiboPortalContent [(isOpen)]="sub.popoverTrigger.isOpen">
+      <ng-template fiboPortalContent let-trigger>
         <fibo-menu
           fiboPopover
           (closeParent)="menuPanel.closeMenuWithParent()"
-          [trigger]="sub.popoverTrigger"
+          [trigger]="trigger"
           [offset]="1"
           placement="right-start"
           [menuContent]="item.content"

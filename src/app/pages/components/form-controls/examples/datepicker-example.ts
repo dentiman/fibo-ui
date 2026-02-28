@@ -18,14 +18,13 @@ import { Calendar, FormFieldControl } from '@fibo-ui/components';
   template: `
     <div class="mx-auto w-90 p-8">
       <fibo-form-field-control fiboPopoverTriggerClick
-        #trigger="PopoverTrigger"
         [formField]="userForm.birthDate"
         label="Birth Date" iconEnd="calendar-days" [clearValue]="''">
 
         <input [formField]="userForm.birthDate"
                placeholder="YYYY-MM-DD" class="text-field-input" />
 
-        <ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
+        <ng-template fiboPortalContent let-trigger>
           <fibo-calendar fiboPopover [trigger]="trigger"
                          fiboSelectDate [(value)]="userForm.birthDate().value"
                          (itemTriggered)="trigger.close()"

@@ -52,7 +52,6 @@ interface RegistrationData {
 
       <fibo-form-field-control
         fiboPopoverTriggerToggle
-        #positionTrigger="PopoverTrigger"
         [formField]="registrationForm.position"
         label="Position" iconEnd="chevron-down">
 
@@ -60,9 +59,9 @@ interface RegistrationData {
           {{ positionLabel() || 'Select position' }}
         </div>
 
-        <ng-template fiboPortalContent [(isOpen)]="positionTrigger.isOpen">
-          <div fiboPopover [trigger]="positionTrigger" [matchWidth]="true"
-               fiboDataList (itemTriggered)="positionTrigger.close()"
+        <ng-template fiboPortalContent let-trigger>
+          <div fiboPopover [trigger]="trigger" [matchWidth]="true"
+               fiboDataList (itemTriggered)="trigger.close()"
                fiboSelectOne [(value)]="registrationForm.position().value"
                class="popover-container">
             @for (item of positions; track item.value) {
@@ -75,23 +74,21 @@ interface RegistrationData {
       </fibo-form-field-control>
 
       <fibo-form-field-control fiboPopoverTriggerClick
-        #dateTrigger="PopoverTrigger"
         [formField]="registrationForm.birthDate"
         label="Birth Date" iconEnd="calendar-days" [clearValue]="''">
 
         <input [formField]="registrationForm.birthDate"
                placeholder="YYYY-MM-DD" class="text-field-input" />
 
-        <ng-template fiboPortalContent [(isOpen)]="dateTrigger.isOpen">
-          <fibo-calendar fiboPopover [trigger]="dateTrigger"
+        <ng-template fiboPortalContent let-trigger>
+          <fibo-calendar fiboPopover [trigger]="trigger"
                          fiboSelectDate [(value)]="registrationForm.birthDate().value"
-                         (itemTriggered)="dateTrigger.close()"
+                         (itemTriggered)="trigger.close()"
                          class="popover-container" />
         </ng-template>
       </fibo-form-field-control>
 
       <fibo-form-field-control fiboPopoverTriggerToggle
-        #skillsTrigger="PopoverTrigger"
         [formField]="registrationForm.skills"
         label="Skills" iconEnd="chevron-down">
 
@@ -112,8 +109,8 @@ interface RegistrationData {
           }
         </div>
 
-        <ng-template fiboPortalContent [(isOpen)]="skillsTrigger.isOpen">
-          <div fiboPopover [trigger]="skillsTrigger" [matchWidth]="true"
+        <ng-template fiboPortalContent let-trigger>
+          <div fiboPopover [trigger]="trigger" [matchWidth]="true"
                fiboDataList
                fiboSelectMulti [(value)]="registrationForm.skills().value"
                class="popover-container">

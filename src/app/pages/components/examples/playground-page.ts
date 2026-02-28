@@ -8,7 +8,6 @@ import {
   FiboInput,
   DataListItem,
   Popover,
-  PopoverTrigger,
   PopoverTriggerClick,
   PortalContent,
   SelectOne,
@@ -35,7 +34,6 @@ import { Checkbox } from '@fibo-ui/components';
     SelectOne,
     SelectMulti,
     DataListItem,
-    PopoverTrigger,
     LucideAngularModule,
     Checkbox,
     Calendar,
@@ -49,15 +47,14 @@ import { Checkbox } from '@fibo-ui/components';
               <!-- User Select -->
               <div fiboFormField
                    fiboPopoverTriggerClick
-                   #userTrigger="PopoverTrigger"
                    class="group content-center form-field-control rounded-full inline-block relative">
                   <span class="form-field-label">User:</span>
                   <span class="text-sm text-nowrap">{{ getSelectedUserLabel() || 'Any' }}</span>
                   <lucide-icon name="chevron-down" size="16"
                                class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
-                  <ng-template fiboPortalContent [(isOpen)]="userTrigger.isOpen">
-                      <div fiboPopover [trigger]="userTrigger" [matchWidth]="false"
-                           fiboDataList (itemTriggered)="userTrigger.close()"
+                  <ng-template fiboPortalContent let-trigger>
+                      <div fiboPopover [trigger]="trigger" [matchWidth]="false"
+                           fiboDataList (itemTriggered)="trigger.close()"
                            fiboSelectOne [(value)]="userSelectValue"
                            class="popover-container w-60"
                       >
@@ -86,7 +83,6 @@ import { Checkbox } from '@fibo-ui/components';
               <!-- Datepicker -->
               <div fiboFormField
                    fiboPopoverTriggerClick
-                   #dateTrigger="PopoverTrigger"
                    class="group content-center form-field-control rounded-full inline-block w-46 relative">
                   <span class="form-field-label">Date:</span>
                   <input
@@ -95,14 +91,13 @@ import { Checkbox } from '@fibo-ui/components';
                           [(ngModel)]="createdAfter"
                           [ngModelOptions]="{standalone: true}"
                           [placeholder]="'Any'"
-                          (focus)="dateTrigger.open()"
                           class="w-full appearance-none outline-none text-sm focus:outline-0"/>
                   <lucide-icon name="calendar-days" size="16"
                                class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
-                  <ng-template fiboPortalContent [(isOpen)]="dateTrigger.isOpen">
-                      <fibo-calendar fiboPopover [trigger]="dateTrigger"
+                  <ng-template fiboPortalContent let-trigger>
+                      <fibo-calendar fiboPopover [trigger]="trigger"
                                      fiboSelectDate [(value)]="createdAfter"
-                                     (itemTriggered)="dateTrigger.close()"
+                                     (itemTriggered)="trigger.close()"
                                      class="popover-container"/>
                   </ng-template>
               </div>
@@ -110,7 +105,6 @@ import { Checkbox } from '@fibo-ui/components';
               <!-- Multiple Select Users -->
               <div fiboFormField
                    fiboPopoverTriggerClick
-                   #usersTrigger="PopoverTrigger"
                    class="group content-center form-field-control rounded-full inline-block relative min-w-40">
                   <span class="form-field-label">Users:</span>
                   <span class="w-full flex flex-wrap gap-x-1 gap-y-1">
@@ -131,8 +125,8 @@ import { Checkbox } from '@fibo-ui/components';
           </span>
                   <lucide-icon name="chevron-down" size="16"
                                class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
-                  <ng-template fiboPortalContent [(isOpen)]="usersTrigger.isOpen">
-                      <div fiboPopover [trigger]="usersTrigger" [matchWidth]="false"
+                  <ng-template fiboPortalContent let-trigger>
+                      <div fiboPopover [trigger]="trigger" [matchWidth]="false"
                            fiboDataList
                            fiboSelectMulti [(value)]="selectedUsers"
                            class="popover-container w-60"
@@ -194,15 +188,14 @@ import { Checkbox } from '@fibo-ui/components';
                   <div class="text-xs text-foreground-secondary mb-2">Container with overflow-hidden:</div>
                   <div fiboFormField
                        fiboPopoverTriggerClick
-                       #statusTrigger="PopoverTrigger"
                        class="group content-center form-field-control w-60 relative">
                       <span class="form-field-label">Status:</span>
                       <span class="text-sm">{{ getStatusLabel(statusSelect()) || 'Select status' }}</span>
                       <lucide-icon name="chevron-down" size="16"
                                    class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
-                      <ng-template fiboPortalContent [(isOpen)]="statusTrigger.isOpen">
-                          <div fiboPopover [trigger]="statusTrigger" [matchWidth]="false"
-                               fiboDataList (itemTriggered)="statusTrigger.close()"
+                      <ng-template fiboPortalContent let-trigger>
+                          <div fiboPopover [trigger]="trigger" [matchWidth]="false"
+                               fiboDataList (itemTriggered)="trigger.close()"
                                fiboSelectOne [(value)]="statusSelect"
                                class="popover-container w-60"
                           >
@@ -219,15 +212,14 @@ import { Checkbox } from '@fibo-ui/components';
 
               <div fiboFormField
                    fiboPopoverTriggerClick
-                   #categoryTrigger="PopoverTrigger"
                    class="group content-center form-field-control rounded-full inline-block w-60 relative">
                   <span class="form-field-label">Category:</span>
                   <span class="text-sm">{{ getCategoryLabel(categorySelect()) || 'Select category' }}</span>
                   <lucide-icon name="chevron-down" size="16"
                                class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
-                  <ng-template fiboPortalContent [(isOpen)]="categoryTrigger.isOpen">
-                      <div fiboPopover [trigger]="categoryTrigger" [matchWidth]="false"
-                           fiboDataList (itemTriggered)="categoryTrigger.close()"
+                  <ng-template fiboPortalContent let-trigger>
+                      <div fiboPopover [trigger]="trigger" [matchWidth]="false"
+                           fiboDataList (itemTriggered)="trigger.close()"
                            fiboSelectOne [(value)]="categorySelect"
                            class="popover-container w-60"
                       >

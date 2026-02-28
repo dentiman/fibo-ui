@@ -33,7 +33,6 @@ interface UserModel {
   template: `
     <div class="mx-auto w-90 p-8">
       <fibo-form-field-control fiboPopoverTriggerToggle
-        #trigger="PopoverTrigger"
         [formField]="userForm.skills"
         label="Skills" iconEnd="chevron-down">
 
@@ -54,7 +53,7 @@ interface UserModel {
           }
         </div>
 
-        <ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
+        <ng-template fiboPortalContent let-trigger>
           <div fiboPopover [trigger]="trigger" [matchWidth]="true"
                fiboDataList
                fiboSelectMulti [(value)]="userForm.skills().value"

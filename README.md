@@ -161,10 +161,11 @@ userForm = form(this.userModel, (path) => {
 ### Popover Menu
 
 ```html
-<button #trigger="PopoverTrigger" fiboPopoverTriggerToggle>Menu</button>
-<ng-template [(isOpen)]="trigger.isOpen" fiboPortalContent>
-  <fibo-menu [items]="menuItems" [trigger]="trigger" placement="bottom-start" />
-</ng-template>
+<button fiboPopoverTriggerToggle>Menu
+  <ng-template fiboPortalContent let-trigger>
+    <fibo-menu [items]="menuItems" [trigger]="trigger" placement="bottom-start" />
+  </ng-template>
+</button>
 ```
 
 ### Table with Sort and Selection

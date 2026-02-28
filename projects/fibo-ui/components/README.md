@@ -335,10 +335,11 @@ items: MenuItemType[] = [
 ```
 
 ```html
-<button #trigger="PopoverTrigger" fiboPopoverTriggerToggle>Open Menu</button>
-<ng-template [(isOpen)]="trigger.isOpen" fiboPortalContent>
-  <fibo-menu fiboPopover [items]="items" [trigger]="trigger" placement="bottom-start" />
-</ng-template>
+<button fiboPopoverTriggerToggle>Open Menu
+  <ng-template fiboPortalContent let-trigger>
+    <fibo-menu fiboPopover [items]="items" [trigger]="trigger" placement="bottom-start" />
+  </ng-template>
+</button>
 ```
 
 **Declarative:**

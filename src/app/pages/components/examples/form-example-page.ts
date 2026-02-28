@@ -78,7 +78,7 @@ interface UserProfile {
           </div>
         </div>
 
-        <button type="button" fiboFormFieldTrigger #cityTrigger="PopoverTrigger"
+        <button type="button" fiboFormFieldTrigger
                 [formField]="userProfileForm.city"
                 class="w-full form-field-control flex items-center gap-2 text-left">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
@@ -89,9 +89,9 @@ interface UserProfile {
           <lucide-icon name="chevron-down" size="16"
                        class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
 
-          <ng-template fiboPortalContent [(isOpen)]="cityTrigger.isOpen">
-            <div fiboPopover [trigger]="cityTrigger" [matchWidth]="true"
-                 fiboDataList (itemTriggered)="cityTrigger.close()"
+          <ng-template fiboPortalContent let-trigger>
+            <div fiboPopover [trigger]="trigger" [matchWidth]="true"
+                 fiboDataList (itemTriggered)="trigger.close()"
                  fiboSelectOne [(value)]="userProfileForm.city().value"
                  class="popover-container">
               @for (c of cities; track c.value) {
@@ -104,7 +104,7 @@ interface UserProfile {
         </button>
 
 
-        <button type="button" fiboFormFieldTrigger #roleTrigger="PopoverTrigger"
+        <button type="button" fiboFormFieldTrigger
                 [formField]="userProfileForm.userRole"
                 class="w-full form-field-control flex items-center gap-2 text-left">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
@@ -115,9 +115,9 @@ interface UserProfile {
           <lucide-icon name="chevron-down" size="16"
                        class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
 
-          <ng-template fiboPortalContent [(isOpen)]="roleTrigger.isOpen">
-            <div fiboPopover [trigger]="roleTrigger" [matchWidth]="true"
-                 fiboDataList (itemTriggered)="roleTrigger.close()"
+          <ng-template fiboPortalContent let-trigger>
+            <div fiboPopover [trigger]="trigger" [matchWidth]="true"
+                 fiboDataList (itemTriggered)="trigger.close()"
                  fiboSelectOne [(value)]="userProfileForm.userRole().value"
                  class="popover-container">
               @for (role of userRoles; track role) {
@@ -168,7 +168,7 @@ interface UserProfile {
         </div>
 
         <!-- Birth Date -->
-        <div fiboFormField fiboPopoverTriggerClick #dateTrigger="PopoverTrigger"
+        <div fiboFormField fiboPopoverTriggerClick
              class="form-field-control flex items-center gap-2">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
             <label class="form-field-label mt-1">Birth Date</label>
@@ -180,10 +180,10 @@ interface UserProfile {
           </div>
           <lucide-icon name="calendar-days" size="16"
                        class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
-          <ng-template fiboPortalContent [(isOpen)]="dateTrigger.isOpen">
-            <fibo-calendar fiboPopover [trigger]="dateTrigger"
+          <ng-template fiboPortalContent let-trigger>
+            <fibo-calendar fiboPopover [trigger]="trigger"
                            fiboSelectDate [(value)]="userProfileForm.birthDate().value"
-                           (itemTriggered)="dateTrigger.close()"
+                           (itemTriggered)="trigger.close()"
                            class="popover-container"/>
           </ng-template>
         </div>
@@ -199,7 +199,7 @@ interface UserProfile {
 
 
         <!-- Skills (multiple) -->
-        <button type="button" fiboFormFieldTrigger #skillsTrigger="PopoverTrigger"
+        <button type="button" fiboFormFieldTrigger
                 [formField]="userProfileForm.skills"
                 class="w-full form-field-control flex items-center gap-2 text-left">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
@@ -223,8 +223,8 @@ interface UserProfile {
           </div>
           <lucide-icon name="chevron-down" size="16"
                        class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
-          <ng-template fiboPortalContent [(isOpen)]="skillsTrigger.isOpen">
-            <div fiboPopover [trigger]="skillsTrigger" [matchWidth]="true"
+          <ng-template fiboPortalContent let-trigger>
+            <div fiboPopover [trigger]="trigger" [matchWidth]="true"
                  fiboDataList
                  fiboSelectMulti [(value)]="userProfileForm.skills().value"
                  class="popover-container">

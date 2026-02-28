@@ -18,31 +18,44 @@ Complete directive/component dependency graph for `@fibo-ui/cdk` and `@fibo-ui/c
 ## 1. Portal System
 
 ```
-PortalContent
-    ├── inject ──▶ PortalRegistry
+PortalOwner (interface + PORTAL_OWNER token)
+    └── setPortalTemplate(templateRef | null)
+
+PortalContent [fiboPortalContent]
     ├── inject ──▶ TemplateRef
-    └── model: isOpen (bound via [(isOpen)]="trigger.isOpen" in templates)
+    ├── inject(opt) ──▶ PORTAL_OWNER
+    ├── constructor: owner.setPortalTemplate(templateRef)
+    └── ngOnDestroy: owner.setPortalTemplate(null)
 
 PortalOutlet ──inject──▶ PortalRegistry
-    └── renders: openPortalsList → ngTemplateOutlet
+    └── renders: openPortalsList → ngTemplateOutlet with context
 
 PortalRegistry (root service)
-    └── signal: Map<id, {templateRef}>
+    └── signal: Map<id, {templateRef, context?}>
 ```
 
-**Design:** Portal is a generic infrastructure layer with no knowledge of popover or trigger.
-The `isOpen` model is two-way bound to `trigger.isOpen` at the template level.
+**Design:** Portal is a generic infrastructure layer. `PortalContent` auto-discovers its owner
+via the `PORTAL_OWNER` DI token. The owner (e.g. `PopoverTrigger`) manages registration
+in `PortalRegistry` and provides template context (`{$implicit: this}`).
+
+**Usage:** `*fiboPortalContent="let trigger"` or `<ng-template fiboPortalContent let-trigger>`.
+The `trigger` variable is the `PopoverTrigger` instance, passed via template context.
 
 ---
 
 ## 2. Popover System
 
 ```
-PopoverTrigger
+PopoverTrigger ──provides──▶ { PORTAL_OWNER: self }
+    ├── implements: PortalOwner
     ├── inject(opt, self) ──▶ DataListItem   (checks if trigger is a list item)
+    ├── inject ──▶ PortalRegistry
     ├── signal: isOpen
+    ├── signal: portalTemplate (set by PortalContent via PORTAL_OWNER)
     ├── signal: popover → Popover (set by Popover.ngOnInit)
     ├── signal: keydownDelegate → KeydownDelegate | null
+    ├── effect: isOpen && portalTemplate → register/unregister in PortalRegistry
+    │           with context: {$implicit: this}
     ├── host: [tabindex], [aria-expanded], (keydown), (focusout)
     └── onKeydown → delegates to keydownDelegate()?.onKeydown()
 
@@ -316,6 +329,7 @@ TreeMenuChain [fibo-tree-menu-chain]
 
 | Token | Provided by | Consumed by |
 |-------|-------------|-------------|
+| `PORTAL_OWNER` | PopoverTrigger | PortalContent |
 | `SELECTION_MODEL` | SelectOne, SelectMulti, SelectDate | DataListItem, Calendar, Listbox, Table |
 | `MENU_PANEL` | MenuPanel | SubmenuTrigger |
 | `DATA_LIST` | DataList | (internal) |

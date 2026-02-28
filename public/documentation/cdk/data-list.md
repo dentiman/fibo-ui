@@ -100,23 +100,22 @@ This means the user can navigate the list **without moving focus** into the popo
 Pass the `trigger` input to `DataList` so that Escape returns focus to the trigger and closes the popover:
 
 ```html
-<button fiboPopoverTriggerToggle #trigger="PopoverTrigger">
+<button fiboPopoverTriggerToggle>
   Open list
+  <ng-template fiboPortalContent let-trigger>
+    <div fiboPopover [trigger]="trigger"
+         fiboDataList [trigger]="trigger"
+         fiboSelectOne [(value)]="selected"
+         (itemTriggered)="trigger.close()"
+         class="popover-container">
+      @for (item of items; track item.value) {
+        <button fiboDataListItem [value]="item.value" class="datalist-item">
+          {{ item.label }}
+        </button>
+      }
+    </div>
+  </ng-template>
 </button>
-
-<ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
-  <div fiboPopover [trigger]="trigger"
-       fiboDataList [trigger]="trigger"
-       fiboSelectOne [(value)]="selected"
-       (itemTriggered)="trigger.close()"
-       class="popover-container">
-    @for (item of items; track item.value) {
-      <button fiboDataListItem [value]="item.value" class="datalist-item">
-        {{ item.label }}
-      </button>
-    }
-  </div>
-</ng-template>
 ```
 
 Key points:

@@ -11,14 +11,16 @@ Most UI libraries have a single monolithic overlay system that couples positioni
 ### The Four Actors
 
 ```
-PopoverTrigger          — owns the isOpen signal; handles focus-out, Escape, aria-expanded
+PopoverTrigger          — owns the isOpen signal; provides PORTAL_OWNER token;
+    │                     registers/unregisters template in PortalRegistry when isOpen changes
     │
-    ├─ PortalContent    — watches isOpen; registers / unregisters a TemplateRef
-    │       │            in PortalRegistry when it changes
+    ├─ PortalContent    — auto-discovers trigger via PORTAL_OWNER DI token;
+    │       │            passes its TemplateRef to the trigger
     │       │
-    │   PortalRegistry  — root-level signal Map of open portals
+    │   PortalRegistry  — root-level signal Map of open portals (with context)
     │       │
     │   PortalOutlet    — placed once at app root; renders every registered TemplateRef
+    │                     with context ({$implicit: trigger})
     │
     └─ Popover          — floating container; reads trigger position via @floating-ui/dom;
                           closes on click-outside and focus-out
@@ -33,7 +35,7 @@ The standard approach in Angular is the CDK `Overlay` module — a powerful but 
 - **Zero `@angular/cdk` dependency** — the entire implementation is ~150 lines
 - **Fully signal-driven** — no `BehaviorSubject`, no zone-based events, no `NgZone.run()`
 - **Dead simple mental model** — one signal, one registry service, one outlet component
-- **Predictable cleanup** — `PortalContent.ngOnDestroy()` always unregisters; no zombie overlays
+- **Predictable cleanup** — `PopoverTrigger`'s effect cleanup always unregisters; no zombie overlays
 
 ### Escaping Stacking Contexts
 
@@ -44,10 +46,10 @@ Component tree                     Rendered DOM
 ─────────────────────────────────  ──────────────────────────────────────────
 <card style="overflow:hidden">     <card style="overflow:hidden">
   <button fiboPopoverTriggerToggle>  <button aria-expanded="true">…</button>
-    #trigger="PopoverTrigger"      </card>
-  <ng-template fiboPortalContent>
-    <div fiboPopover>…</div>       ← not here
-  </ng-template>
+    <div *fiboPortalContent>       </card>
+      <div fiboPopover>…</div>
+    </div>                         ← not here
+  </button>
 </card>
 
 <fibo-portal-outlet>               <fibo-portal-outlet>
@@ -68,29 +70,28 @@ The most common pattern: a toggle button opens a keyboard-navigable list. `DataL
 ```html {example="cdk-popover-basic"}
 <button type="button" #trigger="PopoverTrigger" fiboPopoverTriggerToggle class="btn btn-primary">
   Toggle popover
+  <ng-template fiboPortalContent let-trigger>
+    <div
+      fiboPopover
+      [trigger]="trigger"
+      placement="bottom-start"
+      [offset]="8"
+      fiboDataList
+      fiboSelectOne
+      [(value)]="selectedAction"
+      (itemTriggered)="onActionTriggered(trigger)"
+      class="popover-container min-w-72 p-2"
+    >
+      @for (action of actions; track action.id) {
+        <button fiboDataListItem type="button" [value]="action.id" class="datalist-item w-full text-left">
+          <span class="block">{{ action.label }}</span>
+          <span class="block text-xs text-foreground-secondary">{{ action.description }}</span>
+        </button>
+      }
+    </div>
+  </ng-template>
 </button>
 <span class="text-sm text-foreground-secondary">Open: {{ trigger.isOpen() ? 'yes' : 'no' }}</span>
-
-<ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
-  <div
-    fiboPopover
-    [trigger]="trigger"
-    placement="bottom-start"
-    [offset]="8"
-    fiboDataList
-    fiboSelectOne
-    [(value)]="selectedAction"
-    (itemTriggered)="onActionTriggered(trigger)"
-    class="popover-container min-w-72 p-2"
-  >
-    @for (action of actions; track action.id) {
-      <button fiboDataListItem type="button" [value]="action.id" class="datalist-item w-full text-left">
-        <span class="block">{{ action.label }}</span>
-        <span class="block text-xs text-foreground-secondary">{{ action.description }}</span>
-      </button>
-    }
-  </div>
-</ng-template>
 ```
 
 ```ts {example="cdk-popover-basic"}
@@ -124,40 +125,40 @@ The popover works with _any_ HTML content — not just lists. This example shows
 :::example cdk-popover-info-card
 
 ```html {example="cdk-popover-info-card"}
-<button type="button" #trigger="PopoverTrigger" fiboPopoverTriggerToggle
+<button type="button" #triggerRef="PopoverTrigger" fiboPopoverTriggerToggle
         class="btn btn-secondary flex items-center gap-2">
   <lucide-icon name="user" size="16" />
   Alex Johnson
+  <ng-template fiboPortalContent let-trigger>
+    <div fiboPopover [trigger]="trigger" placement="bottom-start" [offset]="8"
+         class="popover-container p-4 w-72 flex flex-col gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+          <lucide-icon name="user" size="18" class="text-primary" />
+        </div>
+        <div class="min-w-0">
+          <div class="font-semibold text-sm">Alex Johnson</div>
+          <div class="text-xs text-foreground-secondary truncate">alex@company.io</div>
+        </div>
+      </div>
+      <hr class="border-border-primary" />
+      <div class="flex flex-col gap-2 text-sm">
+        <div class="flex items-center gap-2 text-foreground-secondary">
+          <lucide-icon name="briefcase" size="14" class="shrink-0" />
+          <span>Senior Frontend Engineer</span>
+        </div>
+        <div class="flex items-center gap-2 text-foreground-secondary">
+          <lucide-icon name="map-pin" size="14" class="shrink-0" />
+          <span>Berlin, Germany</span>
+        </div>
+      </div>
+      <button type="button" class="btn btn-sm btn-primary w-full" (click)="trigger.close()">
+        View Profile
+      </button>
+    </div>
+  </ng-template>
 </button>
-
-<ng-template fiboPortalContent [(isOpen)]="trigger.isOpen">
-  <div fiboPopover [trigger]="trigger" placement="bottom-start" [offset]="8"
-       class="popover-container p-4 w-72 flex flex-col gap-3">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-        <lucide-icon name="user" size="18" class="text-primary" />
-      </div>
-      <div class="min-w-0">
-        <div class="font-semibold text-sm">Alex Johnson</div>
-        <div class="text-xs text-foreground-secondary truncate">alex@company.io</div>
-      </div>
-    </div>
-    <hr class="border-border-primary" />
-    <div class="flex flex-col gap-2 text-sm">
-      <div class="flex items-center gap-2 text-foreground-secondary">
-        <lucide-icon name="briefcase" size="14" class="shrink-0" />
-        <span>Senior Frontend Engineer</span>
-      </div>
-      <div class="flex items-center gap-2 text-foreground-secondary">
-        <lucide-icon name="map-pin" size="14" class="shrink-0" />
-        <span>Berlin, Germany</span>
-      </div>
-    </div>
-    <button type="button" class="btn btn-sm btn-primary w-full" (click)="trigger.close()">
-      View Profile
-    </button>
-  </div>
-</ng-template>
+<span class="text-sm text-foreground-secondary">{{ triggerRef.isOpen() ? 'Open' : 'Closed' }}</span>
 ```
 
 ```ts {example="cdk-popover-info-card"}
@@ -179,20 +180,15 @@ export class CdkPopoverInfoCardExample {}
 :::example cdk-popover-placements
 
 ```html {example="cdk-popover-placements"}
-<button type="button" #top="PopoverTrigger" fiboPopoverTriggerToggle class="btn btn-secondary">top</button>
-<button type="button" #topStart="PopoverTrigger" fiboPopoverTriggerToggle class="btn btn-secondary">top-start</button>
-<button type="button" #bottom="PopoverTrigger" fiboPopoverTriggerToggle class="btn btn-secondary">bottom</button>
-<button type="button" #bottomEnd="PopoverTrigger" fiboPopoverTriggerToggle class="btn btn-secondary">bottom-end</button>
-<button type="button" #right="PopoverTrigger" fiboPopoverTriggerToggle class="btn btn-secondary">right</button>
-<button type="button" #left="PopoverTrigger" fiboPopoverTriggerToggle class="btn btn-secondary">left</button>
-
-<ng-template fiboPortalContent [(isOpen)]="top.isOpen">
-  <div fiboPopover [trigger]="top" placement="top" [offset]="8" class="popover-container px-3 py-2 text-sm">
+<button type="button" fiboPopoverTriggerToggle class="btn btn-secondary">
+  top
+  <div *fiboPortalContent="let trigger" fiboPopover [trigger]="trigger"
+       placement="top" [offset]="8" class="popover-container px-3 py-2 text-sm">
     placement: <strong>top</strong>
   </div>
-</ng-template>
+</button>
 
-<!-- … one ng-template per trigger … -->
+<!-- … same pattern per placement … -->
 ```
 
 ```ts {example="cdk-popover-placements"}
@@ -231,7 +227,7 @@ Need a custom popover your design system doesn't provide? Import the three CDK p
 | `fiboPopoverTriggerClick` | Click → open; Escape → close; click again stays open until focus-out | Tooltips, contextual info |
 | `[fiboPopoverTrigger]` | No automatic event handling — call `open()`, `close()`, `toggle()` programmatically | Fully custom triggers |
 
-All three expose the same `PopoverTrigger` directive via `exportAs: 'PopoverTrigger'`, so `#ref="PopoverTrigger"` works with any of them.
+All three expose the same `PopoverTrigger` directive via `exportAs: 'PopoverTrigger'`. Use `#ref="PopoverTrigger"` when you need to read `isOpen()` in the outer template (e.g. for status display).
 
 ---
 
@@ -247,7 +243,7 @@ The portal system is ~150 lines of signals code. No scroll strategies, no backdr
 `PopoverTrigger + PortalContent + Popover` is the minimal kernel. Add `DataList` for keyboard navigation. Add `SelectOne` for selection semantics. Add `DataListItem` for individual items. None of these layers know about each other — they communicate through Angular's DI.
 
 **4. Signals-native**
-`isOpen` is a plain `Signal<boolean>`. No subscriptions, no `async` pipe, no `BehaviorSubject`. Template bindings react to it automatically with `OnPush`.
+`isOpen` is a plain `Signal<boolean>`. No subscriptions, no `async` pipe, no `BehaviorSubject`. The trigger's effect reacts to it automatically with `OnPush`.
 
 **5. ARIA wired automatically**
 `PopoverTrigger` sets `aria-expanded` on its host element. `DataList` manages `aria-activedescendant`. `DataListItem` sets `aria-selected` and `aria-disabled`. Keyboard handling (Arrow keys, Enter, Escape) is built into `DataList`, not the popover.
@@ -279,11 +275,9 @@ Base directive. Use via `fiboPopoverTriggerToggle` or `fiboPopoverTriggerClick`.
 
 Selector: `ng-template[fiboPortalContent]`
 
-| Input | Type | Default | Description |
-|---|---|---|---|
-| `isOpen` | `model<boolean>` | — | Two-way open state. Sync with `[(isOpen)]="trigger.isOpen"` |
+Auto-discovers the nearest `PopoverTrigger` (or any `PORTAL_OWNER` provider) via DI and passes its `TemplateRef` to it. No inputs needed — just place the `<ng-template>` inside a trigger element.
 
-When placed inside a `PopoverTrigger` host, `PortalContent` injects and syncs with the trigger automatically — no explicit binding needed.
+Usage: `*fiboPortalContent="let trigger"` or `<ng-template fiboPortalContent let-trigger>`. The `trigger` variable is the `PopoverTrigger` instance, passed via template context.
 
 ### Popover
 
@@ -314,8 +308,8 @@ Root-level service (`providedIn: 'root'`).
 | Member | Type | Description |
 |---|---|---|
 | `openPortalsList` | `Signal<PortalEntry[]>` | Computed list of currently open portals |
-| `register(id, templateRef, trigger)` | method | Called by `PortalContent` when opening |
-| `unregister(id)` | method | Called by `PortalContent` when closing or destroyed |
+| `register(id, templateRef, context?)` | method | Called by `PopoverTrigger` when opening |
+| `unregister(id)` | method | Called by `PopoverTrigger` effect cleanup when closing |
 
 ### PopoverArrow
 

@@ -4,6 +4,7 @@ import { TemplateRef } from '@angular/core';
 export interface PortalEntry {
   id: string;
   templateRef: TemplateRef<any>;
+  context?: Record<string, any>;
 }
 
 @Injectable({
@@ -18,10 +19,10 @@ export class PortalRegistry {
     return Array.from(this.openPortals().values());
   });
 
-  register(id: string, templateRef: TemplateRef<any>): void {
+  register(id: string, templateRef: TemplateRef<any>, context?: Record<string, any>): void {
     this.openPortals.update(map => {
       const newMap = new Map(map);
-      newMap.set(id, { id, templateRef });
+      newMap.set(id, { id, templateRef, context });
       return newMap;
     });
   }
