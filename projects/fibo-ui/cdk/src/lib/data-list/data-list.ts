@@ -75,6 +75,9 @@ export class DataList {
     currentDataListItem: DataListItem | null
   ): DataListItem | null {
     const optionsArray = this.options();
+    if (optionsArray.length === 0) {
+      return null;
+    }
     // @ts-ignore
     const currentIndex = optionsArray.indexOf(currentDataListItem);
 
@@ -104,6 +107,9 @@ export class DataList {
     currentDataListItem: DataListItem | null
   ): DataListItem | null {
     const optionsArray = this.options();
+    if (optionsArray.length === 0) {
+      return null;
+    }
     // @ts-ignore
     const currentIndex = optionsArray.indexOf(currentDataListItem);
 
