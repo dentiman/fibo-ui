@@ -25,6 +25,6 @@
 
 - Добавить тесты для overlay-критичных сценариев:
   - `OverlayRegistry` (`register/unregister/closeTopmost/closeAllByCategory`);
-  - `Notifier` timer cleanup и manual close;
+
   - keyboard dismiss (`Escape`) в `OverlayOutlet`.
 
