@@ -1,4 +1,4 @@
-import {computed, inject, Injectable, signal, TemplateRef} from '@angular/core';
+import {inject, Injectable, signal, TemplateRef} from '@angular/core';
 import {OverlayRegistry} from '@fibo-ui/cdk';
 
 export type ConfirmationContent =
@@ -23,11 +23,15 @@ export class ConfirmationService {
 
   containerTemplateRef = signal<TemplateRef<any> | null>(null);
 
+  // Business state — reflects logical open/closed immediately.
+  isOpen = signal(false);
+  // Render data — stays valid during animate.leave so the template
+  // content is visible while the outlet wrapper fades out.
   config = signal<ConfirmationConfig | null>(null);
-  isOpen = computed(() => !!this.config());
 
   open(config: ConfirmationConfig) {
     this.config.set(config);
+    this.isOpen.set(true);
     const tpl = this.containerTemplateRef();
     if (tpl) {
       this.registry.register('confirmation', tpl, undefined, 'confirmation', () => this.close());
@@ -44,6 +48,7 @@ export class ConfirmationService {
   }
 
   close() {
+    this.isOpen.set(false);
     // Don't clear config — data must stay valid during the outlet's
     // animate.leave="overlay-leave" fade. It gets overwritten on next open().
     this.registry.unregister('confirmation');
