@@ -250,13 +250,13 @@ Dialog and drawer use the same trigger flow via shared overlay outlet.
 Confirmation dialog triggered by a directive.
 
 ```html
-<button (confirm)="onDelete()">Delete Item</button>
+<button fiboConfirm (confirm)="onDelete()">Delete Item</button>
 ```
 
 With custom content:
 
 ```html
-<button [content]="{ title: 'Are you sure?', message: 'This cannot be undone.' }" (confirm)="onDelete()">
+<button fiboConfirm [content]="{ title: 'Are you sure?', message: 'This cannot be undone.' }" (confirm)="onDelete()">
   Delete
 </button>
 ```

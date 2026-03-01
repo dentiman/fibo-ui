@@ -2,6 +2,8 @@
   @let tooltipRef = tooltipService.tooltipRef();
   @if (tooltipRef) {
     <div fiboPopoverPosition
+         [id]="tooltipRef.tooltipId"
+         role="tooltip"
          [referenceElement]="tooltipRef.referenceElement"
          [placement]="tooltipRef.placement"
          (mouseleave)="tooltipService.close()"

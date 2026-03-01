@@ -1,15 +1,5 @@
 /* Fibo UI Component Styles */
 @layer components {
-  .fibo-notification-container {
-    z-index: 10;
-  }
-
-  .fibo-tooltip-container {
-    z-index: 9999;
-  }
-
-
-
   .form-field-icon {
     color: var(--form-field-label-text);
   }

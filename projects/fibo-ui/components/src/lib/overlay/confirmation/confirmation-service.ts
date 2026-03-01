@@ -15,11 +15,16 @@ export interface ConfirmationConfig {
   onConfirm: () => void;
 }
 
+// Must be >= outlet overlay leave animation duration (200ms)
+// so confirmation content remains available until fade-out completes.
+const CONFIRMATION_LEAVE_CLEANUP_DELAY = 220;
+
 @Injectable({
   providedIn: 'root',
 })
 export class ConfirmationService {
   private registry = inject(OverlayRegistry);
+  private cleanupTimer: ReturnType<typeof setTimeout> | null = null;
 
   containerTemplateRef = signal<TemplateRef<any> | null>(null);
 
@@ -30,6 +35,11 @@ export class ConfirmationService {
   config = signal<ConfirmationConfig | null>(null);
 
   open(config: ConfirmationConfig) {
+    if (this.cleanupTimer) {
+      clearTimeout(this.cleanupTimer);
+      this.cleanupTimer = null;
+    }
+
     this.config.set(config);
     this.isOpen.set(true);
     const tpl = this.containerTemplateRef();
@@ -49,8 +59,14 @@ export class ConfirmationService {
 
   close() {
     this.isOpen.set(false);
-    // Don't clear config — data must stay valid during the outlet's
-    // animate.leave="overlay-leave" fade. It gets overwritten on next open().
     this.registry.unregister('confirmation');
+
+    // Keep config during leave animation, then release payload/callback references.
+    this.cleanupTimer = setTimeout(() => {
+      if (!this.isOpen()) {
+        this.config.set(null);
+      }
+      this.cleanupTimer = null;
+    }, CONFIRMATION_LEAVE_CLEANUP_DELAY);
   }
 }

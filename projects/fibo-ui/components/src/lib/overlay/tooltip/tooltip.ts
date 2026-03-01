@@ -2,30 +2,32 @@ import {Directive, ElementRef, inject, input, TemplateRef} from '@angular/core';
 import {TooltipService} from './tooltip-service';
 import {Placement} from '@floating-ui/dom';
 
+let nextId = 0;
 
 @Directive({
   selector: '[fiboTooltip]',
-  standalone: true,
   host: {
     '(mouseenter)': 'open()',
     '(mouseleave)': 'close()',
+    '(focusin)': 'open()',
+    '(focusout)': 'close()',
+    '[attr.aria-describedby]': 'tooltipId',
   },
 })
 export class Tooltip {
+  private element = inject(ElementRef).nativeElement;
+  private tooltipService = inject(TooltipService);
 
-  element = inject(ElementRef).nativeElement;
+  readonly tooltipId = `fibo-tooltip-${nextId++}`;
 
-  tooltipService = inject(TooltipService)
-
-  content = input.required<string | TemplateRef<any>>({ alias: 'fiboTooltip' });
-
+  content = input.required<string | TemplateRef<any>>({alias: 'fiboTooltip'});
   placement = input<Placement>('top');
 
   open() {
-   this.tooltipService.open(this.content(), this.element,this.placement())
+    this.tooltipService.open(this.content(), this.element, this.placement(), this.tooltipId);
   }
 
   close() {
-    this.tooltipService.close()
+    this.tooltipService.close();
   }
 }

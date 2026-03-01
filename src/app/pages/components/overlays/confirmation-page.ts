@@ -6,6 +6,7 @@ import {ConfirmationTrigger} from '@fibo-ui/components';
   imports: [ConfirmationTrigger],
   template: `
 <button class="btn-primary"
+        fiboConfirm
         (confirm)="onConfirm()"
         >Confirm button</button>
   `,

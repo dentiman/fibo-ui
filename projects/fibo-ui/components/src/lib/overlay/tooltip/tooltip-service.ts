@@ -15,6 +15,7 @@ export class TooltipService {
     content: string | TemplateRef<unknown>;
     referenceElement: HTMLElement;
     placement: Placement;
+    tooltipId: string;
   } | null>(null);
 
   openDelay = signal<number>(100);
@@ -22,12 +23,17 @@ export class TooltipService {
 
   private _interactionRequest = new Subject<'open' | 'close'>();
 
-  open(content: string | TemplateRef<unknown>, referenceElement: HTMLElement, placement: Placement) {
+  open(
+    content: string | TemplateRef<unknown>,
+    referenceElement: HTMLElement,
+    placement: Placement,
+    tooltipId: string
+  ) {
     this._interactionRequest.next('open');
     timer(this.openDelay())
       .pipe(takeUntil(this._interactionRequest))
       .subscribe(() => {
-        this.tooltipRef.set({ content, referenceElement, placement });
+        this.tooltipRef.set({content, referenceElement, placement, tooltipId});
         const tpl = this.containerTemplateRef();
         if (tpl) {
           this.registry.register('tooltip', tpl, undefined, 'tooltip');
