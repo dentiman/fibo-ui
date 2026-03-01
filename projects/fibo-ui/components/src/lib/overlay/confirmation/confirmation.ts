@@ -76,9 +76,11 @@ export class FiboConfirmation {
     const config = this.confirmation.config();
     if (!config) return DEFAULT_CONFIG;
 
-    return config.content instanceof TemplateRef
-      ? DEFAULT_CONFIG
-      : {...DEFAULT_CONFIG, ...config};
+    if (!config.content || config.content instanceof TemplateRef) {
+      return DEFAULT_CONFIG;
+    }
+
+    return { ...DEFAULT_CONFIG, ...config.content };
   });
 
   template = computed(() => {

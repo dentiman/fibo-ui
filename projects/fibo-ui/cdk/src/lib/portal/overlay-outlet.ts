@@ -25,6 +25,15 @@ export class OverlayOutletComponent {
         document.documentElement.style.overflow = '';
       }
     });
+
+    effect(() => {
+      const activePortalIds = new Set(this.registry.openPortalsList().map(portal => portal.id));
+      for (const id of this.injectorCache.keys()) {
+        if (!activePortalIds.has(id)) {
+          this.injectorCache.delete(id);
+        }
+      }
+    });
   }
 
   portalInjector(portal: OverlayEntry): Injector {

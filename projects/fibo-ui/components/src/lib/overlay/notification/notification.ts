@@ -44,13 +44,12 @@ import {LucideAngularModule} from 'lucide-angular';
   `,
 })
 export class Notification {
+  private notifier = inject(Notifier);
 
-  notifications = inject(Notifier).notifications;
+  notifications = this.notifier.notifications;
 
   removeNotification(notification: NotificationConfig) {
-    this.notifications.update(notifications =>
-      notifications.filter(n => n !== notification)
-    );
+    this.notifier.removeNotification(notification);
   }
 
 }
