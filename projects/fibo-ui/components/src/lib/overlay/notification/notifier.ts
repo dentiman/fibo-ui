@@ -1,6 +1,7 @@
-import {Injectable, signal, TemplateRef} from '@angular/core';
+import {inject, Injectable, signal, TemplateRef} from '@angular/core';
+import {OverlayRegistry} from '@fibo-ui/cdk';
 
-export  type NotificationType = 'info' | 'success' | 'warning' | 'danger';
+export type NotificationType = 'info' | 'success' | 'warning' | 'danger';
 export interface NotificationConfig {
   type?: NotificationType;
   message?: string;
@@ -11,12 +12,15 @@ export interface NotificationConfig {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class Notifier {
+  private registry = inject(OverlayRegistry);
   private readonly DEFAULT_DURATION = 5; // 5 seconds
   notifications = signal<NotificationConfig[]>([]);
   private readonly timers = new Map<symbol, ReturnType<typeof setTimeout>>();
+
+  containerTemplateRef = signal<TemplateRef<any> | null>(null);
 
   push(config: NotificationConfig) {
     const id = Symbol('notification-id');
@@ -24,30 +28,39 @@ export class Notifier {
     const notification: NotificationConfig = {
       ...config,
       duration,
-      id
+      id,
     };
 
+    const wasEmpty = this.notifications().length === 0;
     this.notifications.update(value => [...value, notification]);
+
+    if (wasEmpty) {
+      const tpl = this.containerTemplateRef();
+      if (tpl) {
+        this.registry.register('notification', tpl, undefined, 'notification');
+      }
+    }
 
     if (duration > 0) {
       const timerId = setTimeout(() => {
         this.removeNotification(notification);
-      }, duration * 1000); // Convert seconds to milliseconds
-      
+      }, duration * 1000);
+
       this.timers.set(id, timerId);
     }
   }
 
   removeNotification(notification: NotificationConfig) {
-    // Clear timer if exists to prevent memory leaks
     if (notification.id && this.timers.has(notification.id)) {
       clearTimeout(this.timers.get(notification.id)!);
       this.timers.delete(notification.id);
     }
 
-    this.notifications.update(notifications =>
-      notifications.filter(n => n !== notification)
-    );
+    this.notifications.update(notifications => notifications.filter(n => n !== notification));
+
+    if (this.notifications().length === 0) {
+      this.registry.unregister('notification');
+    }
   }
 
   success(message: string, duration?: number) {

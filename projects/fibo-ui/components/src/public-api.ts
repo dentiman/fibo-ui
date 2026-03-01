@@ -27,6 +27,8 @@ export * from './lib/overlay/confirmation/confirmation-trigger';
 export * from './lib/overlay/notification/notification';
 export * from './lib/overlay/notification/notifier';
 
+export * from './lib/overlay/overlay-outlet';
+
 
 export * from './lib/form-controls/calendar/calendar';
 

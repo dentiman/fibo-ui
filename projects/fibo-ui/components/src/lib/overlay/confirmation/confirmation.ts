@@ -1,4 +1,12 @@
-import {Component, computed, inject, TemplateRef, viewChild, ViewEncapsulation} from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  computed,
+  inject,
+  TemplateRef,
+  viewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {ConfirmationService} from './confirmation-service';
 import {LucideAngularModule} from 'lucide-angular';
@@ -7,7 +15,7 @@ const DEFAULT_CONFIG = {
   title: 'Confirmation',
   message: 'Do you really want to perform action?',
   cancelLabel: 'Cancel',
-  confirmLabel: 'Confirm'
+  confirmLabel: 'Confirm',
 } as const;
 
 @Component({
@@ -70,6 +78,7 @@ const DEFAULT_CONFIG = {
 })
 export class FiboConfirmation {
   confirmation = inject(ConfirmationService);
+  private root = viewChild.required<TemplateRef<any>>('root');
   defaultContent = viewChild.required<TemplateRef<unknown>>('defaultContent');
 
   content = computed(() => {
@@ -80,13 +89,17 @@ export class FiboConfirmation {
       return DEFAULT_CONFIG;
     }
 
-    return { ...DEFAULT_CONFIG, ...config.content };
+    return {...DEFAULT_CONFIG, ...config.content};
   });
 
   template = computed(() => {
     const config = this.confirmation.config();
-    return config?.content instanceof TemplateRef
-      ? config.content
-      : this.defaultContent();
+    return config?.content instanceof TemplateRef ? config.content : this.defaultContent();
   });
+
+  constructor() {
+    afterNextRender(() => {
+      this.confirmation.containerTemplateRef.set(this.root());
+    });
+  }
 }

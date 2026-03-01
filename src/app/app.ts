@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {Notification, FiboConfirmation, TooltipContainer} from '@fibo-ui/components';
-import {OverlayOutletComponent} from '@fibo-ui/cdk';
+import { OverlayOutlet } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TooltipContainer, FiboConfirmation, Notification, OverlayOutletComponent],
+  imports: [RouterOutlet, OverlayOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

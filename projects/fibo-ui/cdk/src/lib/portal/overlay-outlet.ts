@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { OVERLAY_REF, OverlayRef, OverlayEntry, OverlayRegistry } from './overlay-registry';
 
 @Component({
-  selector: 'fibo-overlay-outlet',
+  selector: 'fibo-cdk-overlay-outlet',
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './overlay-outlet.html',
@@ -18,12 +18,11 @@ export class OverlayOutletComponent {
 
   constructor() {
     effect(() => {
-      const hasDialogs = this.registry.hasOpenDialogs();
-      if (hasDialogs) {
-        document.documentElement.style.overflow = 'hidden';
-      } else {
-        document.documentElement.style.overflow = '';
-      }
+      const list = this.registry.openPortalsList();
+      const needsScrollLock = list.some(
+        p => p.category === 'dialog' || p.category === 'confirmation'
+      );
+      document.documentElement.style.overflow = needsScrollLock ? 'hidden' : '';
     });
 
     effect(() => {

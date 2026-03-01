@@ -1,15 +1,19 @@
-import {Component, computed, inject, TemplateRef, ViewEncapsulation} from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  computed,
+  inject,
+  TemplateRef,
+  viewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {PopoverArrow, PopoverPosition} from '@fibo-ui/cdk';
 import {TooltipService} from './tooltip-service';
 
 @Component({
   selector: 'fibo-tooltip-container',
-  imports: [
-    NgTemplateOutlet,
-    PopoverPosition,
-    PopoverArrow,
-  ],
+  imports: [NgTemplateOutlet, PopoverPosition, PopoverArrow],
   templateUrl: './tooltip-container.html',
   encapsulation: ViewEncapsulation.None,
   styles: `
@@ -44,6 +48,7 @@ import {TooltipService} from './tooltip-service';
 })
 export class TooltipContainer {
   tooltipService = inject(TooltipService);
+  private root = viewChild.required<TemplateRef<any>>('root');
 
   content = computed(() =>
     typeof this.tooltipService.tooltipRef()?.content === 'string'
@@ -55,4 +60,10 @@ export class TooltipContainer {
       ? (this.tooltipService.tooltipRef()?.content as TemplateRef<any>)
       : null
   );
+
+  constructor() {
+    afterNextRender(() => {
+      this.tooltipService.containerTemplateRef.set(this.root());
+    });
+  }
 }

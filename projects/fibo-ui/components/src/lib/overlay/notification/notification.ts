@@ -1,4 +1,12 @@
-import {Component, inject, ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  TemplateRef,
+  viewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {Notifier, NotificationConfig} from './notifier';
 import {NgTemplateOutlet} from '@angular/common';
 import {LucideAngularModule} from 'lucide-angular';
@@ -9,10 +17,6 @@ import {LucideAngularModule} from 'lucide-angular';
   templateUrl: './notification.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  host: {
-    'aria-live': 'assertive',
-    'class': 'pointer-events-none fixed inset-0 flex items-end sm:items-start '
-  },
   styles: `
     .notify-enter {
       animation: notify-slide-in 200ms ease-out;
@@ -45,6 +49,7 @@ import {LucideAngularModule} from 'lucide-angular';
 })
 export class Notification {
   private notifier = inject(Notifier);
+  private root = viewChild.required<TemplateRef<any>>('root');
 
   notifications = this.notifier.notifications;
 
@@ -52,4 +57,9 @@ export class Notification {
     this.notifier.removeNotification(notification);
   }
 
+  constructor() {
+    afterNextRender(() => {
+      this.notifier.containerTemplateRef.set(this.root());
+    });
+  }
 }

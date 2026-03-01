@@ -1,14 +1,24 @@
 import { Injectable, InjectionToken, computed, signal, untracked } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
-export type OverlayCategory = 'popover' | 'menu' | 'dialog' | 'tooltip';
+export type OverlayCategory =
+  | 'popover'
+  | 'menu'
+  | 'dialog'
+  | 'tooltip'
+  | 'confirmation'
+  | 'notification';
 
 const BASE_Z_INDEX: Record<OverlayCategory, number> = {
   dialog: 500,
+  confirmation: 600,
   popover: 1000,
   menu: 1000,
   tooltip: 2000,
+  notification: 3000,
 };
+
+const ESCAPE_SKIP_CATEGORIES: Set<OverlayCategory> = new Set(['notification', 'tooltip']);
 
 export interface OverlayEntry {
   id: string;
@@ -81,9 +91,13 @@ export class OverlayRegistry {
   }
 
   closeTopmost(): void {
-    const top = this.topmost();
-    if (top?.close) {
-      top.close();
+    const list = this.openPortalsList();
+    for (let i = list.length - 1; i >= 0; i--) {
+      const entry = list[i];
+      if (!ESCAPE_SKIP_CATEGORIES.has(entry.category) && entry.close) {
+        entry.close();
+        return;
+      }
     }
   }
 
