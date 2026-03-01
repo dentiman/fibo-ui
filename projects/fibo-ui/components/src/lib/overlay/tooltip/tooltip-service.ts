@@ -44,7 +44,8 @@ export class TooltipService {
     timer(this.closeDelay())
       .pipe(takeUntil(this._interactionRequest))
       .subscribe(() => {
-        this.tooltipRef.set(null);
+        // Don't clear tooltipRef — data must stay valid during the outlet's
+        // animate.leave="overlay-leave" fade. It gets overwritten on next open().
         this.registry.unregister('tooltip');
       });
   }

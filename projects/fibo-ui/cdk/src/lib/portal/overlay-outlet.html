@@ -1,5 +1,7 @@
 @for (portal of registry.openPortalsList(); track portal.id) {
-  <div [style.z-index]="portal.zIndex" style="position: relative">
+  <div [style.z-index]="portal.zIndex"
+       style="position: relative"
+       animate.leave="overlay-leave">
     <ng-container
       *ngTemplateOutlet="portal.templateRef; context: portal.context; injector: portalInjector(portal)"
     ></ng-container>

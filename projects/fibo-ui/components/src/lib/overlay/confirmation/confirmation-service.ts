@@ -44,7 +44,8 @@ export class ConfirmationService {
   }
 
   close() {
-    this.config.set(null);
+    // Don't clear config — data must stay valid during the outlet's
+    // animate.leave="overlay-leave" fade. It gets overwritten on next open().
     this.registry.unregister('confirmation');
   }
 }

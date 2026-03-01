@@ -20,7 +20,8 @@ import {TooltipService} from './tooltip-service';
     .tooltip-enter {
       animation: tooltip-in 150ms ease-out;
     }
-    .tooltip-leave {
+    /* Leave — triggered by outlet's animate.leave="overlay-leave" */
+    .overlay-leave .fibo-tooltip-container {
       animation: tooltip-out 100ms ease-in forwards;
     }
 

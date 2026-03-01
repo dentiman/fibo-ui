@@ -13,8 +13,7 @@ import { FocusTrap, OVERLAY_REF } from '@fibo-ui/cdk';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="fixed inset-0"
-         animate.enter="dialog-enter"
-         animate.leave="dialog-leave">
+         animate.enter="dialog-enter">
 
       <div (click)="close()"
            [class]="'dialog-backdrop fixed inset-0' + (firstDialog ? ' bg-black/30 dark:bg-black/50' : '')">
@@ -43,14 +42,11 @@ import { FocusTrap, OVERLAY_REF } from '@fibo-ui/cdk';
       animation: dialog-content-in 200ms ease-out;
     }
 
-    /* Leave */
-    .dialog-leave {
+    /* Leave — triggered by outlet's animate.leave="overlay-leave" */
+    .overlay-leave .dialog-backdrop {
       animation: dialog-fade-out 150ms ease-in forwards;
     }
-    .dialog-leave .dialog-backdrop {
-      animation: dialog-fade-out 150ms ease-in forwards;
-    }
-    .dialog-leave .dialog-content {
+    .overlay-leave .dialog-content {
       animation: dialog-content-out 150ms ease-in forwards;
     }
 

@@ -35,14 +35,11 @@ const DEFAULT_CONFIG = {
       animation: confirm-content-in 200ms ease-out;
     }
 
-    /* Leave */
-    .confirm-leave {
+    /* Leave — triggered by outlet's animate.leave="overlay-leave" */
+    .overlay-leave .confirm-backdrop {
       animation: confirm-fade-out 150ms ease-in forwards;
     }
-    .confirm-leave .confirm-backdrop {
-      animation: confirm-fade-out 150ms ease-in forwards;
-    }
-    .confirm-leave .confirm-content {
+    .overlay-leave .confirm-content {
       animation: confirm-content-out 150ms ease-in forwards;
     }
 
