@@ -23,7 +23,6 @@ import { SelectItem } from './select';
     PopoverTriggerToggle,
     Checkbox
   ],
-  hostDirectives: [PopoverTrigger],
   host: {
     'class': 'block',
   },

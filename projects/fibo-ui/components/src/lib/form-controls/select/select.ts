@@ -25,7 +25,6 @@ export interface SelectItem {
     FormFieldControl,
     PopoverTriggerToggle
   ],
-  hostDirectives: [PopoverTrigger],
 
   host: {
     'class': 'block',
