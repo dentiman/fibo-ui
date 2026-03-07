@@ -10,7 +10,13 @@ import {
   SelectMulti,
   SelectOne,
 } from '@fibo-ui/cdk';
-import { Calendar, Checkbox, FormFieldControl, SelectItem } from '@fibo-ui/components';
+import {
+  Calendar,
+  Checkbox,
+  fieldErrorMessage,
+  FormFieldControl,
+  SelectItem,
+} from '@fibo-ui/components';
 import { LucideAngularModule } from 'lucide-angular';
 
 interface RegistrationData {
@@ -40,28 +46,48 @@ interface RegistrationData {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto w-90 p-8 space-y-4">
-
       <fibo-form-field-control
-        [formField]="registrationForm.name" [clearValue]="''"
-        label="Name" iconEnd="user">
-        <input [formField]="registrationForm.name"
-               type="text" placeholder="Enter full name" class="text-field-input" />
+        [formField]="registrationForm.name"
+        [clearValue]="''"
+        label="Name"
+        iconEnd="user"
+      >
+        <input
+          [formField]="registrationForm.name"
+          type="text"
+          placeholder="Enter full name"
+          class="text-field-input"
+        />
       </fibo-form-field-control>
+      @if (nameError(); as error) {
+        <div class="form-field-error">{{ error }}</div>
+      }
 
       <fibo-form-field-control
-        fiboPopoverTriggerToggle [content]="positionTpl"
+        fiboPopoverTriggerToggle
+        [content]="positionTpl"
         [formField]="registrationForm.position"
-        label="Position" iconEnd="chevron-down">
-
+        label="Position"
+        iconEnd="chevron-down"
+      >
         <div class="text-sm" [class.from-field-placeholder]="!positionLabel()">
           {{ positionLabel() || 'Select position' }}
         </div>
       </fibo-form-field-control>
+      @if (positionError(); as error) {
+        <div class="form-field-error">{{ error }}</div>
+      }
       <ng-template #positionTpl let-trigger>
-        <div fiboPopover [trigger]="trigger" [matchWidth]="true"
-             fiboDataList (itemTriggered)="trigger.close()"
-             fiboSelectOne [(value)]="registrationForm.position().value"
-             class="popover-container">
+        <div
+          fiboPopover
+          [trigger]="trigger"
+          [matchWidth]="true"
+          fiboDataList
+          (itemTriggered)="trigger.close()"
+          fiboSelectOne
+          [(value)]="registrationForm.position().value"
+          class="popover-container"
+        >
           @for (item of positions; track item.value) {
             <a fiboDataListItem [value]="item.value" class="datalist-item">
               {{ item.label }}
@@ -70,32 +96,50 @@ interface RegistrationData {
         </div>
       </ng-template>
 
-      <fibo-form-field-control fiboPopoverTriggerClick [content]="calTpl"
+      <fibo-form-field-control
+        fiboPopoverTriggerClick
+        [content]="calTpl"
         [formField]="registrationForm.birthDate"
-        label="Birth Date" iconEnd="calendar-days" [clearValue]="''">
-
-        <input [formField]="registrationForm.birthDate"
-               placeholder="YYYY-MM-DD" class="text-field-input" />
+        label="Birth Date"
+        iconEnd="calendar-days"
+        [clearValue]="''"
+      >
+        <input
+          [formField]="registrationForm.birthDate"
+          placeholder="YYYY-MM-DD"
+          class="text-field-input"
+        />
       </fibo-form-field-control>
+      @if (birthDateError(); as error) {
+        <div class="form-field-error">{{ error }}</div>
+      }
       <ng-template #calTpl let-trigger>
-        <fibo-calendar fiboPopover
-                       fiboSelectDate [(value)]="registrationForm.birthDate().value"
-                       (itemTriggered)="trigger.close()"
-                       class="popover-container" />
+        <fibo-calendar
+          fiboPopover
+          fiboSelectDate
+          [(value)]="registrationForm.birthDate().value"
+          (itemTriggered)="trigger.close()"
+          class="popover-container"
+        />
       </ng-template>
 
-      <fibo-form-field-control fiboPopoverTriggerToggle [content]="skillsTpl"
+      <fibo-form-field-control
+        fiboPopoverTriggerToggle
+        [content]="skillsTpl"
         [formField]="registrationForm.skills"
-        label="Skills" iconEnd="chevron-down">
-
+        label="Skills"
+        iconEnd="chevron-down"
+      >
         <div class="w-full flex flex-wrap gap-x-1 gap-y-1 -mx-1">
           @for (item of selectedSkills(); track item.value) {
             <div class="flex items-center gap-1 btn btn-sm h-6 px-1.5 min-w-0">
               <span class="truncate flex-1 text-xs font-medium">{{ item.label }}</span>
-              <button type="button"
-                      class="rounded-full cursor-pointer flex-shrink-0 btn-text p-0.5 hover:bg-black/5 dark:hover:bg-white/5"
-                      (click)="removeSkill(item.value); $event.stopPropagation()"
-                      (keydown)="$event.stopPropagation()">
+              <button
+                type="button"
+                class="rounded-full cursor-pointer flex-shrink-0 btn-text p-0.5 hover:bg-black/5 dark:hover:bg-white/5"
+                (click)="removeSkill(item.value); $event.stopPropagation()"
+                (keydown)="$event.stopPropagation()"
+              >
                 <lucide-icon name="x" size="12"></lucide-icon>
               </button>
             </div>
@@ -105,14 +149,26 @@ interface RegistrationData {
           }
         </div>
       </fibo-form-field-control>
+      @if (skillsError(); as error) {
+        <div class="form-field-error">{{ error }}</div>
+      }
       <ng-template #skillsTpl let-trigger>
-        <div fiboPopover [trigger]="trigger" [matchWidth]="true"
-             fiboDataList
-             fiboSelectMulti [(value)]="registrationForm.skills().value"
-             class="popover-container">
+        <div
+          fiboPopover
+          [trigger]="trigger"
+          [matchWidth]="true"
+          fiboDataList
+          fiboSelectMulti
+          [(value)]="registrationForm.skills().value"
+          class="popover-container"
+        >
           @for (item of skillItems; track item.value) {
-            <a fiboDataListItem [value]="item.value" #option="DataListItem"
-               class="datalist-item items-center">
+            <a
+              fiboDataListItem
+              [value]="item.value"
+              #option="DataListItem"
+              class="datalist-item items-center"
+            >
               <fibo-checkbox [readonly]="true" [checked]="option.isSelected()">
                 {{ item.label }}
               </fibo-checkbox>
@@ -160,29 +216,33 @@ export class FormExampleTemplatedFields {
     skills: [],
   });
 
-  readonly registrationForm = form(this.model, schema => {
+  readonly registrationForm = form(this.model, (schema) => {
     required(schema.name, { message: 'Name is required' });
     required(schema.position, { message: 'Position is required' });
     required(schema.birthDate, { message: 'Birth date is required' });
   });
+  readonly nameError = fieldErrorMessage(this.registrationForm.name);
+  readonly positionError = fieldErrorMessage(this.registrationForm.position);
+  readonly birthDateError = fieldErrorMessage(this.registrationForm.birthDate);
+  readonly skillsError = fieldErrorMessage(this.registrationForm.skills);
 
   readonly positionLabel = computed(() => {
     const v = this.registrationForm.position().value();
     if (v === null) return null;
-    return this.positions.find(i => i.value === v)?.label || null;
+    return this.positions.find((i) => i.value === v)?.label || null;
   });
 
   readonly selectedSkills = computed(() => {
     const v = this.registrationForm.skills().value();
     if (!v || !Array.isArray(v)) return [];
-    return this.skillItems.filter(i => i.value !== null && v.includes(i.value as string));
+    return this.skillItems.filter((i) => i.value !== null && v.includes(i.value as string));
   });
 
   removeSkill(val: string | number | null) {
     if (val === null) return;
     const current = this.registrationForm.skills().value();
     if (!current || !Array.isArray(current)) return;
-    this.registrationForm.skills().value.set(current.filter(v => v !== val));
+    this.registrationForm.skills().value.set(current.filter((v) => v !== val));
   }
 
   onSubmit() {
