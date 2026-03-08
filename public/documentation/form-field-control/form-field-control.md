@@ -20,6 +20,12 @@ A `FormFieldControl` wraps any native input (or custom content) and adds a label
 <fibo-form-field-control label="Search" iconStart="search" iconEnd="arrow-right">
   <input type="text" placeholder="Search..." class="text-field-input" />
 </fibo-form-field-control>
+
+<div class="form-field-variant-inline">
+  <fibo-form-field-control label="Role" iconEnd="chevron-down">
+    <div class="text-sm from-field-placeholder">Select role</div>
+  </fibo-form-field-control>
+</div>
 ```
 
 ```ts {example="form-field-control-basic"}
@@ -30,6 +36,37 @@ A `FormFieldControl` wraps any native input (or custom content) and adds a label
   template: '...',
 })
 export class FormFieldControlBasicExample {}
+```
+
+## Layout Variants
+
+`FormFieldControl` exposes stable internal slot classes, and layout variants can be applied entirely from global CSS:
+
+- default layout from `form-fields.css`: the label is rendered above the content.
+- `.form-field-variant-inline`: keeps the icons at the edges, but places the label inline to the left of the content.
+
+For component usage, wrap the field with a global variant class:
+
+```html
+<div class="form-field-variant-inline">
+  <fibo-form-field-control label="Status" iconEnd="chevron-down">
+    <div class="text-sm">Active</div>
+  </fibo-form-field-control>
+</div>
+```
+
+For manual templating with `fiboFormField` / `fiboFormFieldTrigger`, use the same modifier classes in CSS:
+
+```html
+<button class="form-field-control">
+  <div class="form-field-body">
+    <label class="form-field-label">Status</label>
+    <div class="form-field-content">
+      <div class="text-sm">Active</div>
+    </div>
+  </div>
+  <lucide-icon name="chevron-down" size="16" class="form-field-icon form-field-icon-end"></lucide-icon>
+</button>
 ```
 
 ## Signal Forms Integration
@@ -285,7 +322,10 @@ export class FormExample {
 | Class | Element | Description |
 |-------|---------|-------------|
 | `.form-field-control` | Host | Main container — flex row with gap |
-| `.form-field-label` | `<label>` | Floating label above the projected content |
+| `.form-field-variant-inline` | Wrapper | Global modifier that switches descendants to inline label layout |
+| `.form-field-body` | Inner wrapper | Variant-aware layout wrapper for label/content |
+| `.form-field-content` | Inner wrapper | Content slot that stretches between label and trailing icons |
+| `.form-field-label` | `<label>` | Label element used by both layout variants |
 | `.form-field-icon` | `<lucide-icon>` | Start and end icons |
 | `.form-field-icon-end` | `<lucide-icon>` | Additional class on the end icon |
 | `.form-field-clear-icon` | `<lucide-icon>` | The clear (X) button |

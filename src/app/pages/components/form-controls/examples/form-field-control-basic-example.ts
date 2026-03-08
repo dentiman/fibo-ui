@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormFieldControl } from '@fibo-ui/components';
 
 @Component({
@@ -18,6 +18,12 @@ import { FormFieldControl } from '@fibo-ui/components';
       <fibo-form-field-control label="Search" iconStart="search" iconEnd="arrow-right">
         <input type="text" placeholder="Search..." class="text-field-input" />
       </fibo-form-field-control>
+
+      <div class="form-field-variant-inline">
+        <fibo-form-field-control label="Role" iconEnd="chevron-down">
+          <div class="text-sm from-field-placeholder">Select role</div>
+        </fibo-form-field-control>
+      </div>
     </div>
   `,
 })

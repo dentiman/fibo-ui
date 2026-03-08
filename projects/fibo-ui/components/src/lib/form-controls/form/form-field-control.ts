@@ -11,7 +11,7 @@ import { LucideAngularModule } from 'lucide-angular';
   },
   template: `
     <div
-      class="form-field-control flex items-center gap-2"
+      class="form-field-control"
       [attr.aria-disabled]="disabled() || null"
       [attr.aria-required]="required() || null"
       [attr.data-error]="hasError() || null"
@@ -21,11 +21,13 @@ import { LucideAngularModule } from 'lucide-angular';
       @if (iconStart()) {
         <lucide-icon [name]="iconStart()" size="16" class="form-field-icon shrink-0"></lucide-icon>
       }
-      <div class="flex flex-col justify-center flex-1 min-w-0 gap-0 ">
+      <div class="form-field-body">
         @if (label()) {
-          <label [for]="id()" class="form-field-label mt-1">{{ label() }}</label>
+          <label [for]="id()" class="form-field-label">{{ label() }}</label>
         }
-        <ng-content></ng-content>
+        <div class="form-field-content">
+          <ng-content></ng-content>
+        </div>
       </div>
       @if (canClear()) {
         <lucide-icon

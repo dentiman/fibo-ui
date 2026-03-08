@@ -1,5 +1,8 @@
 @layer components {
     .form-field-control {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
         text-align: left;
         min-height: 2.25rem;
         /* min-h-9 */
@@ -83,6 +86,46 @@
         }
 
 
+    }
+
+    .form-field-body {
+        display: flex;
+        flex: 1 1 0%;
+        min-width: 0;
+    }
+
+    .form-field-content {
+        display: flex;
+        align-items: center;
+        flex: 1 1 0%;
+        min-width: 0;
+    }
+
+    .form-field-body {
+        flex-direction: column;
+        justify-content: center;
+        gap: 0;
+    }
+
+    .form-field-label {
+        margin-top: 0.25rem;
+    }
+
+    .form-field-variant-inline .form-field-body {
+        align-items: center;
+        gap: 0.75rem;
+        flex-direction: row;
+    }
+
+    .form-field-variant-inline .form-field-label {
+        flex-shrink: 0;
+        margin-top: 0;
+        line-height: 1rem;
+        white-space: nowrap;
+    }
+
+    .form-field-variant-inline .form-field-content {
+        justify-content: flex-start;
     }
 
     .text-field-input {

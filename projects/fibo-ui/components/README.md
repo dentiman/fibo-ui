@@ -116,6 +116,8 @@ Low-level wrapper providing label, icons, and clear button for custom form field
 </fibo-form-field-control>
 ```
 
+Use global wrapper classes such as `.form-field-variant-inline` to override the default layout without changing component APIs.
+
 **Inputs:** `value: model<unknown>`, `label`, `iconStart`, `iconEnd`, `clearValue`, `required`, `disabled`, `touched`, `invalid`, `dirty`, `errors`
 
 ---

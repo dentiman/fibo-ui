@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { FormField, form, required, email } from '@angular/forms/signals';
+import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { FormField, form, required } from '@angular/forms/signals';
 import {
   TextField,
   Select,
@@ -20,7 +20,12 @@ interface RegistrationData {
   imports: [FormField, TextField, Select, MultiSelect, DatePickerField],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="mx-auto w-90 p-8 space-y-4">
+    <div class="mx-auto w-[26rem] p-8 space-y-4">
+      <div class="space-y-1">
+        <h1 class="text-2xl font-bold">{{ title() }}</h1>
+        <p class="text-sm text-foreground-secondary">{{ description() }}</p>
+      </div>
+
       <fibo-text-field
         [formField]="registrationForm.name"
         label="Name"
@@ -60,6 +65,9 @@ interface RegistrationData {
   `,
 })
 export class FormExample {
+  readonly title = input('Form Example');
+  readonly description = input('Registration form demo built from fibo form controls.');
+
   readonly positions: SelectItem[] = [
     { label: 'Developer', value: 'developer' },
     { label: 'Designer', value: 'designer' },

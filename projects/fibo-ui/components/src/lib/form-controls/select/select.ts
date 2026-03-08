@@ -50,6 +50,7 @@ export interface SelectItem {
         {{ selectedValue() || placeholder() }}
       </div>
     </fibo-form-field-control>
+
     @if (errorMessage(); as error) {
       <div class="form-field-error">{{ error }}</div>
     }
