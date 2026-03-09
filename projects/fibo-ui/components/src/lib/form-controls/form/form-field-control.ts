@@ -1,4 +1,4 @@
-import { Component, input, model, computed } from '@angular/core';
+import { Component, ElementRef, inject, input, model, computed } from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
 import { LucideAngularModule } from 'lucide-angular';
 
@@ -8,6 +8,7 @@ import { LucideAngularModule } from 'lucide-angular';
   imports: [LucideAngularModule],
   host: {
     class: 'block',
+    '(click)': 'focusInput($event)',
   },
   template: `
     <div
@@ -48,6 +49,8 @@ import { LucideAngularModule } from 'lucide-angular';
   `,
 })
 export class FormFieldControl implements FormValueControl<unknown> {
+  private element = inject(ElementRef<HTMLElement>).nativeElement;
+
   id = input<string>('');
   value = model<unknown>();
 
@@ -66,6 +69,13 @@ export class FormFieldControl implements FormValueControl<unknown> {
 
   hasError = computed(() => this.invalid() && this.touched());
   canClear = computed(() => this.clearValue() !== undefined && this.value() !== this.clearValue());
+
+  focusInput(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (target.closest('input,textarea,select')) return;
+    const focusable = this.element.querySelector('input,textarea,select') as HTMLElement | null;
+    focusable?.focus();
+  }
 
   clear() {
     if (this.disabled()) return;

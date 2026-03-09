@@ -14,6 +14,7 @@ import { Calendar } from '../calendar/calendar';
   template: `
     <fibo-form-field-control
       fiboPopoverTriggerClick
+      [delegatesFocus]="true"
       [content]="calendarTpl"
       [id]="id()"
       [label]="label()"

@@ -11,9 +11,10 @@ export interface KeydownDelegate {
   selector: '[fiboPopoverTrigger]',
   exportAs: 'PopoverTrigger',
   host: {
-    '[attr.tabindex]': 'isListItem ? null : "0"',
+    '[attr.tabindex]': 'isListItem ? null : (delegatesFocus() ? "-1" : "0")',
     '[attr.aria-expanded]': 'isOpen() || null',
     '(keydown)': 'onKeydown($event)',
+    '(focus)': 'onFocus()',
     '(focusout)': 'onFocusOut($event)',
   },
 })
@@ -24,6 +25,7 @@ export class PopoverTrigger {
 
   content = input<TemplateRef<any>>();
   overlayCategory = model<OverlayCategory>('popover');
+  delegatesFocus = input(false);
 
   keydownDelegate = signal<KeydownDelegate | null>(null);
 
@@ -67,6 +69,15 @@ export class PopoverTrigger {
     }
   }
 
+  onFocus() {
+    if (this.delegatesFocus()) {
+      const focusable = this.element.querySelector(
+        'input,textarea,select,button,[tabindex="0"]'
+      ) as HTMLElement | null;
+      focusable?.focus();
+    }
+  }
+
   onKeydown(event: KeyboardEvent): void {
     if (!this.isListItem) {
       this.keydownDelegate()?.onKeydown(event);
@@ -94,7 +105,7 @@ export class PopoverTrigger {
   hostDirectives: [
     {
       directive: PopoverTrigger,
-      inputs: ['content', 'overlayCategory'],
+      inputs: ['content', 'overlayCategory', 'delegatesFocus'],
     },
   ],
   host: {
@@ -112,10 +123,11 @@ export class PopoverTriggerClick {
   hostDirectives: [
     {
       directive: PopoverTrigger,
-      inputs: ['content', 'overlayCategory'],
+      inputs: ['content', 'overlayCategory', 'delegatesFocus'],
     },
   ],
   host: {
+    '(keydown.enter)': 'popoverTrigger.toggle()',
     '(keydown.escape)': 'popoverTrigger.close()',
     '(click)': 'popoverTrigger.toggle()',
   },
