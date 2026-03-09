@@ -1,18 +1,39 @@
 @layer components {
     .form-field-control {
+        --ff-control-min-height: 2.25rem;
+        --ff-control-padding-x: 0.75rem;
+        --ff-control-padding-y: 0.25rem;
+        --ff-control-width: 100%;
+        --ff-control-max-width: none;
+
+        --ff-body-direction: column;
+        --ff-body-align: stretch;
+        --ff-body-gap: 0rem;
+
+        --ff-label-margin-top: 0.25rem;
+        --ff-label-font-size: 0.75rem;
+        --ff-label-line-height: 0.7rem;
+        --ff-label-white-space: normal;
+
+        --ff-content-justify: flex-start;
+        --ff-content-flex: 1 1 0%;
+        --ff-content-min-width: 0;
+
         display: flex;
         align-items: center;
         gap: 0.5rem;
         text-align: left;
-        min-height: 2.25rem;
+        min-height: var(--ff-control-min-height);
         /* min-h-9 */
         cursor: default;
         border-radius: 0.375rem;
         /* rounded-md */
         box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
         /* shadow-xs */
-        padding: 0.25rem 0.75rem;
+        padding: var(--ff-control-padding-y) var(--ff-control-padding-x);
         /* px-3 py-1 */
+        width: var(--ff-control-width);
+        max-width: var(--ff-control-max-width);
 
         outline-width: 1px;
         outline-style: solid;
@@ -89,43 +110,70 @@
     }
 
     .form-field-body {
+        position: relative;
         display: flex;
         flex: 1 1 0%;
         min-width: 0;
+        flex-direction: var(--ff-body-direction);
+        align-items: var(--ff-body-align);
+        justify-content: center;
+        gap: var(--ff-body-gap);
     }
 
     .form-field-content {
         display: flex;
         align-items: center;
-        flex: 1 1 0%;
+        justify-content: var(--ff-content-justify);
+        flex: var(--ff-content-flex);
+        min-width: var(--ff-content-min-width);
+    }
+
+    .ff-label-inline .form-field-control {
+        --ff-body-direction: row;
+        --ff-body-align: center;
+        --ff-body-gap: 0.75rem;
+
+        --ff-label-margin-top: 0;
+        --ff-label-font-size: 0.875rem;
+        --ff-label-line-height: 1.25rem;
+        --ff-label-white-space: nowrap;
+    }
+
+    .ff-density-compact .form-field-control {
+        --ff-control-min-height: 2rem;
+        --ff-control-padding-x: 0.625rem;
+        --ff-control-padding-y: 0.125rem;
+    }
+
+    .ff-filter-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .ff-filter-bar > * {
+        flex: 0 0 auto;
         min-width: 0;
     }
 
-    .form-field-body {
-        flex-direction: column;
-        justify-content: center;
-        gap: 0;
+    .ff-filter-bar .form-field-control {
+        --ff-control-width: auto;
+        --ff-content-flex: 0 0 auto;
     }
 
-    .form-field-label {
-        margin-top: 0.25rem;
+    .ff-filter-bar .form-field-body {
+        flex: 0 1 auto;
     }
 
-    .form-field-variant-inline .form-field-body {
-        align-items: center;
-        gap: 0.75rem;
-        flex-direction: row;
+    .ff-filter-bar .form-field-content {
+        flex: 0 1 auto;
     }
 
-    .form-field-variant-inline .form-field-label {
-        flex-shrink: 0;
-        margin-top: 0;
-        line-height: 1rem;
-        white-space: nowrap;
-    }
-
-    .form-field-variant-inline .form-field-content {
-        justify-content: flex-start;
+    .ff-filter-bar .text-field-input {
+        width: auto;
+        min-width: 6ch;
+        field-sizing: content;
     }
 
     .text-field-input {
@@ -198,11 +246,12 @@
     }
 
     .form-field-label {
-        font-size: 0.75rem;
-        /* text-xs */
-        line-height: 0.7rem;
+        font-size: var(--ff-label-font-size);
+        line-height: var(--ff-label-line-height);
         display: block;
         /* block */
+        margin-top: var(--ff-label-margin-top);
+        white-space: var(--ff-label-white-space);
 
         transition-property: color;
         /* transition-colors */

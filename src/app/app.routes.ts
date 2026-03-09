@@ -11,9 +11,7 @@ import { ListboxPageComponent } from './pages/components/data-display/listbox-pa
 import { LoadingSpinPageComponent } from './pages/components/data-display/loading-spin-page';
 import { TablePageComponent } from './pages/components/data-display/table-page';
 import { ComponentsFieldsFormComponent } from './pages/components/examples/components-fields-form';
-import { FormExampleInlinePageComponent } from './pages/components/examples/form-example-inline-page';
-import { FormExampleLabelTopPageComponent } from './pages/components/examples/form-example-label-top-page';
-import { FormExample } from './pages/components/form-controls/examples/form-example';
+import { FormExamplesPageComponent } from './pages/components/form-controls/form-examples-page';
 import { PlaygroundPageComponent } from './pages/components/examples/playground-page';
 import { ThemeDemoComponent } from './pages/components/examples/theme-demo';
 import { TreeMenuPage } from './pages/components/examples/tree-menu-page';
@@ -95,15 +93,12 @@ export const routes: Routes = [
       },
       {
         path: 'form-example',
-        component: FormExample
+        pathMatch: 'full',
+        redirectTo: 'form-examples'
       },
       {
-        path: 'form-example-inline',
-        component: FormExampleInlinePageComponent
-      },
-      {
-        path: 'form-example-label-top',
-        component: FormExampleLabelTopPageComponent
+        path: 'form-examples',
+        component: FormExamplesPageComponent
       },
       {
         path: 'components-fields-form',

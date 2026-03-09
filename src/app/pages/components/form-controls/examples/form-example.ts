@@ -20,11 +20,13 @@ interface RegistrationData {
   imports: [FormField, TextField, Select, MultiSelect, DatePickerField],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="mx-auto w-[26rem] p-8 space-y-4">
-      <div class="space-y-1">
-        <h1 class="text-2xl font-bold">{{ title() }}</h1>
-        <p class="text-sm text-foreground-secondary">{{ description() }}</p>
-      </div>
+    <div class="mx-auto w-full max-w-[26rem] min-w-0 p-2 space-y-4">
+      @if (showHeader()) {
+        <div class="space-y-1">
+          <h1 class="text-2xl font-bold">{{ title() }}</h1>
+          <p class="text-sm text-foreground-secondary">{{ description() }}</p>
+        </div>
+      }
 
       <fibo-text-field
         [formField]="registrationForm.name"
@@ -67,6 +69,7 @@ interface RegistrationData {
 export class FormExample {
   readonly title = input('Form Example');
   readonly description = input('Registration form demo built from fibo form controls.');
+  readonly showHeader = input(true);
 
   readonly positions: SelectItem[] = [
     { label: 'Developer', value: 'developer' },

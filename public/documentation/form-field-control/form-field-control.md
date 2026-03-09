@@ -21,7 +21,7 @@ A `FormFieldControl` wraps any native input (or custom content) and adds a label
   <input type="text" placeholder="Search..." class="text-field-input" />
 </fibo-form-field-control>
 
-<div class="form-field-variant-inline">
+<div class="ff-label-inline ff-density-compact">
   <fibo-form-field-control label="Role" iconEnd="chevron-down">
     <div class="text-sm from-field-placeholder">Select role</div>
   </fibo-form-field-control>
@@ -43,12 +43,13 @@ export class FormFieldControlBasicExample {}
 `FormFieldControl` exposes stable internal slot classes, and layout variants can be applied entirely from global CSS:
 
 - default layout from `form-fields.css`: the label is rendered above the content.
-- `.form-field-variant-inline`: keeps the icons at the edges, but places the label inline to the left of the content.
+- `.ff-label-inline`: keeps the icons at the edges, but places the label inline to the left of the content.
+- `.ff-density-compact`: reduces field height and padding for dense toolbars or admin forms.
 
 For component usage, wrap the field with a global variant class:
 
 ```html
-<div class="form-field-variant-inline">
+<div class="ff-label-inline ff-density-compact">
   <fibo-form-field-control label="Status" iconEnd="chevron-down">
     <div class="text-sm">Active</div>
   </fibo-form-field-control>
@@ -322,7 +323,8 @@ export class FormExample {
 | Class | Element | Description |
 |-------|---------|-------------|
 | `.form-field-control` | Host | Main container — flex row with gap |
-| `.form-field-variant-inline` | Wrapper | Global modifier that switches descendants to inline label layout |
+| `.ff-label-inline` | Wrapper | Global modifier that switches descendants to inline label layout |
+| `.ff-density-compact` | Wrapper | Global modifier that makes fields denser |
 | `.form-field-body` | Inner wrapper | Variant-aware layout wrapper for label/content |
 | `.form-field-content` | Inner wrapper | Content slot that stretches between label and trailing icons |
 | `.form-field-label` | `<label>` | Label element used by both layout variants |

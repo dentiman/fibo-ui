@@ -19,7 +19,7 @@ import { FormFieldControl } from '@fibo-ui/components';
         <input type="text" placeholder="Search..." class="text-field-input" />
       </fibo-form-field-control>
 
-      <div class="form-field-variant-inline">
+      <div class="ff-label-inline ff-density-compact">
         <fibo-form-field-control label="Role" iconEnd="chevron-down">
           <div class="text-sm from-field-placeholder">Select role</div>
         </fibo-form-field-control>
