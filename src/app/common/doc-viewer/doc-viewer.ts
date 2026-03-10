@@ -10,10 +10,13 @@ import {
   effect,
   inject,
   input,
+  output,
   computed,
 } from '@angular/core';
 import { ShikiHighlighterService } from '../shiki-highlighter.service';
 import { EXAMPLE_REGISTRY } from './example-registry';
+import { TocEntry } from './heading-anchor-plugin';
+import { TocService } from '../toc.service';
 
 @Component({
   selector: 'doc-viewer',
@@ -31,12 +34,14 @@ import { EXAMPLE_REGISTRY } from './example-registry';
 })
 export class DocViewer {
   readonly docUrl = input.required<string>();
+  readonly tocChange = output<TocEntry[]>();
 
   private readonly highlighter = inject(ShikiHighlighterService);
   private readonly elRef = inject(ElementRef);
   private readonly appRef = inject(ApplicationRef);
   private readonly destroyRef = inject(DestroyRef);
   private readonly registry = inject(EXAMPLE_REGISTRY, { optional: true });
+  private readonly tocService = inject(TocService);
 
   private readonly docResource = this.highlighter.createDocResource(
     computed(() => this.docUrl())
@@ -51,11 +56,17 @@ export class DocViewer {
       const result = this.docResource.value();
       if (!result) return;
 
+      this.tocService.set(result.toc);
+      this.tocChange.emit(result.toc);
+
       // Defer to next microtask so Angular renders innerHTML first
       queueMicrotask(() => this.mountExamples(result.examples));
     });
 
-    this.destroyRef.onDestroy(() => this.destroyComponents());
+    this.destroyRef.onDestroy(() => {
+      this.destroyComponents();
+      this.tocService.clear();
+    });
   }
 
   private mountExamples(

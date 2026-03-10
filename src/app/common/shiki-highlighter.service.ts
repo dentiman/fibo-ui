@@ -9,10 +9,15 @@ import {
   extractExamplesPlugin,
   ExtractedBlock,
 } from './doc-viewer/extract-examples-plugin';
+import {
+  headingAnchorPlugin,
+  TocEntry,
+} from './doc-viewer/heading-anchor-plugin';
 
 export type DocRenderResult = {
   html: SafeHtml;
   examples: Map<string, { lang: string; code: string; highlighted: string }[]>;
+  toc: TocEntry[];
 };
 
 @Injectable()
@@ -30,7 +35,10 @@ export class ShikiHighlighterService {
 
   private md = MarkdownItAsync().use(this.shikiPlugin);
 
-  private mdDoc = MarkdownItAsync().use(this.shikiPlugin).use(extractExamplesPlugin);
+  private mdDoc = MarkdownItAsync()
+    .use(this.shikiPlugin)
+    .use(extractExamplesPlugin)
+    .use(headingAnchorPlugin);
 
   createMarkdownResource(url: Signal<string | undefined>) {
     const content = httpResource.text(() => url());
@@ -52,7 +60,7 @@ export class ShikiHighlighterService {
       params: content.value,
       loader: async ({ params }) => {
         if (!params) return null;
-        const env: { examples?: Map<string, ExtractedBlock[]> } = {};
+        const env: { examples?: Map<string, ExtractedBlock[]>; toc?: TocEntry[] } = {};
         const html = await this.mdDoc.renderAsync(params as string, env);
 
         const examples = new Map<
@@ -84,6 +92,7 @@ export class ShikiHighlighterService {
         return {
           html: this.sanitizer.bypassSecurityTrustHtml(html),
           examples,
+          toc: env.toc ?? [],
         };
       },
     });
