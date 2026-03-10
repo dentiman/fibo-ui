@@ -24,16 +24,27 @@ import { TocEntry } from '../common/doc-viewer/heading-anchor-plugin';
         </span>
       </div>
 
-      @for (entry of entries(); track entry.id) {
+      @for (entry of entries(); track entry.id; let first = $first; let last = $last) {
         <a
           fiboDataListItem
           [value]="entry.id"
-          class="group relative flex items-center gap-x-3 rounded-md py-1 text-sm cursor-pointer
-            text-foreground-secondary hover:bg-black/3 dark:hover:bg-white/4 hover:text-foreground
-            aria-selected:bg-black/6 dark:aria-selected:bg-white/8 aria-selected:text-foreground"
-          [style.padding-left.px]="entry.level === 3 ? 28 : 8"
+          class="group relative flex items-center gap-x-2 rounded-md py-1 text-sm cursor-pointer
+            text-foreground-secondary hover:text-foreground
+            aria-selected:text-foreground"
         >
-          <span class="flex-auto">{{ entry.text }}</span>
+          @if (!first) {
+            <div class="absolute top-0 left-[11.5px] h-1/2 w-px bg-gray-300 dark:bg-neutral-700/50"></div>
+          }
+          @if (!last) {
+            <div class="absolute bottom-0 left-[11.5px] h-1/2 w-px bg-gray-300 dark:bg-neutral-700/50"></div>
+          }
+          <div class="relative flex size-6 flex-none items-center justify-center">
+            <div class="size-1.5 rounded-full ring ring-border-primary bg-gray-100 dark:bg-background
+              group-aria-selected:ring-blue-500 group-aria-selected:bg-blue-300
+              dark:group-aria-selected:bg-blue-500">
+            </div>
+          </div>
+          <span class="flex-auto" [class.pl-3]="entry.level === 3">{{ entry.text }}</span>
         </a>
       }
     }
