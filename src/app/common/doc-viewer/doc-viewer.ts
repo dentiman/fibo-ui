@@ -19,6 +19,7 @@ import { EXAMPLE_REGISTRY } from './example-registry';
   selector: 'doc-viewer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  providers: [ShikiHighlighterService],
   template: `
     @if (docHtml()) {
       <div

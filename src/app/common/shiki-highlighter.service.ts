@@ -15,7 +15,7 @@ export type DocRenderResult = {
   examples: Map<string, { lang: string; code: string; highlighted: string }[]>;
 };
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class ShikiHighlighterService {
   private readonly sanitizer = inject(DomSanitizer);
   private readonly themeService = inject(ThemeService);

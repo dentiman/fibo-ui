@@ -5,6 +5,7 @@ import { ShikiHighlighterService } from './shiki-highlighter.service';
 @Component({
   selector: 'app-usage-demo',
   imports: [CommonModule],
+  providers: [ShikiHighlighterService],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div

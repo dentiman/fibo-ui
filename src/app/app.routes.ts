@@ -1,34 +1,5 @@
 import { Routes } from '@angular/router';
 import { AppLayoutComponent } from './layout/app-layout';
-import { InstallationPageComponent } from './pages/getting-started/installation-page';
-import { IntroductionPageComponent } from './pages/getting-started/introduction-page';
-import { CdkDataListPageComponent } from './pages/cdk/data-list-page';
-import { CdkPopoverPageComponent } from './pages/cdk/popover-page';
-import { CdkSelectionModelPageComponent } from './pages/cdk/selection-model-page';
-import { CdkCompositionPageComponent } from './pages/cdk/composition-page';
-import { ButtonDemoPageComponent } from './pages/components/data-display/button-demo-page';
-import { ListboxPageComponent } from './pages/components/data-display/listbox-page';
-import { LoadingSpinPageComponent } from './pages/components/data-display/loading-spin-page';
-import { TablePageComponent } from './pages/components/data-display/table-page';
-import { ComponentsFieldsFormComponent } from './pages/components/examples/components-fields-form';
-import { FormExamplesPageComponent } from './pages/components/form-controls/form-examples-page';
-import { PlaygroundPageComponent } from './pages/components/examples/playground-page';
-import { ThemeDemoComponent } from './pages/components/examples/theme-demo';
-import { TreeMenuPage } from './pages/components/examples/tree-menu-page';
-import { CheckboxPageComponent } from './pages/components/form-controls/checkbox/checkbox-page';
-import { DatepickerPageComponent } from './pages/components/form-controls/datepicker';
-import { DatepickerRangePageComponent } from './pages/components/form-controls/datepicker-range';
-import { FormFieldControlPageComponent } from './pages/components/form-controls/form-field-control-page';
-import { InputPageComponent } from './pages/components/form-controls/input-page';
-import { MultipleSelectPageComponent } from './pages/components/form-controls/multiple-select-page';
-import { SelectPageComponent } from './pages/components/form-controls/select-page';
-import { SwitchPageComponent } from './pages/components/form-controls/switch/switch-page';
-import { ConfirmationPageComponent } from './pages/components/overlays/confirmation-page';
-import { DialogPageComponent } from './pages/components/overlays/dialog-page';
-import { DrawerPageComponent } from './pages/components/overlays/drawer-page';
-import { MenuPageComponent } from './pages/components/overlays/menu-page';
-import { NotificationPageComponent } from './pages/components/overlays/notification-page';
-import { TooltipPageComponent } from './pages/components/overlays/tooltip-page';
 
 export const routes: Routes = [
   {
@@ -37,119 +8,214 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        component: SelectPageComponent
+        loadComponent: () =>
+          import('./pages/components/form-controls/select-page').then(
+            (m) => m.SelectPageComponent,
+          ),
       },
       {
         path: 'getting-started/introduction',
-        component: IntroductionPageComponent,
+        loadComponent: () =>
+          import('./pages/getting-started/introduction-page').then(
+            (m) => m.IntroductionPageComponent,
+          ),
       },
       {
         path: 'getting-started/installation',
-        component: InstallationPageComponent,
+        loadComponent: () =>
+          import('./pages/getting-started/installation-page').then(
+            (m) => m.InstallationPageComponent,
+          ),
       },
       {
         path: 'form-field-control',
-        component: FormFieldControlPageComponent
+        loadComponent: () =>
+          import('./pages/components/form-controls/form-field-control-page').then(
+            (m) => m.FormFieldControlPageComponent,
+          ),
       },
       {
         path: 'input',
-        component: InputPageComponent
+        loadComponent: () =>
+          import('./pages/components/form-controls/input-page').then(
+            (m) => m.InputPageComponent,
+          ),
       },
       {
         path: 'select-multiple',
-        component: MultipleSelectPageComponent
+        loadComponent: () =>
+          import('./pages/components/form-controls/multiple-select-page').then(
+            (m) => m.MultipleSelectPageComponent,
+          ),
       },
       {
         path: 'tooltips',
-        component: TooltipPageComponent
+        loadComponent: () =>
+          import('./pages/components/overlays/tooltip-page').then(
+            (m) => m.TooltipPageComponent,
+          ),
       },
       {
         path: 'menu',
-        component: MenuPageComponent
+        loadComponent: () =>
+          import('./pages/components/overlays/menu-page').then((m) => m.MenuPageComponent),
       },
       {
         path: 'dialog',
-        component: DialogPageComponent
+        loadComponent: () =>
+          import('./pages/components/overlays/dialog-page').then(
+            (m) => m.DialogPageComponent,
+          ),
       },
       {
         path: 'drawer',
-        component: DrawerPageComponent
+        loadComponent: () =>
+          import('./pages/components/overlays/drawer-page').then(
+            (m) => m.DrawerPageComponent,
+          ),
       },
       {
         path: 'confirmation',
-        component: ConfirmationPageComponent
+        loadComponent: () =>
+          import('./pages/components/overlays/confirmation-page').then(
+            (m) => m.ConfirmationPageComponent,
+          ),
       },
       {
         path: 'notifications',
-        component: NotificationPageComponent
+        loadComponent: () =>
+          import('./pages/components/overlays/notification-page').then(
+            (m) => m.NotificationPageComponent,
+          ),
       },
       {
         path: 'datepicker',
-        component: DatepickerPageComponent
+        loadComponent: () =>
+          import('./pages/components/form-controls/datepicker').then(
+            (m) => m.DatepickerPageComponent,
+          ),
       },
       {
         path: 'datepicker-range',
-        component: DatepickerRangePageComponent
+        loadComponent: () =>
+          import('./pages/components/form-controls/datepicker-range').then(
+            (m) => m.DatepickerRangePageComponent,
+          ),
       },
       {
         path: 'form-example',
         pathMatch: 'full',
-        redirectTo: 'form-examples'
+        redirectTo: 'form-examples',
       },
       {
         path: 'form-examples',
-        component: FormExamplesPageComponent
+        loadComponent: () =>
+          import('./pages/components/form-controls/form-examples-page').then(
+            (m) => m.FormExamplesPageComponent,
+          ),
       },
       {
         path: 'components-fields-form',
-        component: ComponentsFieldsFormComponent
+        loadComponent: () =>
+          import('./pages/components/examples/components-fields-form').then(
+            (m) => m.ComponentsFieldsFormComponent,
+          ),
       },
       {
         path: 'switch',
-        component: SwitchPageComponent
+        loadComponent: () =>
+          import('./pages/components/form-controls/switch/switch-page').then(
+            (m) => m.SwitchPageComponent,
+          ),
       },
       {
         path: 'checkbox',
-        component: CheckboxPageComponent
+        loadComponent: () =>
+          import('./pages/components/form-controls/checkbox/checkbox-page').then(
+            (m) => m.CheckboxPageComponent,
+          ),
       },
       {
         path: 'loading-spin',
-        component: LoadingSpinPageComponent
+        loadComponent: () =>
+          import('./pages/components/data-display/loading-spin-page').then(
+            (m) => m.LoadingSpinPageComponent,
+          ),
       },
       {
         path: 'playground',
-        component: PlaygroundPageComponent
+        loadComponent: () =>
+          import('./pages/components/examples/playground-page').then(
+            (m) => m.PlaygroundPageComponent,
+          ),
       },
       {
         path: 'tree-menu',
-        component: TreeMenuPage
+        loadComponent: () =>
+          import('./pages/components/examples/tree-menu-page').then((m) => m.TreeMenuPage),
       },
       {
         path: 'theme-demo',
-        component: ThemeDemoComponent
+        loadComponent: () =>
+          import('./pages/components/examples/theme-demo').then(
+            (m) => m.ThemeDemoComponent,
+          ),
       },
       {
         path: 'listbox',
-        component: ListboxPageComponent
+        loadComponent: () =>
+          import('./pages/components/data-display/listbox-page').then(
+            (m) => m.ListboxPageComponent,
+          ),
       },
       {
         path: 'button-demo',
-        component: ButtonDemoPageComponent
+        loadComponent: () =>
+          import('./pages/components/data-display/button-demo-page').then(
+            (m) => m.ButtonDemoPageComponent,
+          ),
       },
       {
         path: 'table',
-        component: TablePageComponent
+        loadComponent: () =>
+          import('./pages/components/data-display/table-page').then(
+            (m) => m.TablePageComponent,
+          ),
       },
       {
         path: 'cdk',
         children: [
-          { path: 'data-list', component: CdkDataListPageComponent },
-          { path: 'popover', component: CdkPopoverPageComponent },
-          { path: 'selection-model', component: CdkSelectionModelPageComponent },
-          { path: 'composition', component: CdkCompositionPageComponent },
-          { path: '', pathMatch: 'full', redirectTo: 'data-list' }
-        ]
-      }
-    ]
-  }
+          {
+            path: 'data-list',
+            loadComponent: () =>
+              import('./pages/cdk/data-list-page').then(
+                (m) => m.CdkDataListPageComponent,
+              ),
+          },
+          {
+            path: 'popover',
+            loadComponent: () =>
+              import('./pages/cdk/popover-page').then(
+                (m) => m.CdkPopoverPageComponent,
+              ),
+          },
+          {
+            path: 'selection-model',
+            loadComponent: () =>
+              import('./pages/cdk/selection-model-page').then(
+                (m) => m.CdkSelectionModelPageComponent,
+              ),
+          },
+          {
+            path: 'composition',
+            loadComponent: () =>
+              import('./pages/cdk/composition-page').then(
+                (m) => m.CdkCompositionPageComponent,
+              ),
+          },
+          { path: '', pathMatch: 'full', redirectTo: 'data-list' },
+        ],
+      },
+    ],
+  },
 ];
