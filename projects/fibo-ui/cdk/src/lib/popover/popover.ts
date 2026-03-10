@@ -20,7 +20,8 @@ import {OVERLAY_REF} from '../portal/overlay-registry';
 
   host: {
     class: 'fibo-popover-container',
-    '(clickOutside)': 'clickOutsideHandle($event)'
+    '(keydown.escape)': 'close()',
+    '(clickOutside)': 'clickOutsideHandle($event)',
   },
 })
 export class Popover {

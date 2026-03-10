@@ -1,13 +1,13 @@
 import { Component, input, model, signal } from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
-import { SelectDate, Popover, PopoverTriggerClick } from '@fibo-ui/cdk';
+import { SelectDate, Popover, PopoverTriggerClick, FocusTrap } from '@fibo-ui/cdk';
 import { formErrorMessage } from '../form/form-error';
 import { FormFieldControl } from '../form/form-field-control';
 import { Calendar } from '../calendar/calendar';
 
 @Component({
   selector: 'fibo-datepicker',
-  imports: [FormFieldControl, Popover, PopoverTriggerClick, Calendar, SelectDate],
+  imports: [FormFieldControl, Popover, PopoverTriggerClick, Calendar, SelectDate, FocusTrap],
   host: {
     class: 'block',
   },
@@ -46,7 +46,10 @@ import { Calendar } from '../calendar/calendar';
     <ng-template #calendarTpl let-trigger>
       <fibo-calendar
         fiboPopover
+        fiboFocusTrap
+        [restoreFocus]="false"
         fiboSelectDate
+        role="dialog"
         [(value)]="value"
         (itemTriggered)="trigger.close()"
         class="popover-container"

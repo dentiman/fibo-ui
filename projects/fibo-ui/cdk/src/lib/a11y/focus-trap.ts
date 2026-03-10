@@ -1,16 +1,16 @@
 import { afterNextRender, Directive, ElementRef, inject, input, OnDestroy } from '@angular/core';
 
-const FOCUSABLE_SELECTOR = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
+const TABBABLE_SELECTOR = [
+  'a[href]:not([tabindex="-1"])',
+  'button:not([disabled]):not([tabindex="-1"])',
+  'input:not([disabled]):not([tabindex="-1"])',
+  'select:not([disabled]):not([tabindex="-1"])',
+  'textarea:not([disabled]):not([tabindex="-1"])',
   '[tabindex]:not([tabindex="-1"])',
 ].join(', ');
 
-function getFocusableElements(root: HTMLElement): HTMLElement[] {
-  return Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+function getTabbableElements(root: HTMLElement): HTMLElement[] {
+  return Array.from(root.querySelectorAll<HTMLElement>(TABBABLE_SELECTOR)).filter(
     (el) => !el.hasAttribute('disabled') && el.offsetParent !== null,
   );
 }
@@ -38,11 +38,11 @@ export class FocusTrap implements OnDestroy {
     afterNextRender(() => {
       if (this.autoFocus()) {
         this.previouslyFocused = document.activeElement as HTMLElement;
-        const focusable = getFocusableElements(this.elementRef.nativeElement);
+        const focusable = getTabbableElements(this.elementRef.nativeElement);
         if (focusable.length > 0) {
-          focusable[0].focus();
+          focusable[0].focus({ preventScroll: true });
         } else {
-          this.elementRef.nativeElement.focus();
+          this.elementRef.nativeElement.focus({ preventScroll: true });
         }
       }
     });
@@ -51,19 +51,22 @@ export class FocusTrap implements OnDestroy {
   onKeydown(event: KeyboardEvent): void {
     if (!this.enabled() || event.key !== 'Tab') return;
 
-    const focusable = getFocusableElements(this.elementRef.nativeElement);
+    const focusable = getTabbableElements(this.elementRef.nativeElement);
     if (focusable.length === 0) return;
 
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
+    const active = document.activeElement as HTMLElement;
+    const isInsideTrap = this.elementRef.nativeElement.contains(active);
+    const isInTabOrder = focusable.includes(active);
 
     if (event.shiftKey) {
-      if (document.activeElement === first) {
+      if (active === first || (isInsideTrap && !isInTabOrder)) {
         event.preventDefault();
         last.focus();
       }
     } else {
-      if (document.activeElement === last) {
+      if (active === last || (isInsideTrap && !isInTabOrder)) {
         event.preventDefault();
         first.focus();
       }
