@@ -11,6 +11,7 @@ import {LucideAngularModule} from 'lucide-angular';
   hostDirectives: [MenuPanel],
   host: {
     'class': 'popover-container  group min-w-40',
+    'role': 'menu',
   },
   imports: [CommonModule, DataListItem, SubmenuTrigger, RouterLink, LucideAngularModule, Popover],
   templateUrl: './menu.html',

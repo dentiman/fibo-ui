@@ -13,7 +13,8 @@ import {DataListItem} from '@fibo-ui/cdk';
   }],
   host: {
     'class': 'menu-item',
-    '(itemTrigger)': 'menu.menuPanel.closeAll()'
+    'role': 'menuitem',
+    '(itemTrigger)': 'menu.menuPanel.closeAll()',
   }
 })
 export class MenuItem {

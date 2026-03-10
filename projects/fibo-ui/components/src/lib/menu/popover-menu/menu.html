@@ -1,6 +1,6 @@
 @for (item of items(); track idx; let idx = $index) {
   @if (item.children || item.content) {
-    <button fiboSubmenuTrigger [content]="subTpl" [disabled]="!!item.disabled"
+    <button fiboSubmenuTrigger role="menuitem" [content]="subTpl" [disabled]="!!item.disabled"
             class="datalist-item py-1 px-2 w-full rounded-md  items-center  group text-sm"
     >
       @if (item?.icon) {
@@ -31,20 +31,20 @@
 
   } @else {
     @if (item.url) {
-      <a fiboDataListItem [value]="item" [disabled]="!!item.disabled" (itemTrigger)="menuPanel.closeAll()"
+      <a fiboDataListItem role="menuitem" [value]="item" [disabled]="!!item.disabled" (itemTrigger)="menuPanel.closeAll()"
          [routerLink]="item.url"
          class="datalist-item ">
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
       </a>
     } @else if (item.callback) {
       <a class="datalist-item py-1 px-2 rounded-md relative group text-sm"
-         fiboDataListItem [disabled]="!!item.disabled"
+         fiboDataListItem role="menuitem" [disabled]="!!item.disabled"
          (itemTrigger)="item.callback(); menuPanel.closeAll()">
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
       </a>
     } @else if (item.value !== undefined) {
       <a class="datalist-item py-1 px-2 rounded-md relative group text-sm"
-         fiboDataListItem [disabled]="!!item.disabled"
+         fiboDataListItem role="menuitem" [disabled]="!!item.disabled"
          [value]="item.value"
          (itemTrigger)="menuPanel.closeAll()">
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>

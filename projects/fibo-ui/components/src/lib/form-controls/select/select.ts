@@ -35,6 +35,8 @@ export interface SelectItem {
   template: `
     <fibo-form-field-control
       fiboPopoverTriggerToggle
+      role="combobox"
+      aria-haspopup="listbox"
       [content]="selectTpl"
       [label]="label()"
       iconEnd="chevron-down"
@@ -58,6 +60,7 @@ export interface SelectItem {
     <ng-template #selectTpl let-trigger>
       <div
         fiboPopover
+        role="listbox"
         [trigger]="trigger"
         [matchWidth]="true"
         fiboDataList
@@ -67,7 +70,7 @@ export interface SelectItem {
         class="popover-container"
       >
         @for (item of items(); track item.value) {
-          <a fiboDataListItem [value]="item.value" class="datalist-item">
+          <a fiboDataListItem role="option" [value]="item.value" class="datalist-item">
             {{ item.label }}
           </a>
         }

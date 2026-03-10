@@ -39,6 +39,7 @@ import { MENU_PANEL } from './menu-panel';
     },
   ],
   host: {
+    'aria-haspopup': 'menu',
     '(keydown.enter)': 'popoverTrigger.open()',
     '(keydown.escape)': 'popoverTrigger.close()',
     '(keydown.arrowright)': 'popoverTrigger.keydownDelegate()?.navigateNext?.($event)',

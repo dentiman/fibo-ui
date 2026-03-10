@@ -32,6 +32,8 @@ import { SelectItem } from './select';
   template: `
     <fibo-form-field-control
       fiboPopoverTriggerToggle
+      role="combobox"
+      aria-haspopup="listbox"
       [content]="multiSelectTpl"
       [label]="label()"
       iconEnd="chevron-down"
@@ -68,6 +70,8 @@ import { SelectItem } from './select';
     <ng-template #multiSelectTpl let-trigger>
       <div
         fiboPopover
+        role="listbox"
+        aria-multiselectable="true"
         [trigger]="trigger"
         [matchWidth]="true"
         fiboDataList
@@ -78,6 +82,7 @@ import { SelectItem } from './select';
         @for (item of items(); track item.value) {
           <a
             fiboDataListItem
+            role="option"
             [value]="item.value"
             #option="DataListItem"
             class="datalist-item items-center"
