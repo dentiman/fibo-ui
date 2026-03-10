@@ -65,7 +65,17 @@ export class PopoverTrigger {
 
   close() {
     if (this.isOpen()) {
+      const activeEl = document.activeElement as HTMLElement | null;
+      const shouldRestoreFocus =
+        !activeEl ||
+        activeEl === document.body ||
+        !!activeEl.closest(`[data-portal-id="${this.portalId}"]`);
+
       this.isOpen.set(false);
+
+      if (shouldRestoreFocus) {
+        this.element.focus();
+      }
     }
   }
 
@@ -90,9 +100,11 @@ export class PopoverTrigger {
 
     const relatedElement =
       relatedTarget instanceof Element ? relatedTarget : relatedTarget.parentElement;
-    const isMovingToPortal = !!relatedElement?.closest('fibo-overlay-outlet');
+    const isMovingToOwnPortal = !!relatedElement?.closest(
+      `[data-portal-id="${this.portalId}"]`
+    );
 
-    if (this.element.contains(relatedTarget) || isMovingToPortal) {
+    if (this.element.contains(relatedTarget) || isMovingToOwnPortal) {
       return;
     }
 
