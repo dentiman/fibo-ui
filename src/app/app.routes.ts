@@ -42,6 +42,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'combobox',
+        loadComponent: () =>
+          import('./pages/components/form-controls/combobox-page').then(
+            (m) => m.ComboboxPageComponent,
+          ),
+      },
+      {
         path: 'select-multiple',
         loadComponent: () =>
           import('./pages/components/form-controls/multiple-select-page').then(

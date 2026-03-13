@@ -31,6 +31,7 @@ export * from './lib/overlay/overlay-outlet';
 export * from './lib/form-controls/calendar/calendar';
 
 // Form components and interfaces
+export * from './lib/form-controls/combobox/combobox';
 export * from './lib/form-controls/select/select';
 export * from './lib/form-controls/select/multi-select';
 export * from './lib/form-controls/fields/text-field';
