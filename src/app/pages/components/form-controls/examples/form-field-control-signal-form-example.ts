@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormField, form, required } from '@angular/forms/signals';
-import { DataList, DataListItem, Popover, PopoverTriggerToggle, SelectOne } from '@fibo-ui/cdk';
+import { DataList, DataListItem, DataListKeyboardBridge, KeyboardTarget, Popover, PopoverTriggerToggle, SelectOne } from '@fibo-ui/cdk';
 import { fieldErrorMessage, FormFieldControl, SelectItem } from '@fibo-ui/components';
 
 interface ContactData {
@@ -16,7 +16,9 @@ interface ContactData {
     PopoverTriggerToggle,
     Popover,
     DataList,
+    DataListKeyboardBridge,
     DataListItem,
+    KeyboardTarget,
     SelectOne,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,7 +42,9 @@ interface ContactData {
       }
 
       <fibo-form-field-control
+        fiboKeyboardTarget
         fiboPopoverTriggerToggle
+        #keyboardTarget="KeyboardTarget"
         [content]="roleTpl"
         [formField]="contactForm.role"
         label="Role"
@@ -56,10 +60,11 @@ interface ContactData {
       <ng-template #roleTpl let-trigger>
         <div
           fiboPopover
-          [trigger]="trigger"
           [matchWidth]="true"
+          #popover="Popover"
           fiboDataList
-          (itemTriggered)="trigger.close()"
+          [fiboDataListKeyboardBridge]="keyboardTarget"
+          (itemTriggered)="popover.close()"
           fiboSelectOne
           [(value)]="contactForm.role().value"
           class="popover-container"

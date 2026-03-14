@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import {
   DataList,
+  DataListKeyboardBridge,
   DataListItem,
+  KeyboardTarget,
   Popover,
   PopoverTrigger,
   PopoverTriggerToggle,
@@ -16,25 +18,26 @@ interface PopoverAction {
 
 @Component({
   selector: 'cdk-popover-basic-example',
-  imports: [PopoverTriggerToggle, Popover, DataList, DataListItem, SelectOne],
+  imports: [PopoverTriggerToggle, Popover, DataList, DataListKeyboardBridge, DataListItem, KeyboardTarget, SelectOne],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mx-auto w-full max-w-xl p-6">
       <div class="flex items-center gap-3">
-        <button type="button" #trigger="PopoverTrigger" fiboPopoverTriggerToggle [content]="popoverTpl"
+        <button type="button" #trigger="PopoverTrigger" #keyboardTarget="KeyboardTarget" fiboKeyboardTarget fiboPopoverTriggerToggle [content]="popoverTpl"
                 class="btn btn-primary">
           Toggle popover
         </button>
         <ng-template #popoverTpl let-trigger>
           <div
             fiboPopover
-            [trigger]="trigger"
+            #popover="Popover"
             placement="bottom-start"
             [offset]="8"
             fiboDataList
+            [fiboDataListKeyboardBridge]="keyboardTarget"
             fiboSelectOne
             [(value)]="selectedAction"
-            (itemTriggered)="onActionTriggered(trigger)"
+            (itemTriggered)="popover.close()"
             class="popover-container min-w-72 p-2"
           >
             @for (action of actions; track action.id) {
@@ -63,7 +66,4 @@ export class CdkPopoverBasicExample {
 
   readonly selectedAction = signal<string>('');
 
-  onActionTriggered(trigger: PopoverTrigger): void {
-    trigger.close();
-  }
 }

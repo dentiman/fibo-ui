@@ -44,15 +44,16 @@ import { Calendar } from '../calendar/calendar';
       <div class="form-field-error">{{ error }}</div>
     }
 
-    <ng-template #calendarTpl let-trigger>
+    <ng-template #calendarTpl>
       <fibo-calendar
         fiboPopover
+        #popover="Popover"
         fiboFocusTrap
         [restoreFocus]="false"
         fiboSelectDate
         role="dialog"
         [(value)]="value"
-        (itemTriggered)="trigger.close()"
+        (itemTriggered)="popover.close()"
         class="popover-container"
       />
     </ng-template>

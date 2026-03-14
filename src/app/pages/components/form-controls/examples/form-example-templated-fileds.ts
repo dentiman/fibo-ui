@@ -3,6 +3,8 @@ import { FormField, form, required } from '@angular/forms/signals';
 import {
   DataList,
   DataListItem,
+  DataListKeyboardBridge,
+  KeyboardTarget,
   Popover,
   PopoverTriggerClick,
   PopoverTriggerToggle,
@@ -35,7 +37,9 @@ interface RegistrationData {
     PopoverTriggerClick,
     Popover,
     DataList,
+    DataListKeyboardBridge,
     DataListItem,
+    KeyboardTarget,
     SelectOne,
     SelectMulti,
     SelectDate,
@@ -64,7 +68,9 @@ interface RegistrationData {
       }
 
       <fibo-form-field-control
+        fiboKeyboardTarget
         fiboPopoverTriggerToggle
+        #positionKeyboardTarget="KeyboardTarget"
         [content]="positionTpl"
         [formField]="registrationForm.position"
         label="Position"
@@ -80,10 +86,11 @@ interface RegistrationData {
       <ng-template #positionTpl let-trigger>
         <div
           fiboPopover
-          [trigger]="trigger"
           [matchWidth]="true"
+          #popover="Popover"
           fiboDataList
-          (itemTriggered)="trigger.close()"
+          [fiboDataListKeyboardBridge]="positionKeyboardTarget"
+          (itemTriggered)="popover.close()"
           fiboSelectOne
           [(value)]="registrationForm.position().value"
           class="popover-container"
@@ -113,18 +120,21 @@ interface RegistrationData {
       @if (birthDateError(); as error) {
         <div class="form-field-error">{{ error }}</div>
       }
-      <ng-template #calTpl let-trigger>
+      <ng-template #calTpl>
         <fibo-calendar
           fiboPopover
+          #popover="Popover"
           fiboSelectDate
           [(value)]="registrationForm.birthDate().value"
-          (itemTriggered)="trigger.close()"
+          (itemTriggered)="popover.close()"
           class="popover-container"
         />
       </ng-template>
 
       <fibo-form-field-control
+        fiboKeyboardTarget
         fiboPopoverTriggerToggle
+        #skillsKeyboardTarget="KeyboardTarget"
         [content]="skillsTpl"
         [formField]="registrationForm.skills"
         label="Skills"
@@ -155,9 +165,9 @@ interface RegistrationData {
       <ng-template #skillsTpl let-trigger>
         <div
           fiboPopover
-          [trigger]="trigger"
           [matchWidth]="true"
           fiboDataList
+          [fiboDataListKeyboardBridge]="skillsKeyboardTarget"
           fiboSelectMulti
           [(value)]="registrationForm.skills().value"
           class="popover-container"

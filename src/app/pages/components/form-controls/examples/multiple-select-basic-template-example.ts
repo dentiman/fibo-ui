@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormField, form } from '@angular/forms/signals';
-import { DataList, DataListItem, Popover, PopoverTriggerToggle, SelectMulti } from '@fibo-ui/cdk';
+import { DataList, DataListItem, DataListKeyboardBridge, KeyboardTarget, Popover, PopoverTriggerToggle, SelectMulti } from '@fibo-ui/cdk';
 import { Checkbox, fieldErrorMessage, FormFieldControl, SelectItem } from '@fibo-ui/components';
 import { LucideAngularModule } from 'lucide-angular';
 
@@ -16,7 +16,9 @@ interface UserModel {
     PopoverTriggerToggle,
     Popover,
     DataList,
+    DataListKeyboardBridge,
     DataListItem,
+    KeyboardTarget,
     SelectMulti,
     Checkbox,
     LucideAngularModule,
@@ -25,7 +27,9 @@ interface UserModel {
   template: `
     <div class="mx-auto w-90 p-8">
       <fibo-form-field-control
+        fiboKeyboardTarget
         fiboPopoverTriggerToggle
+        #keyboardTarget="KeyboardTarget"
         [content]="skillsTpl"
         [formField]="userForm.skills"
         label="Skills"
@@ -56,9 +60,9 @@ interface UserModel {
       <ng-template #skillsTpl let-trigger>
         <div
           fiboPopover
-          [trigger]="trigger"
           [matchWidth]="true"
           fiboDataList
+          [fiboDataListKeyboardBridge]="keyboardTarget"
           fiboSelectMulti
           [(value)]="userForm.skills().value"
           class="popover-container"

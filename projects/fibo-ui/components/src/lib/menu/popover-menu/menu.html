@@ -1,15 +1,21 @@
 @for (item of items(); track idx; let idx = $index) {
   @if (item.children || item.content) {
-    <button fiboSubmenuTrigger role="menuitem" [content]="subTpl" [disabled]="!!item.disabled"
-            class="datalist-item py-1 px-2 w-full rounded-md  items-center  group text-sm"
+    <button
+      fiboSubmenuTrigger
+      #keyboardSource="KeyboardSource"
+      role="menuitem"
+      [content]="subTpl"
+      [disabled]="!!item.disabled"
+      class="datalist-item py-1 px-2 w-full rounded-md items-center group text-sm"
     >
       @if (item?.icon) {
-        <lucide-icon [name]="item.icon"
-                     class="absolute self-center text-foreground-secondary  mt-2 size-4"></lucide-icon>
+        <lucide-icon
+          [name]="item.icon"
+          class="absolute self-center text-foreground-secondary mt-2 size-4"
+        ></lucide-icon>
       }
-      <div class="min-w-0 grow text-left"
-           [class.ml-6]="itemsHaveIcons()"
-      >{{ item.label }}
+      <div class="min-w-0 grow text-left" [class.ml-6]="itemsHaveIcons()">
+        {{ item.label }}
       </div>
 
       <lucide-icon
@@ -18,10 +24,10 @@
       ></lucide-icon>
     </button>
 
-    <ng-template #subTpl let-trigger>
+    <ng-template #subTpl>
       <fibo-menu
         fiboPopover
-        [trigger]="trigger"
+        [keyboardSource]="keyboardSource"
         [offset]="1"
         placement="right-start"
         [menuContent]="item.content"
@@ -31,22 +37,36 @@
 
   } @else {
     @if (item.url) {
-      <a fiboDataListItem role="menuitem" [value]="item" [disabled]="!!item.disabled" (itemTrigger)="menuPanel.closeAll()"
-         [routerLink]="item.url"
-         class="datalist-item ">
+      <a
+        fiboDataListItem
+        role="menuitem"
+        [value]="item"
+        [disabled]="!!item.disabled"
+        (itemTrigger)="menuPanel.closeAll()"
+        [routerLink]="item.url"
+        class="datalist-item"
+      >
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
       </a>
     } @else if (item.callback) {
-      <a class="datalist-item py-1 px-2 rounded-md relative group text-sm"
-         fiboDataListItem role="menuitem" [disabled]="!!item.disabled"
-         (itemTrigger)="item.callback(); menuPanel.closeAll()">
+      <a
+        class="datalist-item py-1 px-2 rounded-md relative group text-sm"
+        fiboDataListItem
+        role="menuitem"
+        [disabled]="!!item.disabled"
+        (itemTrigger)="item.callback(); menuPanel.closeAll()"
+      >
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
       </a>
     } @else if (item.value !== undefined) {
-      <a class="datalist-item py-1 px-2 rounded-md relative group text-sm"
-         fiboDataListItem role="menuitem" [disabled]="!!item.disabled"
-         [value]="item.value"
-         (itemTrigger)="menuPanel.closeAll()">
+      <a
+        class="datalist-item py-1 px-2 rounded-md relative group text-sm"
+        fiboDataListItem
+        role="menuitem"
+        [disabled]="!!item.disabled"
+        [value]="item.value"
+        (itemTrigger)="menuPanel.closeAll()"
+      >
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
       </a>
     }

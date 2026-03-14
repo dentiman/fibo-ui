@@ -1,11 +1,6 @@
-import { Directive, ElementRef, effect, inject, input, model, signal, TemplateRef } from '@angular/core';
+import { Directive, ElementRef, inject, input, model, signal, TemplateRef } from '@angular/core';
 import { DataListItem } from '../data-list/data-list-item.directive';
-import { OverlayCategory, OverlayRegistry } from '../portal/overlay-registry';
-
-export interface KeydownDelegate {
-  onKeydown(e: KeyboardEvent): void;
-  navigateNext?(e: Event): void;
-}
+import { OverlayCategory, OverlayCloseContext, createOverlay } from '../portal/overlay-registry';
 
 @Directive({
   selector: '[fiboPopoverTrigger]',
@@ -13,7 +8,6 @@ export interface KeydownDelegate {
   host: {
     '[attr.tabindex]': 'isListItem ? null : (delegatesFocus() ? "-1" : "0")',
     '[attr.aria-expanded]': 'isOpen() || null',
-    '(keydown)': 'onKeydown($event)',
     '(focus)': 'onFocus()',
     '(focusout)': 'onFocusOut($event)',
   },
@@ -27,34 +21,17 @@ export class PopoverTrigger {
   overlayCategory = model<OverlayCategory>('popover');
   delegatesFocus = input(false);
 
-  keydownDelegate = signal<KeydownDelegate | null>(null);
-
-  private portalRegistry = inject(OverlayRegistry);
-  private portalId = 'portal-' + Math.random().toString(36).substring(2, 10);
-
-  constructor() {
-    effect(onCleanup => {
-      const template = this.content();
-      if (this.isOpen() && template) {
-        this.portalRegistry.register(
-          this.portalId,
-          template,
-          { $implicit: this },
-          this.overlayCategory(),
-          () => this.close(),
-          this.element
-        );
-        onCleanup(() => this.portalRegistry.unregister(this.portalId));
-      }
-    });
-  }
+  overlayRef = createOverlay({
+    isOpen: this.isOpen,
+    content: this.content,
+    category: this.overlayCategory,
+    referenceElement: this.element,
+    context: {},
+    onCloseRequest: ctx => this.restoreFocus(ctx),
+  });
 
   toggle() {
-    if (this.isOpen()) {
-      this.close();
-    } else {
-      this.open();
-    }
+    this.isOpen() ? this.close() : this.open();
   }
 
   open() {
@@ -64,24 +41,33 @@ export class PopoverTrigger {
   }
 
   /**
-   * Закрывает попап и восстанавливает фокус на триггер-элемент (a11y).
+   * Закрывает попап через overlayRef.close(), что запускает:
+   * 1. onCloseRequest — восстановление фокуса
+   * 2. isOpen.set(false) — автоматически через createOverlay
+   * 3. unregister — через effect cleanup
+   */
+  close() {
+    const ref = this.overlayRef();
+    if (ref) {
+      ref.close({ reason: 'programmatic' });
+    }
+  }
+
+  /**
+   * Восстанавливает фокус на триггер-элемент (a11y).
    * Фокус возвращается, только если он находится «нигде» (body) или
    * внутри закрываемого портала. Если пользователь уже кликнул за
    * пределами портала — фокус остаётся на новом элементе.
    */
-  close() {
-    if (this.isOpen()) {
-      const activeEl = document.activeElement as HTMLElement | null;
-      const shouldRestoreFocus =
-        !activeEl ||
-        activeEl === document.body ||
-        !!activeEl.closest(`[data-portal-id="${this.portalId}"]`);
+  private restoreFocus(ctx: OverlayCloseContext) {
+    const portalId = this.overlayRef()?.id;
+    const shouldRestore =
+      !ctx.activeElement ||
+      ctx.activeElement === document.body ||
+      (portalId && !!ctx.activeElement.closest(`[data-portal-id="${portalId}"]`));
 
-      this.isOpen.set(false);
-
-      if (shouldRestoreFocus) {
-        this.element.focus();
-      }
+    if (shouldRestore) {
+      this.element.focus();
     }
   }
 
@@ -94,21 +80,15 @@ export class PopoverTrigger {
     }
   }
 
-  onKeydown(event: KeyboardEvent): void {
-    if (!this.isListItem) {
-      this.keydownDelegate()?.onKeydown(event);
-    }
-  }
-
   onFocusOut(event: FocusEvent) {
     const relatedTarget = event.relatedTarget as Node;
     if (!relatedTarget) return;
 
     const relatedElement =
       relatedTarget instanceof Element ? relatedTarget : relatedTarget.parentElement;
-    const isMovingToOwnPortal = !!relatedElement?.closest(
-      `[data-portal-id="${this.portalId}"]`
-    );
+    const portalId = this.overlayRef()?.id;
+    const isMovingToOwnPortal =
+      portalId && !!relatedElement?.closest(`[data-portal-id="${portalId}"]`);
 
     if (this.element.contains(relatedTarget) || isMovingToOwnPortal) {
       return;

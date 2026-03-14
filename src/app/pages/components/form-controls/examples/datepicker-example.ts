@@ -22,12 +22,13 @@ import { Calendar, fieldErrorMessage, FormFieldControl } from '@fibo-ui/componen
       @if (birthDateError(); as error) {
         <div class="form-field-error">{{ error }}</div>
       }
-      <ng-template #calTpl let-trigger>
+      <ng-template #calTpl>
         <fibo-calendar
           fiboPopover
+          #popover="Popover"
           fiboSelectDate
           [(value)]="userForm.birthDate().value"
-          (itemTriggered)="trigger.close()"
+          (itemTriggered)="popover.close()"
           class="popover-container"
         />
       </ng-template>

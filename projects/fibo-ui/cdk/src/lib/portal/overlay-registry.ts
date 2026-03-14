@@ -1,4 +1,14 @@
-import { Injectable, InjectionToken, computed, signal, untracked } from '@angular/core';
+import {
+  Injectable,
+  InjectionToken,
+  Signal,
+  WritableSignal,
+  computed,
+  effect,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
 export type OverlayCategory =
@@ -20,22 +30,64 @@ const BASE_Z_INDEX: Record<OverlayCategory, number> = {
 
 const ESCAPE_SKIP_CATEGORIES: Set<OverlayCategory> = new Set(['notification', 'tooltip']);
 
-export interface OverlayEntry {
-  id: string;
+export interface OverlayCloseContext {
+  reason: string;
+  activeElement: HTMLElement | null;
+  relatedTarget?: EventTarget | null;
+}
+
+export interface RegisterOverlayOptions {
   templateRef: TemplateRef<any>;
   context?: Record<string, any>;
-  category: OverlayCategory;
-  zIndex: number;
-  close?: () => void;
-  firstInCategory: boolean;
+  category?: OverlayCategory;
   referenceElement?: HTMLElement;
 }
+
+let nextOverlayId = 0;
+
+export type OverlayState = 'open' | 'closing';
+
+export class OverlayRef {
+  readonly id: string;
+  readonly templateRef: TemplateRef<any>;
+  readonly context: Record<string, any>;
+  readonly category: OverlayCategory;
+  readonly zIndex: number;
+  readonly firstInCategory: boolean;
+  readonly referenceElement?: HTMLElement;
+  readonly state = signal<OverlayState>('open');
+  readonly closeContext = signal<OverlayCloseContext | null>(null);
+
+  constructor(
+    options: RegisterOverlayOptions & { zIndex: number; firstInCategory: boolean }
+  ) {
+    this.id = `overlay-${++nextOverlayId}`;
+    this.templateRef = options.templateRef;
+    this.context = options.context ?? {};
+    this.category = options.category ?? 'popover';
+    this.zIndex = options.zIndex;
+    this.firstInCategory = options.firstInCategory;
+    this.referenceElement = options.referenceElement;
+  }
+
+  close(ctx: Partial<OverlayCloseContext> = {}) {
+    if (this.state() !== 'open') return;
+    this.state.set('closing');
+    this.closeContext.set({
+      reason: 'programmatic',
+      activeElement: document.activeElement as HTMLElement | null,
+      ...ctx,
+    });
+  }
+}
+
+export const OVERLAY_REF = new InjectionToken<OverlayRef>('OVERLAY_REF');
 
 @Injectable({
   providedIn: 'root',
 })
 export class OverlayRegistry {
-  private openPortals = signal<Map<string, OverlayEntry>>(new Map());
+  private openPortals = signal<Map<string, OverlayRef>>(new Map());
   private zIndexCounter = 0;
 
   openPortalsList = computed(() => {
@@ -60,32 +112,29 @@ export class OverlayRegistry {
     return this.openPortalsList().filter(p => p.category === category);
   }
 
-  register(
-    id: string,
-    templateRef: TemplateRef<any>,
-    context?: Record<string, any>,
-    category: OverlayCategory = 'popover',
-    close?: () => void,
-    referenceElement?: HTMLElement
-  ): void {
+  private register(options: RegisterOverlayOptions): OverlayRef {
+    const category = options.category ?? 'popover';
     const zIndex = BASE_Z_INDEX[category] + ++this.zIndexCounter;
     // untracked: prevent signal read from being tracked by calling effect
     const firstInCategory = untracked(() =>
       Array.from(this.openPortals().values()).every(p => p.category !== category)
     );
+
+    const ref = new OverlayRef({ ...options, zIndex, firstInCategory });
+
     this.openPortals.update(map => {
       const newMap = new Map(map);
-      newMap.set(id, {
-        id, templateRef, context, category, zIndex, close, firstInCategory, referenceElement,
-      });
+      newMap.set(ref.id, ref);
       return newMap;
     });
+
+    return ref;
   }
 
-  unregister(id: string): void {
+  private unregister(ref: OverlayRef): void {
     this.openPortals.update(map => {
       const newMap = new Map(map);
-      newMap.delete(id);
+      newMap.delete(ref.id);
       return newMap;
     });
   }
@@ -93,9 +142,9 @@ export class OverlayRegistry {
   closeTopmost(): void {
     const list = this.openPortalsList();
     for (let i = list.length - 1; i >= 0; i--) {
-      const entry = list[i];
-      if (!ESCAPE_SKIP_CATEGORIES.has(entry.category) && entry.close) {
-        entry.close();
+      const ref = list[i];
+      if (!ESCAPE_SKIP_CATEGORIES.has(ref.category)) {
+        ref.close({ reason: 'escape' });
         return;
       }
     }
@@ -103,24 +152,93 @@ export class OverlayRegistry {
 
   closeAllByCategory(category: OverlayCategory): void {
     const portals = this.byCategory(category);
-    for (const portal of [...portals].reverse()) {
-      portal.close?.();
+    for (const ref of [...portals].reverse()) {
+      ref.close({ reason: 'programmatic' });
     }
   }
-}
 
-export class OverlayRef {
-  constructor(
-    readonly category: OverlayCategory,
-    readonly zIndex: number,
-    readonly firstInCategory: boolean,
-    private closeFn: () => void,
-    readonly referenceElement?: HTMLElement
-  ) {}
+  /**
+   * Creates a reactive overlay binding. Must be called in injection context.
+   *
+   * Reacts to `isOpen` signal: when true — registers overlay in OverlayRegistry,
+   * when false — unregisters. Returns a signal holding the current OverlayRef or null.
+   *
+   * When external code calls `overlayRef.close()` (e.g. Escape via registry,
+   * click outside via Popover directive), the flow is:
+   * 1. `onCloseRequest` callback is invoked for side effects (focus restore, cleanup)
+   * 2. `isOpen` is set to false automatically
+   * 3. Effect cleanup unregisters the overlay
+   */
+  createOverlay(options: CreateOverlayOptions): Signal<OverlayRef | null> {
+    const overlayRef = signal<OverlayRef | null>(null);
 
-  close() {
-    this.closeFn();
+    // Effect 1: register/unregister based on isOpen signal
+    effect(onCleanup => {
+      const template = options.content();
+      if (options.isOpen() && template) {
+        const category =
+          typeof options.category === 'function'
+            ? options.category()
+            : (options.category ?? 'popover');
+
+        const ref = this.register({
+          templateRef: template,
+          context: options.context,
+          category,
+          referenceElement: options.referenceElement,
+        });
+
+        overlayRef.set(ref);
+
+        onCleanup(() => {
+          this.unregister(ref);
+          overlayRef.set(null);
+        });
+      }
+    });
+
+    // Effect 2: react to external close requests (Escape, click outside, etc.)
+    effect(() => {
+      const ref = overlayRef();
+      if (!ref) return;
+
+      const ctx = ref.closeContext();
+      if (ctx) {
+        options.onCloseRequest?.(ctx);
+        options.isOpen.set(false);
+      }
+    });
+
+    return overlayRef.asReadonly();
   }
 }
 
-export const OVERLAY_REF = new InjectionToken<OverlayRef>('OVERLAY_REF');
+export interface CreateOverlayOptions {
+  isOpen: WritableSignal<boolean>;
+  content: Signal<TemplateRef<any> | undefined>;
+  category?: OverlayCategory | Signal<OverlayCategory>;
+  referenceElement?: HTMLElement;
+  context?: Record<string, any>;
+  onCloseRequest?: (ctx: OverlayCloseContext) => void;
+}
+
+/**
+ * Creates a reactive overlay binding. Must be called in injection context.
+ *
+ * Usage:
+ * ```ts
+ * overlayRef = createOverlay({
+ *   isOpen: this.isOpen,
+ *   content: this.templateRef,
+ *   category: 'popover',
+ *   referenceElement: this.element,
+ *   onCloseRequest: (ctx) => {
+ *     // side effects only — isOpen.set(false) is handled automatically
+ *     this.restoreFocus(ctx);
+ *   },
+ * });
+ * ```
+ */
+export function createOverlay(options: CreateOverlayOptions): Signal<OverlayRef | null> {
+  return inject(OverlayRegistry).createOverlay(options);
+}

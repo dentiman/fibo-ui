@@ -7,6 +7,7 @@ import {OVERLAY_REF} from '../portal/overlay-registry';
 
 @Directive({
   selector: '[fiboPopover]',
+  exportAs: 'Popover',
   hostDirectives: [
     {
       directive: PopoverPosition,

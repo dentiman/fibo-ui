@@ -7,7 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OVERLAY_REF, OverlayRef, OverlayEntry, OverlayRegistry } from './overlay-registry';
+import { OVERLAY_REF, OverlayRef, OverlayRegistry } from './overlay-registry';
 
 @Component({
   selector: 'fibo-cdk-overlay-outlet',
@@ -58,25 +58,14 @@ export class OverlayOutletComponent {
     });
   }
 
-  portalInjector(portal: OverlayEntry): Injector {
-    let injector = this.injectorCache.get(portal.id);
+  portalInjector(ref: OverlayRef): Injector {
+    let injector = this.injectorCache.get(ref.id);
     if (!injector) {
       injector = Injector.create({
-        providers: [
-          {
-            provide: OVERLAY_REF,
-            useValue: new OverlayRef(
-              portal.category,
-              portal.zIndex,
-              portal.firstInCategory,
-              portal.close ?? (() => {}),
-              portal.referenceElement
-            ),
-          },
-        ],
+        providers: [{ provide: OVERLAY_REF, useValue: ref }],
         parent: this.parentInjector,
       });
-      this.injectorCache.set(portal.id, injector);
+      this.injectorCache.set(ref.id, injector);
     }
     return injector;
   }

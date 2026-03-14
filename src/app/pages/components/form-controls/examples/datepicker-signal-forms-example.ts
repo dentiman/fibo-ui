@@ -24,11 +24,12 @@ import { LucideAngularModule } from 'lucide-angular';
           </div>
           <lucide-icon name="calendar-days" size="16" class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
         </div>
-        <ng-template #calTpl let-trigger>
+        <ng-template #calTpl>
           <fibo-calendar
             fiboPopover
+            #popover="Popover"
             fiboSelectDate [(value)]="userForm.birthDate().value"
-            (itemTriggered)="trigger.close()"
+            (itemTriggered)="popover.close()"
             class="popover-container"
           />
         </ng-template>

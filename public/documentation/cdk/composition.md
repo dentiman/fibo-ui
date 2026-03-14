@@ -54,9 +54,7 @@ PopoverTrigger
     ├── inject ──▶ OverlayRegistry
     ├── signal: isOpen
     ├── signal: popover → Popover | null
-    ├── signal: keydownDelegate → KeydownDelegate | null
-    ├── host: tabindex / aria-expanded / keydown / focusout
-    └── onKeydown → keydownDelegate()?.onKeydown()
+    └── host: tabindex / aria-expanded / focusout
 
 PopoverTriggerClick ──hostDir──▶ PopoverTrigger (inputs: contentTemplate)
     └── host: click/open, enter/open, escape/close
@@ -85,12 +83,21 @@ PopoverArrow
 
 ```
 DataList
-    ├── model: trigger → PopoverTrigger
-    │     └── effect: registers self as trigger.keydownDelegate
     ├── model: options → DataListItem[]
     ├── signal: activeDataListItem
     ├── output: itemTriggered
     └── keyboard: ArrowUp/Down, Enter, Escape
+
+DataListKeyboardBridge
+    ├── inject ──▶ DataList
+    ├── input: target → KeyboardTarget
+    └── effect: target.connect(self)
+
+KeyboardTarget
+    ├── applied explicitly on the target element
+    ├── host: keydown
+    ├── method: connect(handler)
+    └── forwards keydown / navigateNext
 
 DataListItem
     ├── inject ──▶ DataList
@@ -107,7 +114,7 @@ RouterSelectOne ──provides──▶ { SELECTION_MODEL: self }
 
 Keyboard chain:
 
-`PopoverTrigger.onKeydown()` → `keydownDelegate` → `DataList.onKeydown()`
+`KeyboardTarget.forwardKeydown()` → `DataListKeyboardBridge.onKeydown()` → `DataList.onKeydown()`
 
 ---
 

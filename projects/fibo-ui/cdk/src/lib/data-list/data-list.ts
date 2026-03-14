@@ -1,6 +1,6 @@
-import {Directive, effect, ElementRef, inject, InjectionToken, input, model, output, signal} from '@angular/core';
-import {PopoverTrigger} from '../popover/popover-trigger';
-import {DataListItem} from './data-list-item.directive';
+import { Directive, effect, InjectionToken, input, model, output, signal } from '@angular/core';
+import { DataListItem } from './data-list-item.directive';
+import { KeyboardSource, KeydownDelegate } from './keyboard-source';
 
 export const DATA_LIST = new InjectionToken<DataList>('DataList');
 
@@ -22,11 +22,9 @@ let nextDataListId = 0;
   //   },
   // ],
 })
-export class DataList {
+export class DataList implements KeydownDelegate {
   disabled = input(false);
-  elementRef = inject(ElementRef<HTMLElement>)
-
-  trigger = model<PopoverTrigger>()
+  keyboardSource = input<KeyboardSource | null>(null);
 
   itemTriggered = output<Event>();
 
@@ -44,13 +42,19 @@ export class DataList {
       this._activeDataListItem.set(null);
     });
 
-    // Register as keydown delegate on the trigger for keyboard navigation
     effect((onCleanup) => {
-      const trigger = this.trigger();
-      if (trigger) {
-        trigger.keydownDelegate.set(this);
-        onCleanup(() => trigger.keydownDelegate.set(null));
+      const keyboardSource = this.keyboardSource();
+      if (!keyboardSource) {
+        return;
       }
+
+      keyboardSource.delegate.set(this);
+
+      onCleanup(() => {
+        if (keyboardSource.delegate() === this) {
+          keyboardSource.delegate.set(null);
+        }
+      });
     });
   }
 
@@ -175,11 +179,6 @@ export class DataList {
         break;
       case 'Enter':
         this._activeDataListItem()?.triggerSelection(event);
-        event.stopPropagation();
-        break;
-      case 'Escape':
-        this.trigger()?.element.focus();
-        this.trigger()?.close();
         event.stopPropagation();
         break;
       default:

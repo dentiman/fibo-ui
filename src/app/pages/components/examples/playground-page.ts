@@ -5,8 +5,10 @@ import { Calendar } from '@fibo-ui/components';
 import {
   SelectDate,
   DataList,
+  DataListKeyboardBridge,
   FiboInput,
   DataListItem,
+  KeyboardTarget,
   Popover,
   PopoverTriggerClick,
   SelectOne,
@@ -27,6 +29,8 @@ import { Checkbox } from '@fibo-ui/components';
     FormFieldDirective,
     FiboInput,
     DataList,
+    DataListKeyboardBridge,
+    KeyboardTarget,
     Popover,
     PopoverTriggerClick,
     SelectOne,
@@ -44,6 +48,7 @@ import { Checkbox } from '@fibo-ui/components';
           <div class="flex flex-row justify-start space-x-1">
               <!-- User Select -->
               <div fiboFormField
+                   fiboKeyboardTarget #userKeyboardTarget="KeyboardTarget"
                    fiboPopoverTriggerClick [content]="userTpl"
                    class="group content-center form-field-control rounded-full inline-block relative">
                   <span class="form-field-label">User:</span>
@@ -52,8 +57,10 @@ import { Checkbox } from '@fibo-ui/components';
                                class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
               </div>
               <ng-template #userTpl let-trigger>
-                  <div fiboPopover [trigger]="trigger" [matchWidth]="false"
-                       fiboDataList (itemTriggered)="trigger.close()"
+                  <div fiboPopover [matchWidth]="false"
+                       #popover="Popover"
+                       fiboDataList [fiboDataListKeyboardBridge]="userKeyboardTarget"
+                       (itemTriggered)="popover.close()"
                        fiboSelectOne [(value)]="userSelectValue"
                        class="popover-container w-60"
                   >
@@ -93,15 +100,17 @@ import { Checkbox } from '@fibo-ui/components';
                   <lucide-icon name="calendar-days" size="16"
                                class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
               </div>
-              <ng-template #dateTpl let-trigger>
+              <ng-template #dateTpl>
                   <fibo-calendar fiboPopover
+                                 #popover="Popover"
                                  fiboSelectDate [(value)]="createdAfter"
-                                 (itemTriggered)="trigger.close()"
+                                 (itemTriggered)="popover.close()"
                                  class="popover-container"/>
               </ng-template>
 
               <!-- Multiple Select Users -->
               <div fiboFormField
+                   fiboKeyboardTarget #usersKeyboardTarget="KeyboardTarget"
                    fiboPopoverTriggerClick [content]="usersTpl"
                    class="group content-center form-field-control rounded-full inline-block relative min-w-40">
                   <span class="form-field-label">Users:</span>
@@ -125,8 +134,8 @@ import { Checkbox } from '@fibo-ui/components';
                                class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
               </div>
               <ng-template #usersTpl let-trigger>
-                  <div fiboPopover [trigger]="trigger" [matchWidth]="false"
-                       fiboDataList
+                  <div fiboPopover [matchWidth]="false"
+                       fiboDataList [fiboDataListKeyboardBridge]="usersKeyboardTarget"
                        fiboSelectMulti [(value)]="selectedUsers"
                        class="popover-container w-60"
                   >
@@ -185,6 +194,7 @@ import { Checkbox } from '@fibo-ui/components';
               <div class="overflow-hidden rounded-lg border-2 border-dashed border-border p-4">
                   <div class="text-xs text-foreground-secondary mb-2">Container with overflow-hidden:</div>
                   <div fiboFormField
+                       fiboKeyboardTarget #statusKeyboardTarget="KeyboardTarget"
                        fiboPopoverTriggerClick [content]="statusTpl"
                        class="group content-center form-field-control w-60 relative">
                       <span class="form-field-label">Status:</span>
@@ -193,8 +203,10 @@ import { Checkbox } from '@fibo-ui/components';
                                    class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
                   </div>
                   <ng-template #statusTpl let-trigger>
-                      <div fiboPopover [trigger]="trigger" [matchWidth]="false"
-                           fiboDataList (itemTriggered)="trigger.close()"
+                      <div fiboPopover [matchWidth]="false"
+                           #popover="Popover"
+                           fiboDataList [fiboDataListKeyboardBridge]="statusKeyboardTarget"
+                           (itemTriggered)="popover.close()"
                            fiboSelectOne [(value)]="statusSelect"
                            class="popover-container w-60"
                       >
@@ -209,6 +221,7 @@ import { Checkbox } from '@fibo-ui/components';
               </div>
 
               <div fiboFormField
+                   fiboKeyboardTarget #categoryKeyboardTarget="KeyboardTarget"
                    fiboPopoverTriggerClick [content]="categoryTpl"
                    class="group content-center form-field-control rounded-full inline-block w-60 relative">
                   <span class="form-field-label">Category:</span>
@@ -217,8 +230,10 @@ import { Checkbox } from '@fibo-ui/components';
                                class="absolute right-0 top-1/2 w-5 -translate-x-1/2 -translate-y-1/2 text-foreground-tertiary"></lucide-icon>
               </div>
               <ng-template #categoryTpl let-trigger>
-                  <div fiboPopover [trigger]="trigger" [matchWidth]="false"
-                       fiboDataList (itemTriggered)="trigger.close()"
+                  <div fiboPopover [matchWidth]="false"
+                       #popover="Popover"
+                       fiboDataList [fiboDataListKeyboardBridge]="categoryKeyboardTarget"
+                       (itemTriggered)="popover.close()"
                        fiboSelectOne [(value)]="categorySelect"
                        class="popover-container w-60"
                   >

@@ -9,7 +9,9 @@ import {
 import { FormFieldControl } from '@fibo-ui/components';
 import {
   DataList,
+  DataListKeyboardBridge,
   DataListItem,
+  KeyboardTarget,
   Popover,
   PopoverTrigger,
   SelectOne,
@@ -22,13 +24,15 @@ interface ComboboxOption {
 
 @Component({
   selector: 'combobox-basic-template-example',
-  imports: [FormFieldControl, PopoverTrigger, Popover, DataList, DataListItem, SelectOne],
+  imports: [FormFieldControl, PopoverTrigger, Popover, DataList, DataListKeyboardBridge, DataListItem, KeyboardTarget, SelectOne],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto w-90 p-8">
       <fibo-form-field-control
+        fiboKeyboardTarget
         fiboPopoverTrigger
         #trigger="PopoverTrigger"
+        #keyboardTarget="KeyboardTarget"
         [delegatesFocus]="true"
         [content]="comboboxTpl"
         label="Assignee"
@@ -57,14 +61,15 @@ interface ComboboxOption {
         @if (visibleItems().length > 0) {
           <div
             fiboPopover
-            [trigger]="trigger"
             [matchWidth]="true"
+            #popover="Popover"
             [id]="listboxId()"
             role="listbox"
             fiboDataList
+            [fiboDataListKeyboardBridge]="keyboardTarget"
             fiboSelectOne
             [(value)]="value"
-            (itemTriggered)="trigger.close()"
+            (itemTriggered)="popover.close()"
             class="popover-container"
           >
             @for (item of visibleItems(); track item.value) {

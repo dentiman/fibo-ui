@@ -1,14 +1,12 @@
-import {inject, Injectable, signal, TemplateRef} from '@angular/core';
+import {computed, Injectable, signal, TemplateRef} from '@angular/core';
 import {Subject, takeUntil, timer} from 'rxjs';
 import {Placement} from '@floating-ui/dom';
-import {OverlayRegistry} from '@fibo-ui/cdk';
+import {createOverlay} from '@fibo-ui/cdk';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TooltipService {
-  private registry = inject(OverlayRegistry);
-
   containerTemplateRef = signal<TemplateRef<any> | null>(null);
 
   tooltipRef = signal<{
@@ -22,6 +20,14 @@ export class TooltipService {
   closeDelay = signal<number>(100);
 
   private _interactionRequest = new Subject<'open' | 'close'>();
+  private isOpen = signal(false);
+  private content = computed(() => this.containerTemplateRef() ?? undefined);
+
+  overlayRef = createOverlay({
+    isOpen: this.isOpen,
+    content: this.content,
+    category: 'tooltip',
+  });
 
   open(
     content: string | TemplateRef<unknown>,
@@ -34,10 +40,7 @@ export class TooltipService {
       .pipe(takeUntil(this._interactionRequest))
       .subscribe(() => {
         this.tooltipRef.set({content, referenceElement, placement, tooltipId});
-        const tpl = this.containerTemplateRef();
-        if (tpl) {
-          this.registry.register('tooltip', tpl, undefined, 'tooltip');
-        }
+        this.isOpen.set(true);
       });
   }
 
@@ -52,7 +55,7 @@ export class TooltipService {
       .subscribe(() => {
         // Don't clear tooltipRef — data must stay valid during the outlet's
         // animate.leave="overlay-leave" fade. It gets overwritten on next open().
-        this.registry.unregister('tooltip');
+        this.isOpen.set(false);
       });
   }
 }

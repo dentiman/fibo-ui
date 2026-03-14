@@ -1,5 +1,6 @@
 import { Directive, inject, OnDestroy, OnInit } from '@angular/core';
 import { DataListItem } from '../data-list/data-list-item.directive';
+import { KeyboardSource } from '../data-list/keyboard-source';
 import { PopoverTrigger } from '../popover/popover-trigger';
 import { MENU_PANEL } from './menu-panel';
 
@@ -37,27 +38,21 @@ import { MENU_PANEL } from './menu-panel';
       directive: PopoverTrigger,
       inputs: ['content'],
     },
+    KeyboardSource,
   ],
   host: {
     'aria-haspopup': 'menu',
     '(keydown.enter)': 'popoverTrigger.open()',
     '(keydown.escape)': 'popoverTrigger.close()',
-    '(keydown.arrowright)': 'popoverTrigger.keydownDelegate()?.navigateNext?.($event)',
+    '(keydown.arrowright)': 'keyboardSource.delegate()?.navigateNext?.($event)',
     '(click)': 'popoverTrigger.open()',
   },
 })
 export class SubmenuTrigger implements OnInit, OnDestroy {
   popoverTrigger = inject(PopoverTrigger);
   option = inject(DataListItem);
+  keyboardSource = inject(KeyboardSource);
   private panel = inject(MENU_PANEL);
-
-  // Expose PopoverTrigger's isOpen for template binding
-  get isOpen() {
-    return this.popoverTrigger.isOpen;
-  }
-  set isOpen(value: any) {
-    this.popoverTrigger.isOpen = value;
-  }
 
   ngOnInit() {
     this.popoverTrigger.overlayCategory.set('menu');

@@ -3,8 +3,8 @@ import { FormValueControl, ValidationError, WithOptionalField } from '@angular/f
 import {
   DataList,
   DataListItem,
+  KeyboardSource,
   Popover,
-  PopoverTrigger,
   PopoverTriggerToggle,
   SelectOne,
 } from '@fibo-ui/cdk';
@@ -22,6 +22,7 @@ export interface SelectItem {
   imports: [
     Popover,
     DataList,
+    KeyboardSource,
     SelectOne,
     LucideAngularModule,
     DataListItem,
@@ -34,7 +35,9 @@ export interface SelectItem {
   },
   template: `
     <fibo-form-field-control
+      fiboKeyboardSource
       fiboPopoverTriggerToggle
+      #keyboardSource="KeyboardSource"
       role="combobox"
       aria-haspopup="listbox"
       [content]="selectTpl"
@@ -57,14 +60,15 @@ export interface SelectItem {
       <div class="form-field-error">{{ error }}</div>
     }
 
-    <ng-template #selectTpl let-trigger>
+    <ng-template #selectTpl>
       <div
         fiboPopover
+        #popover="Popover"
         role="listbox"
-        [trigger]="trigger"
+        [keyboardSource]="keyboardSource"
         [matchWidth]="true"
         fiboDataList
-        (itemTriggered)="trigger.close()"
+        (itemTriggered)="popover.close()"
         fiboSelectOne
         [(value)]="value"
         class="popover-container"

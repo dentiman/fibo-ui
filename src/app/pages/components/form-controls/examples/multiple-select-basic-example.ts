@@ -1,18 +1,20 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormField, form } from '@angular/forms/signals';
-import { DataList, FormFieldTrigger, DataListItem, Popover, SelectMulti } from '@fibo-ui/cdk';
+import { DataList, DataListItem, DataListKeyboardBridge, FormFieldTrigger, KeyboardTarget, Popover, SelectMulti } from '@fibo-ui/cdk';
 import { Checkbox } from '@fibo-ui/components';
 import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'multiple-select-basic-example',
-  imports: [FormField, FormFieldTrigger, DataList, Popover, SelectMulti, DataListItem, LucideAngularModule, Checkbox],
+  imports: [FormField, FormFieldTrigger, DataList, DataListKeyboardBridge, KeyboardTarget, Popover, SelectMulti, DataListItem, LucideAngularModule, Checkbox],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto p-8 w-[350px]">
       <form class="space-y-5">
         <button
           type="button"
+          fiboKeyboardTarget
+          #keyboardTarget="KeyboardTarget"
           fiboFormFieldTrigger [content]="skillsTpl"
           [formField]="userForm.skills"
           class="w-full form-field-control flex items-center gap-2 text-left"
@@ -42,8 +44,8 @@ import { LucideAngularModule } from 'lucide-angular';
         </button>
         <ng-template #skillsTpl let-trigger>
           <div
-            fiboPopover [trigger]="trigger" [matchWidth]="true"
-            fiboDataList
+            fiboPopover [matchWidth]="true"
+            fiboDataList [fiboDataListKeyboardBridge]="keyboardTarget"
             fiboSelectMulti [(value)]="userForm.skills().value"
             class="popover-container"
           >

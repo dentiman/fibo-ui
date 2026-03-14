@@ -1,5 +1,5 @@
-import {inject, Injectable, signal, TemplateRef} from '@angular/core';
-import {OverlayRegistry} from '@fibo-ui/cdk';
+import {computed, inject, Injectable, signal, TemplateRef} from '@angular/core';
+import {createOverlay} from '@fibo-ui/cdk';
 
 export type ConfirmationContent =
   | {
@@ -23,7 +23,6 @@ const CONFIRMATION_LEAVE_CLEANUP_DELAY = 220;
   providedIn: 'root',
 })
 export class ConfirmationService {
-  private registry = inject(OverlayRegistry);
   private cleanupTimer: ReturnType<typeof setTimeout> | null = null;
 
   containerTemplateRef = signal<TemplateRef<any> | null>(null);
@@ -34,6 +33,15 @@ export class ConfirmationService {
   // content is visible while the outlet wrapper fades out.
   config = signal<ConfirmationConfig | null>(null);
 
+  private content = computed(() => this.containerTemplateRef() ?? undefined);
+
+  overlayRef = createOverlay({
+    isOpen: this.isOpen,
+    content: this.content,
+    category: 'confirmation',
+    onCloseRequest: () => this.scheduleConfigCleanup(),
+  });
+
   open(config: ConfirmationConfig) {
     if (this.cleanupTimer) {
       clearTimeout(this.cleanupTimer);
@@ -42,10 +50,6 @@ export class ConfirmationService {
 
     this.config.set(config);
     this.isOpen.set(true);
-    const tpl = this.containerTemplateRef();
-    if (tpl) {
-      this.registry.register('confirmation', tpl, undefined, 'confirmation', () => this.close());
-    }
   }
 
   confirm() {
@@ -58,10 +62,14 @@ export class ConfirmationService {
   }
 
   close() {
-    this.isOpen.set(false);
-    this.registry.unregister('confirmation');
+    const ref = this.overlayRef();
+    if (ref) {
+      ref.close({ reason: 'programmatic' });
+    }
+  }
 
-    // Keep config during leave animation, then release payload/callback references.
+  // Keep config during leave animation, then release payload/callback references.
+  private scheduleConfigCleanup() {
     this.cleanupTimer = setTimeout(() => {
       if (!this.isOpen()) {
         this.config.set(null);

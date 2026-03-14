@@ -1,9 +1,10 @@
-import { DestroyRef, Directive, inject, InjectionToken, input, signal } from '@angular/core';
+import { DestroyRef, Directive, effect, inject, InjectionToken, input, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { DataList } from '../data-list/data-list';
 import { DataListItem } from '../data-list/data-list-item.directive';
+import { KeyboardSource } from '../data-list/keyboard-source';
 import { SubmenuTrigger } from './submenu-trigger';
-import { OverlayRegistry } from '../portal/overlay-registry';
+import { OVERLAY_REF, OverlayRegistry } from '../portal/overlay-registry';
 
 /**
  * Injection token for parent MenuPanel.
@@ -31,17 +32,13 @@ export const MENU_PANEL = new InjectionToken<MenuPanel>('MenuPanel');
   host: {
     '(keydown.arrowleft)': 'focusToTrigger($event)',
   },
-  hostDirectives: [
-    {
-      directive: DataList,
-      inputs: ['trigger'],
-    },
-  ],
+  hostDirectives: [DataList],
   providers: [{ provide: MENU_PANEL, useExisting: MenuPanel }],
 })
 export class MenuPanel {
   dataList = inject(DataList);
   private registry = inject(OverlayRegistry);
+  private overlayRef = inject(OVERLAY_REF);
   private destroyRef = inject(DestroyRef);
   private openTimeout: ReturnType<typeof setTimeout> | undefined;
   private closeTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -51,6 +48,7 @@ export class MenuPanel {
 
   /** Delay in milliseconds before opening submenu on hover (default 300ms) */
   openDelay = input(300);
+  keyboardSource = input<KeyboardSource | null>(null);
 
   registerSubmenuTrigger(trigger: SubmenuTrigger) {
     const currentTriggers = this.submenuTriggers();
@@ -76,12 +74,11 @@ export class MenuPanel {
   }
 
   focusToTrigger(event: Event) {
-    const trigger = this.dataList.trigger();
-    if (!trigger?.isListItem) {
-      return;
-    }
+    const refEl = this.overlayRef.referenceElement;
+    // Only handle ArrowLeft for submenus (reference element is inside another portal)
+    if (!refEl?.closest('[data-portal-id]')) return;
 
-    trigger.element.focus();
+    refEl.focus();
     this.dataList.resetActiveDataListItem();
     event.stopPropagation();
     this.closeAllSubmenus();
@@ -89,6 +86,21 @@ export class MenuPanel {
 
   constructor() {
     this.destroyRef.onDestroy(() => this.clearTimeouts());
+
+    effect((onCleanup) => {
+      const keyboardSource = this.keyboardSource();
+      if (!keyboardSource) {
+        return;
+      }
+
+      keyboardSource.delegate.set(this.dataList);
+
+      onCleanup(() => {
+        if (keyboardSource.delegate() === this.dataList) {
+          keyboardSource.delegate.set(null);
+        }
+      });
+    });
 
     // Open/close submenu with symmetric delay when active option changes
     toObservable(this.dataList.activeDataListItem)

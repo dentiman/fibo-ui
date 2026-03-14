@@ -2,8 +2,10 @@ import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormField, form } from '@angular/forms/signals';
 import {
   DataList,
+  DataListKeyboardBridge,
   DataListItem,
   Popover,
+  KeyboardTarget,
   SelectOne,
   FormFieldTrigger,
 } from '@fibo-ui/cdk';
@@ -19,6 +21,8 @@ interface UserModel {
     FormField,
     FormFieldTrigger,
     DataList,
+    DataListKeyboardBridge,
+    KeyboardTarget,
     Popover,
     SelectOne,
     DataListItem,
@@ -29,6 +33,8 @@ interface UserModel {
     <div class="mx-auto w-90 p-8">
       <button
         type="button"
+        fiboKeyboardTarget
+        #keyboardTarget="KeyboardTarget"
         fiboFormFieldTrigger [content]="selectTpl"
         [formField]="userForm.role"
         class="w-full form-field-control flex items-center gap-2 text-left"
@@ -49,10 +55,11 @@ interface UserModel {
       <ng-template #selectTpl let-trigger>
         <div
           fiboPopover
-          [trigger]="trigger"
           [matchWidth]="true"
+          #popover="Popover"
           fiboDataList
-          (itemTriggered)="trigger.close()"
+          [fiboDataListKeyboardBridge]="keyboardTarget"
+          (itemTriggered)="popover.close()"
           fiboSelectOne
           [(value)]="userForm.role().value"
           class="popover-container"

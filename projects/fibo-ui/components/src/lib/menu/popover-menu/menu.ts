@@ -1,14 +1,18 @@
-import {Component, computed, inject, input, TemplateRef} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {MenuPanel, Popover, DataListItem, SubmenuTrigger} from '@fibo-ui/cdk';
-import {RouterLink} from '@angular/router';
-import {MenuItemType} from '../menu-item.type';
-import {LucideAngularModule} from 'lucide-angular';
-
+import { CommonModule } from '@angular/common';
+import { Component, computed, inject, input, TemplateRef } from '@angular/core';
+import { DataListItem, MenuPanel, Popover, SubmenuTrigger } from '@fibo-ui/cdk';
+import { RouterLink } from '@angular/router';
+import { LucideAngularModule } from 'lucide-angular';
+import { MenuItemType } from '../menu-item.type';
 
 @Component({
   selector: 'fibo-menu',
-  hostDirectives: [MenuPanel],
+  hostDirectives: [
+    {
+      directive: MenuPanel,
+      inputs: ['keyboardSource'],
+    },
+  ],
   host: {
     'class': 'popover-container  group min-w-40',
     'role': 'menu',
@@ -18,7 +22,7 @@ import {LucideAngularModule} from 'lucide-angular';
 })
 export class Menu {
   items = input<MenuItemType[]>();
-  menuContent = input<TemplateRef<any>>()
+  menuContent = input<TemplateRef<any>>();
   itemsHaveIcons = computed(() => this.items()?.some((item) => !!item.icon));
   menuPanel = inject(MenuPanel);
 }

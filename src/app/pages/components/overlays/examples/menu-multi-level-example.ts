@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Popover, PopoverTriggerToggle } from '@fibo-ui/cdk';
+import { DataListKeyboardBridge, KeyboardTarget, Popover, PopoverTriggerToggle } from '@fibo-ui/cdk';
 import { Menu, type MenuItemType } from '@fibo-ui/components';
 
 @Component({
   selector: 'menu-multi-level-example',
-  imports: [PopoverTriggerToggle, Popover, Menu],
+  imports: [PopoverTriggerToggle, Popover, DataListKeyboardBridge, KeyboardTarget, Menu],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto w-80 p-8">
-      <button class="btn btn-primary" fiboPopoverTriggerToggle [content]="menuTpl">
+      <button class="btn btn-primary" fiboKeyboardTarget #keyboardTarget="KeyboardTarget" fiboPopoverTriggerToggle [content]="menuTpl">
         User Profile
       </button>
-      <ng-template #menuTpl let-trigger>
-        <fibo-menu fiboPopover [trigger]="trigger" [items]="userProfileMenuItems" placement="bottom-start"></fibo-menu>
+      <ng-template #menuTpl>
+        <fibo-menu fiboPopover [fiboDataListKeyboardBridge]="keyboardTarget" [items]="userProfileMenuItems" placement="bottom-start"></fibo-menu>
       </ng-template>
     </div>
   `,

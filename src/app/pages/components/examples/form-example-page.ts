@@ -5,7 +5,9 @@ import { Calendar } from '@fibo-ui/components';
 import {
   SelectDate,
   DataList,
+  DataListKeyboardBridge,
   DataListItem,
+  KeyboardTarget,
   Popover,
   PopoverTriggerClick,
   SelectOne,
@@ -41,6 +43,8 @@ interface UserProfile {
     FormField,
     FormFieldDirective,
     DataList,
+    DataListKeyboardBridge,
+    KeyboardTarget,
     Popover,
     PopoverTriggerClick,
     SelectOne,
@@ -76,7 +80,7 @@ interface UserProfile {
           </div>
         </div>
 
-        <button type="button" fiboFormFieldTrigger [content]="cityTpl"
+        <button type="button" fiboKeyboardTarget #cityKeyboardTarget="KeyboardTarget" fiboFormFieldTrigger [content]="cityTpl"
                 [formField]="userProfileForm.city"
                 class="w-full form-field-control flex items-center gap-2 text-left">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
@@ -88,8 +92,10 @@ interface UserProfile {
                        class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
         </button>
         <ng-template #cityTpl let-trigger>
-          <div fiboPopover [trigger]="trigger" [matchWidth]="true"
-               fiboDataList (itemTriggered)="trigger.close()"
+          <div fiboPopover [matchWidth]="true"
+               #popover="Popover"
+               fiboDataList [fiboDataListKeyboardBridge]="cityKeyboardTarget"
+               (itemTriggered)="popover.close()"
                fiboSelectOne [(value)]="userProfileForm.city().value"
                class="popover-container">
             @for (c of cities; track c.value) {
@@ -101,7 +107,7 @@ interface UserProfile {
         </ng-template>
 
 
-        <button type="button" fiboFormFieldTrigger [content]="roleTpl"
+        <button type="button" fiboKeyboardTarget #roleKeyboardTarget="KeyboardTarget" fiboFormFieldTrigger [content]="roleTpl"
                 [formField]="userProfileForm.userRole"
                 class="w-full form-field-control flex items-center gap-2 text-left">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
@@ -113,8 +119,10 @@ interface UserProfile {
                        class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
         </button>
         <ng-template #roleTpl let-trigger>
-          <div fiboPopover [trigger]="trigger" [matchWidth]="true"
-               fiboDataList (itemTriggered)="trigger.close()"
+          <div fiboPopover [matchWidth]="true"
+               #popover="Popover"
+               fiboDataList [fiboDataListKeyboardBridge]="roleKeyboardTarget"
+               (itemTriggered)="popover.close()"
                fiboSelectOne [(value)]="userProfileForm.userRole().value"
                class="popover-container">
             @for (role of userRoles; track role) {
@@ -177,10 +185,11 @@ interface UserProfile {
           <lucide-icon name="calendar-days" size="16"
                        class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
         </div>
-        <ng-template #birthCalTpl let-trigger>
+        <ng-template #birthCalTpl>
           <fibo-calendar fiboPopover
+                         #popover="Popover"
                          fiboSelectDate [(value)]="userProfileForm.birthDate().value"
-                         (itemTriggered)="trigger.close()"
+                         (itemTriggered)="popover.close()"
                          class="popover-container"/>
         </ng-template>
 
@@ -195,7 +204,7 @@ interface UserProfile {
 
 
         <!-- Skills (multiple) -->
-        <button type="button" fiboFormFieldTrigger [content]="skillsTpl"
+        <button type="button" fiboKeyboardTarget #skillsKeyboardTarget="KeyboardTarget" fiboFormFieldTrigger [content]="skillsTpl"
                 [formField]="userProfileForm.skills"
                 class="w-full form-field-control flex items-center gap-2 text-left">
           <div class="flex flex-col justify-center flex-1 min-w-0 gap-0">
@@ -221,8 +230,8 @@ interface UserProfile {
                        class="form-field-icon form-field-icon-end shrink-0"></lucide-icon>
         </button>
         <ng-template #skillsTpl let-trigger>
-          <div fiboPopover [trigger]="trigger" [matchWidth]="true"
-               fiboDataList
+          <div fiboPopover [matchWidth]="true"
+               fiboDataList [fiboDataListKeyboardBridge]="skillsKeyboardTarget"
                fiboSelectMulti [(value)]="userProfileForm.skills().value"
                class="popover-container">
             @if (skills.length === 0) {

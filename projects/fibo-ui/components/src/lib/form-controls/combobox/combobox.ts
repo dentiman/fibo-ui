@@ -3,6 +3,7 @@ import { FormValueControl, ValidationError, WithOptionalField } from '@angular/f
 import {
   DataList,
   DataListItem,
+  KeyboardSource,
   Popover,
   PopoverTrigger,
   SelectOne,
@@ -17,14 +18,16 @@ export interface ComboboxItem {
 
 @Component({
   selector: 'fibo-combobox',
-  imports: [FormFieldControl, PopoverTrigger, Popover, DataList, DataListItem, SelectOne],
+  imports: [FormFieldControl, PopoverTrigger, Popover, DataList, DataListItem, KeyboardSource, SelectOne],
   host: {
     class: 'block',
   },
   template: `
     <fibo-form-field-control
+      fiboKeyboardSource
       fiboPopoverTrigger
       #trigger="PopoverTrigger"
+      #keyboardSource="KeyboardSource"
       [id]="id()"
       [delegatesFocus]="true"
       [content]="comboboxTpl"
@@ -64,18 +67,19 @@ export interface ComboboxItem {
       <div class="form-field-error">{{ error }}</div>
     }
 
-    <ng-template #comboboxTpl let-trigger>
+    <ng-template #comboboxTpl>
       @if (shouldRenderPopup()) {
         <div
           fiboPopover
-          [trigger]="trigger"
+          #popover="Popover"
+          [keyboardSource]="keyboardSource"
           [matchWidth]="true"
           [id]="listboxId()"
           role="listbox"
           fiboDataList
           fiboSelectOne
           [(value)]="value"
-          (itemTriggered)="trigger.close()"
+          (itemTriggered)="popover.close()"
           class="popover-container"
         >
           @for (item of visibleItems(); track item.value; let index = $index) {

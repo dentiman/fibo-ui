@@ -13,7 +13,7 @@ import { LucideAngularModule } from 'lucide-angular';
         <lucide-icon name="user" size="16" />
         Alex Johnson
       </button>
-      <ng-template #cardTpl let-trigger>
+      <ng-template #cardTpl>
         <div fiboPopover placement="bottom-start" [offset]="8"
              class="popover-container p-4 w-72 flex flex-col gap-3">
           <div class="flex items-center gap-3">
@@ -36,7 +36,7 @@ import { LucideAngularModule } from 'lucide-angular';
               <span>Berlin, Germany</span>
             </div>
           </div>
-          <button type="button" class="btn btn-sm btn-primary w-full" (click)="trigger.close()">
+          <button type="button" class="btn btn-sm btn-primary w-full" (click)="triggerRef.close()">
             View Profile
           </button>
         </div>

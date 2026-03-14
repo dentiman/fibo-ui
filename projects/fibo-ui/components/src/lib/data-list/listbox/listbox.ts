@@ -12,7 +12,7 @@ import {Checkbox} from '../../form-controls/checkbox/checkbox';
   ],
   hostDirectives: [{
     directive: DataList,
-    inputs: ['disabled','trigger'],
+    inputs: ['disabled'],
     outputs: ['itemTriggered'],
   }],
   templateUrl: './listbox.html',
