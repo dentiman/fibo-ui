@@ -1,5 +1,6 @@
 import { Directive, ElementRef, inject, input, model, signal, TemplateRef } from '@angular/core';
 import { DataListItem } from '../data-list/data-list-item.directive';
+import { isElementInOverlayPortal, isFocusInsideHostOrOverlay } from '../portal/overlay-focus';
 import { OverlayCategory, OverlayCloseContext, createOverlay } from '../portal/overlay-registry';
 
 @Directive({
@@ -68,7 +69,7 @@ export class PopoverTrigger {
     const shouldRestore =
       !ctx.activeElement ||
       ctx.activeElement === document.body ||
-      (portalId && !!ctx.activeElement.closest(`[data-portal-id="${portalId}"]`));
+      isElementInOverlayPortal(ctx.activeElement, portalId);
 
     if (shouldRestore) {
       this.element.focus();
@@ -88,13 +89,9 @@ export class PopoverTrigger {
     const relatedTarget = event.relatedTarget as Node;
     if (!relatedTarget) return;
 
-    const relatedElement =
-      relatedTarget instanceof Element ? relatedTarget : relatedTarget.parentElement;
     const portalId = this.overlayRef()?.id;
-    const isMovingToOwnPortal =
-      portalId && !!relatedElement?.closest(`[data-portal-id="${portalId}"]`);
 
-    if (this.element.contains(relatedTarget) || isMovingToOwnPortal) {
+    if (isFocusInsideHostOrOverlay(relatedTarget, this.element, portalId)) {
       return;
     }
 

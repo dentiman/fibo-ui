@@ -3,6 +3,7 @@ import { FormValueControl, ValidationError, WithOptionalField } from '@angular/f
 import {
   DataList,
   DataListItem,
+  isFocusInsideHostOrOverlay,
   KeyboardSource,
   Popover,
   PopoverTrigger,
@@ -147,7 +148,7 @@ export class Combobox implements FormValueControl<string | number | null> {
 
   onBlur(event: FocusEvent, trigger: PopoverTrigger) {
     this.touched.set(true);
-    if (this.isFocusMovingInsideCombobox(event, trigger)) {
+    if (isFocusInsideHostOrOverlay(event.relatedTarget, trigger.element, trigger.overlayRef()?.id)) {
       return;
     }
 
@@ -157,22 +158,5 @@ export class Combobox implements FormValueControl<string | number | null> {
   private resetInputValue() {
     const value = this.value();
     this.inputValue.set(value !== null ? String(value) : '');
-  }
-
-  private isFocusMovingInsideCombobox(event: FocusEvent, trigger: PopoverTrigger): boolean {
-    const relatedTarget = event.relatedTarget;
-    if (!(relatedTarget instanceof Node)) {
-      return false;
-    }
-
-    if (trigger.element.contains(relatedTarget)) {
-      return true;
-    }
-
-    const relatedElement =
-      relatedTarget instanceof Element ? relatedTarget : relatedTarget.parentElement;
-    const portalId = trigger.overlayRef()?.id;
-
-    return !!(portalId && relatedElement?.closest(`[data-portal-id="${portalId}"]`));
   }
 }

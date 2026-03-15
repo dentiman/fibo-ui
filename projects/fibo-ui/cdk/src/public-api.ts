@@ -54,4 +54,5 @@ export * from './lib/a11y/focus-trap';
 
 // Overlay Components and Services
 export * from './lib/portal/overlay-registry';
+export * from './lib/portal/overlay-focus';
 export * from './lib/portal/overlay-outlet';
