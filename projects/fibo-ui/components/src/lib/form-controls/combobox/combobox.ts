@@ -22,6 +22,7 @@ import { FormFieldControl } from '../form/form-field-control';
       fiboKeyboardSource
       fiboPopoverTrigger
       [(open)]="showSuggestions"
+      #trigger="PopoverTrigger"
       #keyboardSource="KeyboardSource"
       [id]="id()"
       [delegatesFocus]="true"
@@ -52,8 +53,8 @@ import { FormFieldControl } from '../form/form-field-control';
         autocomplete="off"
         class="text-field-input"
         (input)="onInput($event)"
-
-        (blur)="onBlur($event)"
+        (keydown)="onInputKeydown($event, trigger)"
+        (blur)="onBlur($event, trigger)"
       />
     </fibo-form-field-control>
 
@@ -64,6 +65,7 @@ import { FormFieldControl } from '../form/form-field-control';
     <ng-template #comboboxTpl>
         <div
           fiboPopover
+          #popover="Popover"
           [keyboardSource]="keyboardSource"
           [matchWidth]="true"
           [id]="listboxId()"
@@ -71,6 +73,7 @@ import { FormFieldControl } from '../form/form-field-control';
           fiboDataList
           fiboSelectOne
           [(value)]="value"
+          (itemTriggered)="popover.close()"
           class="popover-container"
         >
           @for (item of visibleItems(); track item) {
@@ -133,27 +136,43 @@ export class Combobox implements FormValueControl<string | number | null> {
     this.showSuggestions.set(!!value.trim() && this.visibleItems().length > 0);
   }
 
-  onKeydown(event: KeyboardEvent) {
-    if (this.disabled()) return;
-
-    if (event.key === 'ArrowDown' && !this.showSuggestions() && this.visibleItems().length) {
-      this.showSuggestions.set(true);
+  onInputKeydown(event: KeyboardEvent, trigger: PopoverTrigger) {
+    if (event.key === 'Escape') {
+      trigger.close();
+      this.resetInputValue();
       event.preventDefault();
-    } else if (event.key === 'Escape' && this.showSuggestions()) {
-      this.showSuggestions.set(false);
+      event.stopPropagation();
     }
   }
 
-  onBlur(event: FocusEvent) {
+  onBlur(event: FocusEvent, trigger: PopoverTrigger) {
     this.touched.set(true);
-    const related = event.relatedTarget as Element | null;
-    // Don't reset input while user is clicking a popover item.
-    // Check both [role="listbox"] (standard case) and null relatedTarget
-    // while popover is open (portal-rendered items may not appear as
-    // relatedTarget on some browsers/OS combinations).
-    if (related?.closest('[role="listbox"]') || (!related && this.showSuggestions())) {
+    if (this.isFocusMovingInsideCombobox(event, trigger)) {
       return;
     }
-    this.inputValue.set(this.value() !== null ? String(this.value()) : '');
+
+    this.resetInputValue();
+  }
+
+  private resetInputValue() {
+    const value = this.value();
+    this.inputValue.set(value !== null ? String(value) : '');
+  }
+
+  private isFocusMovingInsideCombobox(event: FocusEvent, trigger: PopoverTrigger): boolean {
+    const relatedTarget = event.relatedTarget;
+    if (!(relatedTarget instanceof Node)) {
+      return false;
+    }
+
+    if (trigger.element.contains(relatedTarget)) {
+      return true;
+    }
+
+    const relatedElement =
+      relatedTarget instanceof Element ? relatedTarget : relatedTarget.parentElement;
+    const portalId = trigger.overlayRef()?.id;
+
+    return !!(portalId && relatedElement?.closest(`[data-portal-id="${portalId}"]`));
   }
 }
