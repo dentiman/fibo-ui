@@ -127,8 +127,6 @@ export class Combobox implements FormValueControl<string | number | null> {
       : this.items();
   });
 
-
-
   onInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     this.inputValue.set(value);
@@ -148,11 +146,14 @@ export class Combobox implements FormValueControl<string | number | null> {
 
   onBlur(event: FocusEvent) {
     this.touched.set(true);
-    // Don't reset input while user is clicking a popover item —
-    // the linkedSignal will handle it when value changes.
     const related = event.relatedTarget as Element | null;
-    if (!related?.closest('[role="listbox"]')) {
-      this.inputValue.set(this.value() !== null ? String(this.value()) : '');
+    // Don't reset input while user is clicking a popover item.
+    // Check both [role="listbox"] (standard case) and null relatedTarget
+    // while popover is open (portal-rendered items may not appear as
+    // relatedTarget on some browsers/OS combinations).
+    if (related?.closest('[role="listbox"]') || (!related && this.showSuggestions())) {
+      return;
     }
+    this.inputValue.set(this.value() !== null ? String(this.value()) : '');
   }
 }
