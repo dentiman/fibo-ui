@@ -65,7 +65,11 @@ export class ConfirmationService {
     const ref = this.overlayRef();
     if (ref) {
       ref.close({ reason: 'programmatic' });
+      return;
     }
+
+    this.isOpen.set(false);
+    this.scheduleConfigCleanup();
   }
 
   // Keep config during leave animation, then release payload/callback references.

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormField, form } from '@angular/forms/signals';
-import { Combobox, ComboboxItem } from '@fibo-ui/components';
+import { Combobox } from '@fibo-ui/components';
 
 @Component({
   selector: 'combobox-component-example',
@@ -18,13 +18,13 @@ import { Combobox, ComboboxItem } from '@fibo-ui/components';
   `,
 })
 export class ComboboxComponentExample {
-  readonly assignees: ComboboxItem[] = [
-    { label: 'Ada Lovelace', value: 'ada' },
-    { label: 'Alan Turing', value: 'alan' },
-    { label: 'Barbara Liskov', value: 'barbara' },
-    { label: 'Grace Hopper', value: 'grace' },
-    { label: 'Linus Torvalds', value: 'linus' },
-    { label: 'Margaret Hamilton', value: 'margaret' },
+  readonly assignees = [
+    'Ada Lovelace',
+    'Alan Turing',
+    'Barbara Liskov',
+    'Grace Hopper',
+    'Linus Torvalds',
+    'Margaret Hamilton',
   ];
 
   readonly user = signal({ assignee: null as string | null });

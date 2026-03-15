@@ -15,7 +15,8 @@ import { OverlayCategory, OverlayCloseContext, createOverlay } from '../portal/o
 export class PopoverTrigger {
   isListItem = !!inject(DataListItem, { optional: true, self: true });
   element = inject(ElementRef<HTMLElement>).nativeElement;
-  isOpen = signal(false);
+  isOpen = model(false, { alias: 'open' });
+
 
   content = input<TemplateRef<any>>();
   overlayCategory = model<OverlayCategory>('popover');
@@ -50,7 +51,10 @@ export class PopoverTrigger {
     const ref = this.overlayRef();
     if (ref) {
       ref.close({ reason: 'programmatic' });
+      return;
     }
+
+    this.isOpen.set(false);
   }
 
   /**

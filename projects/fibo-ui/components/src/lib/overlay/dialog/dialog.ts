@@ -16,7 +16,7 @@ import { FocusTrap, OVERLAY_REF } from '@fibo-ui/cdk';
          animate.enter="dialog-enter">
 
       <div (click)="close()"
-           [class]="'dialog-backdrop fixed inset-0' + (firstDialog ? ' bg-black/30 dark:bg-black/50' : '')">
+           [class]="'dialog-backdrop fixed inset-0' + (firstDialog() ? ' bg-black/30 dark:bg-black/50' : '')">
       </div>
 
       <div fiboFocusTrap

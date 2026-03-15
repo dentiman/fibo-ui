@@ -11,11 +11,6 @@ import {
 import { formErrorMessage } from '../form/form-error';
 import { FormFieldControl } from '../form/form-field-control';
 
-export interface ComboboxItem {
-  label: string;
-  value: string | number | null;
-}
-
 @Component({
   selector: 'fibo-combobox',
   imports: [FormFieldControl, PopoverTrigger, Popover, DataList, DataListItem, KeyboardSource, SelectOne],
@@ -26,14 +21,14 @@ export interface ComboboxItem {
     <fibo-form-field-control
       fiboKeyboardSource
       fiboPopoverTrigger
-      #trigger="PopoverTrigger"
+      [(open)]="showSuggestions"
       #keyboardSource="KeyboardSource"
       [id]="id()"
       [delegatesFocus]="true"
       [content]="comboboxTpl"
       [label]="label()"
       [iconStart]="iconStart()"
-      [iconEnd]="'chevron-down'"
+      iconEnd="chevron-down"
       [required]="required()"
       [disabled]="disabled()"
       [invalid]="invalid()"
@@ -48,7 +43,7 @@ export interface ComboboxItem {
         role="combobox"
         aria-autocomplete="list"
         [attr.aria-controls]="listboxId()"
-        [attr.aria-expanded]="trigger.isOpen()"
+        [attr.aria-expanded]="showSuggestions()"
         [attr.aria-activedescendant]="null"
         [value]="inputValue()"
         [placeholder]="placeholder()"
@@ -56,10 +51,9 @@ export interface ComboboxItem {
         [attr.data-error]="(invalid() && touched()) || null"
         autocomplete="off"
         class="text-field-input"
-        (focus)="onFocus(trigger)"
-        (input)="onInput($event, trigger)"
-        (keydown)="onInputKeydown($event, trigger)"
-        (blur)="onBlur()"
+        (input)="onInput($event)"
+
+        (blur)="onBlur($event)"
       />
     </fibo-form-field-control>
 
@@ -68,10 +62,8 @@ export interface ComboboxItem {
     }
 
     <ng-template #comboboxTpl>
-      @if (shouldRenderPopup()) {
         <div
           fiboPopover
-          #popover="Popover"
           [keyboardSource]="keyboardSource"
           [matchWidth]="true"
           [id]="listboxId()"
@@ -79,120 +71,88 @@ export interface ComboboxItem {
           fiboDataList
           fiboSelectOne
           [(value)]="value"
-          (itemTriggered)="popover.close()"
           class="popover-container"
         >
-          @for (item of visibleItems(); track item.value; let index = $index) {
+          @for (item of visibleItems(); track item) {
             <button
               type="button"
               fiboDataListItem
-              [id]="optionId(index)"
-              [value]="item.value"
+              [value]="item"
               role="option"
               class="datalist-item w-full text-left"
             >
-              {{ item.label }}
+              {{ item }}
             </button>
           }
         </div>
-      }
     </ng-template>
   `,
 })
 export class Combobox implements FormValueControl<string | number | null> {
   static nextId = 0;
 
-  readonly id = signal(`fibo-combobox-${Combobox.nextId++}`);
-  readonly listboxId = computed(() => `${this.id()}-listbox`);
+  id = signal(`fibo-combobox-${Combobox.nextId++}`);
+  listboxId = computed(() => `${this.id()}-listbox`);
 
-  readonly value = model<string | number | null>(null);
+  value = model<string | number | null>(null);
 
-  readonly required = input(false);
-  readonly disabled = input(false);
-  readonly touched = model(false);
-  readonly invalid = input(false);
-  readonly dirty = input(false);
-  readonly errors = input<readonly WithOptionalField<ValidationError>[]>([]);
-
-  readonly items = input<ComboboxItem[]>([]);
-  readonly label = input('');
-  readonly placeholder = input('Search and select');
-  readonly iconStart = input('');
-  readonly clearValue = input<string | number | null | undefined>(null);
-  readonly errorMessage = formErrorMessage(this.errors, this.invalid, this.touched);
-
-  readonly selectedItem = computed(() => {
-    const currentValue = this.value();
-    if (currentValue === null) return null;
-
-    return this.items().find((item) => item.value === currentValue) ?? null;
+  showSuggestions = linkedSignal({
+    source: this.value,
+    computation: () => false,
   });
 
-  readonly inputValue = linkedSignal({
-    source: this.selectedItem,
-    computation: (selectedItem) => selectedItem?.label ?? '',
+  required = input(false);
+  disabled = input(false);
+  touched = model(false);
+  invalid = input(false);
+  dirty = input(false);
+  errors = input<readonly WithOptionalField<ValidationError>[]>([]);
+
+  items = input<(string | number)[]>([]);
+  label = input('');
+  placeholder = input('Search and select');
+  iconStart = input('');
+  clearValue = input<string | number | null | undefined>(null);
+  errorMessage = formErrorMessage(this.errors, this.invalid, this.touched);
+
+  inputValue = linkedSignal({
+    source: this.value,
+    computation: (value) => (value !== null ? String(value) : ''),
   });
 
-  readonly normalizedQuery = computed(() => this.normalize(this.inputValue()));
-
-  readonly visibleItems = computed(() => {
-    const query = this.normalizedQuery();
-    const items = this.items();
-    if (!query) return items;
-
-    return items.filter((item) => this.normalize(item.label).includes(query));
+  visibleItems = computed(() => {
+    const query = this.inputValue().trim().toLocaleLowerCase();
+    return query
+      ? this.items().filter((item) => String(item).toLocaleLowerCase().includes(query))
+      : this.items();
   });
 
-  readonly shouldRenderPopup = computed(() => this.visibleItems().length > 0);
 
-  optionId(index: number): string {
-    return `${this.id()}-option-${index}`;
+
+  onInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.inputValue.set(value);
+    this.showSuggestions.set(!!value.trim() && this.visibleItems().length > 0);
   }
 
-  onFocus(trigger: PopoverTrigger) {
-    if (this.disabled()) return;
-    if (!this.normalizedQuery()) return;
-    if (this.visibleItems().length === 0) return;
-
-    trigger.open();
-  }
-
-  onInput(event: Event, trigger: PopoverTrigger) {
-    const target = event.target as HTMLInputElement;
-    this.inputValue.set(target.value);
-
-    if (!this.normalize(target.value) || this.visibleItems().length === 0) {
-      trigger.close();
-      return;
-    }
-
-    trigger.open();
-  }
-
-  onInputKeydown(event: KeyboardEvent, trigger: PopoverTrigger) {
+  onKeydown(event: KeyboardEvent) {
     if (this.disabled()) return;
 
-    if (event.key === 'ArrowDown' && !trigger.isOpen() && this.visibleItems().length > 0) {
-      trigger.open();
+    if (event.key === 'ArrowDown' && !this.showSuggestions() && this.visibleItems().length) {
+      this.showSuggestions.set(true);
       event.preventDefault();
-      return;
-    }
-
-    if (event.key === 'Escape' && !trigger.isOpen()) {
-      this.resetInputValue();
+    } else if (event.key === 'Escape' && this.showSuggestions()) {
+      this.showSuggestions.set(false);
     }
   }
 
-  onBlur() {
+  onBlur(event: FocusEvent) {
     this.touched.set(true);
-    this.resetInputValue();
-  }
-
-  private resetInputValue() {
-    this.inputValue.set(this.selectedItem()?.label ?? '');
-  }
-
-  private normalize(value: string): string {
-    return value.trim().toLocaleLowerCase();
+    // Don't reset input while user is clicking a popover item —
+    // the linkedSignal will handle it when value changes.
+    const related = event.relatedTarget as Element | null;
+    if (!related?.closest('[role="listbox"]')) {
+      this.inputValue.set(this.value() !== null ? String(this.value()) : '');
+    }
   }
 }

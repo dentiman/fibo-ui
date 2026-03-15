@@ -7,7 +7,6 @@ import {
   effect,
   inject,
   signal,
-  untracked,
 } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
@@ -53,13 +52,13 @@ export class OverlayRef {
   readonly context: Record<string, any>;
   readonly category: OverlayCategory;
   readonly zIndex: number;
-  readonly firstInCategory: boolean;
+  readonly firstInCategory: Signal<boolean>;
   readonly referenceElement?: HTMLElement;
   readonly state = signal<OverlayState>('open');
   readonly closeContext = signal<OverlayCloseContext | null>(null);
 
   constructor(
-    options: RegisterOverlayOptions & { zIndex: number; firstInCategory: boolean }
+    options: RegisterOverlayOptions & { zIndex: number; firstInCategory: Signal<boolean> }
   ) {
     this.id = `overlay-${++nextOverlayId}`;
     this.templateRef = options.templateRef;
@@ -115,12 +114,13 @@ export class OverlayRegistry {
   private register(options: RegisterOverlayOptions): OverlayRef {
     const category = options.category ?? 'popover';
     const zIndex = BASE_Z_INDEX[category] + ++this.zIndexCounter;
-    // untracked: prevent signal read from being tracked by calling effect
-    const firstInCategory = untracked(() =>
-      Array.from(this.openPortals().values()).every(p => p.category !== category)
-    );
+    let ref!: OverlayRef;
+    const firstInCategory = computed(() => {
+      const firstOverlay = this.openPortalsList().find((portal) => portal.category === category);
+      return firstOverlay?.id === ref.id;
+    });
 
-    const ref = new OverlayRef({ ...options, zIndex, firstInCategory });
+    ref = new OverlayRef({ ...options, zIndex, firstInCategory });
 
     this.openPortals.update(map => {
       const newMap = new Map(map);
