@@ -20,6 +20,7 @@ import { FormFieldControl } from '../form/form-field-control';
   },
   template: `
     <fibo-form-field-control
+      fiboCombobox
       fiboKeyboardSource
       fiboPopoverTrigger
       [(open)]="showSuggestions"
@@ -56,6 +57,7 @@ import { FormFieldControl } from '../form/form-field-control';
         (input)="onInput($event)"
         (keydown)="onInputKeydown($event, trigger)"
         (blur)="onBlur($event, trigger)"
+
       />
     </fibo-form-field-control>
 

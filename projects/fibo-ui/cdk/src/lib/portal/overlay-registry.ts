@@ -204,7 +204,7 @@ export class OverlayRegistry {
 
       const ctx = ref.closeContext();
       if (ctx) {
-        options.onCloseRequest?.(ctx);
+        options.onCloseRequest?.(ctx, ref);
         options.isOpen.set(false);
       }
     });
@@ -219,7 +219,7 @@ export interface CreateOverlayOptions {
   category?: OverlayCategory | Signal<OverlayCategory>;
   referenceElement?: HTMLElement;
   context?: Record<string, any>;
-  onCloseRequest?: (ctx: OverlayCloseContext) => void;
+  onCloseRequest?: (ctx: OverlayCloseContext, overlay: OverlayRef) => void;
 }
 
 /**
@@ -232,9 +232,9 @@ export interface CreateOverlayOptions {
  *   content: this.templateRef,
  *   category: 'popover',
  *   referenceElement: this.element,
- *   onCloseRequest: (ctx) => {
+ *   onCloseRequest: (ctx, overlay) => {
  *     // side effects only — isOpen.set(false) is handled automatically
- *     this.restoreFocus(ctx);
+ *     restoreOverlayFocus(ctx, overlay, this.element);
  *   },
  * });
  * ```

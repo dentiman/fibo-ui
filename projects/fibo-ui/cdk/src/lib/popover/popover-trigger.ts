@@ -1,7 +1,7 @@
 import { Directive, ElementRef, inject, input, model, signal, TemplateRef } from '@angular/core';
 import { DataListItem } from '../data-list/data-list-item.directive';
-import { isElementInOverlayPortal, isFocusInsideHostOrOverlay } from '../portal/overlay-focus';
-import { OverlayCategory, OverlayCloseContext, createOverlay } from '../portal/overlay-registry';
+import { isFocusInsideHostOrOverlay, restoreOverlayFocus } from '../portal/overlay-focus';
+import { OverlayCategory, createOverlay } from '../portal/overlay-registry';
 
 @Directive({
   selector: '[fiboPopoverTrigger]',
@@ -29,7 +29,7 @@ export class PopoverTrigger {
     category: this.overlayCategory,
     referenceElement: this.element,
     context: {},
-    onCloseRequest: ctx => this.restoreFocus(ctx),
+    onCloseRequest: (ctx, overlay) => restoreOverlayFocus(ctx, overlay),
   });
 
   toggle() {
@@ -56,24 +56,6 @@ export class PopoverTrigger {
     }
 
     this.isOpen.set(false);
-  }
-
-  /**
-   * Восстанавливает фокус на триггер-элемент (a11y).
-   * Фокус возвращается, только если он находится «нигде» (body) или
-   * внутри закрываемого портала. Если пользователь уже кликнул за
-   * пределами портала — фокус остаётся на новом элементе.
-   */
-  private restoreFocus(ctx: OverlayCloseContext) {
-    const portalId = this.overlayRef()?.id;
-    const shouldRestore =
-      !ctx.activeElement ||
-      ctx.activeElement === document.body ||
-      isElementInOverlayPortal(ctx.activeElement, portalId);
-
-    if (shouldRestore) {
-      this.element.focus();
-    }
   }
 
   onFocus() {
