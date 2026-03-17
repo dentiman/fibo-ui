@@ -5,11 +5,11 @@
   "compilerOptions": {
     "paths": {
       "@fibo-ui/cdk": [
-        "./dist/fibo-ui/cdk",
+        // "./dist/fibo-ui/cdk",
         "./projects/fibo-ui/cdk/src/public-api.ts"
       ],
       "@fibo-ui/components": [
-        "./dist/fibo-ui/components",
+        // "./dist/fibo-ui/components",
         "./projects/fibo-ui/components/src/public-api.ts"
       ]
     },

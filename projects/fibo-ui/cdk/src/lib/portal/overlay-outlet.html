@@ -2,9 +2,10 @@
   <div [attr.data-portal-id]="portal.id"
        [style.z-index]="portal.zIndex"
        style="position: relative"
+       (animationend)="handlePortalAnimationEnd(portal.id, $event)"
        animate.leave="overlay-leave">
     <ng-container
-      *ngTemplateOutlet="portal.templateRef; context: portal.context; injector: portalInjector(portal)"
+      *ngTemplateOutlet="portal.templateRef; injector: portalInjector(portal)"
     ></ng-container>
   </div>
 }

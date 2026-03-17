@@ -1,12 +1,18 @@
 import {
+  afterNextRender,
+  AfterRenderRef,
+  DestroyRef,
+  EffectRef,
   Injectable,
   InjectionToken,
+  Injector,
   Signal,
   WritableSignal,
   computed,
   effect,
   inject,
   signal,
+  untracked,
 } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
@@ -35,26 +41,32 @@ export interface OverlayCloseContext {
 
 export interface RegisterOverlayOptions {
   templateRef: TemplateRef<any>;
-  context?: Record<string, any>;
   category?: OverlayCategory;
-  referenceElement?: HTMLElement;
+  referenceElement?: HTMLElement | null;
 }
 
 let nextOverlayId = 0;
 
 export class OverlayRef {
   readonly id: string;
-  readonly templateRef: TemplateRef<any>;
-  readonly context: Record<string, any>;
   readonly category: OverlayCategory;
   readonly zIndex: number;
   readonly firstInCategory: Signal<boolean>;
-  readonly referenceElement?: HTMLElement;
+
+  private readonly _templateRef: WritableSignal<TemplateRef<any> | undefined>;
+  private readonly _referenceElement: WritableSignal<HTMLElement | null | undefined>;
 
   private _closed = false;
 
-  /** Set by createOverlay — captures close side-effects and isOpen.set(false). */
-  _onClose?: () => void;
+  _requestClose?: (reason: OverlayCloseReason, event?: Event) => void;
+
+  get templateRef(): TemplateRef<any> | undefined {
+    return this._templateRef();
+  }
+
+  get referenceElement(): HTMLElement | null | undefined {
+    return this._referenceElement();
+  }
 
   get closed() {
     return this._closed;
@@ -64,28 +76,75 @@ export class OverlayRef {
     options: RegisterOverlayOptions & { zIndex: number; firstInCategory: Signal<boolean> }
   ) {
     this.id = `overlay-${++nextOverlayId}`;
-    this.templateRef = options.templateRef;
-    this.context = options.context ?? {};
+    this._templateRef = signal(options.templateRef);
+    this._referenceElement = signal(options.referenceElement);
     this.category = options.category ?? 'popover';
     this.zIndex = options.zIndex;
     this.firstInCategory = options.firstInCategory;
-    this.referenceElement = options.referenceElement;
   }
 
   close() {
     if (this._closed) return;
+    this._requestClose?.('programmatic');
+  }
+
+  _markClosed() {
     this._closed = true;
-    this._onClose?.();
+  }
+
+  _syncConfig(config: Pick<OverlayConfig, 'templateRef' | 'referenceElement'>) {
+    this._templateRef.set(config.templateRef);
+    this._referenceElement.set(config.referenceElement);
   }
 }
 
 export const OVERLAY_REF = new InjectionToken<OverlayRef>('OVERLAY_REF');
+
+export interface OverlayConfig {
+  templateRef?: TemplateRef<any>;
+  referenceElement?: HTMLElement | null;
+  category: OverlayCategory;
+}
+
+export type OverlayCloseReason =
+  | 'programmatic'
+  | 'escape'
+  | 'focusout'
+  | 'outside-click'
+  | 'backdrop'
+  | 'blur'
+  | 'state'
+  | 'destroy';
+
+export interface OverlaySetupContext {
+  ref: OverlayRef;
+  requestClose: (reason: OverlayCloseReason, event?: Event) => void;
+  afterOpened: (handler: (overlay: OverlayRef) => void) => void;
+  afterClose: (handler: (overlay: OverlayRef, reason: OverlayCloseReason) => void) => void;
+  beforeClose: (
+    handler: (
+      ctx: OverlayCloseContext,
+      overlay: OverlayRef,
+      reason: OverlayCloseReason,
+    ) => void,
+  ) => void;
+  effect: (runner: Parameters<typeof effect>[0]) => EffectRef;
+  onCleanup: (cleanup: () => void) => void;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class OverlayRegistry {
   private openPortals = signal<Map<string, OverlayRef>>(new Map());
+  private pendingAfterClose = new Map<
+    string,
+    {
+      ref: OverlayRef;
+      reason: OverlayCloseReason;
+      handlers: Array<(overlay: OverlayRef, reason: OverlayCloseReason) => void>;
+    }
+  >();
   private zIndexCounter = 0;
 
   openPortalsList = computed(() => {
@@ -156,91 +215,182 @@ export class OverlayRegistry {
     }
   }
 
-  /**
-   * Creates a reactive overlay binding. Must be called in injection context.
-   *
-   * Reacts to `isOpen` signal: when true — registers overlay in OverlayRegistry,
-   * when false — unregisters. Returns a signal holding the current OverlayRef or null.
-   *
-   * When external code calls `overlayRef.close()` (e.g. Escape via registry,
-   * click outside via Popover directive), the flow is:
-   * 1. `activeElement` is captured, `onCloseRequest` callback is invoked
-   * 2. `isOpen` is set to false automatically
-   * 3. Effect cleanup unregisters the overlay
-   */
-  createOverlay(options: CreateOverlayOptions): Signal<OverlayRef | null> {
+  completeAfterClose(id: string): void {
+    const pending = this.pendingAfterClose.get(id);
+    if (!pending) {
+      return;
+    }
+
+    this.pendingAfterClose.delete(id);
+    for (const handler of pending.handlers) {
+      handler(pending.ref, pending.reason);
+    }
+  }
+
+  createOverlay(
+    isOpen: WritableSignal<boolean>,
+    config: Signal<OverlayConfig>,
+    setup?: (overlay: OverlaySetupContext) => void,
+  ): Signal<OverlayRef | null> {
     const overlayRef = signal<OverlayRef | null>(null);
+    const destroyRef = inject(DestroyRef);
+    const injector = inject(Injector);
 
-    effect(onCleanup => {
-      const template = options.content();
-      if (options.isOpen() && template) {
-        const category =
-          typeof options.category === 'function'
-            ? options.category()
-            : (options.category ?? 'popover');
+    let currentRef: OverlayRef | null = null;
+    let configSyncEffect: EffectRef | null = null;
+    let setupCleanups: Array<() => void> = [];
+    let afterOpenedHandlers: Array<(overlay: OverlayRef) => void> = [];
+    let afterCloseHandlers: Array<(overlay: OverlayRef, reason: OverlayCloseReason) => void> = [];
+    let beforeCloseHandlers: Array<
+      (ctx: OverlayCloseContext, overlay: OverlayRef, reason: OverlayCloseReason) => void
+    > = [];
+    let afterOpenedRenderRef: AfterRenderRef | null = null;
 
-        const ref = this.register({
-          templateRef: template,
-          context: options.context,
-          category,
-          referenceElement: options.referenceElement,
-        });
+    const cleanupSetup = () => {
+      for (const cleanup of setupCleanups.splice(0)) {
+        cleanup();
+      }
+    };
 
-        ref._onClose = () => {
-          const ctx: OverlayCloseContext = {
-            activeElement: document.activeElement as HTMLElement | null,
-          };
-          options.onCloseRequest?.(ctx, ref);
-          options.isOpen.set(false);
-        };
+    const destroyConfigSync = () => {
+      configSyncEffect?.destroy();
+      configSyncEffect = null;
+    };
 
-        overlayRef.set(ref);
+    const destroyAfterOpenedRender = () => {
+      afterOpenedRenderRef?.destroy();
+      afterOpenedRenderRef = null;
+    };
 
-        onCleanup(() => {
-          // If ref.close() wasn't called (e.g. parent set isOpen to false directly),
-          // fire onCloseRequest here so side-effects (focus restore, etc.) still run.
-          if (!ref.closed) {
-            const ctx: OverlayCloseContext = {
-              activeElement: document.activeElement as HTMLElement | null,
-            };
-            options.onCloseRequest?.(ctx, ref);
-          }
-          this.unregister(ref);
-          overlayRef.set(null);
+    const runBeforeClose = (ref: OverlayRef, reason: OverlayCloseReason) => {
+      const ctx: OverlayCloseContext = {
+        activeElement: document.activeElement as HTMLElement | null,
+      };
+      for (const handler of beforeCloseHandlers) {
+        handler(ctx, ref, reason);
+      }
+    };
+
+    const teardown = (reason: OverlayCloseReason) => {
+      const ref = currentRef;
+      if (!ref) {
+        return;
+      }
+
+      destroyConfigSync();
+      destroyAfterOpenedRender();
+      cleanupSetup();
+
+      if (!ref.closed) {
+        runBeforeClose(ref, reason);
+      }
+
+      this.unregister(ref);
+      if (afterCloseHandlers.length > 0) {
+        this.pendingAfterClose.set(ref.id, {
+          ref,
+          reason,
+          handlers: [...afterCloseHandlers],
         });
       }
+      currentRef = null;
+      afterOpenedHandlers = [];
+      afterCloseHandlers = [];
+      beforeCloseHandlers = [];
+      overlayRef.set(null);
+    };
+
+    const requestClose = (ref: OverlayRef, reason: OverlayCloseReason, event?: Event) => {
+      if (ref !== currentRef || ref.closed) {
+        return;
+      }
+
+      ref._markClosed();
+      runBeforeClose(ref, reason);
+      isOpen.set(false);
+    };
+
+    effect(() => {
+      if (isOpen()) {
+        if (currentRef) {
+          return;
+        }
+
+        const initialConfig = untracked(config);
+        if (!initialConfig.templateRef) {
+          return;
+        }
+
+        const ref = this.register({
+          templateRef: initialConfig.templateRef,
+          category: initialConfig.category,
+          referenceElement: initialConfig.referenceElement,
+        });
+
+        ref._requestClose = (reason, event) => requestClose(ref, reason, event);
+        currentRef = ref;
+        overlayRef.set(ref);
+
+        untracked(() => {
+          configSyncEffect = effect(
+            () => {
+              const nextConfig = config();
+              ref._syncConfig({
+                templateRef: nextConfig.templateRef,
+                referenceElement: nextConfig.referenceElement,
+              });
+            },
+            { injector },
+          );
+
+          if (setup) {
+            setup({
+              ref,
+              requestClose: (reason, event) => requestClose(ref, reason, event),
+              afterOpened: (handler) => afterOpenedHandlers.push(handler),
+              afterClose: (handler) => afterCloseHandlers.push(handler),
+              beforeClose: (handler) => beforeCloseHandlers.push(handler),
+              effect: (runner) => effect(runner, { injector }),
+              onCleanup: (cleanup) => setupCleanups.push(cleanup),
+            });
+          }
+
+          afterOpenedRenderRef = afterNextRender(
+            () => {
+              if (currentRef !== ref || ref.closed) {
+                return;
+              }
+
+              for (const handler of afterOpenedHandlers) {
+                handler(ref);
+              }
+              afterOpenedHandlers = [];
+              afterOpenedRenderRef = null;
+            },
+            { injector },
+          );
+        });
+
+        return;
+      }
+
+      if (currentRef) {
+        teardown('state');
+      }
+    });
+
+    destroyRef.onDestroy(() => {
+      teardown('destroy');
     });
 
     return overlayRef.asReadonly();
   }
 }
 
-export interface CreateOverlayOptions {
-  isOpen: WritableSignal<boolean>;
-  content: Signal<TemplateRef<any> | undefined>;
-  category?: OverlayCategory | Signal<OverlayCategory>;
-  referenceElement?: HTMLElement;
-  context?: Record<string, any>;
-  onCloseRequest?: (ctx: OverlayCloseContext, overlay: OverlayRef) => void;
-}
-
-/**
- * Creates a reactive overlay binding. Must be called in injection context.
- *
- * Usage:
- * ```ts
- * overlayRef = createOverlay({
- *   isOpen: this.isOpen,
- *   content: this.templateRef,
- *   category: 'popover',
- *   referenceElement: this.element,
- *   onCloseRequest: (ctx, overlay) => {
- *     // side effects only — isOpen.set(false) is handled automatically
- *     restoreOverlayFocus(ctx, overlay, this.element);
- *   },
- * });
- * ```
- */
-export function createOverlay(options: CreateOverlayOptions): Signal<OverlayRef | null> {
-  return inject(OverlayRegistry).createOverlay(options);
+export function createOverlay(
+  isOpen: WritableSignal<boolean>,
+  config: Signal<OverlayConfig>,
+  setup?: (overlay: OverlaySetupContext) => void,
+): Signal<OverlayRef | null> {
+  return inject(OverlayRegistry).createOverlay(isOpen, config, setup);
 }

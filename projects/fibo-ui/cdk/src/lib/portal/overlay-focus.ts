@@ -1,4 +1,8 @@
-import { OverlayCloseContext, OverlayRef } from './overlay-registry';
+import {
+  OverlayCloseContext,
+  OverlayRef,
+  OverlaySetupContext,
+} from './overlay-registry';
 
 /**
  * Restores focus to the trigger element when an overlay closes.
@@ -18,6 +22,64 @@ export function restoreOverlayFocus(
   if (shouldRestore) {
     overlay.referenceElement?.focus();
   }
+}
+
+export function restoreFocusOnBeforeClose(overlay: OverlaySetupContext): void {
+  overlay.beforeClose((ctx, ref) => restoreOverlayFocus(ctx, ref));
+}
+
+export function closeOnFocusOutFromOverlay(overlay: OverlaySetupContext): void {
+  const ref = overlay.effect(onCleanup => {
+    const host = overlay.ref.referenceElement;
+    if (!host) {
+      return;
+    }
+
+    const handleFocusOut = (event: FocusEvent) => {
+      const relatedTarget = event.relatedTarget as Node | null;
+      if (!relatedTarget) {
+        return;
+      }
+
+      if (isFocusInsideHostOrOverlay(relatedTarget, host, overlay.ref.id)) {
+        return;
+      }
+
+      overlay.requestClose('focusout', event);
+    };
+
+    host.addEventListener('focusout', handleFocusOut);
+    onCleanup(() => host.removeEventListener('focusout', handleFocusOut));
+  });
+
+  overlay.onCleanup(() => ref.destroy());
+}
+
+export function closeOnClickOutside(overlay: OverlaySetupContext): void {
+  const ref = overlay.effect(onCleanup => {
+    const host = overlay.ref.referenceElement;
+    if (!host) {
+      return;
+    }
+
+    const handleClick = (event: MouseEvent) => {
+      const target = event.target as Node | null;
+      if (!target) {
+        return;
+      }
+
+      if (host.contains(target) || isElementInOverlayPortal(target, overlay.ref.id)) {
+        return;
+      }
+
+      overlay.requestClose('outside-click', event);
+    };
+
+    document.addEventListener('click', handleClick, true);
+    onCleanup(() => document.removeEventListener('click', handleClick, true));
+  });
+
+  overlay.onCleanup(() => ref.destroy());
 }
 
 export function isElementInOverlayPortal(

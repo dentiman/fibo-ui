@@ -69,4 +69,12 @@ export class OverlayOutletComponent {
     }
     return injector;
   }
+
+  handlePortalAnimationEnd(portalId: string, event: AnimationEvent) {
+    if (event.target !== event.currentTarget || event.animationName !== 'overlay-fade-out') {
+      return;
+    }
+
+    this.registry.completeAfterClose(portalId);
+  }
 }

@@ -1,6 +1,10 @@
-import { Directive, ElementRef, inject, input, model, signal, TemplateRef } from '@angular/core';
+import { Directive, ElementRef, computed, inject, input, model, TemplateRef } from '@angular/core';
 import { DataListItem } from '../data-list/data-list-item.directive';
-import { isFocusInsideHostOrOverlay, restoreOverlayFocus } from '../portal/overlay-focus';
+import {
+  closeOnClickOutside,
+  closeOnFocusOutFromOverlay,
+  restoreFocusOnBeforeClose,
+} from '../portal/overlay-focus';
 import { OverlayCategory, createOverlay } from '../portal/overlay-registry';
 
 @Directive({
@@ -10,7 +14,6 @@ import { OverlayCategory, createOverlay } from '../portal/overlay-registry';
     '[attr.tabindex]': 'isListItem ? null : (delegatesFocus() ? "-1" : "0")',
     '[attr.aria-expanded]': 'isOpen() || null',
     '(focus)': 'onFocus()',
-    '(focusout)': 'onFocusOut($event)',
   },
 })
 export class PopoverTrigger {
@@ -18,19 +21,25 @@ export class PopoverTrigger {
   element = inject(ElementRef<HTMLElement>).nativeElement;
   isOpen = model(false, { alias: 'open' });
 
-
   content = input<TemplateRef<any>>();
   overlayCategory = model<OverlayCategory>('popover');
   delegatesFocus = input(false);
 
-  overlayRef = createOverlay({
-    isOpen: this.isOpen,
-    content: this.content,
-    category: this.overlayCategory,
+  config = computed(() => ({
+    templateRef: this.content(),
     referenceElement: this.element,
-    context: {},
-    onCloseRequest: (ctx, overlay) => restoreOverlayFocus(ctx, overlay),
-  });
+    category: this.overlayCategory(),
+  }));
+
+  overlayRef = createOverlay(
+    this.isOpen,
+    this.config,
+    overlay => {
+      closeOnFocusOutFromOverlay(overlay);
+      closeOnClickOutside(overlay);
+      restoreFocusOnBeforeClose(overlay);
+    },
+  );
 
   toggle() {
     this.isOpen() ? this.close() : this.open();
@@ -65,19 +74,6 @@ export class PopoverTrigger {
       ) as HTMLElement | null;
       focusable?.focus();
     }
-  }
-
-  onFocusOut(event: FocusEvent) {
-    const relatedTarget = event.relatedTarget as Node;
-    if (!relatedTarget) return;
-
-    const portalId = this.overlayRef()?.id;
-
-    if (isFocusInsideHostOrOverlay(relatedTarget, this.element, portalId)) {
-      return;
-    }
-
-    this.close();
   }
 }
 

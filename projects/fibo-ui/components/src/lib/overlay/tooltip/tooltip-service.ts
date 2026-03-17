@@ -21,13 +21,23 @@ export class TooltipService {
 
   private _interactionRequest = new Subject<'open' | 'close'>();
   private isOpen = signal(false);
-  private content = computed(() => this.containerTemplateRef() ?? undefined);
+  overlayConfig = computed(() => ({
+    templateRef: this.containerTemplateRef() ?? undefined,
+    referenceElement: this.tooltipRef()?.referenceElement ?? null,
+    category: 'tooltip' as const,
+  }));
 
-  overlayRef = createOverlay({
-    isOpen: this.isOpen,
-    content: this.content,
-    category: 'tooltip',
-  });
+  overlayRef = createOverlay(
+    this.isOpen,
+    this.overlayConfig,
+    overlay => {
+      overlay.afterClose(() => {
+        if (!this.isOpen()) {
+          this.tooltipRef.set(null);
+        }
+      });
+    },
+  );
 
   open(
     content: string | TemplateRef<unknown>,
@@ -53,8 +63,6 @@ export class TooltipService {
     timer(this.closeDelay())
       .pipe(takeUntil(this._interactionRequest))
       .subscribe(() => {
-        // Don't clear tooltipRef — data must stay valid during the outlet's
-        // animate.leave="overlay-leave" fade. It gets overwritten on next open().
         this.isOpen.set(false);
       });
   }

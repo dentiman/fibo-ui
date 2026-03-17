@@ -14,8 +14,7 @@ import { FocusTrap, OVERLAY_REF } from '@fibo-ui/cdk';
     <div class="fixed inset-0"
          animate.enter="drawer-enter">
 
-      <div (click)="close()"
-           [class]="'drawer-backdrop fixed inset-0' + (firstDrawer() ? ' bg-black/30 dark:bg-black/50' : '')">
+      <div [class]="'drawer-backdrop fixed inset-0' + (firstDrawer() ? ' bg-black/30 dark:bg-black/50' : '')">
       </div>
 
       <div class="drawer-panel pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10"
@@ -72,8 +71,4 @@ export class FiboDrawer {
   private overlayRef = inject(OVERLAY_REF);
 
   firstDrawer = this.overlayRef.firstInCategory;
-
-  close() {
-    this.overlayRef.close();
-  }
 }

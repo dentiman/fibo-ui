@@ -15,8 +15,7 @@ import { FocusTrap, OVERLAY_REF } from '@fibo-ui/cdk';
     <div class="fixed inset-0"
          animate.enter="dialog-enter">
 
-      <div (click)="close()"
-           [class]="'dialog-backdrop fixed inset-0' + (firstDialog() ? ' bg-black/30 dark:bg-black/50' : '')">
+      <div [class]="'dialog-backdrop fixed inset-0' + (firstDialog() ? ' bg-black/30 dark:bg-black/50' : '')">
       </div>
 
       <div fiboFocusTrap
@@ -84,8 +83,4 @@ export class FiboDialog {
   private overlayRef = inject(OVERLAY_REF);
 
   firstDialog = this.overlayRef.firstInCategory;
-
-  close() {
-    this.overlayRef.close();
-  }
 }

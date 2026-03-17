@@ -22,13 +22,12 @@ export class Notifier {
   containerTemplateRef = signal<TemplateRef<any> | null>(null);
 
   private isOpen = signal(false);
-  private content = computed(() => this.containerTemplateRef() ?? undefined);
+  overlayConfig = computed(() => ({
+    templateRef: this.containerTemplateRef() ?? undefined,
+    category: 'notification' as const,
+  }));
 
-  overlayRef = createOverlay({
-    isOpen: this.isOpen,
-    content: this.content,
-    category: 'notification',
-  });
+  overlayRef = createOverlay(this.isOpen, this.overlayConfig);
 
   push(config: NotificationConfig) {
     const id = Symbol('notification-id');
