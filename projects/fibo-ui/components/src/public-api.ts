@@ -9,7 +9,7 @@ export * from './lib/loading-spin/loading-spin';
 export * from './lib/overlay/dialog/dialog';
 export * from './lib/overlay/dialog/drawer';
 
-export * from './lib/overlay/tooltip/tooltip-container';
+export * from './lib/overlay/tooltip/tooltip-overlay-container';
 export * from './lib/overlay/tooltip/tooltip-service';
 export * from './lib/overlay/tooltip/tooltip';
 
@@ -19,14 +19,14 @@ export * from './lib/menu/tree-menu/tree-menu.component';
 export * from './lib/menu/side-menu/side-menu-group';
 export * from './lib/menu/side-menu/side-menu-item';
 
-export * from './lib/overlay/confirmation/confirmation';
+export * from './lib/overlay/confirmation/confirmation-overlay-container';
 export * from './lib/overlay/confirmation/confirmation-service';
 export * from './lib/overlay/confirmation/confirmation-trigger';
 
-export * from './lib/overlay/notification/notification';
+export * from './lib/overlay/notification/notification-overlay-container';
 export * from './lib/overlay/notification/notifier';
 
-export * from './lib/overlay/overlay-outlet';
+export * from './lib/overlay/permanent-overlay-container';
 
 export * from './lib/form-controls/calendar/calendar';
 

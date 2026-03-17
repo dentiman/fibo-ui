@@ -27,7 +27,7 @@ export class TooltipService {
     category: 'tooltip' as const,
   }));
 
-  overlayRef = createOverlay(
+  overlayHandle = createOverlay(
     this.isOpen,
     this.overlayConfig,
     overlay => {

@@ -12,9 +12,9 @@ import {NgTemplateOutlet} from '@angular/common';
 import {LucideAngularModule} from 'lucide-angular';
 
 @Component({
-  selector: 'fibo-notification',
+  selector: 'fibo-notification-overlay-container',
   imports: [NgTemplateOutlet, LucideAngularModule],
-  templateUrl: './notification.html',
+  templateUrl: './notification-overlay-container.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   styles: `
@@ -47,7 +47,7 @@ import {LucideAngularModule} from 'lucide-angular';
     }
   `,
 })
-export class Notification {
+export class NotificationOverlayContainer {
   private notifier = inject(Notifier);
   private root = viewChild.required<TemplateRef<any>>('root');
 

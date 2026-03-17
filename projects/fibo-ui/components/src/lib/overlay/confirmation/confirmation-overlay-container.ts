@@ -19,9 +19,9 @@ const DEFAULT_CONFIG = {
 } as const;
 
 @Component({
-  selector: 'fibo-confirmation',
+  selector: 'fibo-confirmation-overlay-container',
   imports: [NgTemplateOutlet, LucideAngularModule],
-  templateUrl: './confirmation.html',
+  templateUrl: './confirmation-overlay-container.html',
   encapsulation: ViewEncapsulation.None,
   styles: `
     /* Enter */
@@ -73,7 +73,7 @@ const DEFAULT_CONFIG = {
     }
   `,
 })
-export class FiboConfirmation {
+export class ConfirmationOverlayContainer {
   confirmation = inject(ConfirmationService);
   private root = viewChild.required<TemplateRef<any>>('root');
   defaultContent = viewChild.required<TemplateRef<unknown>>('defaultContent');

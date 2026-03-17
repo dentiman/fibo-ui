@@ -40,7 +40,6 @@ export * from './lib/menu/menu-active-route.utils';
 
 // Popover Directives
 export * from './lib/popover/popover-trigger';
-export * from './lib/popover/popover-position';
 export * from './lib/popover/popover-arrow';
 export * from './lib/popover/popover';
 
@@ -53,6 +52,9 @@ export * from './lib/date/select-date-range';
 export * from './lib/a11y/focus-trap';
 
 // Overlay Components and Services
-export * from './lib/portal/overlay-registry';
-export * from './lib/portal/overlay-focus';
-export * from './lib/portal/overlay-outlet';
+export * from './lib/dialog/dialog-trigger';
+export { OVERLAY_HANDLE, type OverlayCategory, type OverlayHandle } from './lib/overlay/overlay-handle';
+export * from './lib/overlay/overlay-session';
+export * from './lib/overlay/overlay-stack';
+export * from './lib/overlay/overlay-behaviors';
+export * from './lib/overlay/overlay-container';

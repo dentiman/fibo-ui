@@ -1,11 +1,12 @@
 import { Directive, ElementRef, computed, inject, input, model, TemplateRef } from '@angular/core';
 import { DataListItem } from '../data-list/data-list-item.directive';
 import {
-  closeOnClickOutside,
-  closeOnFocusOutFromOverlay,
-  restoreFocusOnBeforeClose,
-} from '../portal/overlay-focus';
-import { OverlayCategory, createOverlay } from '../portal/overlay-registry';
+  closeOnFocusLeave,
+  closeOnOutsideClick,
+  restoreTriggerFocusOnClose,
+} from '../overlay/overlay-behaviors';
+import { OverlayCategory } from '../overlay/overlay-handle';
+import { createOverlay } from '../overlay/overlay-stack';
 
 @Directive({
   selector: '[fiboPopoverTrigger]',
@@ -31,13 +32,13 @@ export class PopoverTrigger {
     category: this.overlayCategory(),
   }));
 
-  overlayRef = createOverlay(
+  overlayHandle = createOverlay(
     this.isOpen,
     this.config,
     overlay => {
-      closeOnFocusOutFromOverlay(overlay);
-      closeOnClickOutside(overlay);
-      restoreFocusOnBeforeClose(overlay);
+      closeOnFocusLeave(overlay);
+      closeOnOutsideClick(overlay);
+      restoreTriggerFocusOnClose(overlay);
     },
   );
 
@@ -51,19 +52,7 @@ export class PopoverTrigger {
     }
   }
 
-  /**
-   * Закрывает попап через overlayRef.close(), что запускает:
-   * 1. onCloseRequest — восстановление фокуса
-   * 2. isOpen.set(false) — автоматически через createOverlay
-   * 3. unregister — через effect cleanup
-   */
   close() {
-    const ref = this.overlayRef();
-    if (ref) {
-      ref.close();
-      return;
-    }
-
     this.isOpen.set(false);
   }
 

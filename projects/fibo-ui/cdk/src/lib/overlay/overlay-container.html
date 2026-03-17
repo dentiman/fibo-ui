@@ -1,0 +1,11 @@
+@for (overlay of overlayStack.openOverlayList(); track overlay.id) {
+  <div [attr.data-overlay-container-id]="overlay.id"
+       [style.z-index]="overlay.zIndex"
+       style="position: relative"
+       (animationend)="handleOverlayAnimationEnd(overlay.id, $event)"
+       animate.leave="overlay-leave">
+    <ng-container
+      *ngTemplateOutlet="overlay.templateRef; injector: overlayInjector(overlay)"
+    ></ng-container>
+  </div>
+}

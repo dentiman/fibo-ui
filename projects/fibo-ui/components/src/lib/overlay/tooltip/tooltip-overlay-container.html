@@ -1,7 +1,7 @@
 <ng-template #root>
   @let tooltipRef = tooltipService.tooltipRef();
   @if (tooltipRef) {
-    <div fiboPopoverPosition
+    <div fiboPopover
          [id]="tooltipRef.tooltipId"
          role="tooltip"
          [referenceElement]="tooltipRef.referenceElement"

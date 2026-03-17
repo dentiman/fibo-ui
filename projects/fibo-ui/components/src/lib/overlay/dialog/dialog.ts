@@ -4,7 +4,7 @@ import {
   inject,
   ViewEncapsulation,
 } from '@angular/core';
-import { FocusTrap, OVERLAY_REF } from '@fibo-ui/cdk';
+import { FocusTrap, OVERLAY_HANDLE } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-dialog',
@@ -22,6 +22,7 @@ import { FocusTrap, OVERLAY_REF } from '@fibo-ui/cdk';
            class="flex min-h-full items-end justify-center text-center focus:outline-none sm:items-center sm:p-0 py-4">
         <div class="dialog-content relative max-h-[90vh] overflow-y-auto rounded-lg bg-background text-left shadow-xl sm:p-2 dark:outline
               dark:-outline-offset-1 dark:outline-white/8 my-4"
+             data-dialog-panel
              role="dialog" aria-modal="true">
           <ng-content />
         </div>
@@ -80,7 +81,7 @@ import { FocusTrap, OVERLAY_REF } from '@fibo-ui/cdk';
   `,
 })
 export class FiboDialog {
-  private overlayRef = inject(OVERLAY_REF);
+  private overlayHandle = inject(OVERLAY_HANDLE);
 
-  firstDialog = this.overlayRef.firstInCategory;
+  firstDialog = this.overlayHandle.firstInCategory;
 }

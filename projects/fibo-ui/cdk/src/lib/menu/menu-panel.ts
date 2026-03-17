@@ -4,7 +4,8 @@ import { DataList } from '../data-list/data-list';
 import { DataListItem } from '../data-list/data-list-item.directive';
 import { KeyboardSource } from '../data-list/keyboard-source';
 import { SubmenuTrigger } from './submenu-trigger';
-import { OVERLAY_REF, OverlayRegistry } from '../portal/overlay-registry';
+import { OVERLAY_HANDLE } from '../overlay/overlay-handle';
+import { OverlayStack } from '../overlay/overlay-stack';
 
 /**
  * Injection token for parent MenuPanel.
@@ -37,8 +38,8 @@ export const MENU_PANEL = new InjectionToken<MenuPanel>('MenuPanel');
 })
 export class MenuPanel {
   dataList = inject(DataList);
-  private registry = inject(OverlayRegistry);
-  private overlayRef = inject(OVERLAY_REF);
+  private overlayStack = inject(OverlayStack);
+  private overlayHandle = inject(OVERLAY_HANDLE);
   private destroyRef = inject(DestroyRef);
   private openTimeout: ReturnType<typeof setTimeout> | undefined;
   private closeTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -70,15 +71,15 @@ export class MenuPanel {
   }
 
   closeAll() {
-    this.registry.closeAllByCategory('menu');
+    this.overlayStack.closeAllByCategory('menu');
   }
 
   focusToTrigger(event: Event) {
-    const refEl = this.overlayRef.referenceElement;
-    // Only handle ArrowLeft for submenus (reference element is inside another portal)
-    if (!refEl?.closest('[data-portal-id]')) return;
+    const referenceElement = this.overlayHandle.referenceElement;
+    // Only handle ArrowLeft for submenus (reference element is inside another overlay container).
+    if (!referenceElement?.closest('[data-overlay-container-id]')) return;
 
-    refEl.focus();
+    referenceElement.focus();
     this.dataList.resetActiveDataListItem();
     event.stopPropagation();
     this.closeAllSubmenus();
@@ -129,7 +130,7 @@ export class MenuPanel {
     }
 
     // Ignore null active option to avoid closing submenu when pointer moves
-    // from parent item into the submenu portal (mouseleave on parent list).
+    // from parent item into the submenu overlay container (mouseleave on parent list).
     this.clearOpenTimeout();
   }
 

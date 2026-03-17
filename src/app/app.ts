@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { OverlayOutlet } from '@fibo-ui/components';
+import { PermanentOverlayContainer } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, OverlayOutlet],
+  imports: [RouterOutlet, PermanentOverlayContainer],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

@@ -8,13 +8,13 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
-import {PopoverArrow, PopoverPosition} from '@fibo-ui/cdk';
+import {Popover, PopoverArrow} from '@fibo-ui/cdk';
 import {TooltipService} from './tooltip-service';
 
 @Component({
-  selector: 'fibo-tooltip-container',
-  imports: [NgTemplateOutlet, PopoverPosition, PopoverArrow],
-  templateUrl: './tooltip-container.html',
+  selector: 'fibo-tooltip-overlay-container',
+  imports: [NgTemplateOutlet, Popover, PopoverArrow],
+  templateUrl: './tooltip-overlay-container.html',
   encapsulation: ViewEncapsulation.None,
   styles: `
     .tooltip-enter {
@@ -47,7 +47,7 @@ import {TooltipService} from './tooltip-service';
     }
   `,
 })
-export class TooltipContainer {
+export class TooltipOverlayContainer {
   tooltipService = inject(TooltipService);
   private root = viewChild.required<TemplateRef<any>>('root');
 

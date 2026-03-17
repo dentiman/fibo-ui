@@ -4,7 +4,7 @@ import {
   inject,
   ViewEncapsulation,
 } from '@angular/core';
-import { FocusTrap, OVERLAY_REF } from '@fibo-ui/cdk';
+import { FocusTrap, OVERLAY_HANDLE } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-drawer',
@@ -19,7 +19,7 @@ import { FocusTrap, OVERLAY_REF } from '@fibo-ui/cdk';
 
       <div class="drawer-panel pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10"
            role="dialog" aria-modal="true">
-        <div fiboFocusTrap class="pointer-events-auto w-screen max-w-md shadow-xl focus:outline-none">
+        <div fiboFocusTrap data-dialog-panel class="pointer-events-auto w-screen max-w-md shadow-xl focus:outline-none">
           <div class="flex h-full flex-col overflow-y-scroll bg-background dark:outline dark:-outline-offset-1 dark:outline-white/8">
             <ng-content />
           </div>
@@ -68,7 +68,7 @@ import { FocusTrap, OVERLAY_REF } from '@fibo-ui/cdk';
   `,
 })
 export class FiboDrawer {
-  private overlayRef = inject(OVERLAY_REF);
+  private overlayHandle = inject(OVERLAY_HANDLE);
 
-  firstDrawer = this.overlayRef.firstInCategory;
+  firstDrawer = this.overlayHandle.firstInCategory;
 }

@@ -27,7 +27,7 @@ export class Notifier {
     category: 'notification' as const,
   }));
 
-  overlayRef = createOverlay(this.isOpen, this.overlayConfig);
+  overlayHandle = createOverlay(this.isOpen, this.overlayConfig);
 
   push(config: NotificationConfig) {
     const id = Symbol('notification-id');

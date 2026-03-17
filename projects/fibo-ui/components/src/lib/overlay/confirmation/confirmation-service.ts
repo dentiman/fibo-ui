@@ -32,7 +32,7 @@ export class ConfirmationService {
     category: 'confirmation' as const,
   }));
 
-  overlayRef = createOverlay(
+  overlayHandle = createOverlay(
     this.isOpen,
     this.overlayConfig,
     overlay => {

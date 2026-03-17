@@ -3,7 +3,7 @@ import { FormValueControl, ValidationError, WithOptionalField } from '@angular/f
 import {
   DataList,
   DataListItem,
-  isFocusInsideHostOrOverlay,
+  isFocusInsideTriggerOrOverlay,
   KeyboardSource,
   Popover,
   PopoverTrigger,
@@ -150,7 +150,7 @@ export class Combobox implements FormValueControl<string | number | null> {
 
   onBlur(event: FocusEvent, trigger: PopoverTrigger) {
     this.touched.set(true);
-    if (isFocusInsideHostOrOverlay(event.relatedTarget, trigger.element, trigger.overlayRef()?.id)) {
+    if (isFocusInsideTriggerOrOverlay(event.relatedTarget, trigger.element, trigger.overlayHandle()?.id)) {
       return;
     }
 
