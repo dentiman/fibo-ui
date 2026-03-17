@@ -51,7 +51,7 @@ export class PopoverTrigger {
   close() {
     const ref = this.overlayRef();
     if (ref) {
-      ref.close({ reason: 'programmatic' });
+      ref.close();
       return;
     }
 

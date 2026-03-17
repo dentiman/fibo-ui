@@ -30,9 +30,7 @@ const BASE_Z_INDEX: Record<OverlayCategory, number> = {
 const ESCAPE_SKIP_CATEGORIES: Set<OverlayCategory> = new Set(['notification', 'tooltip']);
 
 export interface OverlayCloseContext {
-  reason: string;
   activeElement: HTMLElement | null;
-  relatedTarget?: EventTarget | null;
 }
 
 export interface RegisterOverlayOptions {
@@ -44,8 +42,6 @@ export interface RegisterOverlayOptions {
 
 let nextOverlayId = 0;
 
-export type OverlayState = 'open' | 'closing';
-
 export class OverlayRef {
   readonly id: string;
   readonly templateRef: TemplateRef<any>;
@@ -54,8 +50,15 @@ export class OverlayRef {
   readonly zIndex: number;
   readonly firstInCategory: Signal<boolean>;
   readonly referenceElement?: HTMLElement;
-  readonly state = signal<OverlayState>('open');
-  readonly closeContext = signal<OverlayCloseContext | null>(null);
+
+  private _closed = false;
+
+  /** Set by createOverlay — captures close side-effects and isOpen.set(false). */
+  _onClose?: () => void;
+
+  get closed() {
+    return this._closed;
+  }
 
   constructor(
     options: RegisterOverlayOptions & { zIndex: number; firstInCategory: Signal<boolean> }
@@ -69,14 +72,10 @@ export class OverlayRef {
     this.referenceElement = options.referenceElement;
   }
 
-  close(ctx: Partial<OverlayCloseContext> = {}) {
-    if (this.state() !== 'open') return;
-    this.state.set('closing');
-    this.closeContext.set({
-      reason: 'programmatic',
-      activeElement: document.activeElement as HTMLElement | null,
-      ...ctx,
-    });
+  close() {
+    if (this._closed) return;
+    this._closed = true;
+    this._onClose?.();
   }
 }
 
@@ -144,7 +143,7 @@ export class OverlayRegistry {
     for (let i = list.length - 1; i >= 0; i--) {
       const ref = list[i];
       if (!ESCAPE_SKIP_CATEGORIES.has(ref.category)) {
-        ref.close({ reason: 'escape' });
+        ref.close();
         return;
       }
     }
@@ -153,7 +152,7 @@ export class OverlayRegistry {
   closeAllByCategory(category: OverlayCategory): void {
     const portals = this.byCategory(category);
     for (const ref of [...portals].reverse()) {
-      ref.close({ reason: 'programmatic' });
+      ref.close();
     }
   }
 
@@ -165,14 +164,13 @@ export class OverlayRegistry {
    *
    * When external code calls `overlayRef.close()` (e.g. Escape via registry,
    * click outside via Popover directive), the flow is:
-   * 1. `onCloseRequest` callback is invoked for side effects (focus restore, cleanup)
+   * 1. `activeElement` is captured, `onCloseRequest` callback is invoked
    * 2. `isOpen` is set to false automatically
    * 3. Effect cleanup unregisters the overlay
    */
   createOverlay(options: CreateOverlayOptions): Signal<OverlayRef | null> {
     const overlayRef = signal<OverlayRef | null>(null);
 
-    // Effect 1: register/unregister based on isOpen signal
     effect(onCleanup => {
       const template = options.content();
       if (options.isOpen() && template) {
@@ -188,24 +186,28 @@ export class OverlayRegistry {
           referenceElement: options.referenceElement,
         });
 
+        ref._onClose = () => {
+          const ctx: OverlayCloseContext = {
+            activeElement: document.activeElement as HTMLElement | null,
+          };
+          options.onCloseRequest?.(ctx, ref);
+          options.isOpen.set(false);
+        };
+
         overlayRef.set(ref);
 
         onCleanup(() => {
+          // If ref.close() wasn't called (e.g. parent set isOpen to false directly),
+          // fire onCloseRequest here so side-effects (focus restore, etc.) still run.
+          if (!ref.closed) {
+            const ctx: OverlayCloseContext = {
+              activeElement: document.activeElement as HTMLElement | null,
+            };
+            options.onCloseRequest?.(ctx, ref);
+          }
           this.unregister(ref);
           overlayRef.set(null);
         });
-      }
-    });
-
-    // Effect 2: react to external close requests (Escape, click outside, etc.)
-    effect(() => {
-      const ref = overlayRef();
-      if (!ref) return;
-
-      const ctx = ref.closeContext();
-      if (ctx) {
-        options.onCloseRequest?.(ctx, ref);
-        options.isOpen.set(false);
       }
     });
 
