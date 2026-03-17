@@ -1,5 +1,9 @@
-import {computed, inject, Injectable, signal, TemplateRef} from '@angular/core';
-import {createOverlay} from '@fibo-ui/cdk';
+import {computed, Injectable, signal, TemplateRef} from '@angular/core';
+import {
+  closeOnBackdropClick,
+  createOverlay,
+  restoreTriggerFocusOnClose,
+} from '@fibo-ui/cdk';
 
 export type ConfirmationContent =
   | {
@@ -13,6 +17,7 @@ export type ConfirmationContent =
 export interface ConfirmationConfig {
   content?: ConfirmationContent | null;
   onConfirm: () => void;
+  referenceElement?: HTMLElement | null;
 }
 
 @Injectable({
@@ -29,6 +34,7 @@ export class ConfirmationService {
 
   overlayConfig = computed(() => ({
     templateRef: this.containerTemplateRef() ?? undefined,
+    referenceElement: this.config()?.referenceElement ?? null,
     category: 'confirmation' as const,
   }));
 
@@ -36,6 +42,8 @@ export class ConfirmationService {
     this.isOpen,
     this.overlayConfig,
     overlay => {
+      closeOnBackdropClick(overlay);
+      restoreTriggerFocusOnClose(overlay);
       overlay.afterClose(() => {
         if (!this.isOpen()) {
           this.config.set(null);

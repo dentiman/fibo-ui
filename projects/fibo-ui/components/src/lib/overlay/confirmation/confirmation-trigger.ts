@@ -1,4 +1,4 @@
-import {Directive, inject, input, output} from '@angular/core';
+import {Directive, ElementRef, inject, input, output} from '@angular/core';
 import {ConfirmationContent, ConfirmationService} from './confirmation-service';
 
 @Directive({
@@ -10,6 +10,7 @@ import {ConfirmationContent, ConfirmationService} from './confirmation-service';
 })
 export class ConfirmationTrigger {
   confirmation = inject(ConfirmationService);
+  private readonly element = inject(ElementRef<HTMLElement>).nativeElement;
 
   content = input<ConfirmationContent | null>(null);
 
@@ -18,7 +19,8 @@ export class ConfirmationTrigger {
   open() {
     this.confirmation.open({
       content: this.content(),
-      onConfirm: () => { this.confirm.emit(); }
+      onConfirm: () => { this.confirm.emit(); },
+      referenceElement: this.element,
     });
   }
 }
