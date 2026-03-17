@@ -1,5 +1,5 @@
-import {computed, Directive, effect, ElementRef, inject, model,} from '@angular/core';
-import {PopoverPosition} from "./popover-position";
+import {computed, Directive, ElementRef, inject} from '@angular/core';
+import {Popover} from './popover';
 
 @Directive({
   selector: '[PopoverArrow]',
@@ -12,7 +12,7 @@ import {PopoverPosition} from "./popover-position";
 export class PopoverArrow {
   elementRef = inject(ElementRef<HTMLElement>);
 
-  popoverPosition = inject(PopoverPosition).position;
+  popoverPosition = inject(Popover).position;
 
   placement = computed(() => { return this.popoverPosition()?.placement.split("-")[0] });
 
