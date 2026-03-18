@@ -39,21 +39,21 @@ export function closeOnFocusLeave(overlay: OverlaySession): void {
       return;
     }
 
-    const handleFocusOut = (event: FocusEvent) => {
-      const nextTarget = event.relatedTarget as Node | null;
+    const handleFocusIn = (event: FocusEvent) => {
+      const nextTarget = event.target as Node | null;
       if (!nextTarget) {
         return;
       }
 
-      if (isFocusInsideTriggerOrOverlay(nextTarget, trigger, overlay.handle.id)) {
+      if (trigger.contains(nextTarget) || overlay.isInOverlayBranch(nextTarget)) {
         return;
       }
 
       overlay.requestClose('focusout', event);
     };
 
-    trigger.addEventListener('focusout', handleFocusOut);
-    onCleanup(() => trigger.removeEventListener('focusout', handleFocusOut));
+    document.addEventListener('focusin', handleFocusIn, true);
+    onCleanup(() => document.removeEventListener('focusin', handleFocusIn, true));
   });
 
   overlay.onCleanup(() => effectRef.destroy());
@@ -76,7 +76,7 @@ export function closeOnOutsideClick(overlay: OverlaySession): void {
         return;
       }
 
-      if (trigger.contains(target) || isElementInsideOverlayContainer(target, overlay.handle.id)) {
+      if (trigger.contains(target) || overlay.isInOverlayBranch(target)) {
         return;
       }
 

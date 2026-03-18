@@ -49,6 +49,7 @@ type RegisterOverlayOptions = Omit<CreateOverlayHandleOptions, 'zIndex' | 'first
 })
 export class OverlayStack {
   private readonly openOverlays = signal<Map<string, OverlayHandle>>(new Map());
+  private readonly overlayParentIds = new Map<string, string | null>();
   private readonly pendingAfterClose = new Map<string, OverlayStackEntry>();
   private zIndexCounter = 0;
 
@@ -102,6 +103,39 @@ export class OverlayStack {
     for (const handler of pendingEntry.handlers) {
       handler(pendingEntry.handle, pendingEntry.reason);
     }
+  }
+
+  findOverlayContainerId(target: EventTarget | null | undefined): string | null {
+    const element =
+      target instanceof Element ? target :
+      target instanceof Node ? target.parentElement :
+      null;
+
+    if (!element) {
+      return null;
+    }
+
+    return element.closest('[data-overlay-container-id]')?.getAttribute('data-overlay-container-id') ?? null;
+  }
+
+  isOverlayInBranch(
+    ownerOverlayId: string | null | undefined,
+    targetOverlayId: string | null | undefined,
+  ): boolean {
+    if (!ownerOverlayId || !targetOverlayId) {
+      return false;
+    }
+
+    let currentOverlayId: string | null | undefined = targetOverlayId;
+    while (currentOverlayId) {
+      if (currentOverlayId === ownerOverlayId) {
+        return true;
+      }
+
+      currentOverlayId = this.overlayParentIds.get(currentOverlayId) ?? null;
+    }
+
+    return false;
   }
 
   createOverlay(
@@ -231,6 +265,9 @@ export class OverlayStack {
           setup({
             handle,
             requestClose: (reason, event) => requestClose(handle, reason, event),
+            findOverlayContainerId: target => this.findOverlayContainerId(target),
+            isInOverlayBranch: target =>
+              this.isOverlayInBranch(handle.id, this.findOverlayContainerId(target)),
             afterOpened: handler => afterOpenedHandlers.push(handler),
             afterClose: handler => afterCloseHandlers.push(handler),
             beforeClose: handler => beforeCloseHandlers.push(handler),
@@ -314,6 +351,7 @@ export class OverlayStack {
   private addOverlay(options: RegisterOverlayOptions): OverlayHandle {
     const category = options.category ?? 'popover';
     const zIndex = BASE_Z_INDEX[category] + ++this.zIndexCounter;
+    const parentOverlayId = this.findOverlayContainerId(options.referenceElement);
     let handle!: OverlayHandle;
 
     const firstInCategory = computed(() => {
@@ -328,6 +366,7 @@ export class OverlayStack {
       nextMap.set(handle.id, handle);
       return nextMap;
     });
+    this.overlayParentIds.set(handle.id, parentOverlayId);
 
     return handle;
   }
@@ -338,6 +377,7 @@ export class OverlayStack {
       nextMap.delete(handle.id);
       return nextMap;
     });
+    this.overlayParentIds.delete(handle.id);
   }
 }
 

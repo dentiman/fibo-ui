@@ -27,6 +27,8 @@ export type OverlayCloseReason =
 export interface OverlaySession {
   handle: OverlayHandle;
   requestClose: (reason: OverlayCloseReason, event?: Event) => void;
+  findOverlayContainerId: (target: EventTarget | null | undefined) => string | null;
+  isInOverlayBranch: (target: EventTarget | null | undefined) => boolean;
   afterOpened: (handler: (overlay: OverlayHandle) => void) => void;
   afterClose: (handler: (overlay: OverlayHandle, reason: OverlayCloseReason) => void) => void;
   beforeClose: (
