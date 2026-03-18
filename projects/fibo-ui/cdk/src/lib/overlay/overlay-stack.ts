@@ -13,15 +13,14 @@ import {
   signal,
   untracked,
 } from '@angular/core';
+import { OverlayCategory, OverlayHandle } from './overlay-handle';
 import {
   CreateOverlayHandleOptions,
-  OverlayCategory,
-  OverlayHandle,
-  ɵcreateOverlayHandle,
-  ɵmarkOverlayHandleClosed,
-  ɵsetOverlayHandleRequestClose,
-  ɵsyncOverlayHandleRenderConfig,
-} from './overlay-handle';
+  createOverlayHandleInternal,
+  markOverlayHandleClosedInternal,
+  setOverlayHandleRequestCloseInternal,
+  syncOverlayHandleRenderConfigInternal,
+} from './overlay-handle-internal';
 import {
   OverlayCloseContext,
   OverlayCloseReason,
@@ -116,6 +115,7 @@ export class OverlayStack {
 
     let currentHandle: OverlayHandle | null = null;
     let configSyncEffect: EffectRef | null = null;
+    let pendingOpenEffect: EffectRef | null = null;
     let setupCleanups: Array<() => void> = [];
     let afterOpenedHandlers: Array<(overlay: OverlayHandle) => void> = [];
     let afterCloseHandlers: Array<(overlay: OverlayHandle, reason: OverlayCloseReason) => void> = [];
@@ -135,6 +135,11 @@ export class OverlayStack {
       configSyncEffect = null;
     };
 
+    const destroyPendingOpen = () => {
+      pendingOpenEffect?.destroy();
+      pendingOpenEffect = null;
+    };
+
     const destroyAfterOpenedRender = () => {
       afterOpenedRenderRef?.destroy();
       afterOpenedRenderRef = null;
@@ -152,6 +157,7 @@ export class OverlayStack {
 
     const teardown = (reason: OverlayCloseReason) => {
       const handle = currentHandle;
+      destroyPendingOpen();
       if (!handle) {
         return;
       }
@@ -185,9 +191,97 @@ export class OverlayStack {
         return;
       }
 
-      ɵmarkOverlayHandleClosed(handle);
+      markOverlayHandleClosedInternal(handle);
       runBeforeClose(handle, reason);
       isOpen.set(false);
+    };
+
+    const openOverlay = (initialConfig: OverlayRenderConfig) => {
+      if (currentHandle || !initialConfig.templateRef) {
+        return false;
+      }
+
+      destroyPendingOpen();
+
+      const handle = this.addOverlay({
+        templateRef: initialConfig.templateRef,
+        category: initialConfig.category,
+        referenceElement: initialConfig.referenceElement,
+      });
+
+      setOverlayHandleRequestCloseInternal(handle, (reason, event) =>
+        requestClose(handle, reason, event),
+      );
+      currentHandle = handle;
+      overlayHandle.set(handle);
+
+      untracked(() => {
+        configSyncEffect = effect(
+          () => {
+            const nextConfig: OverlayRenderConfig = config();
+            syncOverlayHandleRenderConfigInternal(handle, {
+              templateRef: nextConfig.templateRef,
+              referenceElement: nextConfig.referenceElement,
+            });
+          },
+          { injector },
+        );
+
+        if (setup) {
+          setup({
+            handle,
+            requestClose: (reason, event) => requestClose(handle, reason, event),
+            afterOpened: handler => afterOpenedHandlers.push(handler),
+            afterClose: handler => afterCloseHandlers.push(handler),
+            beforeClose: handler => beforeCloseHandlers.push(handler),
+            effect: runner => effect(runner, { injector }),
+            onCleanup: cleanup => setupCleanups.push(cleanup),
+          });
+        }
+
+        afterOpenedRenderRef = afterNextRender(
+          () => {
+            if (currentHandle !== handle || handle.closed) {
+              return;
+            }
+
+            for (const handler of afterOpenedHandlers) {
+              handler(handle);
+            }
+
+            afterOpenedHandlers = [];
+            afterOpenedRenderRef = null;
+          },
+          { injector },
+        );
+      });
+
+      return true;
+    };
+
+    const ensurePendingOpen = () => {
+      if (pendingOpenEffect) {
+        return;
+      }
+
+      untracked(() => {
+        pendingOpenEffect = effect(
+          () => {
+            if (!isOpen() || currentHandle) {
+              destroyPendingOpen();
+              return;
+            }
+
+            const pendingConfig = config();
+            if (!pendingConfig.templateRef) {
+              return;
+            }
+
+            openOverlay(pendingConfig);
+          },
+          { injector },
+        );
+      });
     };
 
     effect(() => {
@@ -197,64 +291,14 @@ export class OverlayStack {
         }
 
         const initialConfig = untracked(config);
-        if (!initialConfig.templateRef) {
-          return;
+        if (!openOverlay(initialConfig)) {
+          ensurePendingOpen();
         }
-
-        const handle = this.addOverlay({
-          templateRef: initialConfig.templateRef,
-          category: initialConfig.category,
-          referenceElement: initialConfig.referenceElement,
-        });
-
-        ɵsetOverlayHandleRequestClose(handle, (reason, event) => requestClose(handle, reason, event));
-        currentHandle = handle;
-        overlayHandle.set(handle);
-
-        untracked(() => {
-          configSyncEffect = effect(
-            () => {
-              const nextConfig: OverlayRenderConfig = config();
-              ɵsyncOverlayHandleRenderConfig(handle, {
-                templateRef: nextConfig.templateRef,
-                referenceElement: nextConfig.referenceElement,
-              });
-            },
-            { injector },
-          );
-
-          if (setup) {
-            setup({
-              handle,
-              requestClose: (reason, event) => requestClose(handle, reason, event),
-              afterOpened: handler => afterOpenedHandlers.push(handler),
-              afterClose: handler => afterCloseHandlers.push(handler),
-              beforeClose: handler => beforeCloseHandlers.push(handler),
-              effect: runner => effect(runner, { injector }),
-              onCleanup: cleanup => setupCleanups.push(cleanup),
-            });
-          }
-
-          afterOpenedRenderRef = afterNextRender(
-            () => {
-              if (currentHandle !== handle || handle.closed) {
-                return;
-              }
-
-              for (const handler of afterOpenedHandlers) {
-                handler(handle);
-              }
-
-              afterOpenedHandlers = [];
-              afterOpenedRenderRef = null;
-            },
-            { injector },
-          );
-        });
 
         return;
       }
 
+      destroyPendingOpen();
       if (currentHandle) {
         teardown('state');
       }
@@ -277,7 +321,7 @@ export class OverlayStack {
       return firstOverlay?.id === handle.id;
     });
 
-    handle = ɵcreateOverlayHandle({ ...options, zIndex, firstInCategory });
+    handle = createOverlayHandleInternal({ ...options, zIndex, firstInCategory });
 
     this.openOverlays.update(map => {
       const nextMap = new Map(map);
