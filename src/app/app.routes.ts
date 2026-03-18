@@ -203,7 +203,7 @@ export const routes: Routes = [
             path: 'popover',
             loadComponent: () =>
               import('./pages/cdk/popover-page').then(
-                (m) => m.CdkPopoverPageComponent,
+                (m) => m.CdkOverlaysPageComponent,
               ),
           },
           {

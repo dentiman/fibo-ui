@@ -9,11 +9,13 @@ import { OverlayHandle } from './overlay-handle';
 export function restoreTriggerFocus(
   ctx: OverlayCloseContext,
   overlay: OverlayHandle,
+  isInOverlayBranch: (target: EventTarget | null | undefined) => boolean = target =>
+    isElementInsideOverlayContainer(target, overlay.id),
 ): void {
   const shouldRestore =
     !ctx.activeElement ||
     ctx.activeElement === document.body ||
-    isElementInsideOverlayContainer(ctx.activeElement, overlay.id);
+    isInOverlayBranch(ctx.activeElement);
 
   if (shouldRestore) {
     overlay.referenceElement?.focus();
@@ -25,7 +27,9 @@ export function restoreTriggerFocus(
  * switches to the closed state.
  */
 export function restoreTriggerFocusOnClose(overlay: OverlaySession): void {
-  overlay.beforeClose((ctx, handle) => restoreTriggerFocus(ctx, handle));
+  overlay.beforeClose((ctx, handle) =>
+    restoreTriggerFocus(ctx, handle, target => overlay.isInOverlayBranch(target)),
+  );
 }
 
 /**

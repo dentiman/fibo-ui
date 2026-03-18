@@ -1,34 +1,42 @@
-import { Component, computed, input, linkedSignal, model, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  TemplateRef,
+  computed,
+  inject,
+  input,
+  linkedSignal,
+  model,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
 import {
   DataList,
   DataListItem,
-  isFocusInsideTriggerOrOverlay,
   KeyboardSource,
+  OverlayStack,
   Popover,
-  PopoverTrigger,
   SelectOne,
+  closeOnFocusLeave,
+  closeOnOutsideClick,
+  createOverlay,
+  restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
 import { formErrorMessage } from '../form/form-error';
 import { FormFieldControl } from '../form/form-field-control';
 
 @Component({
   selector: 'fibo-combobox',
-  imports: [FormFieldControl, PopoverTrigger, Popover, DataList, DataListItem, KeyboardSource, SelectOne],
+  imports: [FormFieldControl, Popover, DataList, DataListItem, KeyboardSource, SelectOne],
   host: {
     class: 'block',
   },
   template: `
     <fibo-form-field-control
-      fiboCombobox
       fiboKeyboardSource
-      fiboPopoverTrigger
-      [(open)]="showSuggestions"
-      #trigger="PopoverTrigger"
       #keyboardSource="KeyboardSource"
       [id]="id()"
-      [delegatesFocus]="true"
-      [content]="comboboxTpl"
       [label]="label()"
       [iconStart]="iconStart()"
       iconEnd="chevron-down"
@@ -55,9 +63,8 @@ import { FormFieldControl } from '../form/form-field-control';
         autocomplete="off"
         class="text-field-input"
         (input)="onInput($event)"
-        (keydown)="onInputKeydown($event, trigger)"
-        (blur)="onBlur($event, trigger)"
-
+        (keydown)="onInputKeydown($event)"
+        (blur)="onBlur($event)"
       />
     </fibo-form-field-control>
 
@@ -66,36 +73,40 @@ import { FormFieldControl } from '../form/form-field-control';
     }
 
     <ng-template #comboboxTpl>
-        <div
-          fiboPopover
-          #popover="Popover"
-          [keyboardSource]="keyboardSource"
-          [matchWidth]="true"
-          [id]="listboxId()"
-          role="listbox"
-          fiboDataList
-          fiboSelectOne
-          [(value)]="value"
-          (itemTriggered)="popover.close()"
-          class="popover-container"
-        >
-          @for (item of visibleItems(); track item) {
-            <button
-              type="button"
-              fiboDataListItem
-              [value]="item"
-              role="option"
-              class="datalist-item w-full text-left"
-            >
-              {{ item }}
-            </button>
-          }
-        </div>
+      <div
+        fiboPopover
+        [keyboardSource]="keyboardSource"
+        [referenceElement]="hostElement"
+        [matchWidth]="true"
+        [id]="listboxId()"
+        role="listbox"
+        fiboDataList
+        fiboSelectOne
+        [(value)]="value"
+        (itemTriggered)="closeSuggestions()"
+        class="popover-container"
+      >
+        @for (item of visibleItems(); track item) {
+          <button
+            type="button"
+            fiboDataListItem
+            [value]="item"
+            role="option"
+            class="datalist-item w-full text-left"
+          >
+            {{ item }}
+          </button>
+        }
+      </div>
     </ng-template>
   `,
 })
 export class Combobox implements FormValueControl<string | number | null> {
   static nextId = 0;
+
+  private readonly overlayStack = inject(OverlayStack);
+  readonly hostElement = inject(ElementRef<HTMLElement>).nativeElement;
+  private readonly comboboxTemplateRef = viewChild.required<TemplateRef<any>>('comboboxTpl');
 
   id = signal(`fibo-combobox-${Combobox.nextId++}`);
   listboxId = computed(() => `${this.id()}-listbox`);
@@ -123,14 +134,26 @@ export class Combobox implements FormValueControl<string | number | null> {
 
   inputValue = linkedSignal({
     source: this.value,
-    computation: (value) => (value !== null ? String(value) : ''),
+    computation: value => (value !== null ? String(value) : ''),
   });
 
   visibleItems = computed(() => {
     const query = this.inputValue().trim().toLocaleLowerCase();
     return query
-      ? this.items().filter((item) => String(item).toLocaleLowerCase().includes(query))
+      ? this.items().filter(item => String(item).toLocaleLowerCase().includes(query))
       : this.items();
+  });
+
+  overlayConfig = computed(() => ({
+    templateRef: this.comboboxTemplateRef(),
+    referenceElement: this.hostElement,
+    category: 'popover' as const,
+  }));
+
+  overlayHandle = createOverlay(this.showSuggestions, this.overlayConfig, overlay => {
+    closeOnFocusLeave(overlay);
+    closeOnOutsideClick(overlay);
+    restoreTriggerFocusOnClose(overlay);
   });
 
   onInput(event: Event) {
@@ -139,22 +162,36 @@ export class Combobox implements FormValueControl<string | number | null> {
     this.showSuggestions.set(!!value.trim() && this.visibleItems().length > 0);
   }
 
-  onInputKeydown(event: KeyboardEvent, trigger: PopoverTrigger) {
+  onInputKeydown(event: KeyboardEvent) {
     if (event.key === 'Escape') {
-      trigger.close();
+      this.closeSuggestions();
       this.resetInputValue();
       event.preventDefault();
       event.stopPropagation();
     }
   }
 
-  onBlur(event: FocusEvent, trigger: PopoverTrigger) {
+  onBlur(event: FocusEvent) {
     this.touched.set(true);
-    if (isFocusInsideTriggerOrOverlay(event.relatedTarget, trigger.element, trigger.overlayHandle()?.id)) {
+
+    const nextTarget = event.relatedTarget;
+    const overlayId = this.overlayHandle()?.id;
+
+    if (
+      (nextTarget instanceof Node && this.hostElement.contains(nextTarget)) ||
+      this.overlayStack.isOverlayInBranch(
+        overlayId,
+        this.overlayStack.findOverlayContainerId(nextTarget),
+      )
+    ) {
       return;
     }
 
     this.resetInputValue();
+  }
+
+  closeSuggestions() {
+    this.showSuggestions.set(false);
   }
 
   private resetInputValue() {
