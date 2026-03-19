@@ -1,4 +1,5 @@
 import { InjectionToken, Signal, TemplateRef } from '@angular/core';
+import type { OverlayCloseReason } from './overlay-session';
 
 export type OverlayCategory =
   | 'popover'
@@ -17,7 +18,7 @@ export interface OverlayHandle {
   readonly templateRef: TemplateRef<any> | undefined;
   readonly referenceElement: HTMLElement | null | undefined;
   readonly closed: boolean;
-  close(): void;
+  close(reason?: OverlayCloseReason): void;
 }
 
 export const OVERLAY_HANDLE = new InjectionToken<OverlayHandle>('OVERLAY_HANDLE');

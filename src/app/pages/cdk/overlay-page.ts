@@ -12,6 +12,6 @@ const EXAMPLES = new Map<string, any>([
   imports: [DocViewer],
   providers: [{ provide: EXAMPLE_REGISTRY, useValue: EXAMPLES }],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<doc-viewer docUrl="/documentation/cdk/popover.md" />`,
+  template: `<doc-viewer docUrl="/documentation/cdk/overlays.md" />`,
 })
 export class CdkOverlaysPageComponent {}

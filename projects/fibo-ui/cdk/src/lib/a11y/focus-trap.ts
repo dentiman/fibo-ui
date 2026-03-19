@@ -1,4 +1,12 @@
-import { afterNextRender, Directive, ElementRef, inject, input, OnDestroy } from '@angular/core';
+import {
+  afterNextRender,
+  Directive,
+  ElementRef,
+  inject,
+  Injectable,
+  input,
+  OnDestroy,
+} from '@angular/core';
 
 const TABBABLE_SELECTOR = [
   'a[href]:not([tabindex="-1"])',
@@ -13,6 +21,34 @@ function getTabbableElements(root: HTMLElement): HTMLElement[] {
   return Array.from(root.querySelectorAll<HTMLElement>(TABBABLE_SELECTOR)).filter(
     (el) => !el.hasAttribute('disabled') && el.offsetParent !== null,
   );
+}
+
+/**
+ * Manages a stack of focus traps. Only the topmost guarded trap
+ * intercepts focusin events, preventing conflicts between nested traps.
+ */
+@Injectable({ providedIn: 'root' })
+export class FocusTrapStack {
+  private stack: FocusTrap[] = [];
+
+  register(trap: FocusTrap): void {
+    this.stack.push(trap);
+    this.sync();
+  }
+
+  deregister(trap: FocusTrap): void {
+    const index = this.stack.indexOf(trap);
+    if (index !== -1) {
+      this.stack.splice(index, 1);
+    }
+    this.sync();
+  }
+
+  private sync(): void {
+    for (let i = 0; i < this.stack.length; i++) {
+      this.stack[i].activeGuard = i === this.stack.length - 1;
+    }
+  }
 }
 
 @Directive({
@@ -31,19 +67,40 @@ export class FocusTrap implements OnDestroy {
   /** Restore focus to the previously focused element on destroy */
   restoreFocus = input(true);
 
+  /** Guard focus via global focusin listener (catches mouse clicks and programmatic focus) */
+  guardFocus = input(true);
+
+  /** Managed by FocusTrapStack — true only for the topmost guarded trap */
+  activeGuard = false;
+
   private elementRef = inject(ElementRef<HTMLElement>);
+  private focusTrapStack = inject(FocusTrapStack);
   private previouslyFocused: HTMLElement | null = null;
+
+  private focusinListener = (event: FocusEvent) => {
+    if (!this.enabled() || !this.guardFocus() || !this.activeGuard) return;
+    const target = event.target as HTMLElement;
+    if (target && !this.elementRef.nativeElement.contains(target)) {
+      const focusable = getTabbableElements(this.elementRef.nativeElement);
+      if (focusable.length > 0) {
+        focusable[0].focus();
+      } else {
+        this.elementRef.nativeElement.focus();
+      }
+    }
+  };
 
   constructor() {
     afterNextRender(() => {
+      this.previouslyFocused = document.activeElement as HTMLElement;
+
       if (this.autoFocus()) {
-        this.previouslyFocused = document.activeElement as HTMLElement;
-        const focusable = getTabbableElements(this.elementRef.nativeElement);
-        if (focusable.length > 0) {
-          focusable[0].focus({ preventScroll: true });
-        } else {
-          this.elementRef.nativeElement.focus({ preventScroll: true });
-        }
+        this.focusInitial();
+      }
+
+      if (this.guardFocus()) {
+        this.focusTrapStack.register(this);
+        document.addEventListener('focusin', this.focusinListener);
       }
     });
   }
@@ -74,8 +131,28 @@ export class FocusTrap implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    document.removeEventListener('focusin', this.focusinListener);
+    this.focusTrapStack.deregister(this);
+
     if (this.restoreFocus() && this.previouslyFocused) {
       this.previouslyFocused.focus();
+    }
+  }
+
+  private focusInitial(): void {
+    const root = this.elementRef.nativeElement;
+    const marked = root.querySelector('[fiboFocusInitial]') as HTMLElement | null;
+
+    if (marked) {
+      marked.focus({ preventScroll: true });
+      return;
+    }
+
+    const focusable = getTabbableElements(root);
+    if (focusable.length > 0) {
+      focusable[0].focus({ preventScroll: true });
+    } else {
+      root.focus({ preventScroll: true });
     }
   }
 }

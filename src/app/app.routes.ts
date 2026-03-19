@@ -200,9 +200,9 @@ export const routes: Routes = [
               ),
           },
           {
-            path: 'popover',
+            path: 'overlay',
             loadComponent: () =>
-              import('./pages/cdk/popover-page').then(
+              import('./pages/cdk/overlay-page').then(
                 (m) => m.CdkOverlaysPageComponent,
               ),
           },

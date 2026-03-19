@@ -80,7 +80,7 @@ export class OverlayStack {
     for (let index = list.length - 1; index >= 0; index--) {
       const overlay = list[index];
       if (!ESCAPE_SKIP_CATEGORIES.has(overlay.category)) {
-        overlay.close();
+        overlay.close('escape');
         return;
       }
     }
@@ -156,6 +156,7 @@ export class OverlayStack {
     let beforeCloseHandlers: Array<
       (ctx: OverlayCloseContext, overlay: OverlayHandle, reason: OverlayCloseReason) => void
     > = [];
+    let closeGuards: Array<(reason: OverlayCloseReason, event?: Event) => boolean | void> = [];
     let afterOpenedRenderRef: AfterRenderRef | null = null;
 
     const cleanupSetup = () => {
@@ -217,12 +218,19 @@ export class OverlayStack {
       afterOpenedHandlers = [];
       afterCloseHandlers = [];
       beforeCloseHandlers = [];
+      closeGuards = [];
       overlayHandle.set(null);
     };
 
     const requestClose = (handle: OverlayHandle, reason: OverlayCloseReason, event?: Event) => {
       if (handle !== currentHandle || handle.closed) {
         return;
+      }
+
+      for (const guard of closeGuards) {
+        if (guard(reason, event) === false) {
+          return;
+        }
       }
 
       markOverlayHandleClosedInternal(handle);
@@ -271,6 +279,7 @@ export class OverlayStack {
             afterOpened: handler => afterOpenedHandlers.push(handler),
             afterClose: handler => afterCloseHandlers.push(handler),
             beforeClose: handler => beforeCloseHandlers.push(handler),
+            canClose: guard => closeGuards.push(guard),
             effect: runner => effect(runner, { injector }),
             onCleanup: cleanup => setupCleanups.push(cleanup),
           });

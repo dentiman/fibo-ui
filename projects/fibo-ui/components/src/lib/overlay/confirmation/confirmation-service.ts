@@ -1,5 +1,6 @@
 import {computed, Injectable, signal, TemplateRef} from '@angular/core';
 import {
+  blockScroll,
   closeOnBackdropClick,
   createOverlay,
   restoreTriggerFocusOnClose,
@@ -44,6 +45,7 @@ export class ConfirmationService {
     overlay => {
       closeOnBackdropClick(overlay);
       restoreTriggerFocusOnClose(overlay);
+      blockScroll(overlay);
       overlay.afterClose(() => {
         if (!this.isOpen()) {
           this.config.set(null);

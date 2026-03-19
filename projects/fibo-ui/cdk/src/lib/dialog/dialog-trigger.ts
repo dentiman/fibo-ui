@@ -1,5 +1,5 @@
 import { Directive, ElementRef, computed, inject, input, model, TemplateRef } from '@angular/core';
-import { closeOnBackdropClick, restoreTriggerFocusOnClose } from '../overlay/overlay-behaviors';
+import { blockScroll, closeOnBackdropClick, restoreTriggerFocusOnClose } from '../overlay/overlay-behaviors';
 import { createOverlay } from '../overlay/overlay-stack';
 
 @Directive({
@@ -8,7 +8,6 @@ import { createOverlay } from '../overlay/overlay-stack';
   host: {
     '[attr.aria-expanded]': 'isOpen() || null',
     '(keydown.enter)': 'open()',
-    '(keydown.escape)': 'close()',
     '(click)': 'open()',
   },
 })
@@ -27,6 +26,7 @@ export class DialogTrigger {
   overlayHandle = createOverlay(this.isOpen, this.config, overlay => {
     closeOnBackdropClick(overlay);
     restoreTriggerFocusOnClose(overlay);
+    blockScroll(overlay);
   });
 
   open() {

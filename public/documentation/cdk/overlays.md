@@ -142,7 +142,21 @@ Returns focus to the reference element when close completes from inside the same
 
 ### `closeOnBackdropClick(...)`
 
-Closes when interaction lands on the backdrop area instead of the marked overlay surface.
+Closes when interaction lands on the backdrop area instead of the marked overlay surface (marked with `fiboOverlayPanel`).
+
+### `blockScroll(...)`
+
+Blocks document scroll while the overlay is open. Preserves scroll position, compensates for scrollbar width, and prevents layout shift. Supports nested overlays through reference counting.
+
+```ts
+createOverlay(isOpen, config, overlay => {
+  blockScroll(overlay);  // For modal dialogs
+});
+```
+
+### `closeOnScroll(...)`
+
+Closes the overlay when the user scrolls outside the overlay container. Useful for tooltips and popovers that lose context when content scrolls.
 
 ## Runtime Architecture
 

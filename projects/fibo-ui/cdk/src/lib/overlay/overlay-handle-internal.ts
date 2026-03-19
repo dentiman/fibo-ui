@@ -43,12 +43,12 @@ class OverlayHandleImpl implements OverlayHandle {
     this.firstInCategory = options.firstInCategory;
   }
 
-  close(): void {
+  close(reason?: OverlayCloseReason): void {
     if (this.closedState) {
       return;
     }
 
-    this.requestClose?.('programmatic');
+    this.requestClose?.(reason ?? 'programmatic');
   }
 
   setRequestClose(requestClose: (reason: OverlayCloseReason, event?: Event) => void): void {

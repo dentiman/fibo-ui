@@ -76,7 +76,6 @@ export class PopoverTrigger {
   ],
   host: {
     '(keydown.enter)': 'popoverTrigger.open()',
-    '(keydown.escape)': 'popoverTrigger.close()',
     '(click)': 'popoverTrigger.open()',
   },
 })
@@ -94,7 +93,6 @@ export class PopoverTriggerClick {
   ],
   host: {
     '(keydown.enter)': 'popoverTrigger.toggle()',
-    '(keydown.escape)': 'popoverTrigger.close()',
     '(click)': 'popoverTrigger.toggle()',
   },
 })

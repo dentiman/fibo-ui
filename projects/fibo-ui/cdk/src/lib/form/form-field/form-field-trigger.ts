@@ -17,7 +17,6 @@ import { PopoverTrigger } from '../../popover/popover-trigger';
     '[style.pointer-events]': "disabled() ? 'none' : 'auto'",
     '[disabled]': "disabled() || null",
     '(keydown.enter)': 'popoverTrigger.open()',
-    '(keydown.escape)': 'popoverTrigger.close()',
     '(click)': "popoverTrigger.toggle()"
   }
 })

@@ -25,6 +25,20 @@ fibo-ui is an Angular 21 component library monorepo containing two publishable l
 
 **Theme system:** `ThemeService` supports light/dark/system modes, persisted to localStorage, applied via `data-theme` attribute on `<html>`.
 
+## Documentation Structure
+
+Two separate documentation directories with different purposes:
+
+**`public/documentation/`** — Public-facing docs served by the demo app. This is the user-facing API reference. Each subdirectory maps to a page rendered by `doc-viewer` in the app.
+- `public/documentation/cdk/` — CDK public API docs (`overlays.md`, `data-list.md`, `selection-model.md`, `composition.md`)
+- `public/documentation/<component>/` — Component-level docs (dialog, menu, select, etc.)
+- Rules: Keep concise, user-oriented, no internal implementation details.
+
+**`docs/`** — Internal developer documentation. Not served publicly. For architectural decisions, code reviews, proposals, implementation analysis, and developer notes.
+- `docs/overlay/` — Overlay system internals: code review, FocusTrap proposal, improvements status, full architecture guide
+- `docs/combobox-*.md` — Combobox pattern research and implementation analysis
+- Rules: Detailed, can reference internal code paths, intended for team and AI context.
+
 ## Code Conventions
 
 - **Standalone components only** — do NOT set `standalone: true` (it's the default in Angular 21)

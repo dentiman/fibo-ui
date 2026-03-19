@@ -14,7 +14,7 @@ import { MENU_PANEL } from './menu-panel';
  * - Composes DataListItem + PopoverTrigger via hostDirectives
  * - Registers in parent MenuPanel on init
  * - Unregisters on destroy
- * - Keyboard support: Enter/Escape to open/close, ArrowRight to navigate into submenu
+ * - Keyboard support: Enter to open, ArrowRight to navigate into submenu
  * - Click to open
  *
  * Usage:
@@ -43,7 +43,6 @@ import { MENU_PANEL } from './menu-panel';
   host: {
     'aria-haspopup': 'menu',
     '(keydown.enter)': 'popoverTrigger.open()',
-    '(keydown.escape)': 'popoverTrigger.close()',
     '(keydown.arrowright)': 'keyboardSource.delegate()?.navigateNext?.($event)',
     '(click)': 'popoverTrigger.open()',
   },

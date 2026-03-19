@@ -23,6 +23,12 @@ export type OverlayCloseReason =
   | 'state'
   | 'destroy';
 
+/**
+ * Guard that can prevent an overlay from closing.
+ * Return `false` to block the close, `true` (or void) to allow it.
+ */
+export type OverlayCloseGuard = (reason: OverlayCloseReason, event?: Event) => boolean | void;
+
 // Lifecycle API exposed to behavior policies for one open cycle.
 export interface OverlaySession {
   handle: OverlayHandle;
@@ -38,6 +44,7 @@ export interface OverlaySession {
       reason: OverlayCloseReason,
     ) => void,
   ) => void;
+  canClose: (guard: OverlayCloseGuard) => void;
   effect: (runner: Parameters<typeof effect>[0]) => EffectRef;
   onCleanup: (cleanup: () => void) => void;
 }

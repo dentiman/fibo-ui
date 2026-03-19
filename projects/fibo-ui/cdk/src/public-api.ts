@@ -58,3 +58,4 @@ export * from './lib/overlay/overlay-session';
 export * from './lib/overlay/overlay-stack';
 export * from './lib/overlay/overlay-behaviors';
 export * from './lib/overlay/overlay-container';
+export * from './lib/overlay/overlay-panel';

@@ -4,11 +4,11 @@ import {
   inject,
   ViewEncapsulation,
 } from '@angular/core';
-import { FocusTrap, OVERLAY_HANDLE } from '@fibo-ui/cdk';
+import { FocusTrap, OVERLAY_HANDLE, OverlayPanel } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-dialog',
-  imports: [FocusTrap],
+  imports: [FocusTrap, OverlayPanel],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -18,12 +18,11 @@ import { FocusTrap, OVERLAY_HANDLE } from '@fibo-ui/cdk';
       <div [class]="'dialog-backdrop fixed inset-0' + (firstDialog() ? ' bg-black/30 dark:bg-black/50' : '')">
       </div>
 
-      <div fiboFocusTrap
+      <div fiboFocusTrap [restoreFocus]="false"
            class="flex min-h-full items-end justify-center text-center focus:outline-none sm:items-center sm:p-0 py-4">
         <div class="dialog-content relative max-h-[90vh] overflow-y-auto rounded-lg bg-background text-left shadow-xl sm:p-2 dark:outline
               dark:-outline-offset-1 dark:outline-white/8 my-4"
-             data-dialog-panel
-             role="dialog" aria-modal="true">
+             fiboOverlayPanel>
           <ng-content />
         </div>
       </div>

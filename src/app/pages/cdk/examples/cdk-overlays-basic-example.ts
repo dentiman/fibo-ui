@@ -44,7 +44,7 @@ import {
           </p>
 
           <div class="mt-4 flex items-center gap-2">
-            <button type="button" class="btn btn-sm" (click)="actionCount.update(v => v + 1)">
+            <button type="button" class="btn btn-sm" (click)="increment()">
               Action
             </button>
             <button type="button" class="btn btn-sm btn-inverse" (click)="close()">
@@ -85,5 +85,9 @@ export class CdkOverlaysBasicExample {
 
   close() {
     this.isOpen.set(false);
+  }
+
+  increment() {
+    this.actionCount.update(v => v + 1);
   }
 }

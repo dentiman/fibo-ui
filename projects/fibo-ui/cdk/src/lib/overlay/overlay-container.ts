@@ -38,15 +38,6 @@ export class OverlayContainerComponent {
 
   constructor() {
     effect(() => {
-      const openOverlays = this.overlayStack.openOverlayList();
-      const needsScrollLock = openOverlays.some(
-        overlay => overlay.category === 'dialog' || overlay.category === 'confirmation',
-      );
-
-      document.documentElement.style.overflow = needsScrollLock ? 'hidden' : '';
-    });
-
-    effect(() => {
       const activeOverlayIds = new Set(
         this.overlayStack.openOverlayList().map(overlay => overlay.id),
       );
