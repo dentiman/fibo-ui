@@ -38,8 +38,7 @@ export class DataList implements KeydownDelegate {
 
   constructor() {
     effect(() => {
-      this.options();
-      this._activeDataListItem.set(null);
+      this._activeDataListItem.set(this.options()[0] ?? null);
     });
 
     effect((onCleanup) => {

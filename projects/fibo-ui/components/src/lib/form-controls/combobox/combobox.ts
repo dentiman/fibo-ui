@@ -3,6 +3,7 @@ import {
   ElementRef,
   TemplateRef,
   computed,
+  effect,
   inject,
   input,
   linkedSignal,
@@ -23,11 +24,10 @@ import {
 } from '@fibo-ui/cdk';
 import { formErrorMessage } from '../form/form-error';
 import { FormFieldControl } from '../form/form-field-control';
-import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'fibo-combobox',
-  imports: [FormFieldControl, Popover, DataList, DataListItem, KeyboardSource, SelectOne, FormsModule],
+  imports: [FormFieldControl, Popover, DataList, DataListItem, KeyboardSource, SelectOne],
   host: {
     class: 'block',
   },
@@ -48,7 +48,8 @@ import {FormsModule} from '@angular/forms';
       <input
         fiboKeyboardSource
         #keyboardSource="KeyboardSource"
-        [(ngModel)]="inputValue"
+        [value]="inputValue()"
+        (input)="onInput($event)"
         [id]="id()"
         type="text"
         role="combobox"
@@ -78,6 +79,7 @@ import {FormsModule} from '@angular/forms';
         [id]="listboxId()"
         role="listbox"
         fiboDataList
+        (itemTriggered)="onItemTriggered()"
         fiboSelectOne
         [(value)]="value"
         class="popover-container"
@@ -157,6 +159,19 @@ export class Combobox implements FormValueControl<string | number | null> {
     closeOnOutsideClick(overlay);
     overlay.afterClose(() => this.resetInputValue());
   });
+
+  onInput(event: Event) {
+    const text = (event.target as HTMLInputElement).value;
+    this.inputValue.set(text);
+    if (!text.trim()) {
+      this.value.set(null);
+    }
+  }
+
+  onItemTriggered() {
+    this.resetInputValue();
+    this.showSuggestions.set(false);
+  }
 
   onBlur() {
     this.touched.set(true);

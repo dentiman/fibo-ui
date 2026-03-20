@@ -39,6 +39,20 @@ Two separate documentation directories with different purposes:
 - `docs/combobox-*.md` — Combobox pattern research and implementation analysis
 - Rules: Detailed, can reference internal code paths, intended for team and AI context.
 
+## Reference Libraries (ref-libs)
+
+Соседние репозитории в `/Users/dentiman/dev/projects/fibo-stack/` — популярные Angular design system библиотеки для справки и изучения паттернов. Обращайся к ним по ключевому слову **ref-libs**.
+
+| Папка        | Библиотека              | Описание |
+|--------------|-------------------------|----------|
+| `angular`    | Angular (angular/angular) | Исходники Angular core, CDK, forms, compiler-cli |
+| `components` | Angular Components (angular/components) | Angular Material + CDK |
+| `spartan`    | Spartan (spartan-ng/spartan) | Headless UI для Angular, сигналы, SSR, zoneless |
+| `taiga-ui`   | Taiga UI (taiga-family/taiga-ui) | Полноценная UI-система, ng-polymorpheus |
+| `zart`       | Zard UI (zard-ui/zardui) | Angular компоненты на базе Shadcn/ui + ng-zorro |
+
+Чтобы поискать паттерн во всех ref-libs: `grep -r "паттерн" /Users/dentiman/dev/projects/fibo-stack/{angular,components,spartan,taiga-ui,zart}`.
+
 ## Code Conventions
 
 - **Standalone components only** — do NOT set `standalone: true` (it's the default in Angular 21)
