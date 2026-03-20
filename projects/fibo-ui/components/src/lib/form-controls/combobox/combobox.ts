@@ -15,27 +15,24 @@ import {
   DataList,
   DataListItem,
   KeyboardSource,
-  OverlayStack,
   Popover,
   SelectOne,
   closeOnFocusLeave,
   closeOnOutsideClick,
   createOverlay,
-  restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
 import { formErrorMessage } from '../form/form-error';
 import { FormFieldControl } from '../form/form-field-control';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'fibo-combobox',
-  imports: [FormFieldControl, Popover, DataList, DataListItem, KeyboardSource, SelectOne],
+  imports: [FormFieldControl, Popover, DataList, DataListItem, KeyboardSource, SelectOne, FormsModule],
   host: {
     class: 'block',
   },
   template: `
     <fibo-form-field-control
-      fiboKeyboardSource
-      #keyboardSource="KeyboardSource"
       [id]="id()"
       [label]="label()"
       [iconStart]="iconStart()"
@@ -49,6 +46,9 @@ import { FormFieldControl } from '../form/form-field-control';
       [(value)]="value"
     >
       <input
+        fiboKeyboardSource
+        #keyboardSource="KeyboardSource"
+        [(ngModel)]="inputValue"
         [id]="id()"
         type="text"
         role="combobox"
@@ -56,15 +56,12 @@ import { FormFieldControl } from '../form/form-field-control';
         [attr.aria-controls]="listboxId()"
         [attr.aria-expanded]="showSuggestions()"
         [attr.aria-activedescendant]="null"
-        [value]="inputValue()"
         [placeholder]="placeholder()"
         [disabled]="disabled()"
         [attr.data-error]="(invalid() && touched()) || null"
         autocomplete="off"
         class="text-field-input"
-        (input)="onInput($event)"
-        (keydown)="onInputKeydown($event)"
-        (blur)="onBlur($event)"
+        (blur)="onBlur()"
       />
     </fibo-form-field-control>
 
@@ -83,7 +80,6 @@ import { FormFieldControl } from '../form/form-field-control';
         fiboDataList
         fiboSelectOne
         [(value)]="value"
-        (itemTriggered)="closeSuggestions()"
         class="popover-container"
       >
         @for (item of visibleItems(); track item) {
@@ -104,7 +100,6 @@ import { FormFieldControl } from '../form/form-field-control';
 export class Combobox implements FormValueControl<string | number | null> {
   static nextId = 0;
 
-  private readonly overlayStack = inject(OverlayStack);
   readonly hostElement = inject(ElementRef<HTMLElement>).nativeElement;
   private readonly comboboxTemplateRef = viewChild.required<TemplateRef<any>>('comboboxTpl');
 
@@ -114,8 +109,15 @@ export class Combobox implements FormValueControl<string | number | null> {
   value = model<string | number | null>(null);
 
   showSuggestions = linkedSignal({
-    source: this.value,
-    computation: () => false,
+    source: () => ({
+      value: this.value(),
+      visibleItems: this.visibleItems(),
+      inputValue: this.inputValue(),
+    }),
+    computation: ({ value, visibleItems, inputValue }) => {
+      const selectedText = value !== null ? String(value) : '';
+      return inputValue !== selectedText && inputValue.trim().length > 0 && visibleItems.length > 0;
+    },
   });
 
   required = input(false);
@@ -153,45 +155,11 @@ export class Combobox implements FormValueControl<string | number | null> {
   overlayHandle = createOverlay(this.showSuggestions, this.overlayConfig, overlay => {
     closeOnFocusLeave(overlay);
     closeOnOutsideClick(overlay);
-    restoreTriggerFocusOnClose(overlay);
+    overlay.afterClose(() => this.resetInputValue());
   });
 
-  onInput(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    this.inputValue.set(value);
-    this.showSuggestions.set(!!value.trim() && this.visibleItems().length > 0);
-  }
-
-  onInputKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
-      this.closeSuggestions();
-      this.resetInputValue();
-      event.preventDefault();
-      event.stopPropagation();
-    }
-  }
-
-  onBlur(event: FocusEvent) {
+  onBlur() {
     this.touched.set(true);
-
-    const nextTarget = event.relatedTarget;
-    const overlayId = this.overlayHandle()?.id;
-
-    if (
-      (nextTarget instanceof Node && this.hostElement.contains(nextTarget)) ||
-      this.overlayStack.isOverlayInBranch(
-        overlayId,
-        this.overlayStack.findOverlayContainerId(nextTarget),
-      )
-    ) {
-      return;
-    }
-
-    this.resetInputValue();
-  }
-
-  closeSuggestions() {
-    this.showSuggestions.set(false);
   }
 
   private resetInputValue() {
