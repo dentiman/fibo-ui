@@ -22,7 +22,6 @@ import {
   provideFormValueControl,
 } from '@fibo-ui/cdk';
 import { type ComboboxControl, provideComboboxControl } from './combobox-control-token';
-import { ComboboxInternal } from './combobox-internal-token';
 import { ComboboxInput } from './combobox-input';
 import { ComboboxList } from './combobox-list';
 import { formErrorMessage } from '../form/form-error';
@@ -46,7 +45,6 @@ import { FormFieldControl } from '../form/form-field-control';
   providers: [
     provideFormValueControl(() => Combobox),
     provideComboboxControl(() => Combobox),
-    ComboboxInternal,
   ],
   template: `
     <fibo-form-field-control
@@ -104,7 +102,9 @@ import { FormFieldControl } from '../form/form-field-control';
   `,
 })
 export class Combobox
-  implements ComboboxControl<string | number | null, string | number>
+  implements
+    ComboboxControl<string | number | null, string | number>,
+    FormValueControl<string | number | null>
 {
   readonly hostElement = inject(ElementRef<HTMLElement>).nativeElement;
   private readonly comboboxTemplateRef = viewChild.required<TemplateRef<any>>('comboboxTpl');
@@ -131,7 +131,7 @@ export class Combobox
     const query = this.query().trim().toLocaleLowerCase();
     return query
       ? this.items().filter(item => String(item).toLocaleLowerCase().includes(query))
-      : this.items();
+      : [];
   });
 
   overlayConfig = computed(() => ({
@@ -143,11 +143,11 @@ export class Combobox
   overlayHandle = createOverlay(this.expanded, this.overlayConfig, overlay => {
     closeOnFocusLeave(overlay);
     closeOnOutsideClick(overlay);
-    // overlay.beforeClose((_, __, reason) => {
-    //   if (reason !== 'state') {
-    //     this.resetQueryToValue();
-    //   }
-    // });
+    overlay.beforeClose((_, __, reason) => {
+      if (reason !== 'state') {
+        this.resetQueryToValue();
+      }
+    });
 
   });
 

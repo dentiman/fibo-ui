@@ -1,15 +1,7 @@
-import { Directive, effect, inject, signal, untracked, type InputSignal, type InputSignalWithTransform, type ModelSignal } from '@angular/core';
+import { Directive, effect, signal, untracked } from '@angular/core';
 import { injectFormValueControl } from '@fibo-ui/cdk';
-import type { FormValueControl } from '@angular/forms/signals';
 import { injectComboboxControl } from './combobox-control-token';
 import { injectComboboxInternal } from './combobox-internal-token';
-
-type ComboboxFormState<T> = FormValueControl<T> & {
-  disabled?: InputSignal<boolean> | InputSignalWithTransform<boolean, unknown>;
-  required?: InputSignal<boolean> | InputSignalWithTransform<boolean, unknown>;
-  invalid?: InputSignal<boolean> | InputSignalWithTransform<boolean, unknown>;
-  touched?: ModelSignal<boolean>;
-};
 
 let nextComboboxInputId = 0;
 
@@ -32,7 +24,7 @@ let nextComboboxInputId = 0;
     '[attr.aria-required]': 'formControl.required?.() ?? false',
     '[attr.aria-invalid]': 'formControl.invalid?.() ?? false',
     '[attr.aria-expanded]': 'combobox.expanded()',
-    '[attr.aria-controls]': 'comboboxInternal.listboxId()',
+    '[attr.aria-controls]': 'combobox.expanded() ? comboboxInternal.listboxId() : null',
     '[attr.aria-activedescendant]': 'combobox.expanded() ? comboboxInternal.activeDescendantId() : null',
     '(input)': 'onInput($event)',
     '(blur)': 'onBlur()',
@@ -89,7 +81,7 @@ export class ComboboxInput {
     const text = (event.target as HTMLInputElement).value;
     this.combobox.query.set(text);
 
-    if (!text.trim()) {
+    if (!text) {
       this.combobox.value.set(null);
       this.collapse();
       return;
