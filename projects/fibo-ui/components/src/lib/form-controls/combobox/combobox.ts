@@ -2,12 +2,11 @@ import {
   Component,
   ElementRef,
   TemplateRef,
-  type WritableSignal,
   computed,
   inject,
   input,
-  linkedSignal,
   model,
+  signal,
   viewChild,
 } from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
@@ -66,6 +65,7 @@ import { FormFieldControl } from '../form/form-field-control';
         fiboKeyboardSource
         #keyboardSource="KeyboardSource"
         [placeholder]="placeholder()"
+        (blur)="touched.set(true)"
         class="text-field-input"
         fiboComboboxInput
       />
@@ -124,22 +124,8 @@ export class Combobox
   errorMessage = formErrorMessage(this.errors, this.invalid, this.touched);
 
   items = input<(string | number)[]>([]);
-
-
-  expanded: WritableSignal<boolean> = linkedSignal({
-    source: () => ({
-      disabled: this.disabled(),
-      optionsCount: this.options().length,
-    }),
-    computation: ({ disabled, optionsCount }, previous) =>
-      (previous?.value ?? false) && !disabled && optionsCount > 0,
-  });
-
-
-  query = linkedSignal({
-    source: this.value,
-    computation: value => (value !== null ? String(value) : ''),
-  });
+  expanded = signal(false);
+  query = model('');
 
   options = computed(() => {
     const query = this.query().trim().toLocaleLowerCase();
@@ -157,6 +143,21 @@ export class Combobox
   overlayHandle = createOverlay(this.expanded, this.overlayConfig, overlay => {
     closeOnFocusLeave(overlay);
     closeOnOutsideClick(overlay);
+    // overlay.beforeClose((_, __, reason) => {
+    //   if (reason !== 'state') {
+    //     this.resetQueryToValue();
+    //   }
+    // });
+
   });
+
+  private resetQueryToValue() {
+    const value = this.value();
+    const valueText = value !== null ? String(value) : '';
+
+    if (this.query() !== valueText) {
+      this.query.set(valueText);
+    }
+  }
 
 }

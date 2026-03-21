@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@ang
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
-import {Checkbox, Combobox} from '@fibo-ui/components';
+import {Checkbox, Combobox, DatePickerField} from '@fibo-ui/components';
 import {form, FormField} from '@angular/forms/signals';
 
 @Component({
@@ -16,6 +16,7 @@ import {form, FormField} from '@angular/forms/signals';
     LucideAngularModule,
     Combobox,
     FormField,
+    DatePickerField,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `

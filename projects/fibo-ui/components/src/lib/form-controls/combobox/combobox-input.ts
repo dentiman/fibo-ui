@@ -1,4 +1,4 @@
-import { Directive, effect, inject, signal, type InputSignal, type InputSignalWithTransform, type ModelSignal } from '@angular/core';
+import { Directive, effect, inject, signal, untracked, type InputSignal, type InputSignalWithTransform, type ModelSignal } from '@angular/core';
 import { injectFormValueControl } from '@fibo-ui/cdk';
 import type { FormValueControl } from '@angular/forms/signals';
 import { injectComboboxControl } from './combobox-control-token';
@@ -35,7 +35,6 @@ let nextComboboxInputId = 0;
     '[attr.aria-controls]': 'comboboxInternal.listboxId()',
     '[attr.aria-activedescendant]': 'combobox.expanded() ? comboboxInternal.activeDescendantId() : null',
     '(input)': 'onInput($event)',
-    '(focus)': 'onFocus()',
     '(blur)': 'onBlur()',
     '(keydown)': 'onKeydown($event)',
   },
@@ -43,15 +42,31 @@ let nextComboboxInputId = 0;
 export class ComboboxInput {
   readonly inputId = signal(`fibo-combobox-input-${nextComboboxInputId++}`);
   readonly combobox = injectComboboxControl<string | number | null, string | number>();
-  readonly formControl = injectFormValueControl<string | number | null>() as ComboboxFormState<
-    string | number | null
-  >;
+  readonly formControl = injectFormValueControl<string | number | null>();
   readonly comboboxInternal = injectComboboxInternal();
 
   constructor() {
     effect(() => {
       if (!this.combobox.expanded()) {
         this.comboboxInternal.activeDescendantId.set(null);
+      }
+    });
+
+    effect(() => {
+      const value = this.combobox.value();
+      const valueText = value !== null ? String(value) : '';
+
+      if (untracked(() => this.combobox.query()) !== valueText) {
+        this.combobox.query.set(valueText);
+      }
+    });
+
+    effect(() => {
+      const disabled = this.formControl.disabled?.() ?? false;
+      const hasOptions = this.combobox.options().length > 0;
+
+      if (this.combobox.expanded() && (disabled || !hasOptions)) {
+        this.collapse();
       }
     });
   }
@@ -83,15 +98,7 @@ export class ComboboxInput {
     this.combobox.expanded.set(this.combobox.options().length > 0);
   }
 
-  onFocus() {
-    if (this.combobox.query().trim().length > 0 && this.combobox.options().length > 0) {
-      this.combobox.expanded.set(true);
-    }
-  }
-
   onBlur() {
-    this.formControl.touched?.set(true);
-
     queueMicrotask(() => {
       if (!this.combobox.expanded()) {
         this.resetInputValue();
