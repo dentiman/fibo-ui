@@ -38,7 +38,14 @@ export class DataList implements KeydownDelegate {
 
   constructor() {
     effect(() => {
-      this._activeDataListItem.set(this.options()[0] ?? null);
+      const options = this.options();
+      const activeItem = this._activeDataListItem();
+
+      if (activeItem && options.includes(activeItem) && !activeItem.disabled()) {
+        return;
+      }
+
+      this._activeDataListItem.set(options.find(option => !option.disabled()) ?? null);
     });
 
     effect((onCleanup) => {
@@ -69,14 +76,11 @@ export class DataList implements KeydownDelegate {
     this.options.set(currentDataListItems.filter(opt => opt !== option));
   }
 
-
   setActiveDataListItem(option: DataListItem | null) {
     this._activeDataListItem.set(option);
   }
 
-  findNextDataListItem(
-    currentDataListItem: DataListItem | null
-  ): DataListItem | null {
+  findNextDataListItem(currentDataListItem: DataListItem | null): DataListItem | null {
     const optionsArray = this.options();
     if (optionsArray.length === 0) {
       return null;
@@ -106,9 +110,7 @@ export class DataList implements KeydownDelegate {
     return optionsArray[0] || null;
   }
 
-  findPreviousDataListItem(
-    currentDataListItem: DataListItem | null
-  ): DataListItem | null {
+  findPreviousDataListItem(currentDataListItem: DataListItem | null): DataListItem | null {
     const optionsArray = this.options();
     if (optionsArray.length === 0) {
       return null;
@@ -141,22 +143,31 @@ export class DataList implements KeydownDelegate {
     return optionsArray[optionsArray.length - 1] || null;
   }
 
-  navigateNext(event: any) {
+  navigateNext(event: Event) {
     const targetIsInput = event.target instanceof HTMLInputElement;
     this.setActiveDataListItem(this.findNextDataListItem(this._activeDataListItem()));
     event.preventDefault();
-    if (!targetIsInput) this._activeDataListItem()?.element.focus();
-    this._activeDataListItem()?.element.scrollIntoView({block: 'nearest', behavior: 'smooth'})
+    if (!targetIsInput) {
+      this._activeDataListItem()?.element.focus();
+    }
+    this._activeDataListItem()?.element.scrollIntoView({
+      block: 'nearest',
+      behavior: 'smooth',
+    });
   }
 
-  navigatePrev(event:Event) {
+  navigatePrev(event: Event) {
     const targetIsInput = event.target instanceof HTMLInputElement;
     this.setActiveDataListItem(this.findPreviousDataListItem(this._activeDataListItem()));
     event.preventDefault();
-    if (!targetIsInput) this._activeDataListItem()?.element.focus();
-    this._activeDataListItem()?.element.scrollIntoView({block: 'nearest', behavior: 'smooth'})
+    if (!targetIsInput) {
+      this._activeDataListItem()?.element.focus();
+    }
+    this._activeDataListItem()?.element.scrollIntoView({
+      block: 'nearest',
+      behavior: 'smooth',
+    });
   }
-
 
   onKeydown(event: KeyboardEvent) {
     const targetIsInput = event.target instanceof HTMLInputElement;
@@ -164,31 +175,50 @@ export class DataList implements KeydownDelegate {
       case 'ArrowDown':
         this.setActiveDataListItem(this.findNextDataListItem(this._activeDataListItem()));
         event.preventDefault();
-        if (!targetIsInput) this._activeDataListItem()?.element.focus();
-        this._activeDataListItem()?.element.scrollIntoView({block: 'nearest', behavior: 'smooth'})
-
+        if (!targetIsInput) {
+          this._activeDataListItem()?.element.focus();
+        }
+        this._activeDataListItem()?.element.scrollIntoView({
+          block: 'nearest',
+          behavior: 'smooth',
+        });
         event.stopPropagation();
         break;
       case 'ArrowUp':
         this.setActiveDataListItem(this.findPreviousDataListItem(this._activeDataListItem()));
         event.preventDefault();
-        if (!targetIsInput) this._activeDataListItem()?.element.focus();
-        this._activeDataListItem()?.element.scrollIntoView({block: 'nearest', behavior: 'smooth'})
+        if (!targetIsInput) {
+          this._activeDataListItem()?.element.focus();
+        }
+        this._activeDataListItem()?.element.scrollIntoView({
+          block: 'nearest',
+          behavior: 'smooth',
+        });
         event.stopPropagation();
         break;
       case 'Enter':
+        event.preventDefault();
         this._activeDataListItem()?.triggerSelection(event);
         event.stopPropagation();
         break;
+      case 'Home':
+        this.setActiveDataListItem(this.options().find(option => !option.disabled()) ?? null);
+        event.preventDefault();
+        event.stopPropagation();
+        break;
+      case 'End': {
+        const options = [...this.options()].reverse();
+        this.setActiveDataListItem(options.find(option => !option.disabled()) ?? null);
+        event.preventDefault();
+        event.stopPropagation();
+        break;
+      }
       default:
         break;
     }
-
   }
 
   resetActiveDataListItem() {
     this._activeDataListItem.set(null);
   }
-
-
 }

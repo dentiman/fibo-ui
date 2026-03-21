@@ -1,5 +1,6 @@
 import { Component, input, model, signal } from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
+import { provideFormValueControl } from '@fibo-ui/cdk';
 import { formErrorMessage } from '../form/form-error';
 import { FormFieldControl } from '../form/form-field-control';
 
@@ -10,6 +11,7 @@ import { FormFieldControl } from '../form/form-field-control';
   host: {
     class: 'block',
   },
+  providers: [provideFormValueControl(() => TextField)],
   template: `
     <fibo-form-field-control
       [id]="id()"

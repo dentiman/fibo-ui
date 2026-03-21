@@ -1,5 +1,6 @@
 import { Component, ElementRef, inject, input, model, computed } from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
+import { provideFormValueControl } from '@fibo-ui/cdk';
 import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
@@ -10,6 +11,7 @@ import { LucideAngularModule } from 'lucide-angular';
     class: 'block',
     '(click)': 'focusInput($event)',
   },
+  providers: [provideFormValueControl(() => FormFieldControl)],
   template: `
     <div
       class="form-field-control"

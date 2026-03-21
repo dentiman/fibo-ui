@@ -7,6 +7,7 @@ import {
   Popover,
   PopoverTriggerToggle,
   SelectMulti,
+  provideFormValueControl,
 } from '@fibo-ui/cdk';
 import { LucideAngularModule } from 'lucide-angular';
 import { formErrorMessage } from '../form/form-error';
@@ -30,6 +31,7 @@ import { SelectItem } from './select';
   host: {
     class: 'block',
   },
+  providers: [provideFormValueControl(() => MultiSelect)],
   template: `
     <fibo-form-field-control
       fiboKeyboardSource

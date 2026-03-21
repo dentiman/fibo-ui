@@ -1,13 +1,25 @@
-import {computed, Directive, ElementRef, inject, input, OnDestroy, OnInit, output, Signal,} from '@angular/core';
-import {DataList} from './data-list';
-import {SelectMulti, SELECTION_MODEL, SelectionModel} from './selection-models';
+import {
+  computed,
+  Directive,
+  ElementRef,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  output,
+  Signal,
+} from '@angular/core';
+import { DataList } from './data-list';
+import { SelectMulti, SELECTION_MODEL, SelectionModel } from './selection-models';
 
+let nextDataListItemId = 0;
 
 @Directive({
   selector: '[fiboDataListItem]',
   exportAs: 'DataListItem',
   standalone: true,
   host: {
+    '[attr.id]': 'id()',
     '[attr.aria-disabled]': '(disabled() === true || this.dataList.disabled() === true) || null',
     '[attr.data-active]': 'isActive() || null',
     '[attr.aria-selected]': 'isSelected()',
@@ -30,7 +42,8 @@ export class DataListItem<T = any> implements OnInit, OnDestroy {
   selectionModel = inject(SELECTION_MODEL, { optional: true }) as SelectionModel<T> | null;
 
   // DataListItem value input
-  value = input<T|undefined>(undefined);
+  value = input<T | undefined>(undefined);
+  id = input(`fibo-data-list-item-${nextDataListItemId++}`);
 
   isActive: Signal<boolean> = computed(() => {
     return this === this.dataList.activeDataListItem();
@@ -51,7 +64,6 @@ export class DataListItem<T = any> implements OnInit, OnDestroy {
     }
     return this.selectionModel.isSelected(itemValue);
   });
-
 
   triggerSelection($event: Event) {
     if (this.disabled()) return;

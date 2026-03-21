@@ -32,6 +32,9 @@ export * from './lib/form-controls/calendar/calendar';
 
 // Form components and interfaces
 export * from './lib/form-controls/combobox/combobox';
+export * from './lib/form-controls/combobox/combobox-control-token';
+export * from './lib/form-controls/combobox/combobox-input';
+export * from './lib/form-controls/combobox/combobox-list';
 export * from './lib/form-controls/select/select';
 export * from './lib/form-controls/select/multi-select';
 export * from './lib/form-controls/fields/text-field';

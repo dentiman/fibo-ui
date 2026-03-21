@@ -2,13 +2,12 @@ import {
   Component,
   ElementRef,
   TemplateRef,
+  type WritableSignal,
   computed,
-  effect,
   inject,
   input,
   linkedSignal,
   model,
-  signal,
   viewChild,
 } from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
@@ -21,19 +20,37 @@ import {
   closeOnFocusLeave,
   closeOnOutsideClick,
   createOverlay,
+  provideFormValueControl,
 } from '@fibo-ui/cdk';
+import { type ComboboxControl, provideComboboxControl } from './combobox-control-token';
+import { ComboboxInternal } from './combobox-internal-token';
+import { ComboboxInput } from './combobox-input';
+import { ComboboxList } from './combobox-list';
 import { formErrorMessage } from '../form/form-error';
 import { FormFieldControl } from '../form/form-field-control';
 
 @Component({
   selector: 'fibo-combobox',
-  imports: [FormFieldControl, Popover, DataList, DataListItem, KeyboardSource, SelectOne],
+  imports: [
+    FormFieldControl,
+    Popover,
+    DataList,
+    DataListItem,
+    KeyboardSource,
+    SelectOne,
+    ComboboxInput,
+    ComboboxList,
+  ],
   host: {
     class: 'block',
   },
+  providers: [
+    provideFormValueControl(() => Combobox),
+    provideComboboxControl(() => Combobox),
+    ComboboxInternal,
+  ],
   template: `
     <fibo-form-field-control
-      [id]="id()"
       [label]="label()"
       [iconStart]="iconStart()"
       iconEnd="chevron-down"
@@ -48,21 +65,9 @@ import { FormFieldControl } from '../form/form-field-control';
       <input
         fiboKeyboardSource
         #keyboardSource="KeyboardSource"
-        [value]="inputValue()"
-        (input)="onInput($event)"
-        [id]="id()"
-        type="text"
-        role="combobox"
-        aria-autocomplete="list"
-        [attr.aria-controls]="listboxId()"
-        [attr.aria-expanded]="showSuggestions()"
-        [attr.aria-activedescendant]="null"
         [placeholder]="placeholder()"
-        [disabled]="disabled()"
-        [attr.data-error]="(invalid() && touched()) || null"
-        autocomplete="off"
         class="text-field-input"
-        (blur)="onBlur()"
+        fiboComboboxInput
       />
     </fibo-form-field-control>
 
@@ -73,18 +78,17 @@ import { FormFieldControl } from '../form/form-field-control';
     <ng-template #comboboxTpl>
       <div
         fiboPopover
+        fiboComboboxList
         [keyboardSource]="keyboardSource"
         [referenceElement]="hostElement"
         [matchWidth]="true"
-        [id]="listboxId()"
-        role="listbox"
         fiboDataList
-        (itemTriggered)="onItemTriggered()"
+        (itemTriggered)="expanded.set(false)"
         fiboSelectOne
         [(value)]="value"
         class="popover-container"
       >
-        @for (item of visibleItems(); track item) {
+        @for (item of options(); track item) {
           <button
             type="button"
             fiboDataListItem
@@ -99,28 +103,13 @@ import { FormFieldControl } from '../form/form-field-control';
     </ng-template>
   `,
 })
-export class Combobox implements FormValueControl<string | number | null> {
-  static nextId = 0;
-
+export class Combobox
+  implements ComboboxControl<string | number | null, string | number>
+{
   readonly hostElement = inject(ElementRef<HTMLElement>).nativeElement;
   private readonly comboboxTemplateRef = viewChild.required<TemplateRef<any>>('comboboxTpl');
 
-  id = signal(`fibo-combobox-${Combobox.nextId++}`);
-  listboxId = computed(() => `${this.id()}-listbox`);
-
   value = model<string | number | null>(null);
-
-  showSuggestions = linkedSignal({
-    source: () => ({
-      value: this.value(),
-      visibleItems: this.visibleItems(),
-      inputValue: this.inputValue(),
-    }),
-    computation: ({ value, visibleItems, inputValue }) => {
-      const selectedText = value !== null ? String(value) : '';
-      return inputValue !== selectedText && inputValue.trim().length > 0 && visibleItems.length > 0;
-    },
-  });
 
   required = input(false);
   disabled = input(false);
@@ -128,21 +117,32 @@ export class Combobox implements FormValueControl<string | number | null> {
   invalid = input(false);
   dirty = input(false);
   errors = input<readonly WithOptionalField<ValidationError>[]>([]);
-
-  items = input<(string | number)[]>([]);
   label = input('');
   placeholder = input('Search and select');
   iconStart = input('');
   clearValue = input<string | number | null | undefined>(null);
   errorMessage = formErrorMessage(this.errors, this.invalid, this.touched);
 
-  inputValue = linkedSignal({
+  items = input<(string | number)[]>([]);
+
+
+  expanded: WritableSignal<boolean> = linkedSignal({
+    source: () => ({
+      disabled: this.disabled(),
+      optionsCount: this.options().length,
+    }),
+    computation: ({ disabled, optionsCount }, previous) =>
+      (previous?.value ?? false) && !disabled && optionsCount > 0,
+  });
+
+
+  query = linkedSignal({
     source: this.value,
     computation: value => (value !== null ? String(value) : ''),
   });
 
-  visibleItems = computed(() => {
-    const query = this.inputValue().trim().toLocaleLowerCase();
+  options = computed(() => {
+    const query = this.query().trim().toLocaleLowerCase();
     return query
       ? this.items().filter(item => String(item).toLocaleLowerCase().includes(query))
       : this.items();
@@ -154,31 +154,9 @@ export class Combobox implements FormValueControl<string | number | null> {
     category: 'popover' as const,
   }));
 
-  overlayHandle = createOverlay(this.showSuggestions, this.overlayConfig, overlay => {
+  overlayHandle = createOverlay(this.expanded, this.overlayConfig, overlay => {
     closeOnFocusLeave(overlay);
     closeOnOutsideClick(overlay);
-    overlay.afterClose(() => this.resetInputValue());
   });
 
-  onInput(event: Event) {
-    const text = (event.target as HTMLInputElement).value;
-    this.inputValue.set(text);
-    if (!text.trim()) {
-      this.value.set(null);
-    }
-  }
-
-  onItemTriggered() {
-    this.resetInputValue();
-    this.showSuggestions.set(false);
-  }
-
-  onBlur() {
-    this.touched.set(true);
-  }
-
-  private resetInputValue() {
-    const value = this.value();
-    this.inputValue.set(value !== null ? String(value) : '');
-  }
 }

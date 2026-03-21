@@ -1,0 +1,117 @@
+import { Directive, effect, inject, signal, type InputSignal, type InputSignalWithTransform, type ModelSignal } from '@angular/core';
+import { injectFormValueControl } from '@fibo-ui/cdk';
+import type { FormValueControl } from '@angular/forms/signals';
+import { injectComboboxControl } from './combobox-control-token';
+import { injectComboboxInternal } from './combobox-internal-token';
+
+type ComboboxFormState<T> = FormValueControl<T> & {
+  disabled?: InputSignal<boolean> | InputSignalWithTransform<boolean, unknown>;
+  required?: InputSignal<boolean> | InputSignalWithTransform<boolean, unknown>;
+  invalid?: InputSignal<boolean> | InputSignalWithTransform<boolean, unknown>;
+  touched?: ModelSignal<boolean>;
+};
+
+let nextComboboxInputId = 0;
+
+@Directive({
+  selector: 'input[fiboComboboxInput]',
+  exportAs: 'ComboboxInput',
+  host: {
+    type: 'text',
+    role: 'combobox',
+    autocomplete: 'off',
+    autocorrect: 'off',
+    autocapitalize: 'none',
+    spellcheck: 'false',
+    'aria-autocomplete': 'list',
+    'aria-haspopup': 'listbox',
+    '[id]': 'inputId()',
+    '[value]': 'combobox.query()',
+    '[disabled]': 'formControl.disabled?.() ?? false',
+    '[required]': 'formControl.required?.() ?? false',
+    '[attr.aria-required]': 'formControl.required?.() ?? false',
+    '[attr.aria-invalid]': 'formControl.invalid?.() ?? false',
+    '[attr.aria-expanded]': 'combobox.expanded()',
+    '[attr.aria-controls]': 'comboboxInternal.listboxId()',
+    '[attr.aria-activedescendant]': 'combobox.expanded() ? comboboxInternal.activeDescendantId() : null',
+    '(input)': 'onInput($event)',
+    '(focus)': 'onFocus()',
+    '(blur)': 'onBlur()',
+    '(keydown)': 'onKeydown($event)',
+  },
+})
+export class ComboboxInput {
+  readonly inputId = signal(`fibo-combobox-input-${nextComboboxInputId++}`);
+  readonly combobox = injectComboboxControl<string | number | null, string | number>();
+  readonly formControl = injectFormValueControl<string | number | null>() as ComboboxFormState<
+    string | number | null
+  >;
+  readonly comboboxInternal = injectComboboxInternal();
+
+  constructor() {
+    effect(() => {
+      if (!this.combobox.expanded()) {
+        this.comboboxInternal.activeDescendantId.set(null);
+      }
+    });
+  }
+
+  private collapse() {
+    this.combobox.expanded.set(false);
+    this.comboboxInternal.activeDescendantId.set(null);
+  }
+
+  private resetInputValue() {
+    this.combobox.query.set(this.currentValueText());
+  }
+
+  private currentValueText() {
+    const value = this.combobox.value();
+    return value !== null ? String(value) : '';
+  }
+
+  onInput(event: Event) {
+    const text = (event.target as HTMLInputElement).value;
+    this.combobox.query.set(text);
+
+    if (!text.trim()) {
+      this.combobox.value.set(null);
+      this.collapse();
+      return;
+    }
+
+    this.combobox.expanded.set(this.combobox.options().length > 0);
+  }
+
+  onFocus() {
+    if (this.combobox.query().trim().length > 0 && this.combobox.options().length > 0) {
+      this.combobox.expanded.set(true);
+    }
+  }
+
+  onBlur() {
+    this.formControl.touched?.set(true);
+
+    queueMicrotask(() => {
+      if (!this.combobox.expanded()) {
+        this.resetInputValue();
+      }
+    });
+  }
+
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      this.collapse();
+      this.resetInputValue();
+      event.preventDefault();
+      return;
+    }
+
+    if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && !this.combobox.expanded()) {
+      if (this.combobox.options().length > 0) {
+        this.combobox.expanded.set(true);
+      }
+      event.preventDefault();
+    }
+  }
+}

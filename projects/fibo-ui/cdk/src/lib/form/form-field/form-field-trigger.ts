@@ -1,14 +1,18 @@
 import { Directive, input, inject, model } from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
 import { PopoverTrigger } from '../../popover/popover-trigger';
+import { provideFormValueControl } from '../form-value-control-token';
 
 @Directive({
   selector: 'button[fiboFormFieldTrigger]',
-  hostDirectives: [{
-    directive: PopoverTrigger,
-    inputs: ['content'],
-  }],
+  hostDirectives: [
+    {
+      directive: PopoverTrigger,
+      inputs: ['content'],
+    },
+  ],
   standalone: true,
+  providers: [provideFormValueControl(() => FormFieldTrigger)],
   host: {
     'type': 'button',
     '[attr.aria-disabled]': 'disabled() || null',
@@ -17,18 +21,16 @@ import { PopoverTrigger } from '../../popover/popover-trigger';
     '[style.pointer-events]': "disabled() ? 'none' : 'auto'",
     '[disabled]': "disabled() || null",
     '(keydown.enter)': 'popoverTrigger.open()',
-    '(click)': "popoverTrigger.toggle()"
-  }
+    '(click)': "popoverTrigger.toggle()",
+  },
 })
 export class FormFieldTrigger implements FormValueControl<any> {
-
   popoverTrigger = inject(PopoverTrigger);
-  value = model<unknown>()
-  required = input(false)
-  disabled = input(false)
-  touched = input(false)
-  invalid = input(false)
-  dirty = input(false)
-  errors = input<readonly WithOptionalField<ValidationError>[]>([])
-
+  value = model<unknown>();
+  required = input(false);
+  disabled = input(false);
+  touched = input(false);
+  invalid = input(false);
+  dirty = input(false);
+  errors = input<readonly WithOptionalField<ValidationError>[]>([]);
 }

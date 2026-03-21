@@ -1,6 +1,13 @@
 import { Component, input, model, signal } from '@angular/core';
 import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
-import { SelectDate, Popover, PopoverTriggerClick, FocusTrap, OverlayPanel } from '@fibo-ui/cdk';
+import {
+  FocusTrap,
+  OverlayPanel,
+  Popover,
+  PopoverTriggerClick,
+  SelectDate,
+  provideFormValueControl,
+} from '@fibo-ui/cdk';
 import { formErrorMessage } from '../form/form-error';
 import { FormFieldControl } from '../form/form-field-control';
 import { Calendar } from '../calendar/calendar';
@@ -11,6 +18,7 @@ import { Calendar } from '../calendar/calendar';
   host: {
     class: 'block',
   },
+  providers: [provideFormValueControl(() => DatePickerField)],
   template: `
     <fibo-form-field-control
       fiboPopoverTriggerClick
