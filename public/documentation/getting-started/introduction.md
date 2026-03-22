@@ -20,15 +20,15 @@ Use `@fibo-ui/components` when the default design fits your product. Drop down t
 A `Select` in fibo-ui is not one component. It is a stack of small, single-responsibility layers:
 
 ```
-FormFieldControl      — visual shell: label, icons, error state
-└─ PopoverTrigger     — open / close signal
-   └─ PortalContent   — escapes DOM stacking context
-      └─ Popover      — floating positioning via @floating-ui/dom
+FormUiState           — signal-form UI state
+└─ FieldShell         — visual shell: label, icons, clear action, focus-within state
+   └─ FieldTarget     — real focusable trigger inside the shell
+      └─ createOverlay() + Popover  — floating positioning via @floating-ui/dom
          └─ DataList  — keyboard navigation, active-item tracking
             └─ SelectOne + DataListItem × N  — selection model
 ```
 
-Every layer is replaceable independently. Swap `SelectOne` for `SelectMulti` to get a multi-select. Swap `SelectOne` for `RouterSelectOne` and the same `DataListItem` directive navigates routes. Swap the inner list for a `Calendar` and you have a date picker — sharing the same popover and keyboard infrastructure.
+Every layer is replaceable independently. Swap `SelectOne` for `SelectMulti` to get a multi-select. Swap the inner list for a `Calendar` and you have a date picker. Change the `FieldTarget` mode from `focus` to `click` and the same shell now behaves like a trigger instead of a plain text field.
 
 ### Signals-first, zoneless
 
@@ -36,7 +36,7 @@ Every piece of state is a `signal()`, `model()`, or `computed()`. All components
 
 ### Accessibility by default
 
-ARIA is built into the CDK primitives, not bolted on at the component layer. `DataList` manages `aria-activedescendant` and keyboard navigation. `DataListItem` sets `aria-selected` and `aria-disabled`. `PopoverTrigger` wires `aria-expanded` and `aria-controls`. Every styled component inherits correct behaviour automatically because it is built on these primitives.
+ARIA is built into the CDK primitives, not bolted on at the component layer. `DataList` manages `aria-activedescendant` and keyboard navigation. `DataListItem` sets `aria-selected` and `aria-disabled`. Field semantics stay on the real inner `input` or `button`, while `FieldShell` remains visual-only. Every styled component inherits correct behaviour automatically because it is built on these primitives.
 
 ### Polymorphic selection via dependency injection
 

@@ -170,17 +170,26 @@ FiboInput [fiboInput]
 ## 6. Components Layer (composition on top of CDK)
 
 ```
-Select [fibo-select] ──hostDir──▶ PopoverTrigger
-    ├── trigger: fiboPopoverTriggerToggle [contentTemplate]="selectTpl"
-    └── template: Popover + DataList + SelectOne + DataListItem
+Select [fibo-select] ──hostDir──▶ FormUiState
+    ├── FieldShell
+    ├── button[fiboFieldTarget fieldTargetMode="click"]
+    └── createOverlay() + Popover + DataList + SelectOne + DataListItem
 
-MultiSelect [fibo-multi-select] ──hostDir──▶ PopoverTrigger
-    ├── trigger: fiboPopoverTriggerToggle [contentTemplate]="multiSelectTpl"
-    └── template: Popover + DataList + SelectMulti + DataListItem + Checkbox
+MultiSelect [fibo-multi-select] ──hostDir──▶ FormUiState
+    ├── FieldShell
+    ├── composite trigger[fiboFieldTarget fieldTargetMode="click"]
+    ├── chip remove buttons[fiboFieldAction]
+    └── createOverlay() + Popover + DataList + SelectMulti + DataListItem + Checkbox
 
-DatePickerField [fibo-datepicker]
-    ├── trigger: fiboPopoverTriggerClick [contentTemplate]="calendarTpl"
-    └── template: Popover + Calendar + SelectDate
+DatePickerField [fibo-datepicker] ──hostDir──▶ FormUiState
+    ├── FieldShell
+    ├── input[fiboFieldTarget fieldTargetMode="click"]
+    └── createOverlay() + Popover + Calendar + SelectDate
+
+Combobox [fibo-combobox] ──hostDir──▶ FormUiState
+    ├── FieldShell
+    ├── input[fiboFieldTarget]
+    └── createOverlay() + Popover + DataList + SelectOne + ComboboxInput + ComboboxList
 
 Menu [fibo-menu] ──hostDir──▶ MenuPanel
     └── recursive submenu template wired via SubmenuTrigger[contentTemplate]
@@ -189,10 +198,11 @@ Menu [fibo-menu] ──hostDir──▶ MenuPanel
 Common usage pattern now:
 
 ```html
-<button fiboPopoverTriggerToggle [content]="menuTpl">Open</button>
-<ng-template #menuTpl let-trigger>
-  <fibo-menu fiboPopover [trigger]="trigger" [items]="items" />
-</ng-template>
+<fibo-field-shell #shell label="Role" iconEnd="chevron-down">
+  <button fiboFieldTarget fieldTargetMode="click" type="button">
+    {{ selectedLabel() || 'Select role' }}
+  </button>
+</fibo-field-shell>
 ```
 
 ---
@@ -207,7 +217,7 @@ Common usage pattern now:
 <fibo-overlay-outlet />
 ```
 
-`OverlayOutlet` is the render target for portal-based overlays (Select, Menu, DatePicker, Dialog, Drawer, and any component using `PopoverTrigger + contentTemplate`).
+`OverlayOutlet` is the render target for `createOverlay()`-driven overlays (Select, MultiSelect, Combobox, DatePicker, Menu, Dialog, Drawer).
 
 ---
 

@@ -1,11 +1,23 @@
-import { Component, ElementRef, EventEmitter, Output, computed, inject, input } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Output,
+  computed,
+  contentChild,
+  inject,
+  input,
+} from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
+import { FieldActionDirective } from './field-action';
+import { FieldOverlayAnchorDirective } from './field-overlay-anchor';
+import { FieldTargetDirective } from './field-target';
 import { FormUiState } from './form-ui-state';
 
 @Component({
   selector: 'fibo-field-shell',
   standalone: true,
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, FieldActionDirective],
   host: {
     class: 'block',
     '(click)': 'onContainerClick($event)',
@@ -34,12 +46,16 @@ import { FormUiState } from './form-ui-state';
       </div>
 
       @if (canClear()) {
-        <lucide-icon
-          name="X"
-          size="16"
+        <button
+          type="button"
+          fiboFieldAction
+          aria-label="Clear value"
           class="form-field-clear-icon"
+          (pointerdown)="$event.preventDefault()"
           (click)="onClear($event)"
-        ></lucide-icon>
+        >
+          <lucide-icon name="X" size="16"></lucide-icon>
+        </button>
       }
 
       @if (iconEnd()) {
@@ -55,6 +71,8 @@ import { FormUiState } from './form-ui-state';
 export class FieldShell {
   readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly formUiState = inject(FormUiState, { optional: true });
+  private readonly fieldTarget = contentChild(FieldTargetDirective, { descendants: true });
+  private readonly overlayAnchor = contentChild(FieldOverlayAnchorDirective, { descendants: true });
 
   readonly id = input('');
   readonly label = input('');
@@ -73,9 +91,34 @@ export class FieldShell {
   );
   readonly canClear = computed(() => this.clearable() && this.hasValue());
 
+  focusPrimary(options?: FocusOptions): void {
+    this.fieldTarget()?.focus(options);
+  }
+
+  activatePrimaryFromShell(): void {
+    this.fieldTarget()?.activateFromShell();
+  }
+
+  overlayReferenceElement(): HTMLElement {
+    return this.overlayAnchor()?.element() ?? this.elementRef.nativeElement;
+  }
+
+  overlayInteractionRoot(): HTMLElement {
+    return this.elementRef.nativeElement;
+  }
+
+  overlayFocusReturnTarget(): HTMLElement | null {
+    return this.fieldTarget()?.focusReturnTarget() ?? null;
+  }
+
   onContainerClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
     if (target.closest('button,input,textarea,select,a,label,[data-field-interactive],[data-field-action]')) {
+      return;
+    }
+
+    if (this.fieldTarget()) {
+      this.activatePrimaryFromShell();
       return;
     }
 

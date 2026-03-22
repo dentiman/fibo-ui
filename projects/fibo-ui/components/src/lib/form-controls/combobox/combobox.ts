@@ -25,6 +25,7 @@ import { type ComboboxControl, provideComboboxControl } from './combobox-control
 import { ComboboxInput } from './combobox-input';
 import { ComboboxList } from './combobox-list';
 import { FieldShell } from '../form/field-shell';
+import { FieldTargetDirective } from '../form/field-target';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
 @Component({
@@ -37,6 +38,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
   ],
   imports: [
     FieldShell,
+    FieldTargetDirective,
     Popover,
     DataList,
     DataListItem,
@@ -61,9 +63,9 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       [clearable]="clearValue() !== undefined"
       [hasValue]="value() !== clearValue()"
       (clearRequested)="clear()"
-      (focusRequested)="focus()"
     >
       <input
+        fiboFieldTarget
         fiboKeyboardSource
         #keyboardSource="KeyboardSource"
         #inputElement
@@ -134,9 +136,9 @@ export class Combobox
 
   readonly overlayConfig = computed(() => ({
     templateRef: this.comboboxTemplateRef(),
-    referenceElement: this.fieldShell().elementRef.nativeElement,
-    interactionRoot: this.fieldShell().elementRef.nativeElement,
-    focusReturnTarget: this.inputElement().nativeElement,
+    referenceElement: this.fieldShell().overlayReferenceElement(),
+    interactionRoot: this.fieldShell().overlayInteractionRoot(),
+    focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
     category: 'popover' as const,
   }));
 

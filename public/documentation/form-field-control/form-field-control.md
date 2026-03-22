@@ -1,333 +1,341 @@
 # Form Field Control
 
-Visual shell for form fields — provides label, start/end icons, error state styling, and a clearable value button. Every styled form component in `@fibo-ui/components` (`TextField`, `Select`, `DatePickerField`) is built on top of `FormFieldControl`.
+Recommended architecture for styled form controls in `@fibo-ui/components`.
+
+This page replaces the old mental model where `FormFieldControl` was both:
+- the visual shell
+- the form control
+- the popover trigger
+
+That model was fine for small demos, but it mixed layout, form state, focus management, and overlay lifecycle into one primitive.
+
+The current architecture separates those concerns.
+
+## Recommended Building Blocks
+
+Use these primitives together:
+
+| Primitive | Responsibility |
+| --- | --- |
+| `FormUiState` | Receives signal-form UI state from `[formField]`: `disabled`, `invalid`, `errors`, `required`, `touched`, and derived `errorMessage` |
+| `FieldShell` | Visual shell: label, icons, clear button, error styling, focus-within styling |
+| `FieldTarget` | Marks the primary interactive element inside the shell |
+| `FieldAction` | Marks secondary actions such as clear or chip remove buttons |
+| `FieldOverlayAnchor` | Optional override for the element used as overlay anchor |
+
+In this model:
+- the real control is always the inner `input`, `button`, or composite surface
+- `FieldShell` is not the control and is not focusable
+- overlays are owned by the component, not by the shell
+
+## Composition Model
+
+The default composition for a field-based control is:
+
+```text
+FormUiState          - form-derived UI state
+FieldShell           - visual container
+FieldTarget          - primary interactive element inside the shell
+FieldAction x N      - clear/remove buttons that should not retrigger shell focus
+createOverlay()      - optional overlay lifecycle for Select / Combobox / DatePicker / MultiSelect
+```
+
+For simple controls such as `TextField`:
+
+```text
+FormUiState
+└─ FieldShell
+   └─ input[fiboFieldTarget]
+```
+
+For overlay controls such as `Select`:
+
+```text
+FormUiState
+└─ FieldShell
+   └─ button[fiboFieldTarget fieldTargetMode="click"]
+      └─ createOverlay({
+           referenceElement: shell,
+           interactionRoot: shell,
+           focusReturnTarget: button
+         })
+```
+
+## Why This Split Exists
+
+The shell is visually wider than the real focusable control:
+- icons live on the sides
+- label lives above or beside the content
+- the primary control sits in the middle
+
+Users still expect:
+- clicking the shell to focus or open the field
+- clicking a clear button to only clear, not reopen
+- overlays to match the shell width
+- focus to return to the correct inner control after the overlay closes
+
+These requirements are hard to model if one element tries to be:
+- the shell
+- the overlay trigger
+- the focus target
+
+The new field primitives make those roles explicit.
 
 ## Basic Usage
 
-A `FormFieldControl` wraps any native input (or custom content) and adds a label, optional icons at start/end positions.
-
-:::example form-field-control-basic
-
-```html {example="form-field-control-basic"}
-<fibo-form-field-control label="Username">
-  <input type="text" placeholder="Enter username" class="text-field-input" />
-</fibo-form-field-control>
-
-<fibo-form-field-control label="Email" iconStart="mail">
-  <input type="email" placeholder="Enter email" class="text-field-input" />
-</fibo-form-field-control>
-
-<fibo-form-field-control label="Search" iconStart="search" iconEnd="arrow-right">
-  <input type="text" placeholder="Search..." class="text-field-input" />
-</fibo-form-field-control>
-
-<div class="ff-label-inline ff-density-compact">
-  <fibo-form-field-control label="Role" iconEnd="chevron-down">
-    <div class="text-sm from-field-placeholder">Select role</div>
-  </fibo-form-field-control>
-</div>
-```
-
-```ts {example="form-field-control-basic"}
-@Component({
-  selector: 'form-field-control-basic-example',
-  imports: [FormFieldControl],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '...',
-})
-export class FormFieldControlBasicExample {}
-```
-
-## Layout Variants
-
-`FormFieldControl` exposes stable internal slot classes, and layout variants can be applied entirely from global CSS:
-
-- default layout from `form-fields.css`: the label is rendered above the content.
-- `.ff-label-inline`: keeps the icons at the edges, but places the label inline to the left of the content.
-- `.ff-density-compact`: reduces field height and padding for dense toolbars or admin forms.
-
-For component usage, wrap the field with a global variant class:
+### Text Input
 
 ```html
-<div class="ff-label-inline ff-density-compact">
-  <fibo-form-field-control label="Status" iconEnd="chevron-down">
-    <div class="text-sm">Active</div>
-  </fibo-form-field-control>
-</div>
-```
-
-For manual templating with `fiboFormField` / `fiboFormFieldTrigger`, use the same modifier classes in CSS:
-
-```html
-<button class="form-field-control">
-  <div class="form-field-body">
-    <label class="form-field-label">Status</label>
-    <div class="form-field-content">
-      <div class="text-sm">Active</div>
-    </div>
-  </div>
-  <lucide-icon name="chevron-down" size="16" class="form-field-icon form-field-icon-end"></lucide-icon>
-</button>
-```
-
-## Signal Forms Integration
-
-`FormFieldControl` implements `FormValueControl<T>`, making it a first-class citizen for custom form fields with `@angular/forms/signals`. When you bind `[formField]` to it, the directive automatically wires `value`, `required`, `disabled`, `touched`, `invalid`, `dirty`, and `errors` — so the control reflects validation state (error styling, error messages) without any manual binding.
-
-This lets you compose fully validated form fields from `FormFieldControl` + any projected content (native `<input>`, CDK-based select dropdown, etc.).
-
-:::example form-field-control-signal-form
-
-```html {example="form-field-control-signal-form"}
-<fibo-form-field-control
-  [formField]="contactForm.name" [clearValue]="''"
-  label="Name" iconEnd="user">
-  <input [formField]="contactForm.name"
-         type="text" placeholder="Enter full name" class="text-field-input" />
-</fibo-form-field-control>
-
-<fibo-form-field-control fiboPopoverTriggerToggle
-  [formField]="contactForm.role"
-  label="Role" iconEnd="chevron-down">
-
-  <div class="text-sm" [class.from-field-placeholder]="!roleLabel()">
-    {{ roleLabel() || 'Select role' }}
-  </div>
-
-  <div *fiboPortalContent="let trigger"
-       fiboPopover [trigger]="trigger" [matchWidth]="true"
-       fiboDataList (itemTriggered)="trigger.close()"
-       fiboSelectOne [(value)]="contactForm.role().value"
-       class="popover-container">
-    @for (item of roles; track item.value) {
-      <a fiboDataListItem [value]="item.value" class="datalist-item">
-        {{ item.label }}
-      </a>
-    }
-  </div>
-</fibo-form-field-control>
-
-<button class="btn btn-primary w-full"
-  [disabled]="!contactForm().valid()"
-  (click)="onSubmit()">
-  Submit
-</button>
-```
-
-```ts {example="form-field-control-signal-form"}
-@Component({
-  selector: 'form-field-control-signal-form-example',
-  imports: [
-    FormField, FormFieldControl,
-    PopoverTriggerToggle, PortalContent, Popover,
-    DataList, DataListItem, SelectOne,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '...',
-})
-export class FormFieldControlSignalFormExample {
-  readonly roles: SelectItem[] = [
-    { label: 'Admin', value: 'admin' },
-    { label: 'Editor', value: 'editor' },
-    { label: 'Viewer', value: 'viewer' },
-  ];
-
-  readonly model = signal<ContactData>({
-    name: '',
-    role: null,
-  });
-
-  readonly contactForm = form(this.model, schema => {
-    required(schema.name, { message: 'Name is required' });
-    required(schema.role, { message: 'Role is required' });
-  });
-
-  readonly roleLabel = computed(() => {
-    const v = this.contactForm.role().value();
-    if (v === null) return null;
-    return this.roles.find(i => i.value === v)?.label || null;
-  });
-
-  onSubmit() {
-    console.log('Contact data:', this.model());
-  }
-}
-```
-
-## Clearable
-
-When `clearValue` is set and the current `value` differs from it, a clear button (X icon) appears. Clicking it resets the value to `clearValue`.
-
-:::example form-field-control-clearable
-
-```html {example="form-field-control-clearable"}
-<fibo-form-field-control
-  label="Clearable field"
-  iconStart="user"
-  [clearValue]="''"
-  [(value)]="username"
+<fibo-field-shell
+  [label]="label()"
+  [iconStart]="iconStart()"
+  [iconEnd]="iconEnd()"
+  [clearable]="value() !== ''"
+  [hasValue]="value() !== ''"
+  (clearRequested)="clear()"
 >
   <input
-    type="text"
-    placeholder="Type something, then clear"
-    [value]="username()"
-    (input)="username.set($any($event.target).value)"
+    fiboFieldTarget
+    [value]="value()"
+    [disabled]="uiState.disabled()"
+    [required]="uiState.required()"
+    [attr.aria-invalid]="uiState.invalid() || null"
+    (input)="value.set(($event.target as HTMLInputElement).value)"
+    (blur)="uiState.touched.set(true)"
     class="text-field-input"
   />
-</fibo-form-field-control>
+</fibo-field-shell>
 
-<p class="text-xs text-muted-foreground">Value: "{{ username() }}"</p>
-```
-
-```ts {example="form-field-control-clearable"}
-@Component({
-  selector: 'form-field-control-clearable-example',
-  imports: [FormFieldControl],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '...',
-})
-export class FormFieldControlClearableExample {
-  readonly username = signal('John Doe');
+@if (uiState.errorMessage(); as error) {
+  <div class="form-field-error">{{ error }}</div>
 }
 ```
 
-## Composition
+What happens here:
+- `FieldShell` handles shell click
+- `FieldTarget` tells the shell which element to focus
+- `FormUiState` supplies validation and disabled state
 
-`FormFieldControl` is the building block behind every styled form component. `TextField`, `Select`, `MultiSelect`, and `DatePickerField` all wrap it internally, forwarding their inputs (label, icons, errors, disabled) down to `FormFieldControl`. Here is a complete registration form showcasing all of them wired with signal forms and validation.
+### Select Trigger
 
-:::example form-example
-
-```html {example="form-example"}
-<fibo-text-field
-  [formField]="registrationForm.name"
-  label="Name"
-  iconEnd="user"
-  placeholder="Enter full name"
-/>
-
-<fibo-select
-  [formField]="registrationForm.position"
-  label="Position"
-  placeholder="Select position"
-  [items]="positions"
-/>
-
-<fibo-datepicker
-  [formField]="registrationForm.birthDate"
-  label="Birth Date"
-  placeholder="YYYY-MM-DD"
-/>
-
-<fibo-multi-select
-  [formField]="registrationForm.skills"
-  label="Skills"
-  placeholder="Select skills"
-  [items]="skillItems"
-/>
-
-<button class="btn btn-primary w-full"
-  [disabled]="!registrationForm().valid()"
-  (click)="onSubmit()">
-  Register
-</button>
+```html
+<fibo-field-shell
+  #shell
+  [label]="label()"
+  iconEnd="chevron-down"
+  [hasValue]="value() !== null"
+  (clearRequested)="clear()"
+>
+  <button
+    fiboFieldTarget
+    fieldTargetMode="click"
+    type="button"
+    role="combobox"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-controls]="isOpen() ? listboxId : null"
+    [attr.aria-invalid]="uiState.invalid() || null"
+    (click)="toggle()"
+    (blur)="uiState.touched.set(true)"
+  >
+    {{ selectedLabel() || placeholder() }}
+  </button>
+</fibo-field-shell>
 ```
 
-```ts {example="form-example"}
+```ts
+readonly overlayConfig = computed(() => ({
+  templateRef: this.selectTemplate(),
+  referenceElement: this.fieldShell().overlayReferenceElement(),
+  interactionRoot: this.fieldShell().overlayInteractionRoot(),
+  focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
+  category: 'popover' as const,
+}));
+```
+
+Here the shell click opens the button because `FieldTarget` is configured with `fieldTargetMode="click"`.
+
+## Shell Interaction Rules
+
+`FieldShell` follows these rules:
+
+1. If the click lands on a `FieldAction`, do nothing except that action.
+2. If the click lands on the primary target itself, let the browser handle it.
+3. If the click lands on non-interactive shell chrome, activate the primary target.
+
+This means:
+- text inputs focus on shell click
+- select-like buttons open on shell click
+- multi-select chip remove buttons do not reopen the popover
+
+## Overlay Strategy
+
+For overlay fields, `FieldShell` works together with `createOverlay()`.
+
+Recommended mapping:
+
+| Overlay config field | Recommended value |
+| --- | --- |
+| `referenceElement` | shell or explicit `FieldOverlayAnchor` |
+| `interactionRoot` | shell |
+| `focusReturnTarget` | primary `FieldTarget` |
+
+This gives the right behaviour:
+- overlay width can match the full field shell
+- click-outside and focus-leave are measured against the whole field
+- focus returns to the real control, not to a non-focusable wrapper
+
+## Accessibility Notes
+
+Keep semantics on the real control, not on `FieldShell`.
+
+Do:
+- put `role="combobox"`, `aria-expanded`, `aria-controls`, `aria-invalid` on the real `button` or `input`
+- put `required`, `disabled`, `name`, and other form semantics on the real focus target
+- keep decorative icons non-interactive
+
+Do not:
+- make `FieldShell` focusable
+- put the main `role="combobox"` on the shell
+- use clickable SVG icons as standalone actions
+
+For secondary actions:
+- use real buttons
+- mark them with `fiboFieldAction`
+- stop propagation when the action should not reopen or refocus the field
+
+## Using `FormUiState`
+
+`FormUiState` is the thin signal-forms bridge for UI state.
+
+Add it through `hostDirectives`:
+
+```ts
 @Component({
-  selector: 'form-example',
-  imports: [FormField, TextField, Select, MultiSelect, DatePickerField],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '...',
+  hostDirectives: [
+    {
+      directive: FormUiState,
+      inputs: [...FORM_UI_STATE_INPUTS],
+    },
+  ],
 })
-export class FormExample {
-  readonly positions: SelectItem[] = [
-    { label: 'Developer', value: 'developer' },
-    { label: 'Designer', value: 'designer' },
-    { label: 'Product Manager', value: 'pm' },
-    { label: 'QA Engineer', value: 'qa' },
-    { label: 'DevOps Engineer', value: 'devops' },
-    { label: 'Team Lead', value: 'lead' },
-  ];
-
-  readonly skillItems: SelectItem[] = [
-    { label: 'Angular', value: 'angular' },
-    { label: 'React', value: 'react' },
-    { label: 'TypeScript', value: 'typescript' },
-    { label: 'Node.js', value: 'nodejs' },
-    { label: 'Python', value: 'python' },
-    { label: 'Docker', value: 'docker' },
-    { label: 'SQL', value: 'sql' },
-    { label: 'Git', value: 'git' },
-  ];
-
-  readonly model = signal<RegistrationData>({
-    name: '',
-    position: null,
-    birthDate: '',
-    skills: [],
-  });
-
-  readonly registrationForm = form(this.model, schema => {
-    required(schema.name, { message: 'Name is required' });
-    required(schema.position, { message: 'Position is required' });
-    required(schema.birthDate, { message: 'Birth date is required' });
-  });
-
-  onSubmit() {
-    console.log('Registration data:', this.model());
-  }
-}
+export class Select {}
 ```
 
-## API
+Then read from `uiState` where needed:
 
-### Selector
+```ts
+readonly uiState = inject(FormUiState);
+```
 
-`fibo-form-field-control` / `button[fiboFormFieldControl]`
+Typical usage:
+- `uiState.disabled()`
+- `uiState.required()`
+- `uiState.invalid()`
+- `uiState.touched.set(true)`
+- `uiState.errorMessage()`
 
-### Inputs
+## Field Primitives API
+
+### `FieldShell`
+
+Selector: `fibo-field-shell`
+
+Inputs:
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `id` | `string` | Used for the projected label `for=""` |
+| `label` | `string` | Field label |
+| `iconStart` | `string` | Leading Lucide icon |
+| `iconEnd` | `string` | Trailing Lucide icon |
+| `clearable` | `boolean` | Enables the clear action |
+| `hasValue` | `boolean` | Controls clear-button visibility |
+
+Outputs:
+
+| Output | Description |
+| --- | --- |
+| `clearRequested` | Fired when the clear button is pressed |
+| `focusRequested` | Fallback event when no `FieldTarget` is present |
+
+Public methods used by controls:
+
+| Method | Description |
+| --- | --- |
+| `focusPrimary()` | Focuses the primary target |
+| `activatePrimaryFromShell()` | Focuses or clicks the primary target based on its mode |
+| `overlayReferenceElement()` | Returns explicit overlay anchor or shell element |
+| `overlayInteractionRoot()` | Returns the shell root used for close policies |
+| `overlayFocusReturnTarget()` | Returns the target used after overlay close |
+
+### `FieldTarget`
+
+Selector: `[fiboFieldTarget]`
+
+Purpose:
+- marks the primary interactive element
+- tells the shell how to react on shell click
+
+Input:
 
 | Input | Type | Default | Description |
-|-------|------|---------|-------------|
-| `label` | `string` | `''` | Label text displayed above the content |
-| `iconStart` | `string` | `''` | Lucide icon name rendered before the content |
-| `iconEnd` | `string` | `''` | Lucide icon name rendered after the content |
-| `id` | `string` | `''` | Forwarded to the inner `<label for="">` |
-| `value` | `unknown` | `undefined` | Two-way bound value (model) |
-| `clearValue` | `unknown` | `undefined` | When set, enables the clear button. Clicking it sets `value` to this |
-| `required` | `boolean` | `false` | Sets `aria-required` on the host |
-| `disabled` | `boolean` | `false` | Sets `aria-disabled` on the host and blocks `clear()` |
-| `invalid` | `boolean` | `false` | Combined with `touched` to derive error state |
-| `touched` | `boolean` | `false` | Combined with `invalid` to derive error state |
-| `dirty` | `boolean` | `false` | Tracks whether the value has been modified |
-| `errors` | `ValidationError[]` | `[]` | Validation errors from `@angular/forms/signals` |
+| --- | --- | --- | --- |
+| `fieldTargetMode` | `'focus' | 'click'` | `'focus'` | `focus` for text-like fields, `click` for button-like triggers |
 
-### Host Attributes
+Use:
+- `input` for `TextField`
+- `button` for `Select`
+- composite `div[tabindex="0"]` for `MultiSelect`
 
-| Attribute | Condition |
-|-----------|-----------|
-| `aria-disabled` | `disabled() === true` |
-| `aria-required` | `required() === true` |
-| `data-error` | `invalid() && touched()` |
-| `data-can-clear` | `clearValue` is set and `value !== clearValue` |
+### `FieldAction`
 
-### Computed
+Selector: `[fiboFieldAction]`
 
-| Name | Description |
-|------|-------------|
-| `hasError()` | `true` when both `invalid` and `touched` are `true` |
-| `canClear()` | `true` when `clearValue` is defined and differs from current `value` |
+Marks an inner action that should not retrigger shell activation.
 
-### CSS Classes
+Typical use cases:
+- clear button
+- remove-chip button
+- secondary trailing action
 
-| Class | Element | Description |
-|-------|---------|-------------|
-| `.form-field-control` | Host | Main container — flex row with gap |
-| `.ff-label-inline` | Wrapper | Global modifier that switches descendants to inline label layout |
-| `.ff-density-compact` | Wrapper | Global modifier that makes fields denser |
-| `.form-field-body` | Inner wrapper | Variant-aware layout wrapper for label/content |
-| `.form-field-content` | Inner wrapper | Content slot that stretches between label and trailing icons |
-| `.form-field-label` | `<label>` | Label element used by both layout variants |
-| `.form-field-icon` | `<lucide-icon>` | Start and end icons |
-| `.form-field-icon-end` | `<lucide-icon>` | Additional class on the end icon |
-| `.form-field-clear-icon` | `<lucide-icon>` | The clear (X) button |
+### `FieldOverlayAnchor`
+
+Selector: `[fiboFieldOverlayAnchor]`
+
+Optional override for cases where the overlay should anchor to something other than the shell root.
+
+If absent, the shell itself is used as the anchor.
+
+## Recommended Patterns
+
+Use these defaults unless a control clearly needs something else.
+
+| Control type | Target mode | Overlay anchor | Focus return |
+| --- | --- | --- | --- |
+| Text input | `focus` | none | input |
+| Select | `click` | shell | trigger button |
+| Combobox | `focus` | shell | input |
+| Date picker | `click` | shell | input or trigger button |
+| Multi-select | `click` | shell | composite trigger surface |
+
+## Legacy Note
+
+`FormFieldControl` still exists in the codebase for backward compatibility and old examples, but it is no longer the recommended primitive for new field components.
+
+For new work, use:
+- `FormUiState`
+- `FieldShell`
+- `FieldTarget`
+- `FieldAction`
+- `FieldOverlayAnchor`
+
+## Reference Implementations
+
+See the current runtime components for the recommended pattern:
+- `TextField`
+- `Select`
+- `Combobox`
+- `DatePickerField`
+- `MultiSelect`
+
+These components now use the same field architecture and should be treated as the canonical examples.

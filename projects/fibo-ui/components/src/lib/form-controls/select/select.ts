@@ -13,6 +13,7 @@ import {
   restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
 import { FieldShell } from '../form/field-shell';
+import { FieldTargetDirective } from '../form/field-target';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
 let nextSelectId = 0;
@@ -33,6 +34,7 @@ export interface SelectItem {
   ],
   imports: [
     FieldShell,
+    FieldTargetDirective,
     Popover,
     DataList,
     KeyboardSource,
@@ -53,9 +55,10 @@ export interface SelectItem {
       [clearable]="canClear()"
       [hasValue]="value() !== clearValue()"
       (clearRequested)="clear()"
-      (focusRequested)="openFromShell()"
     >
       <button
+        fiboFieldTarget
+        fieldTargetMode="click"
         fiboKeyboardSource
         #keyboardSource="KeyboardSource"
         #triggerButton
@@ -138,9 +141,9 @@ export class Select implements FormValueControl<string | number | null> {
 
   readonly overlayConfig = computed(() => ({
     templateRef: this.selectTemplate(),
-    referenceElement: this.fieldShell().elementRef.nativeElement,
-    interactionRoot: this.fieldShell().elementRef.nativeElement,
-    focusReturnTarget: this.triggerButton().nativeElement,
+    referenceElement: this.fieldShell().overlayReferenceElement(),
+    interactionRoot: this.fieldShell().overlayInteractionRoot(),
+    focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
     category: 'popover' as const,
   }));
   readonly overlayHandle = createOverlay(this.isOpen, this.overlayConfig, overlay => {
@@ -167,11 +170,6 @@ export class Select implements FormValueControl<string | number | null> {
 
   close() {
     this.isOpen.set(false);
-  }
-
-  openFromShell() {
-    this.focus();
-    this.open();
   }
 
   clear() {

@@ -13,7 +13,9 @@ import {
   restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
 import { LucideAngularModule } from 'lucide-angular';
+import { FieldActionDirective } from '../form/field-action';
 import { FieldShell } from '../form/field-shell';
+import { FieldTargetDirective } from '../form/field-target';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 import { Checkbox } from '../checkbox/checkbox';
 import { SelectItem } from './select';
@@ -36,6 +38,8 @@ let nextMultiSelectId = 0;
     LucideAngularModule,
     DataListItem,
     FieldShell,
+    FieldTargetDirective,
+    FieldActionDirective,
     Checkbox,
   ],
   host: {
@@ -48,9 +52,10 @@ let nextMultiSelectId = 0;
       [label]="label()"
       iconEnd="chevron-down"
       [hasValue]="selectedItems().length > 0"
-      (focusRequested)="openFromShell()"
     >
       <div
+        fiboFieldTarget
+        fieldTargetMode="click"
         fiboKeyboardSource
         #keyboardSource="KeyboardSource"
         #triggerSurface
@@ -75,7 +80,7 @@ let nextMultiSelectId = 0;
             <span class="truncate flex-1 text-xs font-medium">{{ item.label }}</span>
             <button
               type="button"
-              data-field-action
+              fiboFieldAction
               class="rounded-full cursor-pointer flex-shrink-0 btn-text p-0.5 hover:bg-black/5 dark:hover:bg-white/5"
               (click)="removeItem(item.value); $event.stopPropagation()"
               (keydown)="$event.stopPropagation()"
@@ -143,9 +148,9 @@ export class MultiSelect implements FormValueControl<(string | number)[] | null>
   });
   readonly overlayConfig = computed(() => ({
     templateRef: this.multiSelectTemplate(),
-    referenceElement: this.fieldShell().elementRef.nativeElement,
-    interactionRoot: this.fieldShell().elementRef.nativeElement,
-    focusReturnTarget: this.triggerSurface().nativeElement,
+    referenceElement: this.fieldShell().overlayReferenceElement(),
+    interactionRoot: this.fieldShell().overlayInteractionRoot(),
+    focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
     category: 'popover' as const,
   }));
   readonly overlayHandle = createOverlay(this.isOpen, this.overlayConfig, overlay => {
@@ -168,11 +173,6 @@ export class MultiSelect implements FormValueControl<(string | number)[] | null>
     if (!this.uiState.disabled()) {
       this.isOpen.update(isOpen => !isOpen);
     }
-  }
-
-  openFromShell() {
-    this.focus();
-    this.open();
   }
 
   openFromKeyboard(event: Event) {

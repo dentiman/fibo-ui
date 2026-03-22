@@ -13,6 +13,7 @@ import {
 } from '@fibo-ui/cdk';
 import { Calendar } from '../calendar/calendar';
 import { FieldShell } from '../form/field-shell';
+import { FieldTargetDirective } from '../form/field-target';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
 @Component({
@@ -23,7 +24,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       inputs: [...FORM_UI_STATE_INPUTS],
     },
   ],
-  imports: [FieldShell, Popover, Calendar, SelectDate, FocusTrap, OverlayPanel],
+  imports: [FieldShell, FieldTargetDirective, Popover, Calendar, SelectDate, FocusTrap, OverlayPanel],
   host: {
     class: 'block',
   },
@@ -38,9 +39,10 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       [clearable]="true"
       [hasValue]="value() !== ''"
       (clearRequested)="clear()"
-      (focusRequested)="openCalendar()"
     >
       <input
+        fiboFieldTarget
+        fieldTargetMode="click"
         #inputElement
         aria-haspopup="dialog"
         [id]="id()"
@@ -101,9 +103,9 @@ export class DatePickerField implements FormValueControl<string> {
   readonly iconStart = input<string>('');
   readonly overlayConfig = computed(() => ({
     templateRef: this.calendarTemplate(),
-    referenceElement: this.fieldShell().elementRef.nativeElement,
-    interactionRoot: this.fieldShell().elementRef.nativeElement,
-    focusReturnTarget: this.inputElement().nativeElement,
+    referenceElement: this.fieldShell().overlayReferenceElement(),
+    interactionRoot: this.fieldShell().overlayInteractionRoot(),
+    focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
     category: 'popover' as const,
   }));
   readonly overlayHandle = createOverlay(this.isOpen, this.overlayConfig, overlay => {

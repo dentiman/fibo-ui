@@ -15,16 +15,16 @@ Most UI libraries give you a `<Select>` that works out of the box but is impossi
 Instead of one big `SelectComponent`, a select is a composition:
 
 ```
-FormFieldControl  ← visual shell (label, icons, errors)
-└─ PopoverTriggerToggle  ← open/close behaviour
-   └─ PortalContent  ← lifts content out of DOM stacking context
-      └─ Popover + PopoverPosition  ← floating positioning
+FormUiState  ← signal-form UI state
+└─ FieldShell  ← visual shell (label, icons, errors, clear action)
+   └─ FieldTarget  ← real focusable control inside the shell
+      └─ createOverlay + Popover  ← floating positioning
          └─ DataList  ← keyboard navigation over items
             └─ SelectOne  ← single-value selection model
                └─ DataListItem × N  ← individual selectable items
 ```
 
-Every layer is replaceable. Need multi-select? Swap `SelectOne` for `SelectMulti`. Need a date picker instead of a list? Keep `PopoverTrigger` + `PortalContent` + `Popover`, swap the inner content for `Calendar` + `SelectDate`. Need navigation instead of selection? Use `RouterSelectOne` and the same `DataListItem` directive now navigates routes.
+Every layer is replaceable. Need multi-select? Swap `SelectOne` for `SelectMulti`. Need a date picker instead of a list? Keep `FieldShell` + `FieldTarget` + `createOverlay()` and swap the inner content for `Calendar` + `SelectDate`. Need navigation instead of selection? Use `RouterSelectOne` and the same `DataListItem` directive now navigates routes.
 
 ---
 
@@ -117,7 +117,7 @@ Explains the mental model before diving into components. Adapted from Radix UI a
 | **Data List & Items** | The `DataList` + `DataListItem` primitive: how items register, keyboard navigation, active state |
 | **Selection Models** | `SelectOne`, `SelectMulti`, `RouterSelectOne`, `SelectDate`, `SelectDateRange`, `SELECTION_MODEL` token, implementing your own |
 | **Popover & Portal** | `PopoverTrigger`, `PortalContent`, `OverlayRegistry`, `OverlayOutletComponent`, `PopoverPosition`, `@floating-ui/dom` |
-| **Form Integration** | `FormValueControl<T>`, `FormCheckboxControl`, `FormFieldDirective`, `FormFieldControl`, signal forms binding pattern |
+| **Form Integration** | `FormValueControl<T>`, `FormCheckboxControl`, `FormFieldDirective`, `FormUiState`, `FieldShell`, signal forms binding pattern |
 
 ---
 
@@ -137,7 +137,7 @@ The most important category — the components developers reach for most often. 
 | **Date Picker** | Date selection with calendar popover: basic, range, min/max, custom format, localization |
 | **File Upload** | Drag-and-drop zone, file list, size/type validation |
 | **Slider** | Numeric range with single thumb and dual thumb (range) variants |
-| **Form Field** | `FormFieldControl` wrapper: label, icons, error message display, the `[data-error]` pattern |
+| **Form Field** | `FieldShell` wrapper plus `FieldTarget`, `FieldAction`, and `FieldOverlayAnchor` for shell composition |
 | **Form Errors** | `FormErrorService`, `FormErrorPipe`, `FirstFormErrorPipe`, `HasFormErrorPipe`, custom error messages |
 
 ---
