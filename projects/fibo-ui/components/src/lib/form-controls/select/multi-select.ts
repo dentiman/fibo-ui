@@ -20,8 +20,6 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 import { Checkbox } from '../checkbox/checkbox';
 import { SelectItem } from './select';
 
-let nextMultiSelectId = 0;
-
 @Component({
   selector: 'fibo-multi-select',
   hostDirectives: [
@@ -50,6 +48,7 @@ let nextMultiSelectId = 0;
     <fibo-field-shell
       #fieldShell
       [label]="label()"
+      [hint]="hint()"
       iconEnd="chevron-down"
       [hasValue]="selectedItems().length > 0"
     >
@@ -64,7 +63,7 @@ let nextMultiSelectId = 0;
         aria-haspopup="listbox"
         [attr.tabindex]="uiState.disabled() ? -1 : 0"
         [attr.aria-expanded]="isOpen()"
-        [attr.aria-controls]="isOpen() ? listboxId : null"
+        [attr.aria-controls]="isOpen() ? listboxId() : null"
         [attr.aria-invalid]="uiState.invalid() || null"
         [attr.aria-disabled]="uiState.disabled() || null"
         class="w-full flex flex-wrap gap-x-1 gap-y-1 -mx-1 outline-none"
@@ -94,15 +93,12 @@ let nextMultiSelectId = 0;
         }
       </div>
     </fibo-field-shell>
-    @if (uiState.errorMessage(); as error) {
-      <div class="form-field-error">{{ error }}</div>
-    }
 
     <ng-template #multiSelectTpl>
       <div
         fiboPopover
         role="listbox"
-        [attr.id]="listboxId"
+        [attr.id]="listboxId()"
         aria-multiselectable="true"
         [keyboardSource]="keyboardSource"
         [matchWidth]="true"
@@ -137,9 +133,10 @@ export class MultiSelect implements FormValueControl<(string | number)[] | null>
   readonly value = model<(string | number)[] | null>(null);
   readonly items = input<SelectItem[]>([]);
   readonly label = input<string>('');
+  readonly hint = input<string>('');
   readonly placeholder = input<string>('Select');
   readonly isOpen = signal(false);
-  readonly listboxId = `fibo-multi-select-listbox-${nextMultiSelectId++}`;
+  readonly listboxId = computed(() => this.fieldShell().idFor('listbox'));
 
   readonly selectedItems = computed(() => {
     const currentValue = this.value();

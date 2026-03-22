@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, input, model, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, inject, input, model, viewChild } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
 import { provideFormValueControl } from '@fibo-ui/cdk';
 import { FieldShell } from '../form/field-shell';
@@ -21,8 +21,8 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
   providers: [provideFormValueControl(() => TextField)],
   template: `
     <fibo-field-shell
-      [id]="id()"
       [label]="label()"
+      [hint]="hint()"
       [iconStart]="iconStart()"
       [iconEnd]="iconEnd()"
       [clearable]="true"
@@ -32,7 +32,6 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       <input
         fiboFieldTarget
         #inputElement
-        [id]="id()"
         [type]="type()"
         [value]="value()"
         [placeholder]="placeholder()"
@@ -51,21 +50,16 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         class="text-field-input"
       />
     </fibo-field-shell>
-    @if (uiState.errorMessage(); as error) {
-      <div class="form-field-error">{{ error }}</div>
-    }
   `,
 })
 export class TextField implements FormValueControl<string> {
-  private static nextId = 0;
   readonly uiState = inject(FormUiState);
   private readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('inputElement');
-
-  readonly id = signal(`fibo-text-field-${TextField.nextId++}`);
 
   readonly value = model<string>('');
   readonly type = input<string>('text');
   readonly label = input<string>('');
+  readonly hint = input<string>('');
   readonly placeholder = input<string>('');
   readonly iconStart = input<string>('');
   readonly iconEnd = input<string>('');

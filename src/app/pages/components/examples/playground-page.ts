@@ -35,6 +35,7 @@ import { form, required, FormField } from '@angular/forms/signals';
           <fibo-text-field
             [formField]="debugForm.title"
             label="Title"
+            hint="Shown under the field until a validation error replaces it."
             placeholder="Enter task title"
             iconStart="file-text"
           />
@@ -42,6 +43,7 @@ import { form, required, FormField } from '@angular/forms/signals';
           <fibo-select
             [formField]="debugForm.status"
             label="Status"
+            hint="Required field. Pick one workflow state."
             placeholder="Select status"
             iconStart="list"
             [items]="statuses"
@@ -58,6 +60,7 @@ import { form, required, FormField } from '@angular/forms/signals';
           <fibo-datepicker-field
             [formField]="debugForm.dueDate"
             label="Due date"
+            hint="Optional date in YYYY-MM-DD format."
             placeholder="Pick a date"
           />
         </div>

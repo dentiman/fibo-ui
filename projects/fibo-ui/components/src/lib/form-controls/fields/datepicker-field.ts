@@ -32,8 +32,8 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
   template: `
     <fibo-field-shell
       #fieldShell
-      [id]="id()"
       [label]="label()"
+      [hint]="hint()"
       [iconStart]="iconStart()"
       iconEnd="calendar-days"
       [clearable]="true"
@@ -45,7 +45,6 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         fieldTargetMode="click"
         #inputElement
         aria-haspopup="dialog"
-        [id]="id()"
         [value]="value()"
         [placeholder]="placeholder()"
         [disabled]="uiState.disabled()"
@@ -53,7 +52,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         [attr.name]="uiState.name() || null"
         [attr.aria-required]="uiState.required() || null"
         [attr.aria-expanded]="isOpen()"
-        [attr.aria-controls]="isOpen() ? dialogId : null"
+        [attr.aria-controls]="isOpen() ? dialogId() : null"
         [attr.aria-invalid]="uiState.invalid() || null"
         [attr.data-error]="(uiState.invalid() && uiState.touched()) || null"
         (input)="onInput($event)"
@@ -64,14 +63,11 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         class="text-field-input"
       />
     </fibo-field-shell>
-    @if (uiState.errorMessage(); as error) {
-      <div class="form-field-error">{{ error }}</div>
-    }
 
     <ng-template #calendarTpl>
       <fibo-calendar
         fiboPopover
-        [attr.id]="dialogId"
+        [attr.id]="dialogId()"
         #popover="Popover"
         fiboFocusTrap
         [restoreFocus]="false"
@@ -87,20 +83,19 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
   `,
 })
 export class DatePickerField implements FormValueControl<string> {
-  private static nextId = 0;
   readonly uiState = inject(FormUiState);
   private readonly calendarTemplate = viewChild.required<TemplateRef<unknown>>('calendarTpl');
   readonly fieldShell = viewChild.required(FieldShell);
   private readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('inputElement');
 
-  readonly id = signal(`fibo-datepicker-field-${DatePickerField.nextId++}`);
-  readonly dialogId = `fibo-datepicker-dialog-${DatePickerField.nextId++}`;
   readonly isOpen = signal(false);
 
   readonly value = model<string>('');
   readonly label = input<string>('');
+  readonly hint = input<string>('');
   readonly placeholder = input<string>('');
   readonly iconStart = input<string>('');
+  readonly dialogId = computed(() => this.fieldShell().idFor('dialog'));
   readonly overlayConfig = computed(() => ({
     templateRef: this.calendarTemplate(),
     referenceElement: this.fieldShell().overlayReferenceElement(),

@@ -16,8 +16,6 @@ import { FieldShell } from '../form/field-shell';
 import { FieldTargetDirective } from '../form/field-target';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
-let nextSelectId = 0;
-
 export interface SelectItem {
   label: string;
   value: string | number | null;
@@ -48,8 +46,8 @@ export interface SelectItem {
   template: `
     <fibo-field-shell
       #fieldShell
-      [id]="triggerId"
       [label]="label()"
+      [hint]="hint()"
       [iconStart]="iconStart()"
       iconEnd="chevron-down"
       [clearable]="canClear()"
@@ -65,11 +63,10 @@ export interface SelectItem {
         type="button"
         class="w-full text-left"
         role="combobox"
-        [id]="triggerId"
         [disabled]="uiState.disabled()"
         aria-haspopup="listbox"
         [attr.aria-expanded]="isOpen()"
-        [attr.aria-controls]="isOpen() ? listboxId : null"
+        [attr.aria-controls]="isOpen() ? fieldShell.idFor('listbox') : null"
         [attr.aria-invalid]="uiState.invalid() || null"
         (click)="toggle()"
         (blur)="uiState.touched.set(true)"
@@ -80,15 +77,11 @@ export interface SelectItem {
       </button>
     </fibo-field-shell>
 
-    @if (uiState.errorMessage(); as error) {
-      <div class="form-field-error">{{ error }}</div>
-    }
-
     <ng-template #selectTpl>
       <div
         fiboPopover
         role="listbox"
-        [attr.id]="listboxId"
+        [attr.id]="fieldShell.idFor('listbox')"
         [keyboardSource]="keyboardSource"
         [matchWidth]="true"
         fiboDataList
@@ -123,12 +116,11 @@ export class Select implements FormValueControl<string | number | null> {
 
   readonly items = input<SelectItem[]>([]);
   readonly label = input('');
+  readonly hint = input('');
   readonly placeholder = input('Select');
   readonly iconStart = input('');
   readonly clearValue = input<string | number | null | undefined>(undefined);
 
-  readonly triggerId = `fibo-select-${nextSelectId++}`;
-  readonly listboxId = `fibo-select-listbox-${nextSelectId++}`;
   readonly isOpen = signal(false);
 
   readonly selectedItem = computed(() => {

@@ -58,6 +58,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
     <fibo-field-shell
       #fieldShell
       [label]="label()"
+      [hint]="hint()"
       [iconStart]="iconStart()"
       iconEnd="chevron-down"
       [clearable]="clearValue() !== undefined"
@@ -75,10 +76,6 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         fiboComboboxInput
       />
     </fibo-field-shell>
-
-    @if (uiState.errorMessage(); as error) {
-      <div class="form-field-error">{{ error }}</div>
-    }
 
     <ng-template #comboboxTpl>
       <div
@@ -119,6 +116,7 @@ export class Combobox
 
   readonly value = model<string | number | null>(null);
   readonly label = input('');
+  readonly hint = input('');
   readonly placeholder = input('Search and select');
   readonly iconStart = input('');
   readonly clearValue = input<string | number | null | undefined>(null);

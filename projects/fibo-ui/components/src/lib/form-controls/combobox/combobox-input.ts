@@ -1,9 +1,7 @@
-import { Directive, effect, signal, untracked } from '@angular/core';
+import { Directive, effect, inject, untracked } from '@angular/core';
 import { injectFormValueControl } from '@fibo-ui/cdk';
 import { injectComboboxControl } from './combobox-control-token';
 import { injectComboboxInternal } from './combobox-internal-token';
-
-let nextComboboxInputId = 0;
 
 @Directive({
   selector: 'input[fiboComboboxInput]',
@@ -17,7 +15,6 @@ let nextComboboxInputId = 0;
     spellcheck: 'false',
     'aria-autocomplete': 'list',
     'aria-haspopup': 'listbox',
-    '[id]': 'inputId()',
     '[value]': 'combobox.query()',
     '[disabled]': 'formControl.disabled?.() ?? false',
     '[required]': 'formControl.required?.() ?? false',
@@ -32,7 +29,6 @@ let nextComboboxInputId = 0;
   },
 })
 export class ComboboxInput {
-  readonly inputId = signal(`fibo-combobox-input-${nextComboboxInputId++}`);
   readonly combobox = injectComboboxControl<string | number | null, string | number>();
   readonly formControl = injectFormValueControl<string | number | null>();
   readonly comboboxInternal = injectComboboxInternal();

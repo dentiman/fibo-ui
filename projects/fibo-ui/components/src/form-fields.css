@@ -314,6 +314,14 @@
         }
     }
 
+    .form-field-hint {
+        margin-left: 0.75rem;
+        margin-top: 0.25rem;
+        font-size: 0.75rem;
+        line-height: 1rem;
+        color: var(--foreground-tertiary);
+    }
+
     .form-field-icon {
         color: var(--foreground-tertiary);
     }

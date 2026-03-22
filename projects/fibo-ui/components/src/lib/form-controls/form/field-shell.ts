@@ -14,17 +14,19 @@ import { FieldOverlayAnchorDirective } from './field-overlay-anchor';
 import { FieldTargetDirective } from './field-target';
 import { FormUiState } from './form-ui-state';
 
+let nextFieldShellId = 0;
+
 @Component({
   selector: 'fibo-field-shell',
   standalone: true,
   imports: [LucideAngularModule, FieldActionDirective],
   host: {
     class: 'block',
-    '(click)': 'onContainerClick($event)',
   },
   template: `
     <div
       class="form-field-control"
+      (click)="onContainerClick($event)"
       [attr.aria-disabled]="disabled() || null"
       [attr.aria-required]="required() || null"
       [attr.data-error]="hasError() || null"
@@ -37,7 +39,9 @@ import { FormUiState } from './form-ui-state';
 
       <div class="form-field-body">
         @if (label()) {
-          <label [for]="id() || null" class="form-field-label">{{ label() }}</label>
+          <label [id]="idFor('label')" [for]="idFor('control')" class="form-field-label">
+            {{ label() }}
+          </label>
         }
 
         <div class="form-field-content">
@@ -66,6 +70,12 @@ import { FormUiState } from './form-ui-state';
         ></lucide-icon>
       }
     </div>
+
+    @if (errorMessage(); as error) {
+      <div [id]="idFor('error')" class="form-field-error">{{ error }}</div>
+    } @else if (hint()) {
+      <div [id]="idFor('hint')" class="form-field-hint">{{ hint() }}</div>
+    }
   `,
 })
 export class FieldShell {
@@ -73,9 +83,11 @@ export class FieldShell {
   private readonly formUiState = inject(FormUiState, { optional: true });
   private readonly fieldTarget = contentChild(FieldTargetDirective, { descendants: true });
   private readonly overlayAnchor = contentChild(FieldOverlayAnchorDirective, { descendants: true });
+  private readonly generatedBaseId = `field-${nextFieldShellId++}`;
 
   readonly id = input('');
   readonly label = input('');
+  readonly hint = input('');
   readonly iconStart = input('');
   readonly iconEnd = input('');
   readonly clearable = input(false);
@@ -89,7 +101,9 @@ export class FieldShell {
   readonly hasError = computed(
     () => (this.formUiState?.invalid() ?? false) && (this.formUiState?.touched() ?? false),
   );
+  readonly errorMessage = computed(() => this.formUiState?.errorMessage() ?? null);
   readonly canClear = computed(() => this.clearable() && this.hasValue());
+  readonly baseId = computed(() => this.id() || this.generatedBaseId);
 
   focusPrimary(options?: FocusOptions): void {
     this.fieldTarget()?.focus(options);
@@ -109,6 +123,10 @@ export class FieldShell {
 
   overlayFocusReturnTarget(): HTMLElement | null {
     return this.fieldTarget()?.focusReturnTarget() ?? null;
+  }
+
+  idFor(suffix: string): string {
+    return `${this.baseId()}-${suffix}`;
   }
 
   onContainerClick(event: MouseEvent) {
