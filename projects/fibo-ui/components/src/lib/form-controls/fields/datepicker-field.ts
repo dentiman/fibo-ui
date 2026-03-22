@@ -1,60 +1,75 @@
-import { Component, input, model, signal } from '@angular/core';
-import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
+import { Component, ElementRef, TemplateRef, computed, inject, input, model, signal, viewChild } from '@angular/core';
+import { FormValueControl } from '@angular/forms/signals';
 import {
+  closeOnFocusLeave,
+  closeOnOutsideClick,
+  createOverlay,
   FocusTrap,
   OverlayPanel,
   Popover,
-  PopoverTriggerClick,
   SelectDate,
   provideFormValueControl,
+  restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
-import { formErrorMessage } from '../form/form-error';
-import { FormFieldControl } from '../form/form-field-control';
 import { Calendar } from '../calendar/calendar';
+import { FieldShell } from '../form/field-shell';
+import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
 @Component({
-  selector: 'fibo-datepicker',
-  imports: [FormFieldControl, Popover, PopoverTriggerClick, Calendar, SelectDate, FocusTrap, OverlayPanel],
+  selector: 'fibo-datepicker, fibo-datepicker-field',
+  hostDirectives: [
+    {
+      directive: FormUiState,
+      inputs: [...FORM_UI_STATE_INPUTS],
+    },
+  ],
+  imports: [FieldShell, Popover, Calendar, SelectDate, FocusTrap, OverlayPanel],
   host: {
     class: 'block',
   },
   providers: [provideFormValueControl(() => DatePickerField)],
   template: `
-    <fibo-form-field-control
-      fiboPopoverTriggerClick
-      aria-haspopup="dialog"
-      [delegatesFocus]="true"
-      [content]="calendarTpl"
+    <fibo-field-shell
+      #fieldShell
       [id]="id()"
       [label]="label()"
       [iconStart]="iconStart()"
-      [iconEnd]="'calendar-days'"
-      [required]="required()"
-      [disabled]="disabled()"
-      [invalid]="invalid()"
-      [touched]="touched()"
-      [errors]="errors()"
-      [clearValue]="''"
-      [(value)]="value"
+      iconEnd="calendar-days"
+      [clearable]="true"
+      [hasValue]="value() !== ''"
+      (clearRequested)="clear()"
+      (focusRequested)="openCalendar()"
     >
       <input
+        #inputElement
+        aria-haspopup="dialog"
         [id]="id()"
         [value]="value()"
         [placeholder]="placeholder()"
-        [disabled]="disabled()"
-        [attr.data-error]="(invalid() && touched()) || null"
+        [disabled]="uiState.disabled()"
+        [required]="uiState.required()"
+        [attr.name]="uiState.name() || null"
+        [attr.aria-required]="uiState.required() || null"
+        [attr.aria-expanded]="isOpen()"
+        [attr.aria-controls]="isOpen() ? dialogId : null"
+        [attr.aria-invalid]="uiState.invalid() || null"
+        [attr.data-error]="(uiState.invalid() && uiState.touched()) || null"
         (input)="onInput($event)"
+        (click)="openCalendar()"
+        (keydown.enter)="openCalendar()"
+        (keydown.arrowdown)="openCalendar($event)"
         (blur)="onBlur()"
         class="text-field-input"
       />
-    </fibo-form-field-control>
-    @if (errorMessage(); as error) {
+    </fibo-field-shell>
+    @if (uiState.errorMessage(); as error) {
       <div class="form-field-error">{{ error }}</div>
     }
 
     <ng-template #calendarTpl>
       <fibo-calendar
         fiboPopover
+        [attr.id]="dialogId"
         #popover="Popover"
         fiboFocusTrap
         [restoreFocus]="false"
@@ -70,22 +85,32 @@ import { Calendar } from '../calendar/calendar';
   `,
 })
 export class DatePickerField implements FormValueControl<string> {
-  static nextId = 0;
-  id = signal(`fibo-datepicker-field-${DatePickerField.nextId++}`);
+  private static nextId = 0;
+  readonly uiState = inject(FormUiState);
+  private readonly calendarTemplate = viewChild.required<TemplateRef<unknown>>('calendarTpl');
+  readonly fieldShell = viewChild.required(FieldShell);
+  private readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('inputElement');
 
-  value = model<string>('');
+  readonly id = signal(`fibo-datepicker-field-${DatePickerField.nextId++}`);
+  readonly dialogId = `fibo-datepicker-dialog-${DatePickerField.nextId++}`;
+  readonly isOpen = signal(false);
 
-  required = input(false);
-  disabled = input(false);
-  touched = model(false);
-  invalid = input(false);
-  dirty = input(false);
-  errors = input<readonly WithOptionalField<ValidationError>[]>([]);
-
-  label = input<string>('');
-  placeholder = input<string>('');
-  iconStart = input<string>('');
-  errorMessage = formErrorMessage(this.errors, this.invalid, this.touched);
+  readonly value = model<string>('');
+  readonly label = input<string>('');
+  readonly placeholder = input<string>('');
+  readonly iconStart = input<string>('');
+  readonly overlayConfig = computed(() => ({
+    templateRef: this.calendarTemplate(),
+    referenceElement: this.fieldShell().elementRef.nativeElement,
+    interactionRoot: this.fieldShell().elementRef.nativeElement,
+    focusReturnTarget: this.inputElement().nativeElement,
+    category: 'popover' as const,
+  }));
+  readonly overlayHandle = createOverlay(this.isOpen, this.overlayConfig, overlay => {
+    closeOnFocusLeave(overlay);
+    closeOnOutsideClick(overlay);
+    restoreTriggerFocusOnClose(overlay);
+  });
 
   onInput(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -93,6 +118,32 @@ export class DatePickerField implements FormValueControl<string> {
   }
 
   onBlur() {
-    this.touched.set(true);
+    this.uiState.touched.set(true);
+  }
+
+  focus(options?: FocusOptions) {
+    this.inputElement().nativeElement.focus(options);
+  }
+
+  openCalendar(event?: Event) {
+    event?.preventDefault();
+    this.focus();
+    if (!this.uiState.disabled()) {
+      this.isOpen.set(true);
+    }
+  }
+
+  close() {
+    this.isOpen.set(false);
+  }
+
+  clear() {
+    if (this.uiState.disabled()) {
+      return;
+    }
+
+    this.value.set('');
+    this.uiState.touched.set(true);
+    this.close();
   }
 }

@@ -1,67 +1,73 @@
-import { Component, input, model, signal } from '@angular/core';
-import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
+import { Component, ElementRef, inject, input, model, signal, viewChild } from '@angular/core';
+import { FormValueControl } from '@angular/forms/signals';
 import { provideFormValueControl } from '@fibo-ui/cdk';
-import { formErrorMessage } from '../form/form-error';
-import { FormFieldControl } from '../form/form-field-control';
+import { FieldShell } from '../form/field-shell';
+import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
 @Component({
   selector: 'fibo-text-field',
   standalone: true,
-  imports: [FormFieldControl],
+  hostDirectives: [
+    {
+      directive: FormUiState,
+      inputs: [...FORM_UI_STATE_INPUTS],
+    },
+  ],
+  imports: [FieldShell],
   host: {
     class: 'block',
   },
   providers: [provideFormValueControl(() => TextField)],
   template: `
-    <fibo-form-field-control
+    <fibo-field-shell
       [id]="id()"
       [label]="label()"
       [iconStart]="iconStart()"
       [iconEnd]="iconEnd()"
-      [required]="required()"
-      [disabled]="disabled()"
-      [invalid]="invalid()"
-      [touched]="touched()"
-      [errors]="errors()"
-      [clearValue]="''"
-      [(value)]="value"
+      [clearable]="true"
+      [hasValue]="value() !== ''"
+      (clearRequested)="clear()"
+      (focusRequested)="focus()"
     >
       <input
+        #inputElement
         [id]="id()"
         [type]="type()"
         [value]="value()"
         [placeholder]="placeholder()"
-        [disabled]="disabled()"
-        [attr.data-error]="(invalid() && touched()) || null"
+        [disabled]="uiState.disabled()"
+        [required]="uiState.required()"
+        [attr.name]="uiState.name() || null"
+        [attr.aria-required]="uiState.required() || null"
+        [attr.aria-invalid]="uiState.invalid() || null"
+        [attr.min]="uiState.min() ?? null"
+        [attr.max]="uiState.max() ?? null"
+        [attr.minlength]="uiState.minLength() ?? null"
+        [attr.maxlength]="uiState.maxLength() ?? null"
+        [attr.data-error]="(uiState.invalid() && uiState.touched()) || null"
         (input)="onInput($event)"
         (blur)="onBlur()"
         class="text-field-input"
       />
-    </fibo-form-field-control>
-    @if (errorMessage(); as error) {
+    </fibo-field-shell>
+    @if (uiState.errorMessage(); as error) {
       <div class="form-field-error">{{ error }}</div>
     }
   `,
 })
 export class TextField implements FormValueControl<string> {
-  static nextId = 0;
-  id = signal(`fibo-text-field-${TextField.nextId++}`);
+  private static nextId = 0;
+  readonly uiState = inject(FormUiState);
+  private readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('inputElement');
 
-  value = model<string>('');
-  type = input<string>('text');
+  readonly id = signal(`fibo-text-field-${TextField.nextId++}`);
 
-  required = input(false);
-  disabled = input(false);
-  touched = model(false);
-  invalid = input(false);
-  dirty = input(false);
-  errors = input<readonly WithOptionalField<ValidationError>[]>([]);
-
-  label = input<string>('');
-  placeholder = input<string>('');
-  iconStart = input<string>('');
-  iconEnd = input<string>('');
-  errorMessage = formErrorMessage(this.errors, this.invalid, this.touched);
+  readonly value = model<string>('');
+  readonly type = input<string>('text');
+  readonly label = input<string>('');
+  readonly placeholder = input<string>('');
+  readonly iconStart = input<string>('');
+  readonly iconEnd = input<string>('');
 
   onInput(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -69,6 +75,19 @@ export class TextField implements FormValueControl<string> {
   }
 
   onBlur() {
-    this.touched.set(true);
+    this.uiState.touched.set(true);
+  }
+
+  focus(options?: FocusOptions) {
+    this.inputElement().nativeElement.focus(options);
+  }
+
+  clear() {
+    if (this.uiState.disabled()) {
+      return;
+    }
+
+    this.value.set('');
+    this.uiState.touched.set(true);
   }
 }

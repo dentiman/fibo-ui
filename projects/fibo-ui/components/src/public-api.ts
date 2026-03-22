@@ -40,6 +40,8 @@ export * from './lib/form-controls/select/multi-select';
 export * from './lib/form-controls/fields/text-field';
 export * from './lib/form-controls/fields/datepicker-field';
 export * from './lib/form-controls/form/form-error';
+export * from './lib/form-controls/form/form-ui-state';
+export * from './lib/form-controls/form/field-shell';
 export * from './lib/form-controls/form/form-field-control';
 
 export * from './lib/menu/menu-item.type';

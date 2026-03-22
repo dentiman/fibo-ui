@@ -249,6 +249,8 @@ export class OverlayStack {
         templateRef: initialConfig.templateRef,
         category: initialConfig.category,
         referenceElement: initialConfig.referenceElement,
+        interactionRoot: initialConfig.interactionRoot,
+        focusReturnTarget: initialConfig.focusReturnTarget,
       });
 
       setOverlayHandleRequestCloseInternal(handle, (reason, event) =>
@@ -264,6 +266,8 @@ export class OverlayStack {
             syncOverlayHandleRenderConfigInternal(handle, {
               templateRef: nextConfig.templateRef,
               referenceElement: nextConfig.referenceElement,
+              interactionRoot: nextConfig.interactionRoot,
+              focusReturnTarget: nextConfig.focusReturnTarget,
             });
           },
           { injector },

@@ -6,6 +6,8 @@ export interface CreateOverlayHandleOptions {
   templateRef: TemplateRef<any>;
   category?: OverlayCategory;
   referenceElement?: HTMLElement | null;
+  interactionRoot?: HTMLElement | null;
+  focusReturnTarget?: HTMLElement | null;
   zIndex: number;
   firstInCategory: Signal<boolean>;
 }
@@ -18,6 +20,8 @@ class OverlayHandleImpl implements OverlayHandle {
 
   private readonly templateRefSignal: WritableSignal<TemplateRef<any> | undefined>;
   private readonly referenceElementSignal: WritableSignal<HTMLElement | null | undefined>;
+  private readonly interactionRootSignal: WritableSignal<HTMLElement | null | undefined>;
+  private readonly focusReturnTargetSignal: WritableSignal<HTMLElement | null | undefined>;
 
   private closedState = false;
   private requestClose?: (reason: OverlayCloseReason, event?: Event) => void;
@@ -30,6 +34,14 @@ class OverlayHandleImpl implements OverlayHandle {
     return this.referenceElementSignal();
   }
 
+  get interactionRoot(): HTMLElement | null | undefined {
+    return this.interactionRootSignal();
+  }
+
+  get focusReturnTarget(): HTMLElement | null | undefined {
+    return this.focusReturnTargetSignal();
+  }
+
   get closed(): boolean {
     return this.closedState;
   }
@@ -38,6 +50,8 @@ class OverlayHandleImpl implements OverlayHandle {
     this.id = `overlay-${nextOverlayId++}`;
     this.templateRefSignal = signal(options.templateRef);
     this.referenceElementSignal = signal(options.referenceElement);
+    this.interactionRootSignal = signal(options.interactionRoot);
+    this.focusReturnTargetSignal = signal(options.focusReturnTarget);
     this.category = options.category ?? 'popover';
     this.zIndex = options.zIndex;
     this.firstInCategory = options.firstInCategory;
@@ -62,9 +76,13 @@ class OverlayHandleImpl implements OverlayHandle {
   syncRenderConfig(config: {
     templateRef?: TemplateRef<any>;
     referenceElement?: HTMLElement | null;
+    interactionRoot?: HTMLElement | null;
+    focusReturnTarget?: HTMLElement | null;
   }): void {
     this.templateRefSignal.set(config.templateRef);
     this.referenceElementSignal.set(config.referenceElement);
+    this.interactionRootSignal.set(config.interactionRoot);
+    this.focusReturnTargetSignal.set(config.focusReturnTarget);
   }
 }
 
@@ -88,6 +106,8 @@ export function syncOverlayHandleRenderConfigInternal(
   config: {
     templateRef?: TemplateRef<any>;
     referenceElement?: HTMLElement | null;
+    interactionRoot?: HTMLElement | null;
+    focusReturnTarget?: HTMLElement | null;
   },
 ): void {
   (handle as OverlayHandleImpl).syncRenderConfig(config);

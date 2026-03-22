@@ -1,108 +1,187 @@
-import { Component, computed, input, model } from '@angular/core';
-import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
+import { Component, ElementRef, TemplateRef, computed, inject, input, model, signal, viewChild } from '@angular/core';
+import { FormValueControl } from '@angular/forms/signals';
 import {
+  closeOnFocusLeave,
+  closeOnOutsideClick,
+  createOverlay,
   DataList,
   DataListItem,
   KeyboardSource,
   Popover,
-  PopoverTriggerToggle,
   SelectOne,
   provideFormValueControl,
+  restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
-import { LucideAngularModule } from 'lucide-angular';
-import { formErrorMessage } from '../form/form-error';
-import { FormFieldControl } from '../form/form-field-control';
+import { FieldShell } from '../form/field-shell';
+import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
+
+let nextSelectId = 0;
 
 export interface SelectItem {
   label: string;
   value: string | number | null;
+  disabled?: boolean;
 }
 
 @Component({
   selector: 'fibo-select',
+  hostDirectives: [
+    {
+      directive: FormUiState,
+      inputs: [...FORM_UI_STATE_INPUTS],
+    },
+  ],
   imports: [
+    FieldShell,
     Popover,
     DataList,
     KeyboardSource,
     SelectOne,
-    LucideAngularModule,
     DataListItem,
-    FormFieldControl,
-    PopoverTriggerToggle,
   ],
-
   host: {
     class: 'block',
   },
   providers: [provideFormValueControl(() => Select)],
   template: `
-    <fibo-form-field-control
-      fiboKeyboardSource
-      fiboPopoverTriggerToggle
-      #keyboardSource="KeyboardSource"
-      role="combobox"
-      aria-haspopup="listbox"
-      [content]="selectTpl"
+    <fibo-field-shell
+      #fieldShell
+      [id]="triggerId"
       [label]="label()"
+      [iconStart]="iconStart()"
       iconEnd="chevron-down"
-      [(value)]="value"
-      [clearValue]="clearValue()"
-      [required]="required()"
-      [disabled]="disabled()"
-      [invalid]="invalid()"
-      [touched]="touched()"
-      [errors]="errors()"
+      [clearable]="canClear()"
+      [hasValue]="value() !== clearValue()"
+      (clearRequested)="clear()"
+      (focusRequested)="openFromShell()"
     >
-      <div class="text-sm" [class.from-field-placeholder]="!selectedValue()">
-        {{ selectedValue() || placeholder() }}
-      </div>
-    </fibo-form-field-control>
+      <button
+        fiboKeyboardSource
+        #keyboardSource="KeyboardSource"
+        #triggerButton
+        type="button"
+        class="w-full text-left"
+        role="combobox"
+        [id]="triggerId"
+        [disabled]="uiState.disabled()"
+        aria-haspopup="listbox"
+        [attr.aria-expanded]="isOpen()"
+        [attr.aria-controls]="isOpen() ? listboxId : null"
+        [attr.aria-invalid]="uiState.invalid() || null"
+        (click)="toggle()"
+        (blur)="uiState.touched.set(true)"
+      >
+        <div class="text-sm" [class.from-field-placeholder]="!selectedLabel()">
+          {{ selectedLabel() || placeholder() }}
+        </div>
+      </button>
+    </fibo-field-shell>
 
-    @if (errorMessage(); as error) {
+    @if (uiState.errorMessage(); as error) {
       <div class="form-field-error">{{ error }}</div>
     }
 
     <ng-template #selectTpl>
       <div
         fiboPopover
-        #popover="Popover"
         role="listbox"
+        [attr.id]="listboxId"
         [keyboardSource]="keyboardSource"
         [matchWidth]="true"
         fiboDataList
-        (itemTriggered)="popover.close()"
+        (itemTriggered)="close()"
         fiboSelectOne
         [(value)]="value"
         class="popover-container"
       >
         @for (item of items(); track item.value) {
-          <a fiboDataListItem role="option" [value]="item.value" class="datalist-item">
+          <button
+            type="button"
+            fiboDataListItem
+            role="option"
+            [value]="item.value"
+            [attr.aria-selected]="value() === item.value"
+            class="datalist-item w-full text-left"
+          >
             {{ item.label }}
-          </a>
+          </button>
         }
       </div>
     </ng-template>
   `,
 })
 export class Select implements FormValueControl<string | number | null> {
-  value = model<string | number | null>(null);
-  required = input(false);
-  disabled = input(false);
-  touched = input(false);
-  invalid = input(false);
-  dirty = input(false);
-  errors = input<readonly WithOptionalField<ValidationError>[]>([]);
+  readonly uiState = inject(FormUiState);
+  private readonly selectTemplate = viewChild.required<TemplateRef<unknown>>('selectTpl');
+  readonly fieldShell = viewChild.required(FieldShell);
+  private readonly triggerButton = viewChild.required<ElementRef<HTMLButtonElement>>('triggerButton');
 
-  items = input<SelectItem[]>([]);
-  label = input<string>('');
-  placeholder = input<string>('Select');
-  clearValue = input<string | number | null | undefined>(undefined);
-  errorMessage = formErrorMessage(this.errors, this.invalid, this.touched);
+  readonly value = model<string | number | null>(null);
 
-  selectedValue = computed(() => {
+  readonly items = input<SelectItem[]>([]);
+  readonly label = input('');
+  readonly placeholder = input('Select');
+  readonly iconStart = input('');
+  readonly clearValue = input<string | number | null | undefined>(undefined);
+
+  readonly triggerId = `fibo-select-${nextSelectId++}`;
+  readonly listboxId = `fibo-select-listbox-${nextSelectId++}`;
+  readonly isOpen = signal(false);
+
+  readonly selectedItem = computed(() => {
     const currentValue = this.value();
-    if (currentValue === null) return null;
-    const item = this.items().find((item) => item.value === currentValue);
-    return item?.label || null;
+    return this.items().find(item => item.value === currentValue) ?? null;
   });
+
+  readonly selectedLabel = computed(() => this.selectedItem()?.label ?? null);
+  readonly canClear = computed(() => this.clearValue() !== undefined && this.value() !== this.clearValue());
+
+  readonly overlayConfig = computed(() => ({
+    templateRef: this.selectTemplate(),
+    referenceElement: this.fieldShell().elementRef.nativeElement,
+    interactionRoot: this.fieldShell().elementRef.nativeElement,
+    focusReturnTarget: this.triggerButton().nativeElement,
+    category: 'popover' as const,
+  }));
+  readonly overlayHandle = createOverlay(this.isOpen, this.overlayConfig, overlay => {
+    closeOnFocusLeave(overlay);
+    closeOnOutsideClick(overlay);
+    restoreTriggerFocusOnClose(overlay);
+  });
+
+  focus(options?: FocusOptions) {
+    this.triggerButton().nativeElement.focus(options);
+  }
+
+  open() {
+    if (!this.uiState.disabled()) {
+      this.isOpen.set(true);
+    }
+  }
+
+  toggle() {
+    if (!this.uiState.disabled()) {
+      this.isOpen.update(isOpen => !isOpen);
+    }
+  }
+
+  close() {
+    this.isOpen.set(false);
+  }
+
+  openFromShell() {
+    this.focus();
+    this.open();
+  }
+
+  clear() {
+    const clearValue = this.clearValue();
+
+    if (this.uiState.disabled() || clearValue === undefined) {
+      return;
+    }
+
+    this.value.set(clearValue);
+    this.uiState.touched.set(true);
+  }
 }

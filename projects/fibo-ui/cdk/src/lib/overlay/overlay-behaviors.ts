@@ -12,13 +12,15 @@ export function restoreTriggerFocus(
   isInOverlayBranch: (target: EventTarget | null | undefined) => boolean = target =>
     isElementInsideOverlayContainer(target, overlay.id),
 ): void {
+  const focusTarget =
+    overlay.focusReturnTarget ?? overlay.interactionRoot ?? overlay.referenceElement;
   const shouldRestore =
     !ctx.activeElement ||
     ctx.activeElement === document.body ||
     isInOverlayBranch(ctx.activeElement);
 
   if (shouldRestore) {
-    overlay.referenceElement?.focus();
+    focusTarget?.focus();
   }
 }
 
@@ -38,8 +40,8 @@ export function restoreTriggerFocusOnClose(overlay: OverlaySession): void {
  */
 export function closeOnFocusLeave(overlay: OverlaySession): void {
   const effectRef = overlay.effect(onCleanup => {
-    const trigger = overlay.handle.referenceElement;
-    if (!trigger) {
+    const interactionRoot = overlay.handle.interactionRoot ?? overlay.handle.referenceElement;
+    if (!interactionRoot) {
       return;
     }
 
@@ -49,7 +51,7 @@ export function closeOnFocusLeave(overlay: OverlaySession): void {
         return;
       }
 
-      if (trigger.contains(nextTarget) || overlay.isInOverlayBranch(nextTarget)) {
+      if (interactionRoot.contains(nextTarget) || overlay.isInOverlayBranch(nextTarget)) {
         return;
       }
 
@@ -69,8 +71,8 @@ export function closeOnFocusLeave(overlay: OverlaySession): void {
  */
 export function closeOnOutsideClick(overlay: OverlaySession): void {
   const effectRef = overlay.effect(onCleanup => {
-    const trigger = overlay.handle.referenceElement;
-    if (!trigger) {
+    const interactionRoot = overlay.handle.interactionRoot ?? overlay.handle.referenceElement;
+    if (!interactionRoot) {
       return;
     }
 
@@ -80,7 +82,7 @@ export function closeOnOutsideClick(overlay: OverlaySession): void {
         return;
       }
 
-      if (trigger.contains(target) || overlay.isInOverlayBranch(target)) {
+      if (interactionRoot.contains(target) || overlay.isInOverlayBranch(target)) {
         return;
       }
 

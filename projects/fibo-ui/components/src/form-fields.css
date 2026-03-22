@@ -52,8 +52,9 @@
         /* Focus within */
 
         &:focus-within {
-            outline-color: rgb(0 0 0 / 0.18);
-            /* black/18 */
+            outline-color: rgb(0 0 0 / 0.22);
+            /* black/22 */
+            box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06), 0 1px 2px 0 rgb(0 0 0 / 0.06);
         }
 
 
@@ -66,7 +67,8 @@
         }
 
         [data-theme="dark"] &:focus-within {
-            outline-color: rgb(255 255 255 / 0.05);
+            outline-color: rgb(255 255 255 / 0.09);
+            box-shadow: 0 0 0 1px rgb(255 255 255 / 0.05), 0 1px 2px 0 rgb(0 0 0 / 0.18);
         }
 
         /* Error State */

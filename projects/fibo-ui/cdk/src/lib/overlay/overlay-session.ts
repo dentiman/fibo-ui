@@ -10,6 +10,8 @@ export interface OverlayCloseContext {
 export interface OverlayRenderConfig {
   templateRef?: TemplateRef<any>;
   referenceElement?: HTMLElement | null;
+  interactionRoot?: HTMLElement | null;
+  focusReturnTarget?: HTMLElement | null;
   category: OverlayCategory;
 }
 

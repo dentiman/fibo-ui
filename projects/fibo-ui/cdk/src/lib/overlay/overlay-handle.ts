@@ -17,6 +17,8 @@ export interface OverlayHandle {
   readonly firstInCategory: Signal<boolean>;
   readonly templateRef: TemplateRef<any> | undefined;
   readonly referenceElement: HTMLElement | null | undefined;
+  readonly interactionRoot: HTMLElement | null | undefined;
+  readonly focusReturnTarget: HTMLElement | null | undefined;
   readonly closed: boolean;
   close(reason?: OverlayCloseReason): void;
 }

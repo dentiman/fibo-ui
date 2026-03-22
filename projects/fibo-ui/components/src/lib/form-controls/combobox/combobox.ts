@@ -6,10 +6,9 @@ import {
   inject,
   input,
   model,
-  signal,
   viewChild,
 } from '@angular/core';
-import { FormValueControl, ValidationError, WithOptionalField } from '@angular/forms/signals';
+import { FormValueControl } from '@angular/forms/signals';
 import {
   DataList,
   DataListItem,
@@ -20,17 +19,24 @@ import {
   closeOnOutsideClick,
   createOverlay,
   provideFormValueControl,
+  restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
 import { type ComboboxControl, provideComboboxControl } from './combobox-control-token';
 import { ComboboxInput } from './combobox-input';
 import { ComboboxList } from './combobox-list';
-import { formErrorMessage } from '../form/form-error';
-import { FormFieldControl } from '../form/form-field-control';
+import { FieldShell } from '../form/field-shell';
+import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
 @Component({
   selector: 'fibo-combobox',
+  hostDirectives: [
+    {
+      directive: FormUiState,
+      inputs: [...FORM_UI_STATE_INPUTS],
+    },
+  ],
   imports: [
-    FormFieldControl,
+    FieldShell,
     Popover,
     DataList,
     DataListItem,
@@ -47,29 +53,28 @@ import { FormFieldControl } from '../form/form-field-control';
     provideComboboxControl(() => Combobox),
   ],
   template: `
-    <fibo-form-field-control
+    <fibo-field-shell
+      #fieldShell
       [label]="label()"
       [iconStart]="iconStart()"
       iconEnd="chevron-down"
-      [required]="required()"
-      [disabled]="disabled()"
-      [invalid]="invalid()"
-      [touched]="touched()"
-      [errors]="errors()"
-      [clearValue]="clearValue()"
-      [(value)]="value"
+      [clearable]="clearValue() !== undefined"
+      [hasValue]="value() !== clearValue()"
+      (clearRequested)="clear()"
+      (focusRequested)="focus()"
     >
       <input
         fiboKeyboardSource
         #keyboardSource="KeyboardSource"
+        #inputElement
         [placeholder]="placeholder()"
-        (blur)="touched.set(true)"
+        (blur)="uiState.touched.set(true)"
         class="text-field-input"
         fiboComboboxInput
       />
-    </fibo-form-field-control>
+    </fibo-field-shell>
 
-    @if (errorMessage(); as error) {
+    @if (uiState.errorMessage(); as error) {
       <div class="form-field-error">{{ error }}</div>
     }
 
@@ -78,7 +83,6 @@ import { FormFieldControl } from '../form/form-field-control';
         fiboPopover
         fiboComboboxList
         [keyboardSource]="keyboardSource"
-        [referenceElement]="hostElement"
         [matchWidth]="true"
         fiboDataList
         (itemTriggered)="expanded.set(false)"
@@ -106,49 +110,45 @@ export class Combobox
     ComboboxControl<string | number | null, string | number>,
     FormValueControl<string | number | null>
 {
-  readonly hostElement = inject(ElementRef<HTMLElement>).nativeElement;
+  readonly uiState = inject(FormUiState);
+  readonly fieldShell = viewChild.required(FieldShell);
+  private readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('inputElement');
   private readonly comboboxTemplateRef = viewChild.required<TemplateRef<any>>('comboboxTpl');
 
-  value = model<string | number | null>(null);
+  readonly value = model<string | number | null>(null);
+  readonly label = input('');
+  readonly placeholder = input('Search and select');
+  readonly iconStart = input('');
+  readonly clearValue = input<string | number | null | undefined>(null);
 
-  required = input(false);
-  disabled = input(false);
-  touched = model(false);
-  invalid = input(false);
-  dirty = input(false);
-  errors = input<readonly WithOptionalField<ValidationError>[]>([]);
-  label = input('');
-  placeholder = input('Search and select');
-  iconStart = input('');
-  clearValue = input<string | number | null | undefined>(null);
-  errorMessage = formErrorMessage(this.errors, this.invalid, this.touched);
+  readonly items = input<(string | number)[]>([]);
+  readonly expanded = model(false);
+  readonly query = model('');
 
-  items = input<(string | number)[]>([]);
-  expanded = signal(false);
-  query = model('');
-
-  options = computed(() => {
+  readonly options = computed(() => {
     const query = this.query().trim().toLocaleLowerCase();
     return query
       ? this.items().filter(item => String(item).toLocaleLowerCase().includes(query))
       : [];
   });
 
-  overlayConfig = computed(() => ({
+  readonly overlayConfig = computed(() => ({
     templateRef: this.comboboxTemplateRef(),
-    referenceElement: this.hostElement,
+    referenceElement: this.fieldShell().elementRef.nativeElement,
+    interactionRoot: this.fieldShell().elementRef.nativeElement,
+    focusReturnTarget: this.inputElement().nativeElement,
     category: 'popover' as const,
   }));
 
-  overlayHandle = createOverlay(this.expanded, this.overlayConfig, overlay => {
+  readonly overlayHandle = createOverlay(this.expanded, this.overlayConfig, overlay => {
     closeOnFocusLeave(overlay);
     closeOnOutsideClick(overlay);
+    restoreTriggerFocusOnClose(overlay);
     overlay.beforeClose((_, __, reason) => {
       if (reason !== 'state') {
         this.resetQueryToValue();
       }
     });
-
   });
 
   private resetQueryToValue() {
@@ -160,4 +160,18 @@ export class Combobox
     }
   }
 
+  focus(options?: FocusOptions) {
+    this.inputElement().nativeElement.focus(options);
+  }
+
+  clear() {
+    const clearValue = this.clearValue();
+
+    if (this.uiState.disabled() || clearValue === undefined) {
+      return;
+    }
+
+    this.value.set(clearValue);
+    this.uiState.touched.set(true);
+  }
 }
