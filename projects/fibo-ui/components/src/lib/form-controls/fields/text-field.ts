@@ -25,8 +25,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       [hint]="hint()"
       [iconStart]="iconStart()"
       [iconEnd]="iconEnd()"
-      [clearable]="true"
-      [hasValue]="value() !== ''"
+      [canClear]="value() !== ''"
       (clearRequested)="clear()"
     >
       <input

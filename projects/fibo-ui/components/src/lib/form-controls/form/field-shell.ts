@@ -1,12 +1,11 @@
 import {
   Component,
   ElementRef,
-  EventEmitter,
-  Output,
   computed,
   contentChild,
   inject,
   input,
+  output,
 } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { FieldActionDirective } from './field-action';
@@ -90,11 +89,10 @@ export class FieldShell {
   readonly hint = input('');
   readonly iconStart = input('');
   readonly iconEnd = input('');
-  readonly clearable = input(false);
-  readonly hasValue = input(false);
+  readonly canClear = input(false);
 
-  @Output() readonly clearRequested = new EventEmitter<void>();
-  @Output() readonly focusRequested = new EventEmitter<void>();
+  readonly clearRequested = output<void>();
+  readonly focusRequested = output<void>();
 
   readonly disabled = computed(() => this.formUiState?.disabled() ?? false);
   readonly required = computed(() => this.formUiState?.required() ?? false);
@@ -102,7 +100,6 @@ export class FieldShell {
     () => (this.formUiState?.invalid() ?? false) && (this.formUiState?.touched() ?? false),
   );
   readonly errorMessage = computed(() => this.formUiState?.errorMessage() ?? null);
-  readonly canClear = computed(() => this.clearable() && this.hasValue());
   readonly baseId = computed(() => this.id() || this.generatedBaseId);
 
   focusPrimary(options?: FocusOptions): void {

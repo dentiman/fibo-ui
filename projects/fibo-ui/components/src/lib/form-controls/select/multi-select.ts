@@ -50,7 +50,6 @@ import { SelectItem } from './select';
       [label]="label()"
       [hint]="hint()"
       iconEnd="chevron-down"
-      [hasValue]="selectedItems().length > 0"
     >
       <div
         fiboFieldTarget

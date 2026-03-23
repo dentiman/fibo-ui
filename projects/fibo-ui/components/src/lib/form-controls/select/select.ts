@@ -50,8 +50,7 @@ export interface SelectItem {
       [hint]="hint()"
       [iconStart]="iconStart()"
       iconEnd="chevron-down"
-      [clearable]="canClear()"
-      [hasValue]="value() !== clearValue()"
+      [canClear]="canClear()"
       (clearRequested)="clear()"
     >
       <button
