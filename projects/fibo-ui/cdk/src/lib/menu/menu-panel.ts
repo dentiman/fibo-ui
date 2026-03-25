@@ -88,6 +88,11 @@ export class MenuPanel {
   constructor() {
     this.destroyRef.onDestroy(() => this.clearTimeouts());
 
+    this.dataList.mouseleaveResetGuard.set((event: MouseEvent) => {
+      const targetOverlayId = this.overlayStack.findOverlayContainerId(event.relatedTarget as EventTarget);
+      return !this.overlayStack.isOverlayInBranch(this.overlayHandle.id, targetOverlayId);
+    });
+
     effect((onCleanup) => {
       const keyboardSource = this.keyboardSource();
       if (!keyboardSource) {

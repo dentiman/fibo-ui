@@ -11,7 +11,7 @@ let nextDataListId = 0;
   exportAs: 'DataList',
   standalone: true,
   host: {
-    '(mouseleave)': 'resetActiveDataListItem()',
+    '(mouseleave)': 'onMouseleave($event)',
     '(keydown)': 'onKeydown($event)',
   },
   // providers: [
@@ -25,6 +25,7 @@ let nextDataListId = 0;
 export class DataList implements KeydownDelegate {
   disabled = input(false);
   keyboardSource = input<KeyboardSource | null>(null);
+  autoActivateFirst = input(false);
 
   itemTriggered = output<Event>();
 
@@ -33,6 +34,8 @@ export class DataList implements KeydownDelegate {
   id = `data-list-${nextDataListId++}`;
 
   protected _activeDataListItem = signal<DataListItem | null>(null);
+
+  readonly mouseleaveResetGuard = signal<((event: MouseEvent) => boolean) | null>(null);
 
   activeDataListItem = this._activeDataListItem.asReadonly();
 
@@ -45,7 +48,9 @@ export class DataList implements KeydownDelegate {
         return;
       }
 
-      this._activeDataListItem.set(options.find(option => !option.disabled()) ?? null);
+      this._activeDataListItem.set(
+        this.autoActivateFirst() ? (options.find(option => !option.disabled()) ?? null) : null,
+      );
     });
 
     effect((onCleanup) => {
@@ -220,5 +225,12 @@ export class DataList implements KeydownDelegate {
 
   resetActiveDataListItem() {
     this._activeDataListItem.set(null);
+  }
+
+  onMouseleave(event: MouseEvent) {
+    const guard = this.mouseleaveResetGuard();
+    if (guard ? guard(event) : true) {
+      this._activeDataListItem.set(null);
+    }
   }
 }

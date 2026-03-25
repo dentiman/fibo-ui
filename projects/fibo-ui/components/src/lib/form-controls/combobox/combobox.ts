@@ -83,6 +83,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         [keyboardSource]="keyboardSource"
         [matchWidth]="true"
         fiboDataList
+        [autoActivateFirst]="true"
         (itemTriggered)="expanded.set(false)"
         fiboSelectOne
         [(value)]="value"
