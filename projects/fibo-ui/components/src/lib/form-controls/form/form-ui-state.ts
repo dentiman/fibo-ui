@@ -28,7 +28,7 @@ export const FORM_UI_STATE_INPUTS = [
   standalone: true,
   selector: '[fiboFormUiState]',
 })
-export class FormUiState {
+export class FormUiState  {
   readonly disabled = input(false);
   readonly disabledReasons = input<readonly WithOptionalField<DisabledReason>[]>([]);
   readonly readonly = input(false);

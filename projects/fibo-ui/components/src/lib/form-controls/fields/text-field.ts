@@ -35,6 +35,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         [value]="value()"
         [placeholder]="placeholder()"
         [disabled]="uiState.disabled()"
+        [readOnly]="uiState.readonly()"
         [required]="uiState.required()"
         [attr.name]="uiState.name() || null"
         [attr.aria-required]="uiState.required() || null"

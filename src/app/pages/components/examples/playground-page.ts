@@ -22,15 +22,84 @@ import { form, required, FormField } from '@angular/forms/signals';
     <div class="mx-auto max-w-3xl space-y-8 p-8">
       <section class="space-y-3">
         <h1 class="text-2xl font-semibold">Playground</h1>
-        <p class="text-sm text-zinc-600">
+        <p class="text-sm text-foreground-secondary">
           Debug page for signal-form controls. The block below uses the new Select
           together with other fields and prints live form state.
         </p>
       </section>
 
+      <section class="space-y-6 rounded-xl border border-border-primary bg-background-secondary p-5 shadow-sm">
+        <h2 class="text-lg font-medium text-foreground">Field States</h2>
+
+        <div class="space-y-1">
+          <p class="text-xs font-medium uppercase tracking-wide text-foreground-tertiary">Disabled</p>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <fibo-text-field
+              [disabled]="true"
+              label="Full name"
+              value="Ada Lovelace"
+              iconStart="user"
+            />
+            <fibo-select
+              [disabled]="true"
+              label="Status"
+              [value]="'done'"
+              [items]="statuses"
+              iconStart="list"
+            />
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <p class="text-xs font-medium uppercase tracking-wide text-foreground-tertiary">Readonly</p>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <fibo-text-field
+              [readonly]="true"
+              label="Full name"
+              value="Grace Hopper"
+              iconStart="user"
+            />
+            <fibo-select
+              [readonly]="true"
+              label="Status"
+              [value]="'in_progress'"
+              [items]="statuses"
+              iconStart="list"
+            />
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <p class="text-xs font-medium uppercase tracking-wide text-foreground-tertiary">Pending</p>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <fibo-text-field
+              [pending]="true"
+              label="Username"
+              value="alan_turing"
+              hint="Checking availability…"
+              iconStart="mail"
+            />
+            <fibo-select
+              [pending]="true"
+              label="Status"
+              placeholder="Loading options…"
+              iconStart="loader"
+            />
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <p class="text-xs font-medium uppercase tracking-wide text-foreground-tertiary">Rounded</p>
+          <div class="ff-rounded grid gap-4 sm:grid-cols-2">
+            <fibo-text-field placeholder="Search…" iconStart="search" />
+            <fibo-select placeholder="Filter by status" [items]="statuses" />
+          </div>
+        </div>
+      </section>
+
       <section class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,360px)]">
-        <div class="space-y-4 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm">
-          <h2 class="text-lg font-medium">Signal Form Example</h2>
+        <div class="space-y-4 rounded-xl border border-border-primary bg-background-secondary p-5 shadow-sm">
+          <h2 class="text-lg font-medium text-foreground">Signal Form Example</h2>
 
           <fibo-text-field
             [formField]="debugForm.title"
@@ -65,7 +134,7 @@ import { form, required, FormField } from '@angular/forms/signals';
           />
         </div>
 
-        <aside class="space-y-4 rounded-xl border border-zinc-200 bg-zinc-950 p-5 text-zinc-100 shadow-sm">
+        <aside class="space-y-4 rounded-xl border border-white/10 bg-zinc-950 p-5 text-zinc-100 shadow-sm">
           <div>
             <h2 class="text-lg font-medium">Form State</h2>
             <p class="text-xs text-zinc-400">Live snapshot for debugging.</p>

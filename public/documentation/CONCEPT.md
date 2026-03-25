@@ -127,7 +127,7 @@ The most important category — the components developers reach for most often. 
 
 | Page | Description |
 |------|-------------|
-| **Text Field** | Single-line text input with label, icons, clearable, character count, error display |
+| **Text Field** | Single-line text input with label, icons, clear action, character count, error display |
 | **Textarea** | Multi-line input with auto-resize, character limit |
 | **Select** | Single-value dropdown: basic, disabled options, option groups, custom option template |
 | **Multi Select** | Multi-value dropdown with chips, search/filter, select all |

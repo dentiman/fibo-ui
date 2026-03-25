@@ -30,6 +30,8 @@ let nextFieldShellId = 0;
       [attr.aria-required]="required() || null"
       [attr.data-error]="hasError() || null"
       [attr.data-can-clear]="canClear() || null"
+      [attr.data-readonly]="readonly() || null"
+      [attr.data-pending]="pending() || null"
       [class.disabled]="disabled()"
     >
       @if (iconStart()) {
@@ -96,6 +98,8 @@ export class FieldShell {
 
   readonly disabled = computed(() => this.formUiState?.disabled() ?? false);
   readonly required = computed(() => this.formUiState?.required() ?? false);
+  readonly readonly = computed(() => this.formUiState?.readonly() ?? false);
+  readonly pending = computed(() => this.formUiState?.pending() ?? false);
   readonly hasError = computed(
     () => (this.formUiState?.invalid() ?? false) && (this.formUiState?.touched() ?? false),
   );

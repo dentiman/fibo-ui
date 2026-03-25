@@ -47,12 +47,14 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         [value]="value()"
         [placeholder]="placeholder()"
         [disabled]="uiState.disabled()"
+        [readOnly]="uiState.readonly()"
         [required]="uiState.required()"
         [attr.name]="uiState.name() || null"
         [attr.aria-required]="uiState.required() || null"
         [attr.aria-expanded]="isOpen()"
         [attr.aria-controls]="isOpen() ? dialogId() : null"
         [attr.aria-invalid]="uiState.invalid() || null"
+        [attr.aria-readonly]="uiState.readonly() || null"
         [attr.data-error]="(uiState.invalid() && uiState.touched()) || null"
         (input)="onInput($event)"
         (click)="openCalendar()"
@@ -124,7 +126,7 @@ export class DatePickerField implements FormValueControl<string> {
   openCalendar(event?: Event) {
     event?.preventDefault();
     this.focus();
-    if (!this.uiState.disabled()) {
+    if (!this.uiState.disabled() && !this.uiState.readonly()) {
       this.isOpen.set(true);
     }
   }

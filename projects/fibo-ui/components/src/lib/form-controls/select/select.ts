@@ -67,6 +67,7 @@ export interface SelectItem {
         [attr.aria-expanded]="isOpen()"
         [attr.aria-controls]="isOpen() ? fieldShell.idFor('listbox') : null"
         [attr.aria-invalid]="uiState.invalid() || null"
+        [attr.aria-readonly]="uiState.readonly() || null"
         (click)="toggle()"
         (blur)="uiState.touched.set(true)"
       >
@@ -148,13 +149,13 @@ export class Select implements FormValueControl<string | number | null> {
   }
 
   open() {
-    if (!this.uiState.disabled()) {
+    if (!this.uiState.disabled() && !this.uiState.readonly()) {
       this.isOpen.set(true);
     }
   }
 
   toggle() {
-    if (!this.uiState.disabled()) {
+    if (!this.uiState.disabled() && !this.uiState.readonly()) {
       this.isOpen.update(isOpen => !isOpen);
     }
   }

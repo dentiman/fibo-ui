@@ -108,8 +108,38 @@
             background-image: repeating-linear-gradient(45deg, rgb(255 255 255 / 0.01), rgb(255 255 255 / 0.01) 10px, rgb(255 255 255 / 0.03) 10px, rgb(255 255 255 / 0.03) 20px);
         }
 
+        /* Readonly State */
+
+        &[data-readonly] {
+            cursor: default;
+        }
+
+        /* Pending State */
+
+        &[data-pending] {
+            outline-color: rgb(59 130 246 / 0.4);
+            animation: ff-pending-pulse 1.4s ease-in-out infinite;
+        }
+
+        [data-theme="dark"] &[data-pending] {
+            outline-color: rgb(96 165 250 / 0.3);
+        }
 
     }
+
+    @keyframes ff-pending-pulse {
+        0%, 100% { outline-color: rgb(59 130 246 / 0.15); }
+        50%       { outline-color: rgb(59 130 246 / 0.45); }
+    }
+
+    /* Rounded variant */
+
+    .ff-rounded .form-field-control {
+        border-radius: 9999px;
+        padding-inline: 1rem;
+    }
+
+
 
     .form-field-body {
         position: relative;

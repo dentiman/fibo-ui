@@ -18,7 +18,7 @@ Use these primitives together:
 | Primitive | Responsibility |
 | --- | --- |
 | `FormUiState` | Receives signal-form UI state from `[formField]`: `disabled`, `invalid`, `errors`, `required`, `touched`, and derived `errorMessage` |
-| `FieldShell` | Visual shell: label, icons, clear button, error styling, focus-within styling |
+| `FieldShell` | Visual shell: label, icons, clear button, hint/error text, focus-within styling |
 | `FieldTarget` | Marks the primary interactive element inside the shell |
 | `FieldAction` | Marks secondary actions such as clear or chip remove buttons |
 | `FieldOverlayAnchor` | Optional override for the element used as overlay anchor |
@@ -88,10 +88,10 @@ The new field primitives make those roles explicit.
 ```html
 <fibo-field-shell
   [label]="label()"
+  [hint]="hint()"
   [iconStart]="iconStart()"
   [iconEnd]="iconEnd()"
-  [clearable]="value() !== ''"
-  [hasValue]="value() !== ''"
+  [canClear]="value() !== ''"
   (clearRequested)="clear()"
 >
   <input
@@ -105,16 +105,13 @@ The new field primitives make those roles explicit.
     class="text-field-input"
   />
 </fibo-field-shell>
-
-@if (uiState.errorMessage(); as error) {
-  <div class="form-field-error">{{ error }}</div>
-}
 ```
 
 What happens here:
 - `FieldShell` handles shell click
 - `FieldTarget` tells the shell which element to focus
 - `FormUiState` supplies validation and disabled state
+- `FieldShell` renders hint or error text under the field
 
 ### Select Trigger
 
@@ -122,8 +119,9 @@ What happens here:
 <fibo-field-shell
   #shell
   [label]="label()"
+  [hint]="hint()"
   iconEnd="chevron-down"
-  [hasValue]="value() !== null"
+  [canClear]="clearValue() !== undefined && value() !== clearValue()"
   (clearRequested)="clear()"
 >
   <button
@@ -246,10 +244,10 @@ Inputs:
 | --- | --- | --- |
 | `id` | `string` | Used for the projected label `for=""` |
 | `label` | `string` | Field label |
+| `hint` | `string` | Helper text shown when there is no validation error |
 | `iconStart` | `string` | Leading Lucide icon |
 | `iconEnd` | `string` | Trailing Lucide icon |
-| `clearable` | `boolean` | Enables the clear action |
-| `hasValue` | `boolean` | Controls clear-button visibility |
+| `canClear` | `boolean` | Controls clear-button visibility |
 
 Outputs:
 
