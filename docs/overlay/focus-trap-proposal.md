@@ -1,5 +1,8 @@
 # Предложение: Улучшение Focus Trap
 
+> ⚠️ Historical analysis (2026-03-18): compares directive-based focus trap options.  
+> The active architecture moved to behavior-based focus management (`trapOverlayFocus`) and no longer uses `fiboFocusTrap` directive.
+
 Анализ текущей реализации `FocusTrap` в fibo-ui CDK, сравнение с подходами популярных библиотек и план улучшений.
 
 ---

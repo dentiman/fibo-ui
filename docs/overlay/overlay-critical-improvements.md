@@ -1,5 +1,8 @@
 # Overlay System — Critical Improvements Plan
 
+> ⚠️ Historical implementation plan (2026-03-18): includes steps based on template directive `fiboFocusTrap`.  
+> Current implementation uses `trapOverlayFocus` in `overlay-behaviors.ts`.
+
 ## Проблемы и цели
 
 Две критичные проблемы текущей overlay-системы:

@@ -1,6 +1,6 @@
 # Overlay System — Implementation Status
 
-Статус реализованных улучшений и рекомендаций из кода-ревью от 2026-03-18.
+Статус реализованных улучшений и рекомендаций из кода-ревью от 2026-03-18, с обновлением архитектуры фокуса от 2026-03-26.
 
 ---
 
@@ -9,7 +9,7 @@
 | № | Проблема | Статус | Реализация |
 |---|---|---|---|
 | 1 | Нет системы стратегий скролла | ✅ РЕШЕНО | `blockScroll()` + `closeOnScroll()` behaviors |
-| 2 | Нет захвата фокуса (Focus Trap) | ✅ РЕШЕНО | `FocusTrap` + `FocusTrapStack` + focusin listener |
+| 2 | Нет захвата фокуса в overlay-ветке | ✅ РЕШЕНО | `trapOverlayFocus()` (autofocus + cyclic Tab + branch-aware guard) |
 | 3 | Нет управления ARIA-атрибутами | ✅ РЕШЕНО | `OverlayPanel`, `OverlayTitle`, `OverlayDescription` |
 | 4 | Нет `inert` на фоновом контенте | ⏳ ОТЛОЖЕНО | Рассмотрено, оставлено для будущего |
 | 5 | Единый глобальный обработчик Escape | ✅ РЕШЕНО | Централизовано через `OverlayStack.closeTopmost('escape')` |
@@ -21,63 +21,40 @@
 
 ## Реализованные улучшения
 
-### 1. FocusTrap — Захват и охрана фокуса
+### 1. Focus Management — Behavior-first модель (`trapOverlayFocus`)
 
 #### До
-- Только перехват клавиши Tab
-- Фокус мог уходить мышью или программно
-- Нет поддержки вложенных ловушек
+- Фокус-логика была распределена между template-директивой и overlay-behaviors.
+- На практике `fiboFocusTrap` в overlay-потребителях был сконфигурирован с `guardFocus=false`.
+- Вложенные overlay-сценарии требовали отдельной координации.
 
 #### После
-**Файл:** `projects/fibo-ui/cdk/src/lib/a11y/focus-trap.ts`
+**Файл:** `projects/fibo-ui/cdk/src/lib/overlay/overlay-behaviors.ts`
 
 ```typescript
-// FocusTrapStack для управления вложенными ловушками
-@Injectable({ providedIn: 'root' })
-export class FocusTrapStack {
-  private stack: FocusTrap[] = [];
-  register(trap: FocusTrap): void { ... }
-  deregister(trap: FocusTrap): void { ... }
-  private sync(): void {
-    // Только верхняя ловушка имеет activeGuard = true
-  }
-}
-
-// Директива с focusin listener
-@Directive({ selector: '[fiboFocusTrap]' })
-export class FocusTrap implements OnDestroy {
-  enabled = input(true);
-  autoFocus = input(true);
-  restoreFocus = input(true);
-  guardFocus = input(true);  // NEW: глобальный перехват фокуса
-  activeGuard = false;  // Управляется FocusTrapStack
-
-  private focusinListener = (event: FocusEvent) => {
-    if (!this.enabled() || !this.guardFocus() || !this.activeGuard) return;
-    // Если фокус вне ловушки — верните обратно
-  };
-  // Регистрируется в constructor, удаляется в ngOnDestroy
-}
+trapOverlayFocus(overlay, options?)
 ```
 
-**Особенности:**
-- `[guardFocus]="true"` (по умолчанию) — перехватывает фокус вне ловушки
-- `[guardFocus]="false"` — разрешить фокусу уходить (поповеры, меню)
-- `[fiboFocusInitial]` маркер — указать конкретный начальный элемент
-- `[restoreFocus]="false"` — для overlay-контекста (управление через `restoreTriggerFocusOnClose`)
+`trapOverlayFocus` объединяет focus-политику в одном behavior для текущего overlay-контейнера:
+- `afterOpened` initial focus (`[fiboFocusInitial]` -> first tabbable -> panel root),
+- циклический `Tab/Shift+Tab` внутри текущего `data-overlay-container-id`,
+- `focusin` guard с branch-проверкой через `overlay.isInOverlayBranch(...)`.
 
-**Использование:**
-```html
-<!-- Диалог: охраняет фокус -->
-<div fiboFocusTrap [restoreFocus]="false">
-  <button fiboFocusInitial>Первый элемент</button>
-</div>
+**Автоматическое правило guard:**
+- `dialog`/`confirmation` -> `guard=true`,
+- `popover`/`menu`/`tooltip`/`notification` -> `guard=false`.
 
-<!-- Поповер: фокус может уходить -->
-<div fiboFocusTrap [restoreFocus]="false" [guardFocus]="false">
-  ...
-</div>
+**Интеграция в потребителях:**
+```typescript
+createOverlay(isOpen, config, overlay => {
+  trapOverlayFocus(overlay);
+  restoreTriggerFocusOnClose(overlay);
+});
 ```
+
+**Результат:**
+- template-директива `fiboFocusTrap` удалена из потребителей и из CDK API,
+- фокус и вложенность управляются на уровне overlay behaviors.
 
 ---
 
@@ -352,7 +329,7 @@ export class OverlayDescription {
 
 **Статус:** ⏳ Отложено (может быть добавлено в будущем)
 
-**Причина:** Текущее решение с `FocusTrap + blockScroll` покрывает основные a11y-требования. Атрибут `inert` был бы дополнением.
+**Причина:** Текущее решение с `trapOverlayFocus + blockScroll` покрывает основные a11y-требования. Атрибут `inert` был бы дополнением.
 
 **Как добавить:**
 ```typescript
@@ -382,14 +359,13 @@ effect(() => {
 
 ### CDK
 
-- ✅ `projects/fibo-ui/cdk/src/lib/a11y/focus-trap.ts` — FocusTrapStack + focusin listener
-- ✅ `projects/fibo-ui/cdk/src/lib/overlay/overlay-behaviors.ts` — blockScroll + closeOnScroll
+- ✅ `projects/fibo-ui/cdk/src/lib/overlay/overlay-behaviors.ts` — blockScroll + closeOnScroll + trapOverlayFocus
 - ✅ `projects/fibo-ui/cdk/src/lib/overlay/overlay-session.ts` — canClose guard API
 - ✅ `projects/fibo-ui/cdk/src/lib/overlay/overlay-stack.ts` — Centralized Escape + guards check
 - ✅ `projects/fibo-ui/cdk/src/lib/overlay/overlay-handle.ts` — close(reason?) signature
 - ✅ `projects/fibo-ui/cdk/src/lib/overlay/overlay-handle-internal.ts` — close impl
 - ✅ `projects/fibo-ui/cdk/src/lib/overlay/overlay-panel.ts` — NEW ARIA directives
-- ✅ `projects/fibo-ui/cdk/src/public-api.ts` — Export OverlayPanel, OverlayTitle, OverlayDescription
+- ✅ `projects/fibo-ui/cdk/src/public-api.ts` — Export OverlayPanel, OverlayTitle, OverlayDescription (FocusTrap export removed)
 
 ### Components
 
@@ -397,17 +373,17 @@ effect(() => {
 - ✅ `projects/fibo-ui/components/src/lib/overlay/dialog/drawer.ts` — Use fiboOverlayPanel
 - ✅ `projects/fibo-ui/components/src/lib/overlay/confirmation/confirmation-overlay-container.html` — Fixed HTML bug + fiboOverlayPanel + fiboOverlayTitle
 - ✅ `projects/fibo-ui/components/src/lib/overlay/confirmation/confirmation-overlay-container.ts` — Import ARIA directives
-- ✅ `projects/fibo-ui/components/src/lib/form-controls/fields/datepicker-field.ts` — Use fiboOverlayPanel [modal]="false"
+- ✅ `projects/fibo-ui/components/src/lib/form-controls/fields/datepicker-field.ts` — Use fiboOverlayPanel [modal]="false" + trapOverlayFocus behavior
 
 ---
 
 ## Build Status
 
 - ✅ CDK builds clean
-- ⚠️ Components build — pre-existing error (not introduced by our changes)
+- ✅ Components build clean
 - ✅ No TypeScript errors in updated files
 
 ---
 
 *Дата реализации: 2026-03-18*
-*Все рекомендации приоритета "Высокий" реализованы*
+*Последнее обновление: 2026-03-26 (migration to trapOverlayFocus)*

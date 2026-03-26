@@ -49,9 +49,6 @@ export * from './lib/date/date-adapter';
 export * from './lib/date/select-date';
 export * from './lib/date/select-date-range';
 
-// A11y Directives
-export * from './lib/a11y/focus-trap';
-
 // Overlay Components and Services
 export * from './lib/dialog/dialog-trigger';
 export { OVERLAY_HANDLE, type OverlayCategory, type OverlayHandle } from './lib/overlay/overlay-handle';

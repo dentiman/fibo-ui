@@ -51,7 +51,7 @@ const overlayHandle = createOverlay(
 
 - `OVERLAY_HANDLE` инъекционный токен для содержимого оверлея
 - Завершение `afterClose(...)` после анимации выхода
-- Управление глобальными стилями документа (через comportable behaviors)
+- Управление глобальными стилями документа (через composable behaviors)
 
 #### `OverlayHandle`
 
@@ -159,6 +159,27 @@ createOverlay(isOpen, config, overlay => {
 });
 ```
 
+### `trapOverlayFocus(overlay, options?)`
+
+Единая focus-политика для overlay-контейнера. Используется вместо отдельной директивы `FocusTrap`.
+
+Что делает:
+- автофокус после открытия
+- циклический `Tab/Shift+Tab` внутри текущего overlay-контейнера
+- guard фокуса с учётом ветки (`overlay.isInOverlayBranch`) для модальных категорий
+
+Поведение по умолчанию:
+- `guard` автоматически включён для `dialog` и `confirmation`
+- `guard` выключен для `popover`, `menu`, `tooltip`, `notification`
+- начальный фокус ищет `[fiboFocusInitial]`, иначе первый tabbable, иначе root панели
+
+```typescript
+createOverlay(isOpen, config, overlay => {
+  trapOverlayFocus(overlay);
+  restoreTriggerFocusOnClose(overlay);
+});
+```
+
 ---
 
 ## ARIA и доступность
@@ -223,42 +244,15 @@ export class OverlayPanel {
 
 ## Focus Management
 
-### `FocusTrap` + `FocusTrapStack`
+Focus-управление полностью переехало в `overlay-behaviors.ts` и настраивается через `trapOverlayFocus(...)`.
 
-Директива для захвата фокуса внутри модальных диалогов. Предотвращает Tab от выхода фокуса и перехватывает фокус кликом/программно.
+**Ключевой принцип:** один источник восстановления фокуса на закрытии — `restoreTriggerFocusOnClose(...)`.
 
-```typescript
-@Directive({
-  selector: '[fiboFocusTrap]',
-})
-export class FocusTrap {
-  enabled = input(true);              // Включить/выключить
-  autoFocus = input(true);            // Автофокус на первый элемент?
-  restoreFocus = input(true);         // Восстановить фокус при уничтожении?
-  guardFocus = input(true);           // Перехватывать фокус вне ловушки?
-}
-```
+**Рекомендованные комбинации:**
+- **Modal (dialog/confirmation/drawer):** `closeOnBackdropClick + blockScroll + trapOverlayFocus + restoreTriggerFocusOnClose`
+- **Popover/date/menu:** `closeOnFocusLeave + closeOnOutsideClick + trapOverlayFocus + restoreTriggerFocusOnClose` (guard автоматически выключен)
 
-**Механизм:**
-1. **Tab-handler:** Перехватывает клавишу Tab, циклически навигирует по tabbable-элементам
-2. **Global focusin listener:** При фокусе вне ловушки возвращает в ловушку
-3. **FocusTrapStack:** Стек для вложенных ловушек — только верхняя `guardFocus` активна
-
-```html
-<div fiboFocusTrap [restoreFocus]="false" [guardFocus]="true">
-  <button fiboFocusInitial>Первый элемент</button>
-  <!-- остальной контент -->
-</div>
-```
-
-**`[fiboFocusInitial]` маркер:** Указывает конкретный элемент для начального фокуса (вместо первого в списке).
-
-**В контексте диалогов:**
-- `[restoreFocus]="false"` — overlay-система управляет восстановлением через `restoreTriggerFocusOnClose`
-- `[guardFocus]="true"` — перехватывает фокус вне ловушки (модальное поведение)
-
-**В контексте поповеров:**
-- `[guardFocus]="false"` — фокус может легитимно уходить (например, в календарь датепикера)
+**`[fiboFocusInitial]`** остаётся marker-атрибутом для initial focus target внутри контента оверлея.
 
 ---
 
@@ -359,12 +353,12 @@ overlay.isInOverlayBranch(target)  // Находится ли target в ветк
 
 | Категория | Z-Index | Примечание |
 |---|---|---|
-| `tooltip` | 1000 | Самые верхние подсказки |
-| `notification` | 950 | Toast-уведомления |
-| `menu` | 900 | Выпадающие меню и поповеры |
-| `popover` | 900 | Поповеры (не модальные) |
-| `confirmation` | 850 | Подтверждение действий |
-| `dialog` | 800 | Модальные диалоги |
+| `notification` | 3000 | Toast-уведомления |
+| `tooltip` | 2000 | Самые верхние подсказки поверх интерактивных слоёв |
+| `menu` | 1000 | Выпадающие меню |
+| `popover` | 1000 | Поповеры (не модальные) |
+| `confirmation` | 600 | Подтверждение действий |
+| `dialog` | 500 | Модальные диалоги/дроверы |
 
 **Auto-increment:** В категории каждый следующий оверлей получает +1 к z-index.
 
@@ -420,16 +414,11 @@ export class PopoverExample {
 @Component({
   selector: 'fibo-dialog',
   template: `
-    <div fiboFocusTrap [restoreFocus]="false">
-      <div fiboOverlayPanel>
-        <h2 fiboOverlayTitle>{{ title() }}</h2>
-        <p fiboOverlayDescription>{{ description() }}</p>
-        <div class="dialog-content">
-          <ng-content />
-        </div>
-        <div class="dialog-actions">
-          <button (click)="onClose()">Close</button>
-        </div>
+    <div fiboOverlayPanel>
+      <h2 fiboOverlayTitle>{{ title() }}</h2>
+      <p fiboOverlayDescription>{{ description() }}</p>
+      <div class="dialog-content">
+        <ng-content />
       </div>
     </div>
   `,
@@ -445,6 +434,15 @@ export class FiboDialog {
 }
 ```
 
+```typescript
+createOverlay(isOpen, config, overlay => {
+  closeOnBackdropClick(overlay);
+  blockScroll(overlay);
+  trapOverlayFocus(overlay);
+  restoreTriggerFocusOnClose(overlay);
+});
+```
+
 ---
 
 ## Миграция и обновления
@@ -455,7 +453,7 @@ export class FiboDialog {
 
 1. **Замена `data-dialog-panel`** на `fiboOverlayPanel`
 2. **Удаление ручных ARIA-атрибутов** — используйте `fiboOverlayTitle` / `fiboOverlayDescription`
-3. **Обновление FocusTrap** — добавьте `[restoreFocus]="false"` в диалогах
+3. **Удаление `fiboFocusTrap` из шаблонов** — фокус теперь управляется через `trapOverlayFocus(...)` в setup оверлея
 4. **Добавление blockScroll** — вызовите для модальных диалогов
 
 ---
@@ -473,7 +471,7 @@ export class FiboDialog {
 1. **Всегда используйте `fiboOverlayPanel`** для опознавания панели
 2. **Помечайте заголовок с `fiboOverlayTitle`** — будет автоматически связан
 3. **Для модальных диалогов:** `[modal]="true"` (по умолчанию)
-4. **Для поповеров:** `[modal]="false"` + `[guardFocus]="false"`
+4. **Для поповеров:** `[modal]="false"` + `trapOverlayFocus` c default guard (выключен для non-modal категорий)
 
 ### Тестирование
 
@@ -492,5 +490,5 @@ it('should close on Escape', fakeAsync(() => {
 
 ---
 
-*Дата обновления: 2026-03-18*
-*Версия: CDK v1.x с OverlayPanel, FocusTrapStack, blockScroll, canClose guards*
+*Дата обновления: 2026-03-26*
+*Версия: CDK v1.x с trapOverlayFocus, OverlayPanel, blockScroll, canClose guards*

@@ -70,6 +70,7 @@ export class CdkOverlaysBasicExample {
   readonly overlayHandle = createOverlay(this.isOpen, this.overlayConfig, overlay => {
     closeOnFocusLeave(overlay);
     closeOnOutsideClick(overlay);
+    trapOverlayFocus(overlay);
     restoreTriggerFocusOnClose(overlay);
   });
 
@@ -135,6 +136,16 @@ Closes when the user clicks outside the reference element and outside the curren
 ### `closeOnFocusLeave(...)`
 
 Closes when focus leaves both the reference element and the current overlay branch.
+
+### `trapOverlayFocus(...)`
+
+Unified focus policy for overlays:
+
+- autofocus on open
+- cyclic `Tab/Shift+Tab` inside current overlay container
+- branch-aware focus guard for modal categories (`dialog`, `confirmation`)
+
+Use `[fiboFocusInitial]` marker on an element inside overlay content to override the initial focus target.
 
 ### `restoreTriggerFocusOnClose(...)`
 

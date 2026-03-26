@@ -4,11 +4,11 @@ import {
   inject,
   ViewEncapsulation,
 } from '@angular/core';
-import { FocusTrap, OVERLAY_HANDLE, OverlayPanel } from '@fibo-ui/cdk';
+import { OVERLAY_HANDLE, OverlayPanel } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-drawer',
-  imports: [FocusTrap, OverlayPanel],
+  imports: [OverlayPanel],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="fixed inset-0"
@@ -18,7 +18,7 @@ import { FocusTrap, OVERLAY_HANDLE, OverlayPanel } from '@fibo-ui/cdk';
       </div>
 
       <div class="drawer-panel pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-        <div fiboFocusTrap [restoreFocus]="false" [guardFocus]="false" fiboOverlayPanel class="pointer-events-auto w-screen max-w-md shadow-xl focus:outline-none">
+        <div fiboOverlayPanel class="pointer-events-auto w-screen max-w-md shadow-xl focus:outline-none">
           <div class="flex h-full flex-col overflow-y-scroll bg-background dark:outline dark:-outline-offset-1 dark:outline-white/8">
             <ng-content />
           </div>

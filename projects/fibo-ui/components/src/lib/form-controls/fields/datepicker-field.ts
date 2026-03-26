@@ -4,10 +4,10 @@ import {
   closeOnFocusLeave,
   closeOnOutsideClick,
   createOverlay,
-  FocusTrap,
   OverlayPanel,
   Popover,
   SelectDate,
+  trapOverlayFocus,
   provideFormValueControl,
   restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
@@ -24,7 +24,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       inputs: [...FORM_UI_STATE_INPUTS],
     },
   ],
-  imports: [FieldShell, FieldTargetDirective, Popover, Calendar, SelectDate, FocusTrap, OverlayPanel],
+  imports: [FieldShell, FieldTargetDirective, Popover, Calendar, SelectDate, OverlayPanel],
   host: {
     class: 'block',
   },
@@ -70,9 +70,6 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         fiboPopover
         [attr.id]="dialogId()"
         #popover="Popover"
-        fiboFocusTrap
-        [restoreFocus]="false"
-        [guardFocus]="false"
         fiboSelectDate
         fiboOverlayPanel
         [modal]="false"
@@ -108,6 +105,7 @@ export class DatePickerField implements FormValueControl<string> {
     closeOnFocusLeave(overlay);
     closeOnOutsideClick(overlay);
     restoreTriggerFocusOnClose(overlay);
+    trapOverlayFocus(overlay);
   });
 
   onInput(event: Event) {

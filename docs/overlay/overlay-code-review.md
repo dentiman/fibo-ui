@@ -1,5 +1,8 @@
 # Код-ревью: Overlay System
 
+> ⚠️ Historical document (2026-03-18): this review predates migration to behavior-based focus management (`trapOverlayFocus`).  
+> Use `overlay-system.md` as the current source of truth.
+
 Архитектурный анализ системы оверлеев fibo-ui CDK с сравнением популярных дизайн-систем.
 
 ## Оценка архитектуры

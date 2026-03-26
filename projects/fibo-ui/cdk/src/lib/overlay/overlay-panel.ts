@@ -1,6 +1,13 @@
 import { Directive, InjectionToken, inject, input, signal } from '@angular/core';
 import { OVERLAY_HANDLE } from './overlay-handle';
 
+let nextOverlayElementId = 0;
+
+function createOverlayElementId(kind: 'title' | 'desc'): string {
+  nextOverlayElementId += 1;
+  return `fibo-overlay-${kind}-${nextOverlayElementId}`;
+}
+
 /**
  * Injection token for the nearest OverlayPanel ancestor.
  * Used by OverlayTitle and OverlayDescription to register their IDs.
@@ -52,10 +59,10 @@ export class OverlayPanel {
   host: { '[id]': 'id' },
 })
 export class OverlayTitle {
-  private handle = inject(OVERLAY_HANDLE);
+  private handle = inject(OVERLAY_HANDLE, { optional: true });
   private panel = inject(OVERLAY_PANEL, { optional: true });
 
-  id = `${this.handle.id}-title`;
+  id = this.handle ? `${this.handle.id}-title` : createOverlayElementId('title');
 
   constructor() {
     this.panel?.titleId.set(this.id);
@@ -73,10 +80,10 @@ export class OverlayTitle {
   host: { '[id]': 'id' },
 })
 export class OverlayDescription {
-  private handle = inject(OVERLAY_HANDLE);
+  private handle = inject(OVERLAY_HANDLE, { optional: true });
   private panel = inject(OVERLAY_PANEL, { optional: true });
 
-  id = `${this.handle.id}-desc`;
+  id = this.handle ? `${this.handle.id}-desc` : createOverlayElementId('desc');
 
   constructor() {
     this.panel?.descriptionId.set(this.id);

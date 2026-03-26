@@ -11,9 +11,9 @@ Complete documentation for fibo-ui CDK overlay system.
 
 **Topics:**
 - Architecture (createOverlay, OverlayStack, OverlayContainer, OverlayHandle, OverlaySession)
-- Composable behaviors (closeOnOutsideClick, closeOnFocusLeave, blockScroll, closeOnScroll, etc.)
+- Composable behaviors (closeOnOutsideClick, closeOnFocusLeave, trapOverlayFocus, blockScroll, closeOnScroll, etc.)
 - ARIA and accessibility (OverlayPanel, OverlayTitle, OverlayDescription directives)
-- Focus management (FocusTrap + FocusTrapStack mechanism)
+- Focus management (`trapOverlayFocus` + `restoreTriggerFocusOnClose`)
 - Close guards (conditional closing)
 - Escape handling (centralized)
 - Lifecycle
@@ -48,11 +48,11 @@ Quick reference for common patterns.
 ## 📊 Implementation Status
 
 ### [overlay-improvements-status.md](./overlay-improvements-status.md)
-Status report of all improvements made to the overlay system as of 2026-03-18.
+Status report of improvements made to the overlay system (with latest addendum from 2026-03-26).
 
 **Topics:**
 - Problems found vs. implemented ✅
-- FocusTrap improvements (FocusTrapStack, focusin listener, guardFocus)
+- Focus management via `trapOverlayFocus` (autofocus + cyclic tab + branch-aware guard)
 - Scroll strategies (blockScroll with reference counting, closeOnScroll)
 - Escape handling (centralized through OverlayStack)
 - canClose guards API
@@ -85,26 +85,16 @@ In-depth code review comparing fibo-ui overlay system with popular design system
 - Recommendations by priority
 
 **Read this for:** Understanding trade-offs, architectural decisions, why certain patterns were chosen.
+**Note:** This document is historical (pre-`trapOverlayFocus`) and should be read as background, not as current implementation spec.
 
 ---
 
 ## 🎯 Focus Management
 
 ### [focus-trap-proposal.md](./focus-trap-proposal.md)
-Detailed analysis of FocusTrap implementation approaches.
+Detailed historical analysis of focus-trap implementation approaches.
 
-**Topics:**
-- Current implementation in fibo-ui
-- Problems identified
-- How focus trap works in:
-  - Angular CDK (sentinel approach)
-  - Taiga-UI (element + focusin listener approach)
-  - fibo-ui (tab-handler approach)
-- Comparative table
-- Improvement proposals (Variant A recommended = what was implemented)
-- Priority breakdown
-
-**Read this for:** Understanding focus management decisions, why certain trade-offs were made.
+**Read this for:** Historical context and trade-off analysis before migration to behavior-based focus management.
 
 ---
 
@@ -121,7 +111,7 @@ Overlay System
 ├─ Implementation Details
 │  ├─ overlay-improvements-status.md
 │  ├─ overlay-code-review.md
-│  └─ focus-trap-proposal.md
+│  └─ focus-trap-proposal.md (historical)
 │
 └─ Related
    ├─ data-list.md (for list-based overlays like menu, select)
@@ -137,11 +127,9 @@ Overlay System
   - `overlay-stack.ts` — Runtime coordinator
   - `overlay-handle.ts` — Runtime object interface
   - `overlay-container.ts` — Rendering surface
-  - `overlay-behaviors.ts` — Composable behavior policies
+  - `overlay-behaviors.ts` — Composable behavior policies (`trapOverlayFocus`, close policies, scroll lock)
   - `overlay-panel.ts` — **NEW** ARIA directives
   - `overlay-session.ts` — Lifecycle API
-- `projects/fibo-ui/cdk/src/lib/a11y/focus-trap.ts` — Focus management with FocusTrapStack
-
 ### Components
 - `projects/fibo-ui/components/src/lib/overlay/` — Dialog, Drawer, Confirmation
 - `projects/fibo-ui/components/src/lib/form-controls/fields/datepicker-field.ts` — Popover example
@@ -168,14 +156,13 @@ const overlayHandle = createOverlay(
 ```
 
 ### Modal Dialog with ARIA
-```html
-<div fiboFocusTrap [restoreFocus]="false">
-  <div fiboOverlayPanel>
-    <h2 fiboOverlayTitle>Title</h2>
-    <p fiboOverlayDescription>Description</p>
-    <!-- content -->
-  </div>
-</div>
+```typescript
+createOverlay(isOpen, config, overlay => {
+  closeOnBackdropClick(overlay);
+  blockScroll(overlay);
+  trapOverlayFocus(overlay);
+  restoreTriggerFocusOnClose(overlay);
+});
 ```
 
 ### With Close Guards
@@ -194,15 +181,16 @@ overlay.canClose((reason, event) => {
 
 | Date | Version | Changes |
 |---|---|---|
+| 2026-03-26 | v1.x | Replaced template `fiboFocusTrap` usage with behavior-based `trapOverlayFocus`; removed focus-trap directive from CDK API |
 | 2026-03-18 | v1.x | Complete overlay-system.md, improvements-status.md, removed duplicate popover.md |
-| 2026-03-18 | v1.x | FocusTrap improvements, blockScroll, canClose guards, ARIA system, centralized Escape |
+| 2026-03-18 | v1.x | Directive-based FocusTrap improvements (historical), blockScroll, canClose guards, ARIA system, centralized Escape |
 | Earlier | v1.0 | Initial overlay system, basic behaviors |
 
 ---
 
 ## Related Topics
 
-- **Focus Management:** [focus-trap-proposal.md](./focus-trap-proposal.md)
+- **Focus Management (historical):** [focus-trap-proposal.md](./focus-trap-proposal.md)
 - **Data Lists & Selection:** [data-list.md](./data-list.md)
 - **Composition Patterns:** [composition.md](./composition.md)
 - **Form System:** See components library docs
@@ -210,5 +198,5 @@ overlay.canClose((reason, event) => {
 
 ---
 
-*Last updated: 2026-03-18*
+*Last updated: 2026-03-26*
 *CDK overlay system, comprehensive documentation in Russian and English*

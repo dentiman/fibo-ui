@@ -1,5 +1,5 @@
 import { OverlayCloseContext, OverlaySession } from './overlay-session';
-import { OverlayHandle } from './overlay-handle';
+import { OverlayCategory, OverlayHandle } from './overlay-handle';
 
 const TABBABLE_SELECTOR = [
   'a[href]:not([tabindex="-1"])',
@@ -9,6 +9,19 @@ const TABBABLE_SELECTOR = [
   'textarea:not([disabled]):not([tabindex="-1"])',
   '[tabindex]:not([tabindex="-1"])',
 ].join(', ');
+
+const DEFAULT_FOCUS_INITIAL_SELECTOR = '[fiboFocusInitial]';
+const DEFAULT_FOCUS_ROOT_SELECTOR = '[data-dialog-panel]';
+const MODAL_FOCUS_CATEGORIES: ReadonlySet<OverlayCategory> = new Set(['dialog', 'confirmation']);
+
+export interface TrapOverlayFocusOptions {
+  guard?: boolean;
+  autoFocus?: boolean;
+  loopTab?: boolean;
+  preventScroll?: boolean;
+  initialSelector?: string;
+  rootSelector?: string;
+}
 
 /**
  * Restores focus back to the trigger element after an overlay finishes closing.
@@ -229,35 +242,186 @@ export function closeOnScroll(overlay: OverlaySession): void {
   overlay.onCleanup(() => effectRef.destroy());
 }
 
+function getOverlayContainerElement(overlayId: string): HTMLElement | null {
+  return document.querySelector<HTMLElement>(`[data-overlay-container-id="${overlayId}"]`);
+}
+
+function getOverlayFocusRoot(overlayId: string, rootSelector: string): HTMLElement | null {
+  const container = getOverlayContainerElement(overlayId);
+  if (!container) {
+    return null;
+  }
+
+  return container.querySelector<HTMLElement>(rootSelector) ?? container;
+}
+
+function getTabbableElements(root: HTMLElement): HTMLElement[] {
+  return Array.from(root.querySelectorAll<HTMLElement>(TABBABLE_SELECTOR)).filter(el => {
+    if (el.hasAttribute('disabled')) {
+      return false;
+    }
+
+    const style = getComputedStyle(el);
+    if (style.display === 'none' || style.visibility === 'hidden') {
+      return false;
+    }
+
+    return el.getClientRects().length > 0;
+  });
+}
+
+function focusElement(element: HTMLElement, preventScroll: boolean): void {
+  element.focus({ preventScroll });
+}
+
+function focusOverlayEntryTarget(
+  overlayId: string,
+  options: Required<Pick<TrapOverlayFocusOptions, 'preventScroll' | 'initialSelector' | 'rootSelector'>>,
+): void {
+  const root = getOverlayFocusRoot(overlayId, options.rootSelector);
+  if (!root) {
+    return;
+  }
+
+  const marked = root.querySelector<HTMLElement>(options.initialSelector);
+  const firstFocusable = getTabbableElements(root)[0];
+  const target = marked ?? firstFocusable ?? root;
+
+  if (target === root && !root.hasAttribute('tabindex')) {
+    root.tabIndex = -1;
+  }
+
+  focusElement(target, options.preventScroll);
+}
+
+function focusOverlayFallbackTarget(
+  overlayId: string,
+  options: Required<Pick<TrapOverlayFocusOptions, 'preventScroll' | 'rootSelector'>>,
+): void {
+  const root = getOverlayFocusRoot(overlayId, options.rootSelector);
+  if (!root) {
+    return;
+  }
+
+  const firstFocusable = getTabbableElements(root)[0] ?? root;
+  if (firstFocusable === root && !root.hasAttribute('tabindex')) {
+    root.tabIndex = -1;
+  }
+
+  focusElement(firstFocusable, options.preventScroll);
+}
+
+/**
+ * Unified overlay focus policy:
+ * - autofocuses on open
+ * - keeps Tab/Shift+Tab navigation cyclic inside current overlay container
+ * - optionally guards focus escape for modal categories
+ *
+ * Guard is enabled automatically for modal categories (dialog, confirmation).
+ */
+export function trapOverlayFocus(
+  overlay: OverlaySession,
+  options: TrapOverlayFocusOptions = {},
+): void {
+  const autoFocus = options.autoFocus ?? true;
+  const loopTab = options.loopTab ?? true;
+  const preventScroll = options.preventScroll ?? true;
+  const initialSelector = options.initialSelector ?? DEFAULT_FOCUS_INITIAL_SELECTOR;
+  const rootSelector = options.rootSelector ?? DEFAULT_FOCUS_ROOT_SELECTOR;
+  const guard = options.guard ?? MODAL_FOCUS_CATEGORIES.has(overlay.handle.category);
+
+  if (autoFocus) {
+    overlay.afterOpened(() => {
+      focusOverlayEntryTarget(overlay.handle.id, {
+        preventScroll,
+        initialSelector,
+        rootSelector,
+      });
+    });
+  }
+
+  if (loopTab) {
+    const effectRef = overlay.effect(onCleanup => {
+      const handleKeydown = (event: KeyboardEvent) => {
+        if (event.key !== 'Tab') {
+          return;
+        }
+
+        const targetOverlayId = overlay.findOverlayContainerId(event.target);
+        if (targetOverlayId !== overlay.handle.id) {
+          return;
+        }
+
+        const root = getOverlayFocusRoot(overlay.handle.id, rootSelector);
+        if (!root) {
+          return;
+        }
+
+        const focusable = getTabbableElements(root);
+        if (focusable.length === 0) {
+          event.preventDefault();
+          focusOverlayFallbackTarget(overlay.handle.id, { preventScroll, rootSelector });
+          return;
+        }
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const active = document.activeElement as HTMLElement | null;
+        const isInTabOrder = !!active && focusable.includes(active);
+
+        if (event.shiftKey) {
+          if (active === first || !isInTabOrder) {
+            event.preventDefault();
+            focusElement(last, preventScroll);
+          }
+          return;
+        }
+
+        if (active === last || !isInTabOrder) {
+          event.preventDefault();
+          focusElement(first, preventScroll);
+        }
+      };
+
+      document.addEventListener('keydown', handleKeydown, true);
+      onCleanup(() => document.removeEventListener('keydown', handleKeydown, true));
+    });
+
+    overlay.onCleanup(() => effectRef.destroy());
+  }
+
+  if (guard) {
+    const effectRef = overlay.effect(onCleanup => {
+      const handleFocusIn = (event: FocusEvent) => {
+        if (overlay.isInOverlayBranch(event.target)) {
+          return;
+        }
+
+        focusOverlayFallbackTarget(overlay.handle.id, { preventScroll, rootSelector });
+      };
+
+      document.addEventListener('focusin', handleFocusIn, true);
+      onCleanup(() => document.removeEventListener('focusin', handleFocusIn, true));
+    });
+
+    overlay.onCleanup(() => effectRef.destroy());
+  }
+}
+
 /**
  * Guards focus inside a modal overlay by redirecting any focus that escapes
  * back to the first focusable element in the overlay panel.
  *
- * Unlike FocusTrap's guardFocus, this check is overlay-aware: focus inside
- * descendant overlays (e.g. a datepicker calendar opened from within a dialog)
- * is correctly treated as "still inside" and is never redirected.
+ * This check is overlay-aware: focus inside descendant overlays
+ * (e.g. a datepicker calendar opened from within a dialog)
+ * is treated as "still inside" and is never redirected.
  */
 export function guardModalFocus(overlay: OverlaySession): void {
-  const effectRef = overlay.effect(onCleanup => {
-    const handleFocusIn = (event: FocusEvent) => {
-      if (overlay.isInOverlayBranch(event.target)) return;
-
-      const container = document.querySelector<HTMLElement>(
-        `[data-overlay-container-id="${overlay.handle.id}"]`,
-      );
-      if (!container) return;
-
-      const panel = container.querySelector<HTMLElement>('[data-dialog-panel]');
-      const root = panel ?? container;
-      const firstFocusable = root.querySelector<HTMLElement>(TABBABLE_SELECTOR);
-      (firstFocusable ?? root).focus();
-    };
-
-    document.addEventListener('focusin', handleFocusIn, true);
-    onCleanup(() => document.removeEventListener('focusin', handleFocusIn, true));
+  trapOverlayFocus(overlay, {
+    autoFocus: false,
+    loopTab: false,
+    guard: true,
   });
-
-  overlay.onCleanup(() => effectRef.destroy());
 }
 
 export function isElementInsideOverlayContainer(

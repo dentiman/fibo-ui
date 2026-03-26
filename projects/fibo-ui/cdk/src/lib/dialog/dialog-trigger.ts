@@ -2,8 +2,8 @@ import { Directive, ElementRef, computed, inject, input, model, TemplateRef } fr
 import {
   blockScroll,
   closeOnBackdropClick,
-  guardModalFocus,
   restoreTriggerFocusOnClose,
+  trapOverlayFocus,
 } from '../overlay/overlay-behaviors';
 import { createOverlay } from '../overlay/overlay-stack';
 
@@ -32,7 +32,7 @@ export class DialogTrigger {
     closeOnBackdropClick(overlay);
     restoreTriggerFocusOnClose(overlay);
     blockScroll(overlay);
-    guardModalFocus(overlay);
+    trapOverlayFocus(overlay);
   });
 
   open() {
