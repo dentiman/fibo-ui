@@ -1,5 +1,10 @@
 import { Directive, ElementRef, computed, inject, input, model, TemplateRef } from '@angular/core';
-import { blockScroll, closeOnBackdropClick, restoreTriggerFocusOnClose } from '../overlay/overlay-behaviors';
+import {
+  blockScroll,
+  closeOnBackdropClick,
+  guardModalFocus,
+  restoreTriggerFocusOnClose,
+} from '../overlay/overlay-behaviors';
 import { createOverlay } from '../overlay/overlay-stack';
 
 @Directive({
@@ -27,6 +32,7 @@ export class DialogTrigger {
     closeOnBackdropClick(overlay);
     restoreTriggerFocusOnClose(overlay);
     blockScroll(overlay);
+    guardModalFocus(overlay);
   });
 
   open() {

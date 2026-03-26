@@ -3,6 +3,7 @@ import {
   blockScroll,
   closeOnBackdropClick,
   createOverlay,
+  guardModalFocus,
   restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
 
@@ -46,6 +47,7 @@ export class ConfirmationService {
       closeOnBackdropClick(overlay);
       restoreTriggerFocusOnClose(overlay);
       blockScroll(overlay);
+      guardModalFocus(overlay);
       overlay.afterClose(() => {
         if (!this.isOpen()) {
           this.config.set(null);

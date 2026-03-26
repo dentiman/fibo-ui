@@ -1,6 +1,15 @@
 import { OverlayCloseContext, OverlaySession } from './overlay-session';
 import { OverlayHandle } from './overlay-handle';
 
+const TABBABLE_SELECTOR = [
+  'a[href]:not([tabindex="-1"])',
+  'button:not([disabled]):not([tabindex="-1"])',
+  'input:not([disabled]):not([tabindex="-1"])',
+  'select:not([disabled]):not([tabindex="-1"])',
+  'textarea:not([disabled]):not([tabindex="-1"])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(', ');
+
 /**
  * Restores focus back to the trigger element after an overlay finishes closing.
  * Focus is restored only when the user has not already moved focus to another
@@ -215,6 +224,37 @@ export function closeOnScroll(overlay: OverlaySession): void {
 
     document.addEventListener('scroll', handleScroll, true);
     onCleanup(() => document.removeEventListener('scroll', handleScroll, true));
+  });
+
+  overlay.onCleanup(() => effectRef.destroy());
+}
+
+/**
+ * Guards focus inside a modal overlay by redirecting any focus that escapes
+ * back to the first focusable element in the overlay panel.
+ *
+ * Unlike FocusTrap's guardFocus, this check is overlay-aware: focus inside
+ * descendant overlays (e.g. a datepicker calendar opened from within a dialog)
+ * is correctly treated as "still inside" and is never redirected.
+ */
+export function guardModalFocus(overlay: OverlaySession): void {
+  const effectRef = overlay.effect(onCleanup => {
+    const handleFocusIn = (event: FocusEvent) => {
+      if (overlay.isInOverlayBranch(event.target)) return;
+
+      const container = document.querySelector<HTMLElement>(
+        `[data-overlay-container-id="${overlay.handle.id}"]`,
+      );
+      if (!container) return;
+
+      const panel = container.querySelector<HTMLElement>('[data-dialog-panel]');
+      const root = panel ?? container;
+      const firstFocusable = root.querySelector<HTMLElement>(TABBABLE_SELECTOR);
+      (firstFocusable ?? root).focus();
+    };
+
+    document.addEventListener('focusin', handleFocusIn, true);
+    onCleanup(() => document.removeEventListener('focusin', handleFocusIn, true));
   });
 
   overlay.onCleanup(() => effectRef.destroy());
