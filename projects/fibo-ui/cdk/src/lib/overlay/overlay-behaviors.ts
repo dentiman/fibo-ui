@@ -63,14 +63,14 @@ export function restoreTriggerFocusOnClose(overlay: OverlaySession): void {
  */
 export function closeOnFocusLeave(overlay: OverlaySession): void {
   const effectRef = overlay.effect(onCleanup => {
-    const interactionRoot = overlay.handle.interactionRoot ?? overlay.handle.referenceElement;
-    if (!interactionRoot) {
-      return;
-    }
-
     const handleFocusIn = (event: FocusEvent) => {
       const nextTarget = event.target as Node | null;
       if (!nextTarget) {
+        return;
+      }
+
+      const interactionRoot = overlay.handle.interactionRoot ?? overlay.handle.referenceElement;
+      if (!interactionRoot) {
         return;
       }
 
@@ -94,14 +94,14 @@ export function closeOnFocusLeave(overlay: OverlaySession): void {
  */
 export function closeOnOutsideClick(overlay: OverlaySession): void {
   const effectRef = overlay.effect(onCleanup => {
-    const interactionRoot = overlay.handle.interactionRoot ?? overlay.handle.referenceElement;
-    if (!interactionRoot) {
-      return;
-    }
-
     const handleClick = (event: MouseEvent) => {
       const target = event.target as Node | null;
       if (!target) {
+        return;
+      }
+
+      const interactionRoot = overlay.handle.interactionRoot ?? overlay.handle.referenceElement;
+      if (!interactionRoot) {
         return;
       }
 

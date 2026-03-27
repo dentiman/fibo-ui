@@ -1,9 +1,3 @@
 @for (overlay of overlayStack.openOverlayList(); track overlay.id) {
-  <div class="overlay-layer" style="position: absolute; inset: 0; pointer-events: none;"
-       [attr.data-overlay-container-id]="overlay.id"
-        [style.z-index]="overlay.zIndex"
-        (animationend)="handleOverlayAnimationEnd(overlay.id, $event)"
-        animate.leave="overlay-leave">
-    <ng-container [ngComponentOutlet]="shellComponent(overlay)" [ngComponentOutletInjector]="overlayInjector(overlay)"></ng-container>
-  </div>
+  <ng-container [ngComponentOutlet]="shellComponent(overlay)" [ngComponentOutletInjector]="overlayInjector(overlay)"></ng-container>
 }

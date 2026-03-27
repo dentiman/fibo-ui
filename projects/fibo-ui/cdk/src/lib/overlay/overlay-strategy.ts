@@ -34,6 +34,8 @@ export interface ModalOverlayOptions extends BaseOverlayStrategyOptions {
 }
 
 export interface MenuOverlayOptions extends BaseOverlayStrategyOptions {
+  placement?: Placement;
+  offset?: number;
   openDelay?: number;
   closeDelay?: number;
 }
@@ -114,7 +116,7 @@ export function menuOverlay(options: MenuOverlayOptions): MenuOverlayStrategy {
     kind: 'menu',
     shell: 'menu',
     category: 'menu',
-    options: Object.freeze({ openDelay: 0, closeDelay: 0, ...options }),
+    options: Object.freeze({ placement: 'right-start', offset: 1, openDelay: 0, closeDelay: 0, ...options }),
     config: normalizeRenderConfig(options, 'menu'),
     defaultBehaviors: Object.freeze([
       'closeOnOutsideClick',

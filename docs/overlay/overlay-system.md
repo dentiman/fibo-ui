@@ -1,494 +1,298 @@
-# Overlay System — Complete Guide
+# Overlay System (Current)
 
-Современная система оверлеев fibo-ui CDK, построенная на Angular 21 сигналах с реактивными поведениями и полной поддержкой доступности.
+This document describes the current overlay runtime in `@fibo-ui/cdk`.
 
----
+It covers only active architecture and APIs.
 
-## Архитектура системы
+## 1) Runtime Model
 
-### Ключевые компоненты
+The runtime is strategy-driven and signal-driven.
 
-#### `createOverlay(isOpen, config, setup?)`
+- Entry point: `createOverlay(isOpen, strategy, setup?)`
+- Global coordinator: `OverlayStack`
+- Render host: `OverlayContainerComponent`
+- Runtime object per open overlay: `OverlayHandle`
+- Lifecycle API for one open cycle: `OverlaySession`
 
-Основной API для создания оверлея из компонента.
+Current rendering is shell-based:
 
-```typescript
-const overlayHandle = createOverlay(
-  this.isOpen,  // Signal<boolean> — источник истины
-  computed(() => ({
-    templateRef: this.contentTpl(),
-    referenceElement: this.triggerEl.nativeElement,
-    category: 'dialog' as const,  // 'popover' | 'menu' | 'dialog' | 'tooltip' | 'confirmation' | 'notification'
-  })),
-  overlay => {
-    // Коллбэк для регистрации поведений
-    closeOnFocusLeave(overlay);
-    closeOnOutsideClick(overlay);
-    restoreTriggerFocusOnClose(overlay);
-    blockScroll(overlay);
+- `OverlayConnectedShellComponent` for `connected | menu | tooltip`
+- `OverlayModalShellComponent` for `modal`
+- `OverlayPlainShellComponent` fallback
+
+There is no extra `overlay-layer` wrapper in container template now. Shell roots carry overlay identity (`data-overlay-container-id`) and z-index.
+
+## 2) Core API
+
+### `createOverlay(...)`
+
+Defined in `projects/fibo-ui/cdk/src/lib/overlay/overlay-stack.ts`.
+
+```ts
+createOverlay(
+  isOpen: WritableSignal<boolean>,
+  strategy: OverlayStrategy | Signal<OverlayStrategy | null | undefined> | null | undefined,
+  setup?: (overlay: OverlaySession) => void,
+): Signal<OverlayHandle | null>
+```
+
+Behavior:
+
+- Opens when `isOpen()` becomes `true` and strategy has `templateRef`.
+- Closes when `isOpen()` becomes `false` or close is requested.
+- Keeps render config synced while overlay is open.
+- Supports close guards with `overlay.canClose(...)`.
+
+### `OverlayHandle`
+
+Defined in `projects/fibo-ui/cdk/src/lib/overlay/overlay-handle.ts`.
+
+Important fields:
+
+- `id: string`
+- `category: 'popover' | 'menu' | 'dialog' | 'tooltip' | 'confirmation' | 'notification'`
+- `zIndex: number`
+- `templateRef`, `referenceElement`, `interactionRoot`, `focusReturnTarget`
+- `strategy: OverlayStrategy`
+- `closed: boolean`
+
+Methods:
+
+- `close(reason?: OverlayCloseReason)`
+- `setInteractionRoot(root: HTMLElement | null)`
+
+### `OverlaySession`
+
+Defined in `projects/fibo-ui/cdk/src/lib/overlay/overlay-session.ts`.
+
+Use this API inside `setup` only.
+
+- `requestClose(reason, event?)`
+- `afterOpened(handler)`
+- `beforeClose(handler)`
+- `afterClose(handler)`
+- `canClose(guard)`
+- `effect(runner)`
+- `onCleanup(cleanup)`
+- `findOverlayContainerId(target)`
+- `isInOverlayBranch(target)`
+
+### Close reasons
+
+Defined in `projects/fibo-ui/cdk/src/lib/overlay/overlay-types.ts`.
+
+```ts
+type OverlayCloseReason =
+  | 'programmatic'
+  | 'escape'
+  | 'focusout'
+  | 'outside-click'
+  | 'backdrop'
+  | 'blur'
+  | 'state'
+  | 'destroy';
+```
+
+## 3) Strategy Presets
+
+Defined in `projects/fibo-ui/cdk/src/lib/overlay/overlay-strategy.ts`.
+
+Kinds:
+
+```ts
+type OverlayStrategyKind = 'connected' | 'modal' | 'menu' | 'tooltip' | 'notification';
+```
+
+Factories:
+
+- `connectedOverlay(options)`
+- `modalOverlay(options)`
+- `menuOverlay(options)`
+- `tooltipOverlay(options)`
+- `notificationOverlay(options)`
+
+Notes:
+
+- `modalOverlay` options include `backdropClosable` and `blockScroll`.
+- `menuOverlay` default placement is `right-start`, default offset is `1`.
+- Strategies expose `defaultBehaviors`, but behaviors are currently attached explicitly in `setup`.
+
+## 4) Behavior Helpers
+
+Defined in `projects/fibo-ui/cdk/src/lib/overlay/overlay-behaviors.ts`.
+
+Available helpers:
+
+- `closeOnFocusLeave(overlay)`
+- `closeOnOutsideClick(overlay)`
+- `restoreTriggerFocusOnClose(overlay)`
+- `closeOnScroll(overlay)`
+- `trapOverlayFocus(overlay, options?)`
+- `guardModalFocus(overlay)`
+
+How current outside/focus checks work:
+
+- Compare event target with `interactionRoot ?? referenceElement`.
+- Respect nested branch boundaries using `overlay.isInOverlayBranch(target)`.
+
+## 5) Rendering and Animation Lifecycle
+
+Container template (`projects/fibo-ui/cdk/src/lib/overlay/overlay-container.html`) renders shell components directly:
+
+```html
+@for (overlay of overlayStack.openOverlayList(); track overlay.id) {
+  <ng-container
+    [ngComponentOutlet]="shellComponent(overlay)"
+    [ngComponentOutletInjector]="overlayInjector(overlay)"
+  ></ng-container>
+}
+```
+
+Animation ownership is on shell roots:
+
+- `OverlayConnectedShellComponent`: `animate.enter="overlay-connected-enter"`, `animate.leave="overlay-connected-leave"`
+- `OverlayModalShellComponent`: `animate.enter="overlay-modal-enter"`, `animate.leave="overlay-modal-leave"`
+
+On leave animation end, shell calls:
+
+```ts
+overlayStack.completeAfterClose(handle.id)
+```
+
+This finalizes deferred `afterClose` handlers for strategies that wait for leave animation.
+
+## 6) Z-Index and Escape
+
+`OverlayStack` uses category tiers:
+
+- dialog: 500
+- confirmation: 600
+- popover/menu: 1000
+- tooltip: 2000
+- notification: 3000
+
+Escape handling is centralized in `OverlayContainerComponent` host:
+
+- `document:keydown.escape -> overlayStack.closeTopmost()`
+- skips closing `notification` and `tooltip` categories.
+
+## 7) Accessibility API
+
+Defined in `projects/fibo-ui/cdk/src/lib/overlay/overlay-panel.ts`.
+
+- `[fiboOverlayPanel]`
+  - sets `data-dialog-panel`
+  - wires `role`, `aria-modal`, `aria-labelledby`, `aria-describedby`
+- `[fiboOverlayTitle]`
+- `[fiboOverlayDescription]`
+
+Use for dialog-like overlays.
+
+## 8) High-Level Trigger APIs
+
+### Popover trigger directives
+
+Defined in `projects/fibo-ui/cdk/src/lib/popover/popover-trigger.ts`.
+
+- `[fiboPopoverTrigger]` (base)
+- `[fiboPopoverTriggerClick]`
+- `[fiboPopoverTriggerToggle]`
+
+Supported inputs on trigger directives:
+
+- `content: TemplateRef<any>`
+- `strategyKind: 'connected' | 'menu'`
+- `placement: Placement`
+- `offset: number`
+- `matchWidth: boolean`
+- `delegatesFocus: boolean`
+
+### Menu panel directives
+
+Defined in `projects/fibo-ui/cdk/src/lib/menu/menu-panel.ts` and `submenu-trigger.ts`.
+
+- `MenuPanel` coordinates submenu trigger registry and open/close delays.
+- `SubmenuTrigger` opens submenu via `createOverlay(..., menuOverlay(...))` directly.
+
+## 9) Usage Examples
+
+### Connected overlay (custom popover)
+
+```ts
+readonly strategy = computed(() => {
+  const templateRef = this.popoverTpl();
+  if (!templateRef) {
+    return null;
   }
-);
-```
 
-**Контракт:**
-- `isOpen` — единственный источник истины для состояния открытости
-- `config` вычисляется и может менять контент во время открытия
-- `setup(...)` регистрирует поведения для текущего цикла открытия
-
-#### `OverlayStack`
-
-Глобальный координатор всех оверлеев. Управляет:
-
-- Созданием и удалением оверлеев
-- Z-index и категоризацией
-- Вложенными ветками оверлеев
-- Централизованной обработкой Escape (вызывает `closeTopmost('escape')`)
-- Гарантирует готовность шаблона перед открытием
-
-#### `OverlayContainerComponent`
-
-Постоянная поверхность рендеринга. Предоставляет:
-
-- `OVERLAY_HANDLE` инъекционный токен для содержимого оверлея
-- Завершение `afterClose(...)` после анимации выхода
-- Управление глобальными стилями документа (через composable behaviors)
-
-#### `OverlayHandle`
-
-Рантайм-объект для одного открытого оверлея.
-
-```typescript
-export interface OverlayHandle {
-  readonly id: string;                                  // Уникальный идентификатор
-  readonly category: OverlayCategory;                   // Тип оверлея
-  readonly zIndex: number;                              // Вычисленный z-index
-  readonly firstInCategory: Signal<boolean>;            // Первый в категории?
-  readonly templateRef: TemplateRef<any> | undefined;  // Текущий контент
-  readonly referenceElement: HTMLElement | null;       // Элемент-триггер
-  readonly closed: boolean;                             // Закрыт?
-  close(reason?: OverlayCloseReason): void;            // Запрос на закрытие
-}
-```
-
-#### `OverlaySession`
-
-Временный API жизненного цикла, передаётся в `setup(...)`. Существует только для текущего цикла открытия.
-
-```typescript
-interface OverlaySession {
-  readonly handle: OverlayHandle;
-  readonly isOpen: Signal<boolean>;
-
-  requestClose(reason: OverlayCloseReason, event?: Event): void;
-  beforeClose(callback: (ctx: OverlayCloseContext, handle: OverlayHandle) => void): void;
-  afterOpened(callback: () => void): void;
-  afterClose(callback: () => void): void;
-
-  effect<T>(fn: (onCleanup: (fn: () => void) => void) => T): EffectRef;
-  onCleanup(callback: () => void): void;
-
-  isInOverlayBranch(target: EventTarget | null | undefined): boolean;
-  canClose(guard: (reason, event?) => boolean | void): void;
-}
-```
-
----
-
-## Composable Behaviors (Компонуемые поведения)
-
-### `closeOnOutsideClick(overlay)`
-
-Закрывает при клике вне триггера и вне текущей ветки оверлея. Используется для поповеров и меню.
-
-```typescript
-createOverlay(isOpen, config, overlay => {
-  closeOnOutsideClick(overlay);
-});
-```
-
-### `closeOnFocusLeave(overlay)`
-
-Закрывает при потере фокуса обоими — триггером и оверлеем. Используется для поповеров и выпадающих списков.
-
-```typescript
-createOverlay(isOpen, config, overlay => {
-  closeOnFocusLeave(overlay);
-});
-```
-
-### `closeOnBackdropClick(overlay)`
-
-Закрывает при клике на бэкдроп (фоновую область), но не на содержимое панели (помечено `fiboOverlayPanel`). Используется для модальных диалогов.
-
-```typescript
-createOverlay(isOpen, config, overlay => {
-  closeOnBackdropClick(overlay);  // Проверяет data-overlay-container-id и [fiboOverlayPanel]
-});
-```
-
-### `restoreTriggerFocusOnClose(overlay)`
-
-Возвращает фокус на элемент-триггер после закрытия, если пользователь не переместил фокус на другой элемент внутри ветки.
-
-```typescript
-createOverlay(isOpen, config, overlay => {
-  restoreTriggerFocusOnClose(overlay);
-});
-```
-
-### `blockScroll(overlay)`
-
-Блокирует скролл документа при открытии оверлея. Сохраняет позицию скролла и компенсирует ширину скроллбара для предотвращения layout shift.
-
-**Поддерживает вложенные оверлеи:** используется reference counting — только первый блокирует, только последний восстанавливает.
-
-```typescript
-blockScroll(overlay);
-// Сохраняет: scrollX, scrollY, ширину скроллбара
-// Применяет: position: fixed, top: -scrollY, left: -scrollX, overflow: hidden, overscroll-behavior: none
-// На iOS: touch-action: none
-```
-
-### `closeOnScroll(overlay)`
-
-Закрывает при скролле пользователем вне оверлея. Полезна для тултипов, которые теряют контекст.
-
-```typescript
-createOverlay(isOpen, config, overlay => {
-  closeOnScroll(overlay);
-});
-```
-
-### `trapOverlayFocus(overlay, options?)`
-
-Единая focus-политика для overlay-контейнера. Используется вместо отдельной директивы `FocusTrap`.
-
-Что делает:
-- автофокус после открытия
-- циклический `Tab/Shift+Tab` внутри текущего overlay-контейнера
-- guard фокуса с учётом ветки (`overlay.isInOverlayBranch`) для модальных категорий
-
-Поведение по умолчанию:
-- `guard` автоматически включён для `dialog` и `confirmation`
-- `guard` выключен для `popover`, `menu`, `tooltip`, `notification`
-- начальный фокус ищет `[fiboFocusInitial]`, иначе первый tabbable, иначе root панели
-
-```typescript
-createOverlay(isOpen, config, overlay => {
-  trapOverlayFocus(overlay);
-  restoreTriggerFocusOnClose(overlay);
-});
-```
-
----
-
-## ARIA и доступность
-
-### `[fiboOverlayPanel]`
-
-Директива, которая помечает панель (содержимое) оверлея внутри контейнера. Отвечает за:
-
-- Установку `data-dialog-panel` (используется `closeOnBackdropClick` для различия панели и бэкдропа)
-- Установку `role`, `aria-modal`, `aria-labelledby`, `aria-describedby`
-- Auto-wiring связей с `OverlayTitle` / `OverlayDescription`
-
-```typescript
-@Directive({
-  selector: '[fiboOverlayPanel]',
-  host: {
-    'data-dialog-panel': '',
-    '[attr.role]': 'role()',
-    '[attr.aria-modal]': 'modal() || null',
-    '[attr.aria-labelledby]': 'titleId()',
-    '[attr.aria-describedby]': 'descriptionId()',
-  },
-})
-export class OverlayPanel {
-  role = input<string>('dialog');        // 'dialog' по умолчанию
-  modal = input(true);                   // true для модальных диалогов
-  // titleId и descriptionId устанавливаются автоматически
-}
-```
-
-**Использование в диалогах:**
-
-```html
-<div fiboOverlayPanel>
-  <h2 fiboOverlayTitle>Confirm deletion</h2>
-  <p>Are you sure?</p>
-  <!-- aria-labelledby автоматически -> {overlay-id}-title -->
-</div>
-```
-
-### `[fiboOverlayTitle]`
-
-Помечает элемент заголовка и автоматически генерирует ID для `aria-labelledby`.
-
-```html
-<h2 fiboOverlayTitle>Modal Title</h2>
-<!-- ID: {overlay-id}-title -->
-<!-- Родительский OverlayPanel получает aria-labelledby={overlay-id}-title -->
-```
-
-### `[fiboOverlayDescription]`
-
-Помечает элемент описания и автоматически генерирует ID для `aria-describedby`.
-
-```html
-<p fiboOverlayDescription>Description of the modal action</p>
-<!-- ID: {overlay-id}-desc -->
-<!-- Родительский OverlayPanel получает aria-describedby={overlay-id}-desc -->
-```
-
----
-
-## Focus Management
-
-Focus-управление полностью переехало в `overlay-behaviors.ts` и настраивается через `trapOverlayFocus(...)`.
-
-**Ключевой принцип:** один источник восстановления фокуса на закрытии — `restoreTriggerFocusOnClose(...)`.
-
-**Рекомендованные комбинации:**
-- **Modal (dialog/confirmation/drawer):** `closeOnBackdropClick + blockScroll + trapOverlayFocus + restoreTriggerFocusOnClose`
-- **Popover/date/menu:** `closeOnFocusLeave + closeOnOutsideClick + trapOverlayFocus + restoreTriggerFocusOnClose` (guard автоматически выключен)
-
-**`[fiboFocusInitial]`** остаётся marker-атрибутом для initial focus target внутри контента оверлея.
-
----
-
-## Close Guards (Условное закрытие)
-
-API для предотвращения закрытия оверлея при определённых условиях (например, форма с несохранёнными данными).
-
-```typescript
-createOverlay(isOpen, config, overlay => {
-  overlay.canClose((reason, event) => {
-    // reason: 'escape' | 'focusout' | 'outside-click' | 'backdrop' | 'blur' | 'programmatic'
-    // Вернуть false для предотвращения закрытия
-
-    if (reason === 'escape' && this.hasUnsavedChanges()) {
-      return false;  // Не закрывать по Escape если есть несохранённые данные
-    }
-    return true;  // Разрешить закрытие
+  return connectedOverlay({
+    templateRef,
+    referenceElement: this.triggerEl.nativeElement,
+    interactionRoot: this.triggerEl.nativeElement,
+    placement: 'bottom-start',
+    matchWidth: true,
   });
 });
+
+readonly overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
+  closeOnFocusLeave(overlay);
+  closeOnOutsideClick(overlay);
+  restoreTriggerFocusOnClose(overlay);
+});
 ```
 
----
+### Modal overlay
 
-## Escape Handling (Централизованная обработка Escape)
-
-Вся обработка Escape делегирована `OverlayStack`:
-
-1. **Глобальный слушатель:** На контейнере оверлеев в фазе захвата
-2. **Топ-overlay:** `closeTopmost('escape')` находит верхний оверлей в стеке
-3. **Проверка guards:** Проходит через все `canClose` guards перед закрытием
-
-**Преимущества:**
-- Нет дублирования обработчиков на каждом триггере
-- Гарантированный порядок закрытия (вложенные сначала)
-- Guards применяются ко всем методам закрытия
-
----
-
-## Lifecycle
-
-Каждый оверлей следует одному и тому же жизненному циклу:
-
-```
-1. Компонент устанавливает isOpen = true
-   ↓
-2. OverlayStack ожидает готовности templateRef
-   ↓
-3. Оверлей создаётся в OverlayContainer
-   ↓
-4. setup(...) регистрирует поведения
-   ↓
-5. afterOpened(...) выполняется после рендера
-   ↓
-6. Пользователь взаимодействует (клик, фокус, Escape)
-   ↓
-7. requestClose(...) проходит через guards
-   ↓
-8. beforeClose(...) выполняется
-   ↓
-9. Анимация выхода завершается
-   ↓
-10. afterClose(...) выполняется
-    ↓
-11. Оверлей удаляется из стека
-```
-
----
-
-## Вложенные оверлеи (Branches)
-
-Оверлеи могут быть вложены. Если оверлей открывается внутри другого оверлея, он становится частью его ветки.
-
-```
-Parent Dialog
-  ├─ Backdrop + Panel
-  └─ Child Menu
-       ├─ Backdrop (может быть скрыт)
-       └─ Panel
-            └─ Submenu
-                 └─ Panel
-```
-
-**Поведение:**
-- Клик внутри дочернего оверлея ≠ клик снаружи для родителя
-- Перемещение фокуса от родителя к дочернему ≠ уход фокуса
-- Восстановление фокуса учитывает целую ветку
-
-**API:**
-```typescript
-overlay.isInOverlayBranch(target)  // Находится ли target в ветке этого оверлея или его потомков?
-```
-
----
-
-## Z-index стратегия
-
-Категоризация по уровням:
-
-| Категория | Z-Index | Примечание |
-|---|---|---|
-| `notification` | 3000 | Toast-уведомления |
-| `tooltip` | 2000 | Самые верхние подсказки поверх интерактивных слоёв |
-| `menu` | 1000 | Выпадающие меню |
-| `popover` | 1000 | Поповеры (не модальные) |
-| `confirmation` | 600 | Подтверждение действий |
-| `dialog` | 500 | Модальные диалоги/дроверы |
-
-**Auto-increment:** В категории каждый следующий оверлей получает +1 к z-index.
-
----
-
-## Примеры использования
-
-### Простой поповер
-
-```typescript
-@Component({
-  selector: 'app-popover-example',
-  template: `
-    <button #trigger (click)="isOpen.set(!isOpen())">
-      Toggle Popover
-    </button>
-
-    <ng-template #content>
-      <div class="p-4 bg-white rounded shadow">
-        <p>Popover content</p>
-        <button (click)="isOpen.set(false)">Close</button>
-      </div>
-    </ng-template>
-  `,
-})
-export class PopoverExample {
-  isOpen = signal(false);
-
-  @ViewChild('trigger') trigger!: ElementRef<HTMLElement>;
-  @ViewChild('content') contentTpl!: TemplateRef<any>;
-
-  overlayHandle = computed(() =>
-    this.isOpen() ? createOverlay(
-      this.isOpen,
-      computed(() => ({
-        templateRef: this.contentTpl,
-        referenceElement: this.trigger.nativeElement,
-        category: 'popover',
-      })),
-      overlay => {
-        closeOnFocusLeave(overlay);
-        closeOnOutsideClick(overlay);
-        restoreTriggerFocusOnClose(overlay);
-      }
-    ) : null
-  );
-}
-```
-
-### Модальный диалог с ARIA
-
-```typescript
-@Component({
-  selector: 'fibo-dialog',
-  template: `
-    <div fiboOverlayPanel>
-      <h2 fiboOverlayTitle>{{ title() }}</h2>
-      <p fiboOverlayDescription>{{ description() }}</p>
-      <div class="dialog-content">
-        <ng-content />
-      </div>
-    </div>
-  `,
-})
-export class FiboDialog {
-  @Input() title = signal('');
-  @Input() description = signal('');
-  @Output() closed = output<void>();
-
-  onClose() {
-    this.closed.emit();
+```ts
+readonly strategy = computed(() => {
+  const templateRef = this.dialogTpl();
+  if (!templateRef) {
+    return null;
   }
-}
-```
 
-```typescript
-createOverlay(isOpen, config, overlay => {
-  closeOnBackdropClick(overlay);
-  blockScroll(overlay);
+  return modalOverlay({
+    templateRef,
+    referenceElement: this.triggerEl.nativeElement,
+    focusReturnTarget: this.triggerEl.nativeElement,
+    backdropClosable: true,
+    blockScroll: true,
+  });
+});
+
+readonly overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
   trapOverlayFocus(overlay);
   restoreTriggerFocusOnClose(overlay);
 });
 ```
 
----
+### Menu overlay
 
-## Миграция и обновления
+```ts
+readonly strategy = computed(() => {
+  const templateRef = this.menuTpl();
+  if (!templateRef) {
+    return null;
+  }
 
-### От старой системы
+  return menuOverlay({
+    templateRef,
+    referenceElement: this.triggerEl.nativeElement,
+    placement: 'right-start',
+    offset: 1,
+  });
+});
 
-Если используется старая overlay-система:
-
-1. **Замена `data-dialog-panel`** на `fiboOverlayPanel`
-2. **Удаление ручных ARIA-атрибутов** — используйте `fiboOverlayTitle` / `fiboOverlayDescription`
-3. **Удаление `fiboFocusTrap` из шаблонов** — фокус теперь управляется через `trapOverlayFocus(...)` в setup оверлея
-4. **Добавление blockScroll** — вызовите для модальных диалогов
-
----
-
-## Performance и Best Practices
-
-### Оптимизация
-
-1. **Ленивое вычисление config:** используйте `computed()` чтобы избежать пересоздания оверлея при других изменениях
-2. **Очистка в afterClose:** используйте `onCleanup()` для удаления слушателей
-3. **Единое управление состоянием:** используйте один `signal(false)` для `isOpen`
-
-### Accessibility
-
-1. **Всегда используйте `fiboOverlayPanel`** для опознавания панели
-2. **Помечайте заголовок с `fiboOverlayTitle`** — будет автоматически связан
-3. **Для модальных диалогов:** `[modal]="true"` (по умолчанию)
-4. **Для поповеров:** `[modal]="false"` + `trapOverlayFocus` c default guard (выключен для non-modal категорий)
-
-### Тестирование
-
-```typescript
-it('should close on Escape', fakeAsync(() => {
-  component.isOpen.set(true);
-  tick();
-
-  const event = new KeyboardEvent('keydown', { key: 'Escape' });
-  document.dispatchEvent(event);
-  tick(50);
-
-  expect(component.isOpen()).toBe(false);
-}));
+readonly overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
+  closeOnFocusLeave(overlay);
+  closeOnOutsideClick(overlay);
+  restoreTriggerFocusOnClose(overlay);
+});
 ```
 
----
+## 10) Current Rules
 
-*Дата обновления: 2026-03-26*
-*Версия: CDK v1.x с trapOverlayFocus, OverlayPanel, blockScroll, canClose guards*
+- Keep `isOpen` as source of truth.
+- Use strategy factories, not ad-hoc config objects.
+- Keep close/focus logic in behavior helpers.
+- Keep animations on shell roots, not in container wrappers.
+- Use `fiboOverlayPanel` + title/description directives for modal semantics.

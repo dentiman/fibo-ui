@@ -1,31 +1,11 @@
-import { Directive, inject, OnDestroy, OnInit } from '@angular/core';
+import { Directive, ElementRef, computed, inject, input, model, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { DataListItem } from '../data-list/data-list-item.directive';
 import { KeyboardSource } from '../data-list/keyboard-source';
-import { PopoverTrigger } from '../popover/popover-trigger';
+import { closeOnFocusLeave, closeOnOutsideClick, restoreTriggerFocusOnClose } from '../overlay/overlay-behaviors';
+import { createOverlay, OverlayStack } from '../overlay/overlay-stack';
+import { menuOverlay } from '../overlay/overlay-strategy';
 import { MENU_PANEL } from './menu-panel';
 
-/**
- * Directive that creates a submenu trigger with popover behavior.
- *
- * **Requirements:**
- * - Parent element must have `fiboMenuPanel` directive
- *
- * Features:
- * - Composes DataListItem + PopoverTrigger via hostDirectives
- * - Registers in parent MenuPanel on init
- * - Unregisters on destroy
- * - Keyboard support: Enter to open, ArrowRight to navigate into submenu
- * - Click to open
- *
- * Usage:
- * ```html
- * <div fiboMenuPanel>
- *   <button fiboSubmenuTrigger [disabled]="false">
- *     Menu Item
- *   </button>
- * </div>
- * ```
- */
 @Directive({
   selector: '[fiboSubmenuTrigger]',
   exportAs: 'submenuTrigger',
@@ -34,31 +14,75 @@ import { MENU_PANEL } from './menu-panel';
       directive: DataListItem,
       inputs: ['disabled'],
     },
-    {
-      directive: PopoverTrigger,
-      inputs: ['content'],
-    },
     KeyboardSource,
   ],
   host: {
     'aria-haspopup': 'menu',
-    '(keydown.enter)': 'popoverTrigger.open()',
+    '[attr.aria-expanded]': 'isOpen() || null',
+    '(mouseenter)': 'onMouseEnter()',
+    '(mouseleave)': 'onMouseLeave($event)',
+    '(keydown.enter)': 'open()',
     '(keydown.arrowright)': 'keyboardSource.delegate()?.navigateNext?.($event)',
-    '(click)': 'popoverTrigger.open()',
+    '(click)': 'open()',
   },
 })
 export class SubmenuTrigger implements OnInit, OnDestroy {
-  popoverTrigger = inject(PopoverTrigger);
-  option = inject(DataListItem);
-  keyboardSource = inject(KeyboardSource);
-  private panel = inject(MENU_PANEL);
+  readonly option = inject(DataListItem);
+  readonly keyboardSource = inject(KeyboardSource);
+  private readonly element = inject(ElementRef<HTMLElement>).nativeElement;
+  private readonly panel = inject(MENU_PANEL);
+  private readonly overlayStack = inject(OverlayStack);
+
+  content = input<TemplateRef<any>>();
+  isOpen = model(false, { alias: 'open' });
+
+  strategy = computed(() => {
+    const templateRef = this.content();
+    if (!templateRef) {
+      return null;
+    }
+
+    return menuOverlay({
+      templateRef,
+      referenceElement: this.element,
+      placement: 'right-start',
+      offset: 1,
+    });
+  });
+
+  overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
+    closeOnFocusLeave(overlay);
+    closeOnOutsideClick(overlay);
+    restoreTriggerFocusOnClose(overlay);
+  });
 
   ngOnInit() {
-    this.popoverTrigger.strategyKind.set('menu');
     this.panel.registerSubmenuTrigger(this);
   }
 
   ngOnDestroy() {
     this.panel.unregisterSubmenuTrigger(this);
+  }
+
+  onMouseEnter() {
+    this.panel.activateSubmenu(this);
+  }
+
+  onMouseLeave(event: MouseEvent) {
+    const submenuHandle = this.overlayHandle();
+    const targetOverlayId = this.overlayStack.findOverlayContainerId(event.relatedTarget);
+    if (submenuHandle && this.overlayStack.isOverlayInBranch(submenuHandle.id, targetOverlayId)) {
+      return;
+    }
+
+    this.panel.deactivateSubmenu(this);
+  }
+
+  open() {
+    this.isOpen.set(true);
+  }
+
+  close() {
+    this.isOpen.set(false);
   }
 }

@@ -66,12 +66,25 @@ export class MenuPanel {
   closeAllSubmenus() {
     this.clearTimeouts();
     this.submenuTriggers().forEach(trigger => {
-      trigger.popoverTrigger.close();
+      trigger.close();
     });
+  }
+
+  activateSubmenu(trigger: SubmenuTrigger) {
+    this.clearCloseTimeout();
+    this.scheduleOpen(trigger);
+  }
+
+  deactivateSubmenu(trigger: SubmenuTrigger) {
+    this.scheduleClose(trigger);
   }
 
   closeAll() {
     this.overlayStack.closeAllByCategory('menu');
+  }
+
+  closeAllSoon() {
+    setTimeout(() => this.closeAll(), 0);
   }
 
   focusToTrigger(event: Event) {
@@ -120,14 +133,14 @@ export class MenuPanel {
 
   private handleActiveDataListItemChange(activeItem: DataListItem | null) {
     const activeTrigger = this.findTriggerByDataListItem(activeItem);
-    const openTrigger = this.submenuTriggers().find(trigger => trigger.popoverTrigger.isOpen());
+    const openTrigger = this.submenuTriggers().find(trigger => trigger.isOpen());
 
     if (activeTrigger && openTrigger && activeTrigger !== openTrigger) {
       this.scheduleClose(openTrigger);
     }
 
     if (activeTrigger) {
-      if (activeTrigger.popoverTrigger.isOpen()) {
+      if (activeTrigger.isOpen()) {
         this.clearCloseTimeout();
       }
       this.scheduleOpen(activeTrigger);
@@ -151,8 +164,8 @@ export class MenuPanel {
     this.openTimeout = setTimeout(() => {
       this.submenuTriggers()
         .filter(current => current !== trigger)
-        .forEach(current => current.popoverTrigger.close());
-      trigger.popoverTrigger.open();
+        .forEach(current => current.close());
+      trigger.open();
       this.openTimeout = undefined;
     }, this.openDelay());
   }
@@ -160,7 +173,7 @@ export class MenuPanel {
   private scheduleClose(trigger: SubmenuTrigger) {
     this.clearCloseTimeout();
     this.closeTimeout = setTimeout(() => {
-      trigger.popoverTrigger.close();
+      trigger.close();
       this.closeTimeout = undefined;
     }, this.openDelay());
   }

@@ -1,234 +1,101 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { CommonModule, JsonPipe } from '@angular/common';
-import { LucideAngularModule } from 'lucide-angular';
-import { Combobox, DatePickerField, Select, TextField, type SelectItem } from '@fibo-ui/components';
-import { form, required, FormField } from '@angular/forms/signals';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  DataListKeyboardBridge,
+  KeyboardTarget,
+  PopoverTriggerToggle,
+} from '@fibo-ui/cdk';
+import { Menu, type MenuItemType } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-playground-page',
   standalone: true,
-  imports: [
-    CommonModule,
-    JsonPipe,
-    LucideAngularModule,
-    Combobox,
-    Select,
-    TextField,
-    FormField,
-    DatePickerField,
-  ],
+  imports: [CommonModule, Menu, PopoverTriggerToggle, KeyboardTarget, DataListKeyboardBridge],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto max-w-3xl space-y-8 p-8">
       <section class="space-y-3">
         <h1 class="text-2xl font-semibold">Playground</h1>
         <p class="text-sm text-foreground-secondary">
-          Debug page for signal-form controls. The block below uses the new Select
-          together with other fields and prints live form state.
+          Menu-only debug page for overlay behavior. Open the menus below and verify
+          keyboard navigation, submenu open/close, and outside click behavior.
         </p>
       </section>
 
-      <section class="space-y-6 rounded-xl border border-border-primary bg-background-secondary p-5 shadow-sm">
-        <h2 class="text-lg font-medium text-foreground">Field States</h2>
+      <section class="space-y-4 rounded-xl border border-border-primary bg-background-secondary p-5 shadow-sm">
+        <h2 class="text-lg font-medium text-foreground">Fibo Menu</h2>
 
-        <div class="space-y-1">
-          <p class="text-xs font-medium uppercase tracking-wide text-foreground-tertiary">Disabled</p>
-          <div class="grid gap-4 sm:grid-cols-2">
-            <fibo-text-field
-              [disabled]="true"
-              label="Full name"
-              value="Ada Lovelace"
-              iconStart="user"
-            />
-            <fibo-select
-              [disabled]="true"
-              label="Status"
-              [value]="'done'"
-              [items]="statuses"
-              iconStart="list"
-            />
-          </div>
+        <div class="flex flex-wrap gap-3">
+          <button
+            type="button"
+            class="btn btn-primary"
+            fiboKeyboardTarget
+            #keyboardTarget="KeyboardTarget"
+            fiboPopoverTriggerToggle
+            [content]="menuTpl"
+            placement="bottom-start"
+          >
+            Open Menu
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            fiboKeyboardTarget
+            #keyboardTargetAlt="KeyboardTarget"
+            fiboPopoverTriggerToggle
+            [content]="altMenuTpl"
+            placement="bottom-start"
+          >
+            Open Quick Menu
+          </button>
         </div>
 
-        <div class="space-y-1">
-          <p class="text-xs font-medium uppercase tracking-wide text-foreground-tertiary">Readonly</p>
-          <div class="grid gap-4 sm:grid-cols-2">
-            <fibo-text-field
-              [readonly]="true"
-              label="Full name"
-              value="Grace Hopper"
-              iconStart="user"
-            />
-            <fibo-select
-              [readonly]="true"
-              label="Status"
-              [value]="'in_progress'"
-              [items]="statuses"
-              iconStart="list"
-            />
-          </div>
-        </div>
-
-        <div class="space-y-1">
-          <p class="text-xs font-medium uppercase tracking-wide text-foreground-tertiary">Pending</p>
-          <div class="grid gap-4 sm:grid-cols-2">
-            <fibo-text-field
-              [pending]="true"
-              label="Username"
-              value="alan_turing"
-              hint="Checking availability…"
-              iconStart="mail"
-            />
-            <fibo-select
-              [pending]="true"
-              label="Status"
-              placeholder="Loading options…"
-              iconStart="loader"
-            />
-          </div>
-        </div>
-
-        <div class="space-y-1">
-          <p class="text-xs font-medium uppercase tracking-wide text-foreground-tertiary">Rounded</p>
-          <div class="ff-rounded grid gap-4 sm:grid-cols-2">
-            <fibo-text-field placeholder="Search…" iconStart="search" />
-            <fibo-select placeholder="Filter by status" [items]="statuses" />
-          </div>
-        </div>
-      </section>
-
-      <section class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,360px)]">
-        <div class="space-y-4 rounded-xl border border-border-primary bg-background-secondary p-5 shadow-sm">
-          <h2 class="text-lg font-medium text-foreground">Signal Form Example</h2>
-
-          <fibo-text-field
-            [formField]="debugForm.title"
-            label="Title"
-            hint="Shown under the field until a validation error replaces it."
-            placeholder="Enter task title"
-            iconStart="file-text"
+        <ng-template #menuTpl>
+          <fibo-menu
+            [fiboDataListKeyboardBridge]="keyboardTarget"
+            [items]="menuItems"
           />
+        </ng-template>
 
-          <fibo-select
-            [formField]="debugForm.status"
-            label="Status"
-            hint="Required field. Pick one workflow state."
-            placeholder="Select status"
-            iconStart="list"
-            [items]="statuses"
-            [clearValue]="null"
+        <ng-template #altMenuTpl>
+          <fibo-menu
+            [fiboDataListKeyboardBridge]="keyboardTargetAlt"
+            [items]="quickMenuItems"
           />
-
-          <fibo-combobox
-            [formField]="debugForm.assignee"
-            label="Assignee"
-            placeholder="Search assignee"
-            [items]="assignees"
-          />
-
-          <fibo-datepicker-field
-            [formField]="debugForm.dueDate"
-            label="Due date"
-            hint="Optional date in YYYY-MM-DD format."
-            placeholder="Pick a date"
-          />
-        </div>
-
-        <aside class="space-y-4 rounded-xl border border-white/10 bg-zinc-950 p-5 text-zinc-100 shadow-sm">
-          <div>
-            <h2 class="text-lg font-medium">Form State</h2>
-            <p class="text-xs text-zinc-400">Live snapshot for debugging.</p>
-          </div>
-
-          <dl class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-2 text-sm">
-            <dt class="text-zinc-400">valid</dt>
-            <dd>{{ debugForm().valid() }}</dd>
-            <dt class="text-zinc-400">invalid</dt>
-            <dd>{{ debugForm().invalid() }}</dd>
-            <dt class="text-zinc-400">title error</dt>
-            <dd>{{ titleError() ?? 'none' }}</dd>
-            <dt class="text-zinc-400">status error</dt>
-            <dd>{{ statusError() ?? 'none' }}</dd>
-          </dl>
-
-          <pre class="overflow-auto rounded-lg bg-black/40 p-3 text-xs leading-5">{{
-            debugState() | json
-          }}</pre>
-        </aside>
+        </ng-template>
       </section>
     </div>
   `,
 })
 export class PlaygroundPageComponent {
-  readonly assignees = [
-    'Ada Lovelace',
-    'Alan Turing',
-    'Barbara Liskov',
-    'Grace Hopper',
-    'Linus Torvalds',
-    'Margaret Hamilton',
-  ];
-
-  readonly statuses: SelectItem[] = [
-    { label: 'Backlog', value: 'backlog' },
-    { label: 'In Progress', value: 'in_progress' },
-    { label: 'Blocked', value: 'blocked' },
-    { label: 'Done', value: 'done' },
-  ];
-
-  readonly debugModel = signal({
-    title: '',
-    status: null as string | null,
-    assignee: null as string | null,
-    dueDate: '',
-  });
-
-  readonly debugForm = form(this.debugModel, (path) => {
-    required(path.title, { message: 'Title is required' });
-    required(path.status, { message: 'Status is required' });
-  });
-
-  readonly titleError = computed(() => {
-    const state = this.debugForm.title();
-    return state.invalid() && state.touched() ? state.errors()[0]?.message ?? null : null;
-  });
-
-  readonly statusError = computed(() => {
-    const state = this.debugForm.status();
-    return state.invalid() && state.touched() ? state.errors()[0]?.message ?? null : null;
-  });
-
-  readonly debugState = computed(() => ({
-    model: this.debugModel(),
-    form: {
-      valid: this.debugForm().valid(),
-      invalid: this.debugForm().invalid(),
-      title: {
-        value: this.debugForm.title().value(),
-        touched: this.debugForm.title().touched(),
-        dirty: this.debugForm.title().dirty(),
-        invalid: this.debugForm.title().invalid(),
-        errors: this.debugForm.title().errors().map(error => error.message ?? error.kind),
-      },
-      status: {
-        value: this.debugForm.status().value(),
-        touched: this.debugForm.status().touched(),
-        dirty: this.debugForm.status().dirty(),
-        invalid: this.debugForm.status().invalid(),
-        errors: this.debugForm.status().errors().map(error => error.message ?? error.kind),
-      },
-      assignee: {
-        value: this.debugForm.assignee().value(),
-        touched: this.debugForm.assignee().touched(),
-        dirty: this.debugForm.assignee().dirty(),
-        invalid: this.debugForm.assignee().invalid(),
-      },
-      dueDate: {
-        value: this.debugForm.dueDate().value(),
-        touched: this.debugForm.dueDate().touched(),
-        dirty: this.debugForm.dueDate().dirty(),
-        invalid: this.debugForm.dueDate().invalid(),
-      },
+  readonly menuItems: MenuItemType[] = [
+    { label: 'My Profile', icon: 'user', url: '/form-example' },
+    {
+      label: 'Settings',
+      icon: 'settings',
+      children: [
+        { label: 'Profile Settings', icon: 'user', url: '/form-example' },
+        { label: 'Notifications', icon: 'bell', url: '/notifications' },
+        { label: 'Appearance', icon: 'sun', url: '/theme-demo' },
+      ],
     },
-  }));
+    {
+      label: 'Account & Security',
+      icon: 'shield-check',
+      children: [
+        { label: 'Edit Profile', icon: 'user', url: '/form-example' },
+        { label: 'Change Password', icon: 'lock', url: '/input' },
+        { label: 'Two-Factor Auth', icon: 'shield-check', url: '/switch' },
+        { label: 'Active Sessions', icon: 'monitor', url: '/notifications' },
+      ],
+    },
+    { label: 'Log Out', icon: 'log-out', callback: () => console.log('logout') },
+  ];
+
+  readonly quickMenuItems: MenuItemType[] = [
+    { label: 'Single Select', icon: 'list', url: '/select-single' },
+    { label: 'Multiple Select', icon: 'list-checks', url: '/select-multiple' },
+    { label: 'Datepicker', icon: 'calendar', url: '/datepicker' },
+  ];
 }

@@ -24,6 +24,7 @@ export interface OverlayHandle {
   readonly strategy: OverlayStrategy;
   readonly closed: boolean;
   close(reason?: OverlayCloseReason): void;
+  setInteractionRoot(root: HTMLElement | null): void;
 }
 
 export const OVERLAY_HANDLE = new InjectionToken<OverlayHandle>('OVERLAY_HANDLE');

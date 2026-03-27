@@ -69,6 +69,10 @@ class OverlayHandleImpl implements OverlayHandle {
     this.requestClose?.(reason ?? 'programmatic');
   }
 
+  setInteractionRoot(root: HTMLElement | null): void {
+    this.interactionRootSignal.set(root);
+  }
+
   setRequestClose(requestClose: (reason: OverlayCloseReason, event?: Event) => void): void {
     this.requestClose = requestClose;
   }

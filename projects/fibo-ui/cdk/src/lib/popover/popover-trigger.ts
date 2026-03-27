@@ -7,6 +7,7 @@ import {
 } from '../overlay/overlay-behaviors';
 import { createOverlay } from '../overlay/overlay-stack';
 import { connectedOverlay, menuOverlay } from '../overlay/overlay-strategy';
+import type { Placement } from '@floating-ui/dom';
 
 @Directive({
   selector: '[fiboPopoverTrigger]',
@@ -24,6 +25,9 @@ export class PopoverTrigger {
 
   content = input<TemplateRef<any>>();
   strategyKind = model<'connected' | 'menu'>('connected');
+  placement = model<Placement>('bottom');
+  offset = model<number>(5);
+  matchWidth = model(false);
   delegatesFocus = input(false);
 
   strategy = computed(() => {
@@ -32,20 +36,29 @@ export class PopoverTrigger {
       return null;
     }
 
-    return this.strategyKind() === 'menu'
+    const isMenu = this.strategyKind() === 'menu';
+    const placement = isMenu && this.placement() === 'bottom' ? 'right-start' : this.placement();
+    const offset = isMenu && this.offset() === 5 ? 1 : this.offset();
+
+    return isMenu
       ? menuOverlay({
           templateRef,
           referenceElement: this.element,
+          placement,
+          offset,
         })
       : connectedOverlay({
           templateRef,
           referenceElement: this.element,
+          placement: this.placement(),
+          offset: this.offset(),
+          matchWidth: this.matchWidth(),
         });
   });
 
   overlayHandle = createOverlay(
     this.isOpen,
-    this.strategy as any,
+    this.strategy,
     overlay => {
       closeOnFocusLeave(overlay);
       closeOnOutsideClick(overlay);
@@ -82,7 +95,7 @@ export class PopoverTrigger {
   hostDirectives: [
     {
       directive: PopoverTrigger,
-      inputs: ['content', 'strategyKind', 'delegatesFocus'],
+      inputs: ['content', 'strategyKind', 'placement', 'offset', 'matchWidth', 'delegatesFocus'],
     },
   ],
   host: {
@@ -99,7 +112,7 @@ export class PopoverTriggerClick {
   hostDirectives: [
     {
       directive: PopoverTrigger,
-      inputs: ['content', 'strategyKind', 'delegatesFocus'],
+      inputs: ['content', 'strategyKind', 'placement', 'offset', 'matchWidth', 'delegatesFocus'],
     },
   ],
   host: {

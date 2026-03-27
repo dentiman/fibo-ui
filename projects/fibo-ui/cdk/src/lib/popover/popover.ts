@@ -100,4 +100,8 @@ export class Popover {
   close() {
     this.overlayHandle.close();
   }
+
+  setInteractionRoot(root: HTMLElement | null): void {
+    this.overlayHandle.setInteractionRoot(root);
+  }
 }

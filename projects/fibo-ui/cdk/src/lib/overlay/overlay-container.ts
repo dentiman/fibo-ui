@@ -25,24 +25,7 @@ import { OverlayPlainShellComponent } from './overlay-plain-shell.component';
   },
   styles: `
     :host {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    .overlay-leave {
-      animation: overlay-fade-out 200ms ease-in forwards;
-    }
-
-    .overlay-layer {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    @keyframes overlay-fade-out {
-      from { opacity: 1; }
-      to { opacity: 0; }
+      display: contents;
     }
   `,
 })
@@ -89,13 +72,5 @@ export class OverlayContainerComponent {
       default:
         return OverlayPlainShellComponent;
     }
-  }
-
-  handleOverlayAnimationEnd(overlayId: string, event: AnimationEvent): void {
-    if (event.target !== event.currentTarget || event.animationName !== 'overlay-fade-out') {
-      return;
-    }
-
-    this.overlayStack.completeAfterClose(overlayId);
   }
 }

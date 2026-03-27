@@ -1,89 +1,101 @@
 # Overlay Strategies
 
-This document introduces the first migration step toward strategy-driven overlays.
+Current strategy presets in `projects/fibo-ui/cdk/src/lib/overlay/overlay-strategy.ts`.
 
-## Goal
+## Shared Base Options
 
-- keep `createOverlay(...)` as the runtime entry point
-- move from ad-hoc category handling to typed strategies
-- prepare a future shell-driven rendering model
+Every strategy accepts:
 
-## Current contract
+- `templateRef: TemplateRef<any>`
+- `referenceElement?: HTMLElement | null`
+- `interactionRoot?: HTMLElement | null`
+- `focusReturnTarget?: HTMLElement | null`
 
-```ts
-createOverlay(isOpen, connectedOverlay({...}), session => {
-  closeOnOutsideClick(session);
-});
+`createOverlay(...)` uses `strategy.config` to sync render inputs while open.
 
-createOverlay(isOpen, modalOverlay({...}), session => {
-  restoreTriggerFocusOnClose(session);
-  trapOverlayFocus(session);
-});
-```
-
-## Strategy types
+## Strategy Kinds
 
 ```ts
-type OverlayStrategyKind = 'connected' | 'modal' | 'menu' | 'tooltip';
+type OverlayStrategyKind = 'connected' | 'modal' | 'menu' | 'tooltip' | 'notification';
 ```
 
-### Connected overlay
+## Presets
 
-Use for anchored floating content like select, combobox, datepicker, and simple popovers.
+### `connectedOverlay(options)`
+
+For anchored interactive popovers (select, combobox, datepicker, custom popover).
+
+Extra options:
+
+- `placement?: Placement` (default in shell: `'bottom'`)
+- `matchWidth?: boolean` (default `false`)
+- `offset?: number` (default in shell: `5`)
+
+Defaults metadata:
+
+- `category: 'popover'`
+- `defaultBehaviors: ['closeOnOutsideClick', 'closeOnFocusLeave', 'restoreTriggerFocusOnClose']`
+
+### `modalOverlay(options)`
+
+For dialogs and confirmations.
+
+Extra options:
+
+- `backdropClosable?: boolean` (default `true`)
+- `blockScroll?: boolean` (default `true`)
+
+Defaults metadata:
+
+- `category: 'dialog'`
+- `defaultBehaviors: ['trapOverlayFocus', 'restoreTriggerFocusOnClose']`
+
+### `menuOverlay(options)`
+
+For root menus and submenus.
+
+Extra options:
+
+- `placement?: Placement` (default `'right-start'`)
+- `offset?: number` (default `1`)
+- `openDelay?: number` (default `0`)
+- `closeDelay?: number` (default `0`)
+
+Defaults metadata:
+
+- `category: 'menu'`
+- `defaultBehaviors: ['closeOnOutsideClick', 'closeOnFocusLeave', 'restoreTriggerFocusOnClose']`
+
+### `tooltipOverlay(options)`
+
+For passive floating hints.
+
+Extra options:
+
+- `placement?: Placement` (default in shell: `'top'`)
+- `showDelay?: number` (default `0`)
+- `hideDelay?: number` (default `0`)
+
+Defaults metadata:
+
+- `category: 'tooltip'`
+- `defaultBehaviors: ['closeOnScroll']`
+
+### `notificationOverlay(options)`
+
+For global toast/notification containers.
+
+Defaults metadata:
+
+- `category: 'notification'`
+- `defaultBehaviors: []`
+
+## Important Notes
+
+- `defaultBehaviors` are strategy metadata. Behaviors are still attached in `setup` manually.
+- `category` affects z-index tier and Escape handling.
+- Runtime entry point stays the same for all presets:
 
 ```ts
-const strategy = connectedOverlay({
-  templateRef: contentTpl,
-  referenceElement: triggerEl,
-  placement: 'bottom',
-  matchWidth: true,
-});
+createOverlay(isOpenSignal, strategySignalOrValue, setup?);
 ```
-
-### Modal overlay
-
-Use for dialogs and confirmations.
-
-```ts
-const strategy = modalOverlay({
-  templateRef: dialogTpl,
-  focusReturnTarget: triggerEl,
-});
-```
-
-### Menu overlay
-
-Use for menu and submenu flows.
-
-```ts
-const strategy = menuOverlay({
-  templateRef: menuTpl,
-  referenceElement: triggerEl,
-});
-```
-
-### Tooltip overlay
-
-Use for passive non-interactive floating content.
-
-```ts
-const strategy = tooltipOverlay({
-  templateRef: tooltipTpl,
-  referenceElement: hostEl,
-});
-```
-
-## What each strategy carries
-
-- `kind` — intent of the overlay
-- `shell` — future rendering shell kind
-- `category` — transitional runtime mapping for the current stack
-- `config` — normalized render config for the current implementation
-- `defaultBehaviors` — built-in lifecycle policy ids
-
-## Migration order
-
-1. introduce strategy factories and typed contracts
-2. migrate consumers gradually
-3. move DOM shell rendering into strategy-owned shell components
-4. remove category-centric usage from consumers

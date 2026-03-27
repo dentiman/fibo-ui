@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input, TemplateRef } from '@angular/core';
-import { DataListItem, MenuPanel, Popover, SubmenuTrigger } from '@fibo-ui/cdk';
-import { RouterLink } from '@angular/router';
+import { Component, computed, ElementRef, inject, input, TemplateRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { DataListItem, MenuPanel, SubmenuTrigger, OVERLAY_HANDLE } from '@fibo-ui/cdk';
 import { LucideAngularModule } from 'lucide-angular';
 import { MenuItemType } from '../menu-item.type';
 
@@ -14,10 +14,10 @@ import { MenuItemType } from '../menu-item.type';
     },
   ],
   host: {
-    'class': 'popover-container  group min-w-40',
+    'class': 'group min-w-40',
     'role': 'menu',
   },
-  imports: [CommonModule, DataListItem, SubmenuTrigger, RouterLink, LucideAngularModule, Popover],
+  imports: [CommonModule, DataListItem, SubmenuTrigger, LucideAngularModule],
   templateUrl: './menu.html',
 })
 export class Menu {
@@ -25,4 +25,16 @@ export class Menu {
   menuContent = input<TemplateRef<any>>();
   itemsHaveIcons = computed(() => this.items()?.some((item) => !!item.icon));
   menuPanel = inject(MenuPanel);
+  private readonly elementRef = inject(ElementRef<HTMLElement>);
+  private readonly overlayHandle = inject(OVERLAY_HANDLE) as { setInteractionRoot(root: HTMLElement | null): void };
+  private readonly router = inject(Router);
+
+  constructor() {
+    this.overlayHandle.setInteractionRoot(this.elementRef.nativeElement);
+  }
+
+  navigate(url: string) {
+    this.menuPanel.closeAllSoon();
+    void this.router.navigateByUrl(url);
+  }
 }

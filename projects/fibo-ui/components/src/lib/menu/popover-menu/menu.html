@@ -6,7 +6,7 @@
       role="menuitem"
       [content]="subTpl"
       [disabled]="!!item.disabled"
-      class="datalist-item py-1 px-2 w-full rounded-md items-center group text-sm"
+      class="datalist-item py-1 px-2 w-full rounded-md items-center group text-sm text-left"
     >
       @if (item?.icon) {
         <lucide-icon
@@ -25,50 +25,45 @@
     </button>
 
     <ng-template #subTpl>
-      <fibo-menu
-        fiboPopover
-        [keyboardSource]="keyboardSource"
-        [offset]="1"
-        placement="right-start"
-        [menuContent]="item.content"
-        [items]="item.children"
-      />
+      <fibo-menu [keyboardSource]="keyboardSource" [menuContent]="item.content" [items]="item.children" />
     </ng-template>
 
   } @else {
     @if (item.url) {
-      <a
+      <button
+        type="button"
         fiboDataListItem
         role="menuitem"
         [value]="item"
         [disabled]="!!item.disabled"
-        (itemTrigger)="menuPanel.closeAll()"
-        [routerLink]="item.url"
-        class="datalist-item"
+        (click)="navigate(item.url)"
+        class="datalist-item w-full text-left"
       >
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
-      </a>
+      </button>
     } @else if (item.callback) {
-      <a
-        class="datalist-item py-1 px-2 rounded-md relative group text-sm"
+      <button
+        type="button"
+        class="datalist-item py-1 px-2 rounded-md relative group text-sm w-full text-left"
         fiboDataListItem
         role="menuitem"
         [disabled]="!!item.disabled"
-        (itemTrigger)="item.callback(); menuPanel.closeAll()"
+        (click)="item.callback(); menuPanel.closeAllSoon()"
       >
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
-      </a>
+      </button>
     } @else if (item.value !== undefined) {
-      <a
-        class="datalist-item py-1 px-2 rounded-md relative group text-sm"
+      <button
+        type="button"
+        class="datalist-item py-1 px-2 rounded-md relative group text-sm w-full text-left"
         fiboDataListItem
         role="menuitem"
         [disabled]="!!item.disabled"
         [value]="item.value"
-        (itemTrigger)="menuPanel.closeAll()"
+        (click)="menuPanel.closeAllSoon()"
       >
         <span [class.ml-6]="itemsHaveIcons()">{{ item.label }}</span>
-      </a>
+      </button>
     }
   }
 }
