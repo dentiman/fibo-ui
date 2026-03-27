@@ -2,11 +2,10 @@ import { CommonModule, NgTemplateOutlet } from '@angular/common';
 import { Component, Injector, ViewEncapsulation, computed, inject } from '@angular/core';
 import { OverlayHandle, OVERLAY_HANDLE } from './overlay-handle';
 import { Popover } from '../popover/popover';
-import { PopoverArrow } from '../popover/popover-arrow';
 
 @Component({
   selector: 'fibo-overlay-connected-shell',
-  imports: [CommonModule, NgTemplateOutlet, Popover, PopoverArrow],
+  imports: [CommonModule, NgTemplateOutlet, Popover],
   template: `
     <div
       fiboPopover
@@ -19,12 +18,10 @@ import { PopoverArrow } from '../popover/popover-arrow';
       @if (handle.templateRef) {
         <ng-container *ngTemplateOutlet="handle.templateRef; injector: injector"></ng-container>
       }
-
-      <div PopoverArrow class="overlay-connected-shell-arrow"></div>
     </div>
   `,
   host: {
-    class: 'pointer-events-auto',
+    style: 'display: contents;',
   },
   encapsulation: ViewEncapsulation.None,
 })

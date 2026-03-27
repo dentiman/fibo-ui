@@ -11,7 +11,7 @@ Complete documentation for fibo-ui CDK overlay system.
 
 **Topics:**
 - Architecture (createOverlay, OverlayStack, OverlayContainer, OverlayHandle, OverlaySession)
-- Composable behaviors (closeOnOutsideClick, closeOnFocusLeave, trapOverlayFocus, blockScroll, closeOnScroll, etc.)
+- Composable behaviors (closeOnOutsideClick, closeOnFocusLeave, trapOverlayFocus, closeOnScroll, etc.)
 - ARIA and accessibility (OverlayPanel, OverlayTitle, OverlayDescription directives)
 - Focus management (`trapOverlayFocus` + `restoreTriggerFocusOnClose`)
 - Close guards (conditional closing)

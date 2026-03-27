@@ -34,6 +34,10 @@ describe('overlay strategies', () => {
     expect(strategy.shell).toBe('modal');
     expect(strategy.category).toBe('dialog');
     expect(strategy.options.blockScroll).toBe(true);
+    expect(strategy.defaultBehaviors).toEqual([
+      'trapOverlayFocus',
+      'restoreTriggerFocusOnClose',
+    ]);
   });
 
   it('creates a menu strategy preset', () => {

@@ -1,10 +1,5 @@
 import { Directive, ElementRef, computed, inject, input, model, TemplateRef } from '@angular/core';
-import {
-  blockScroll,
-  closeOnBackdropClick,
-  restoreTriggerFocusOnClose,
-  trapOverlayFocus,
-} from '../overlay/overlay-behaviors';
+import { restoreTriggerFocusOnClose, trapOverlayFocus } from '../overlay/overlay-behaviors';
 import { createOverlay } from '../overlay/overlay-stack';
 import { modalOverlay } from '../overlay/overlay-strategy';
 
@@ -32,13 +27,12 @@ export class DialogTrigger {
     return modalOverlay({
       templateRef,
       referenceElement: this.element,
+      backdropClosable: true,
     });
   });
 
-  overlayHandle = createOverlay(this.isOpen, this.strategy as any, overlay => {
-    closeOnBackdropClick(overlay);
+  overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
     restoreTriggerFocusOnClose(overlay);
-    blockScroll(overlay);
     trapOverlayFocus(overlay);
   });
 

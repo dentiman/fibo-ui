@@ -151,17 +151,18 @@ Use `[fiboFocusInitial]` marker on an element inside overlay content to override
 
 Returns focus to the reference element when close completes from inside the same overlay branch.
 
-### `closeOnBackdropClick(...)`
+### `backdropClosable` / `blockScroll`
 
-Closes when interaction lands on the backdrop area instead of the marked overlay surface (marked with `fiboOverlayPanel`).
-
-### `blockScroll(...)`
-
-Blocks document scroll while the overlay is open. Preserves scroll position, compensates for scrollbar width, and prevents layout shift. Supports nested overlays through reference counting.
+Modal overlays can close on backdrop click and lock document scroll through strategy options:
 
 ```ts
-createOverlay(isOpen, config, overlay => {
-  blockScroll(overlay);  // For modal dialogs
+createOverlay(isOpen, modalOverlay({
+  templateRef,
+  backdropClosable: true,
+  blockScroll: true,
+}), overlay => {
+  restoreTriggerFocusOnClose(overlay);
+  trapOverlayFocus(overlay);
 });
 ```
 

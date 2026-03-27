@@ -16,8 +16,8 @@ createOverlay(isOpen, connectedOverlay({...}), session => {
 });
 
 createOverlay(isOpen, modalOverlay({...}), session => {
-  closeOnBackdropClick(session);
-  blockScroll(session);
+  restoreTriggerFocusOnClose(session);
+  trapOverlayFocus(session);
 });
 ```
 

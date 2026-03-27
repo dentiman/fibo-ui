@@ -11,7 +11,7 @@ import { OverlayHandle, OVERLAY_HANDLE } from './overlay-handle';
     }
   `,
   host: {
-    class: 'pointer-events-auto',
+    style: 'display: contents;',
   },
   encapsulation: ViewEncapsulation.None,
 })

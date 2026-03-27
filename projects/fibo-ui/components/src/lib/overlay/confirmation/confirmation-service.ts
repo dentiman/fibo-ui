@@ -1,12 +1,5 @@
 import {computed, Injectable, signal, TemplateRef} from '@angular/core';
-import {
-  blockScroll,
-  closeOnBackdropClick,
-  createOverlay,
-  modalOverlay,
-  restoreTriggerFocusOnClose,
-  trapOverlayFocus,
-} from '@fibo-ui/cdk';
+import {createOverlay, modalOverlay, restoreTriggerFocusOnClose, trapOverlayFocus} from '@fibo-ui/cdk';
 
 export type ConfirmationContent =
   | {
@@ -49,11 +42,9 @@ export class ConfirmationService {
 
   overlayHandle = createOverlay(
     this.isOpen,
-    this.strategy as any,
+    this.strategy,
     overlay => {
-      closeOnBackdropClick(overlay);
       restoreTriggerFocusOnClose(overlay);
-      blockScroll(overlay);
       trapOverlayFocus(overlay);
       overlay.afterClose(() => {
         if (!this.isOpen()) {

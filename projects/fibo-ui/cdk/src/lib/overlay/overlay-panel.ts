@@ -18,8 +18,8 @@ export const OVERLAY_PANEL = new InjectionToken<OverlayPanel>('OverlayPanel');
  * Marks the panel element inside an overlay container.
  *
  * Responsibilities:
- * - Sets `data-dialog-panel` (used by `closeOnBackdropClick` to distinguish
- *   the panel from the backdrop area)
+ * - Sets `data-dialog-panel` so modal shells can distinguish the panel from
+ *   the backdrop area
  * - Applies `role`, `aria-modal`, `aria-labelledby`, and `aria-describedby`
  *   attributes automatically
  *

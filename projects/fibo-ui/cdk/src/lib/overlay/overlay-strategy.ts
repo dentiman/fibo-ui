@@ -11,8 +11,6 @@ export type OverlayRuntimeCategory = 'popover' | 'menu' | 'dialog' | 'tooltip' |
 export type OverlayBehaviorId =
   | 'closeOnOutsideClick'
   | 'closeOnFocusLeave'
-  | 'closeOnBackdropClick'
-  | 'blockScroll'
   | 'trapOverlayFocus'
   | 'restoreTriggerFocusOnClose'
   | 'closeOnScroll';
@@ -105,8 +103,6 @@ export function modalOverlay(options: ModalOverlayOptions): ModalOverlayStrategy
     options: Object.freeze({ blockScroll: true, backdropClosable: true, ...options }),
     config: normalizeRenderConfig(options, 'dialog'),
     defaultBehaviors: Object.freeze([
-      'closeOnBackdropClick',
-      'blockScroll',
       'trapOverlayFocus',
       'restoreTriggerFocusOnClose',
     ]),
