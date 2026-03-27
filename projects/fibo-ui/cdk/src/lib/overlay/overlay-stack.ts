@@ -5,15 +5,14 @@ import {
   EffectRef,
   Injectable,
   Injector,
-  Signal,
-  WritableSignal,
   computed,
   effect,
   inject,
   signal,
   untracked,
 } from '@angular/core';
-import { OverlayCategory, OverlayHandle } from './overlay-handle';
+import type { Signal, WritableSignal } from '@angular/core';
+import type { OverlayCategory, OverlayHandle } from './overlay-handle';
 import {
   CreateOverlayHandleOptions,
   createOverlayHandleInternal,
@@ -21,14 +20,14 @@ import {
   setOverlayHandleRequestCloseInternal,
   syncOverlayHandleRenderConfigInternal,
 } from './overlay-handle-internal';
+import type { OverlayCloseContext, OverlayCloseReason } from './overlay-types';
 import {
-  OverlayCloseContext,
-  OverlayCloseReason,
   OverlayRenderConfig,
   OverlayRenderConfigSignal,
   OverlaySession,
   OverlayStackEntry,
 } from './overlay-session';
+import type { OverlayStrategy } from './overlay-strategy';
 
 const BASE_Z_INDEX: Record<OverlayCategory, number> = {
   dialog: 500,
@@ -142,7 +141,22 @@ export class OverlayStack {
     isOpen: WritableSignal<boolean>,
     config: OverlayRenderConfigSignal,
     setup?: (overlay: OverlaySession) => void,
+  ): Signal<OverlayHandle | null>;
+  createOverlay(
+    isOpen: WritableSignal<boolean>,
+    strategy: OverlayStrategy,
+    setup?: (overlay: OverlaySession) => void,
+  ): Signal<OverlayHandle | null>;
+  createOverlay(
+    isOpen: WritableSignal<boolean>,
+    configOrStrategy: OverlayRenderConfigSignal | OverlayStrategy,
+    setup?: (overlay: OverlaySession) => void,
   ): Signal<OverlayHandle | null> {
+    const config: OverlayRenderConfigSignal =
+      typeof configOrStrategy === 'function'
+        ? configOrStrategy
+        : computed(() => configOrStrategy.config);
+
     const overlayHandle = signal<OverlayHandle | null>(null);
     const destroyRef = inject(DestroyRef);
     const injector = inject(Injector);
@@ -396,8 +410,18 @@ export class OverlayStack {
 
 export function createOverlay(
   isOpen: WritableSignal<boolean>,
-  config: OverlayRenderConfigSignal,
+  configOrStrategy: OverlayRenderConfigSignal | OverlayStrategy,
+  setup?: (overlay: OverlaySession) => void,
+): Signal<OverlayHandle | null>;
+export function createOverlay(
+  isOpen: WritableSignal<boolean>,
+  configOrStrategy: OverlayRenderConfigSignal | OverlayStrategy,
   setup?: (overlay: OverlaySession) => void,
 ): Signal<OverlayHandle | null> {
-  return inject(OverlayStack).createOverlay(isOpen, config, setup);
+  const overlayStack = inject(OverlayStack);
+  if (typeof configOrStrategy === 'function') {
+    return overlayStack.createOverlay(isOpen, configOrStrategy, setup);
+  }
+
+  return overlayStack.createOverlay(isOpen, configOrStrategy, setup);
 }

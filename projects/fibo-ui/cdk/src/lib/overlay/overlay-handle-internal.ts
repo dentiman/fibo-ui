@@ -1,5 +1,5 @@
 import { Signal, TemplateRef, WritableSignal, signal } from '@angular/core';
-import type { OverlayCloseReason } from './overlay-session';
+import type { OverlayCloseReason } from './overlay-types';
 import { OverlayCategory, OverlayHandle } from './overlay-handle';
 
 export interface CreateOverlayHandleOptions {

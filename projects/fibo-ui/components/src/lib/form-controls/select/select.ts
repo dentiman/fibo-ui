@@ -78,30 +78,29 @@ export interface SelectItem {
     </fibo-field-shell>
 
     <ng-template #selectTpl>
-      <div
-        fiboPopover
-        role="listbox"
-        [attr.id]="fieldShell.idFor('listbox')"
-        [keyboardSource]="keyboardSource"
-        [matchWidth]="true"
-        fiboDataList
-        (itemTriggered)="close()"
-        fiboSelectOne
-        [(value)]="value"
-        class="popover-container"
-      >
-        @for (item of items(); track item.value) {
-          <button
-            type="button"
-            fiboDataListItem
-            role="option"
-            [value]="item.value"
-            [attr.aria-selected]="value() === item.value"
-            class="datalist-item w-full text-left"
-          >
-            {{ item.label }}
-          </button>
-        }
+      <div fiboPopover [matchWidth]="true" class="popover-container">
+        <div
+          role="listbox"
+          [attr.id]="fieldShell.idFor('listbox')"
+          [keyboardSource]="keyboardSource"
+          fiboDataList
+          (itemTriggered)="close()"
+          fiboSelectOne
+          [(value)]="value"
+        >
+          @for (item of items(); track item.value) {
+            <button
+              type="button"
+              fiboDataListItem
+              role="option"
+              [value]="item.value"
+              [attr.aria-selected]="value() === item.value"
+              class="datalist-item w-full text-left"
+            >
+              {{ item.label }}
+            </button>
+          }
+        </div>
       </div>
     </ng-template>
   `,

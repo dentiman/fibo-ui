@@ -9,11 +9,12 @@ import {
 import { CommonModule } from '@angular/common';
 import { OVERLAY_HANDLE, OverlayHandle } from './overlay-handle';
 import { OverlayStack } from './overlay-stack';
+import { Popover } from '../popover/popover';
 
 // DOM container responsible for rendering the current overlay stack.
 @Component({
   selector: 'fibo-cdk-overlay-container',
-  imports: [CommonModule],
+  imports: [CommonModule, Popover],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: './overlay-container.html',

@@ -65,6 +65,19 @@ Status report of improvements made to the overlay system (with latest addendum f
 
 ---
 
+## 🧭 Strategy Migration
+
+### [overlay-strategies.md](./overlay-strategies.md)
+First-step migration note for typed overlay strategies and preset factories.
+
+**Topics:**
+- strategy kinds and presets
+- connected/modal/menu/tooltip examples
+- transitional runtime mapping
+- migration order
+
+---
+
 ## 📋 Code Review & Analysis
 
 ### [overlay-code-review.md](./overlay-code-review.md)

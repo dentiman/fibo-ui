@@ -1,5 +1,6 @@
-import { OverlayCloseContext, OverlaySession } from './overlay-session';
-import { OverlayCategory, OverlayHandle } from './overlay-handle';
+import type { OverlayCloseContext } from './overlay-types';
+import type { OverlaySession } from './overlay-session';
+import type { OverlayCategory, OverlayHandle } from './overlay-handle';
 
 const TABBABLE_SELECTOR = [
   'a[href]:not([tabindex="-1"])',

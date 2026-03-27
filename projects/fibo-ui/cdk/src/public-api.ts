@@ -53,6 +53,8 @@ export * from './lib/date/select-date-range';
 export * from './lib/dialog/dialog-trigger';
 export { OVERLAY_HANDLE, type OverlayCategory, type OverlayHandle } from './lib/overlay/overlay-handle';
 export * from './lib/overlay/overlay-session';
+export * from './lib/overlay/overlay-types';
+export * from './lib/overlay/overlay-strategy';
 export * from './lib/overlay/overlay-stack';
 export * from './lib/overlay/overlay-behaviors';
 export * from './lib/overlay/overlay-container';

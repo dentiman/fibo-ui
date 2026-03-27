@@ -1,10 +1,7 @@
-import { EffectRef, Signal, TemplateRef, effect } from '@angular/core';
-import { OverlayCategory, OverlayHandle } from './overlay-handle';
-
-// Close-time interaction state passed into lifecycle hooks.
-export interface OverlayCloseContext {
-  activeElement: HTMLElement | null;
-}
+import { effect } from '@angular/core';
+import type { EffectRef, Signal, TemplateRef } from '@angular/core';
+import type { OverlayCategory, OverlayHandle } from './overlay-handle';
+import type { OverlayCloseContext, OverlayCloseReason } from './overlay-types';
 
 // Declarative render inputs for one overlay cycle.
 export interface OverlayRenderConfig {
@@ -14,16 +11,6 @@ export interface OverlayRenderConfig {
   focusReturnTarget?: HTMLElement | null;
   category: OverlayCategory;
 }
-
-export type OverlayCloseReason =
-  | 'programmatic'
-  | 'escape'
-  | 'focusout'
-  | 'outside-click'
-  | 'backdrop'
-  | 'blur'
-  | 'state'
-  | 'destroy';
 
 /**
  * Guard that can prevent an overlay from closing.

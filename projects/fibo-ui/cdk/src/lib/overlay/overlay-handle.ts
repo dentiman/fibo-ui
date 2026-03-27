@@ -1,5 +1,6 @@
-import { InjectionToken, Signal, TemplateRef } from '@angular/core';
-import type { OverlayCloseReason } from './overlay-session';
+import { InjectionToken } from '@angular/core';
+import type { Signal, TemplateRef } from '@angular/core';
+import type { OverlayCloseReason } from './overlay-types';
 
 export type OverlayCategory =
   | 'popover'
