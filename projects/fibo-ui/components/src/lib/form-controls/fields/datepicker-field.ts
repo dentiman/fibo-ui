@@ -4,8 +4,8 @@ import {
   closeOnFocusLeave,
   closeOnOutsideClick,
   createOverlay,
+  connectedOverlay,
   OverlayPanel,
-  Popover,
   SelectDate,
   trapOverlayFocus,
   provideFormValueControl,
@@ -24,7 +24,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       inputs: [...FORM_UI_STATE_INPUTS],
     },
   ],
-  imports: [FieldShell, FieldTargetDirective, Popover, Calendar, SelectDate, OverlayPanel],
+  imports: [FieldShell, FieldTargetDirective, Calendar, SelectDate, OverlayPanel],
   host: {
     class: 'block',
   },
@@ -67,14 +67,12 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
     <ng-template #calendarTpl>
       <fibo-calendar
-        fiboPopover
         [attr.id]="dialogId()"
-        #popover="Popover"
         fiboSelectDate
         fiboOverlayPanel
         [modal]="false"
         [(value)]="value"
-        (itemTriggered)="popover.close()"
+        (itemTriggered)="close()"
         class="popover-container"
       />
     </ng-template>
@@ -94,14 +92,20 @@ export class DatePickerField implements FormValueControl<string> {
   readonly placeholder = input<string>('');
   readonly iconStart = input<string>('');
   readonly dialogId = computed(() => this.fieldShell().idFor('dialog'));
-  readonly overlayConfig = computed(() => ({
-    templateRef: this.calendarTemplate(),
-    referenceElement: this.fieldShell().overlayReferenceElement(),
-    interactionRoot: this.fieldShell().overlayInteractionRoot(),
-    focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
-    category: 'popover' as const,
-  }));
-  readonly overlayHandle = createOverlay(this.isOpen, this.overlayConfig, overlay => {
+  readonly strategy = computed(() => {
+    const templateRef = this.calendarTemplate();
+    if (!templateRef) {
+      return null;
+    }
+
+    return connectedOverlay({
+      templateRef,
+      referenceElement: this.fieldShell().overlayReferenceElement(),
+      interactionRoot: this.fieldShell().overlayInteractionRoot(),
+      focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
+    });
+  });
+  readonly overlayHandle = createOverlay(this.isOpen, this.strategy as any, overlay => {
     closeOnFocusLeave(overlay);
     closeOnOutsideClick(overlay);
     restoreTriggerFocusOnClose(overlay);

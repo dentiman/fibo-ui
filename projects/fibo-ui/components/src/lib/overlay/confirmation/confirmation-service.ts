@@ -3,6 +3,7 @@ import {
   blockScroll,
   closeOnBackdropClick,
   createOverlay,
+  modalOverlay,
   restoreTriggerFocusOnClose,
   trapOverlayFocus,
 } from '@fibo-ui/cdk';
@@ -34,15 +35,21 @@ export class ConfirmationService {
   // content is visible while the outlet wrapper fades out.
   config = signal<ConfirmationConfig | null>(null);
 
-  overlayConfig = computed(() => ({
-    templateRef: this.containerTemplateRef() ?? undefined,
-    referenceElement: this.config()?.referenceElement ?? null,
-    category: 'confirmation' as const,
-  }));
+  strategy = computed(() => {
+    const templateRef = this.containerTemplateRef();
+    if (!templateRef) {
+      return null;
+    }
+
+    return modalOverlay({
+      templateRef,
+      referenceElement: this.config()?.referenceElement ?? null,
+    });
+  });
 
   overlayHandle = createOverlay(
     this.isOpen,
-    this.overlayConfig,
+    this.strategy as any,
     overlay => {
       closeOnBackdropClick(overlay);
       restoreTriggerFocusOnClose(overlay);

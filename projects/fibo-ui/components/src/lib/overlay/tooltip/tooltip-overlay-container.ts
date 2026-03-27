@@ -8,12 +8,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
-import {Popover, PopoverArrow} from '@fibo-ui/cdk';
 import {TooltipService} from './tooltip-service';
 
 @Component({
   selector: 'fibo-tooltip-overlay-container',
-  imports: [NgTemplateOutlet, Popover, PopoverArrow],
+  imports: [NgTemplateOutlet],
   templateUrl: './tooltip-overlay-container.html',
   encapsulation: ViewEncapsulation.None,
   styles: `

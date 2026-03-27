@@ -1,10 +1,12 @@
 import type { TemplateRef } from '@angular/core';
+import type { Placement } from '@floating-ui/dom';
+import type { OverlayRenderConfig } from './overlay-session';
 
-export type OverlayStrategyKind = 'connected' | 'modal' | 'menu' | 'tooltip';
+export type OverlayStrategyKind = 'connected' | 'modal' | 'menu' | 'tooltip' | 'notification';
 
 export type OverlayShellKind = OverlayStrategyKind;
 
-export type OverlayRuntimeCategory = 'popover' | 'menu' | 'dialog' | 'tooltip';
+export type OverlayRuntimeCategory = 'popover' | 'menu' | 'dialog' | 'tooltip' | 'notification';
 
 export type OverlayBehaviorId =
   | 'closeOnOutsideClick'
@@ -23,7 +25,7 @@ export interface BaseOverlayStrategyOptions {
 }
 
 export interface ConnectedOverlayOptions extends BaseOverlayStrategyOptions {
-  placement?: 'top' | 'bottom' | 'left' | 'right';
+  placement?: Placement;
   matchWidth?: boolean;
   offset?: number;
 }
@@ -39,9 +41,12 @@ export interface MenuOverlayOptions extends BaseOverlayStrategyOptions {
 }
 
 export interface TooltipOverlayOptions extends BaseOverlayStrategyOptions {
+  placement?: Placement;
   showDelay?: number;
   hideDelay?: number;
 }
+
+export interface NotificationOverlayOptions extends BaseOverlayStrategyOptions {}
 
 export interface OverlayStrategyBase<TKind extends OverlayStrategyKind, TOptions> {
   readonly kind: TKind;
@@ -62,6 +67,7 @@ export type ConnectedOverlayStrategy = OverlayStrategyBase<'connected', Connecte
 export type ModalOverlayStrategy = OverlayStrategyBase<'modal', ModalOverlayOptions>;
 export type MenuOverlayStrategy = OverlayStrategyBase<'menu', MenuOverlayOptions>;
 export type TooltipOverlayStrategy = OverlayStrategyBase<'tooltip', TooltipOverlayOptions>;
+export type NotificationOverlayStrategy = OverlayStrategyBase<'notification', NotificationOverlayOptions>;
 
 function normalizeRenderConfig(
   options: BaseOverlayStrategyOptions,
@@ -133,8 +139,20 @@ export function tooltipOverlay(options: TooltipOverlayOptions): TooltipOverlaySt
   };
 }
 
+export function notificationOverlay(options: NotificationOverlayOptions): NotificationOverlayStrategy {
+  return {
+    kind: 'notification',
+    shell: 'notification',
+    category: 'notification',
+    options: Object.freeze({ ...options }),
+    config: normalizeRenderConfig(options, 'notification'),
+    defaultBehaviors: Object.freeze([]),
+  };
+}
+
 export type OverlayStrategy =
   | ConnectedOverlayStrategy
   | ModalOverlayStrategy
   | MenuOverlayStrategy
-  | TooltipOverlayStrategy;
+  | TooltipOverlayStrategy
+  | NotificationOverlayStrategy;

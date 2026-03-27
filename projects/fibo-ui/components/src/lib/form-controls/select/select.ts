@@ -7,8 +7,8 @@ import {
   DataList,
   DataListItem,
   KeyboardSource,
-  Popover,
   SelectOne,
+  connectedOverlay,
   provideFormValueControl,
   restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
@@ -33,7 +33,6 @@ export interface SelectItem {
   imports: [
     FieldShell,
     FieldTargetDirective,
-    Popover,
     DataList,
     KeyboardSource,
     SelectOne,
@@ -78,29 +77,27 @@ export interface SelectItem {
     </fibo-field-shell>
 
     <ng-template #selectTpl>
-      <div fiboPopover [matchWidth]="true" class="popover-container">
-        <div
-          role="listbox"
-          [attr.id]="fieldShell.idFor('listbox')"
-          [keyboardSource]="keyboardSource"
-          fiboDataList
-          (itemTriggered)="close()"
-          fiboSelectOne
-          [(value)]="value"
-        >
-          @for (item of items(); track item.value) {
-            <button
-              type="button"
-              fiboDataListItem
-              role="option"
-              [value]="item.value"
-              [attr.aria-selected]="value() === item.value"
-              class="datalist-item w-full text-left"
-            >
-              {{ item.label }}
-            </button>
-          }
-        </div>
+      <div
+        role="listbox"
+        [attr.id]="fieldShell.idFor('listbox')"
+        [keyboardSource]="keyboardSource"
+        fiboDataList
+        (itemTriggered)="close()"
+        fiboSelectOne
+        [(value)]="value"
+      >
+        @for (item of items(); track item.value) {
+          <button
+            type="button"
+            fiboDataListItem
+            role="option"
+            [value]="item.value"
+            [attr.aria-selected]="value() === item.value"
+            class="datalist-item w-full text-left"
+          >
+            {{ item.label }}
+          </button>
+        }
       </div>
     </ng-template>
   `,
@@ -130,14 +127,21 @@ export class Select implements FormValueControl<string | number | null> {
   readonly selectedLabel = computed(() => this.selectedItem()?.label ?? null);
   readonly canClear = computed(() => this.clearValue() !== undefined && this.value() !== this.clearValue());
 
-  readonly overlayConfig = computed(() => ({
-    templateRef: this.selectTemplate(),
-    referenceElement: this.fieldShell().overlayReferenceElement(),
-    interactionRoot: this.fieldShell().overlayInteractionRoot(),
-    focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
-    category: 'popover' as const,
-  }));
-  readonly overlayHandle = createOverlay(this.isOpen, this.overlayConfig, overlay => {
+  readonly strategy = computed(() => {
+    const templateRef = this.selectTemplate();
+    if (!templateRef) {
+      return null;
+    }
+
+    return connectedOverlay({
+      templateRef,
+      referenceElement: this.fieldShell().overlayReferenceElement(),
+      interactionRoot: this.fieldShell().overlayInteractionRoot(),
+      focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
+      matchWidth: true,
+    });
+  });
+  readonly overlayHandle = createOverlay(this.isOpen, this.strategy as any, overlay => {
     closeOnFocusLeave(overlay);
     closeOnOutsideClick(overlay);
     restoreTriggerFocusOnClose(overlay);

@@ -6,6 +6,7 @@ import {
   trapOverlayFocus,
 } from '../overlay/overlay-behaviors';
 import { createOverlay } from '../overlay/overlay-stack';
+import { modalOverlay } from '../overlay/overlay-strategy';
 
 @Directive({
   selector: '[fiboDialogTrigger]',
@@ -22,13 +23,19 @@ export class DialogTrigger {
   isOpen = model(false, { alias: 'open' });
   content = input<TemplateRef<any>>();
 
-  private readonly config = computed(() => ({
-    templateRef: this.content(),
-    referenceElement: this.element,
-    category: 'dialog' as const,
-  }));
+  private readonly strategy = computed(() => {
+    const templateRef = this.content();
+    if (!templateRef) {
+      return null;
+    }
 
-  overlayHandle = createOverlay(this.isOpen, this.config, overlay => {
+    return modalOverlay({
+      templateRef,
+      referenceElement: this.element,
+    });
+  });
+
+  overlayHandle = createOverlay(this.isOpen, this.strategy as any, overlay => {
     closeOnBackdropClick(overlay);
     restoreTriggerFocusOnClose(overlay);
     blockScroll(overlay);

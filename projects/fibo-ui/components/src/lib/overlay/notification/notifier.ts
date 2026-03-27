@@ -1,5 +1,5 @@
 import {computed, Injectable, signal, TemplateRef} from '@angular/core';
-import {createOverlay} from '@fibo-ui/cdk';
+import {createOverlay, notificationOverlay} from '@fibo-ui/cdk';
 
 export type NotificationType = 'info' | 'success' | 'warning' | 'danger';
 export interface NotificationConfig {
@@ -22,12 +22,18 @@ export class Notifier {
   containerTemplateRef = signal<TemplateRef<any> | null>(null);
 
   private isOpen = signal(false);
-  overlayConfig = computed(() => ({
-    templateRef: this.containerTemplateRef() ?? undefined,
-    category: 'notification' as const,
-  }));
+  strategy = computed(() => {
+    const templateRef = this.containerTemplateRef();
+    if (!templateRef) {
+      return null;
+    }
 
-  overlayHandle = createOverlay(this.isOpen, this.overlayConfig);
+    return notificationOverlay({
+      templateRef,
+    });
+  });
+
+  overlayHandle = createOverlay(this.isOpen, this.strategy as any);
 
   push(config: NotificationConfig) {
     const id = Symbol('notification-id');

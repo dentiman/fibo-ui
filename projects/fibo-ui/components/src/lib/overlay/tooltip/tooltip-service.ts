@@ -1,7 +1,7 @@
 import {computed, Injectable, signal, TemplateRef} from '@angular/core';
 import {Subject, takeUntil, timer} from 'rxjs';
 import {Placement} from '@floating-ui/dom';
-import {createOverlay} from '@fibo-ui/cdk';
+import {connectedOverlay, createOverlay} from '@fibo-ui/cdk';
 
 @Injectable({
   providedIn: 'root',
@@ -21,15 +21,23 @@ export class TooltipService {
 
   private _interactionRequest = new Subject<'open' | 'close'>();
   private isOpen = signal(false);
-  overlayConfig = computed(() => ({
-    templateRef: this.containerTemplateRef() ?? undefined,
-    referenceElement: this.tooltipRef()?.referenceElement ?? null,
-    category: 'tooltip' as const,
-  }));
+  strategy = computed(() => {
+    const templateRef = this.containerTemplateRef();
+    const tooltipRef = this.tooltipRef();
+    if (!templateRef || !tooltipRef) {
+      return null;
+    }
+
+    return connectedOverlay({
+      templateRef,
+      referenceElement: tooltipRef.referenceElement,
+      placement: tooltipRef.placement,
+    });
+  });
 
   overlayHandle = createOverlay(
     this.isOpen,
-    this.overlayConfig,
+    this.strategy as any,
     overlay => {
       overlay.afterClose(() => {
         if (!this.isOpen()) {

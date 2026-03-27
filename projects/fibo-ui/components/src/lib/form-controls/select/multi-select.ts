@@ -7,7 +7,7 @@ import {
   DataList,
   DataListItem,
   KeyboardSource,
-  Popover,
+  connectedOverlay,
   SelectMulti,
   provideFormValueControl,
   restoreTriggerFocusOnClose,
@@ -29,7 +29,6 @@ import { SelectItem } from './select';
     },
   ],
   imports: [
-    Popover,
     DataList,
     KeyboardSource,
     SelectMulti,
@@ -95,16 +94,13 @@ import { SelectItem } from './select';
 
     <ng-template #multiSelectTpl>
       <div
-        fiboPopover
         role="listbox"
         [attr.id]="listboxId()"
         aria-multiselectable="true"
         [keyboardSource]="keyboardSource"
-        [matchWidth]="true"
         fiboDataList
         fiboSelectMulti
         [(value)]="value"
-        class="popover-container"
       >
         @for (item of items(); track item.value) {
           <a
@@ -142,14 +138,21 @@ export class MultiSelect implements FormValueControl<(string | number)[] | null>
     if (!currentValue || !Array.isArray(currentValue)) return [];
     return this.items().filter((item) => item.value !== null && currentValue.includes(item.value));
   });
-  readonly overlayConfig = computed(() => ({
-    templateRef: this.multiSelectTemplate(),
-    referenceElement: this.fieldShell().overlayReferenceElement(),
-    interactionRoot: this.fieldShell().overlayInteractionRoot(),
-    focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
-    category: 'popover' as const,
-  }));
-  readonly overlayHandle = createOverlay(this.isOpen, this.overlayConfig, overlay => {
+  readonly strategy = computed(() => {
+    const templateRef = this.multiSelectTemplate();
+    if (!templateRef) {
+      return null;
+    }
+
+    return connectedOverlay({
+      templateRef,
+      referenceElement: this.fieldShell().overlayReferenceElement(),
+      interactionRoot: this.fieldShell().overlayInteractionRoot(),
+      focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
+      matchWidth: true,
+    });
+  });
+  readonly overlayHandle = createOverlay(this.isOpen, this.strategy as any, overlay => {
     closeOnFocusLeave(overlay);
     closeOnOutsideClick(overlay);
     restoreTriggerFocusOnClose(overlay);

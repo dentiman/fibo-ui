@@ -9,12 +9,14 @@ import {
 import { CommonModule } from '@angular/common';
 import { OVERLAY_HANDLE, OverlayHandle } from './overlay-handle';
 import { OverlayStack } from './overlay-stack';
-import { Popover } from '../popover/popover';
+import { OverlayConnectedShellComponent } from './overlay-connected-shell.component';
+import { OverlayModalShellComponent } from './overlay-modal-shell.component';
+import { OverlayPlainShellComponent } from './overlay-plain-shell.component';
 
 // DOM container responsible for rendering the current overlay stack.
 @Component({
   selector: 'fibo-cdk-overlay-container',
-  imports: [CommonModule, Popover],
+  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   templateUrl: './overlay-container.html',
@@ -22,8 +24,20 @@ import { Popover } from '../popover/popover';
     '(document:keydown.escape)': 'overlayStack.closeTopmost()',
   },
   styles: `
+    :host {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
     .overlay-leave {
       animation: overlay-fade-out 200ms ease-in forwards;
+    }
+
+    .overlay-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
     }
 
     @keyframes overlay-fade-out {
@@ -62,6 +76,19 @@ export class OverlayContainerComponent {
     }
 
     return injector;
+  }
+
+  shellComponent(handle: OverlayHandle): typeof OverlayConnectedShellComponent | typeof OverlayModalShellComponent | typeof OverlayPlainShellComponent {
+    switch (handle.strategy.kind) {
+      case 'modal':
+        return OverlayModalShellComponent;
+      case 'connected':
+      case 'menu':
+      case 'tooltip':
+        return OverlayConnectedShellComponent;
+      default:
+        return OverlayPlainShellComponent;
+    }
   }
 
   handleOverlayAnimationEnd(overlayId: string, event: AnimationEvent): void {

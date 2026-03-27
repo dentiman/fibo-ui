@@ -5,8 +5,8 @@ import {
   closeOnOutsideClick,
   restoreTriggerFocusOnClose,
 } from '../overlay/overlay-behaviors';
-import { OverlayCategory } from '../overlay/overlay-handle';
 import { createOverlay } from '../overlay/overlay-stack';
+import { connectedOverlay, menuOverlay } from '../overlay/overlay-strategy';
 
 @Directive({
   selector: '[fiboPopoverTrigger]',
@@ -23,18 +23,29 @@ export class PopoverTrigger {
   isOpen = model(false, { alias: 'open' });
 
   content = input<TemplateRef<any>>();
-  overlayCategory = model<OverlayCategory>('popover');
+  strategyKind = model<'connected' | 'menu'>('connected');
   delegatesFocus = input(false);
 
-  config = computed(() => ({
-    templateRef: this.content(),
-    referenceElement: this.element,
-    category: this.overlayCategory(),
-  }));
+  strategy = computed(() => {
+    const templateRef = this.content();
+    if (!templateRef) {
+      return null;
+    }
+
+    return this.strategyKind() === 'menu'
+      ? menuOverlay({
+          templateRef,
+          referenceElement: this.element,
+        })
+      : connectedOverlay({
+          templateRef,
+          referenceElement: this.element,
+        });
+  });
 
   overlayHandle = createOverlay(
     this.isOpen,
-    this.config,
+    this.strategy as any,
     overlay => {
       closeOnFocusLeave(overlay);
       closeOnOutsideClick(overlay);
@@ -71,7 +82,7 @@ export class PopoverTrigger {
   hostDirectives: [
     {
       directive: PopoverTrigger,
-      inputs: ['content', 'overlayCategory', 'delegatesFocus'],
+      inputs: ['content', 'strategyKind', 'delegatesFocus'],
     },
   ],
   host: {
@@ -88,7 +99,7 @@ export class PopoverTriggerClick {
   hostDirectives: [
     {
       directive: PopoverTrigger,
-      inputs: ['content', 'overlayCategory', 'delegatesFocus'],
+      inputs: ['content', 'strategyKind', 'delegatesFocus'],
     },
   ],
   host: {

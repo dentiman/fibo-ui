@@ -12,6 +12,7 @@ import {
   closeOnFocusLeave,
   closeOnOutsideClick,
   createOverlay,
+  connectedOverlay,
   restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
 
@@ -67,13 +68,15 @@ export class CdkOverlaysBasicExample {
   readonly isOpen = signal(false);
   readonly actionCount = signal(0);
 
-  readonly overlayConfig = computed(() => ({
-    templateRef: this.overlayTpl(),
-    referenceElement: this.triggerButton().nativeElement,
-    category: 'popover' as const,
-  }));
+  readonly strategy = computed(() => {
+    const templateRef = this.overlayTpl();
+    return connectedOverlay({
+      templateRef,
+      referenceElement: this.triggerButton().nativeElement,
+    });
+  });
 
-  readonly overlayHandle = createOverlay(this.isOpen, this.overlayConfig, overlay => {
+  readonly overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
     closeOnFocusLeave(overlay);
     closeOnOutsideClick(overlay);
     restoreTriggerFocusOnClose(overlay);

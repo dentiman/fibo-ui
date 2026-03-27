@@ -13,7 +13,7 @@ import {
   DataList,
   DataListItem,
   KeyboardSource,
-  Popover,
+  connectedOverlay,
   SelectOne,
   closeOnFocusLeave,
   closeOnOutsideClick,
@@ -39,7 +39,6 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
   imports: [
     FieldShell,
     FieldTargetDirective,
-    Popover,
     DataList,
     DataListItem,
     KeyboardSource,
@@ -78,16 +77,13 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
     <ng-template #comboboxTpl>
       <div
-        fiboPopover
         fiboComboboxList
         [keyboardSource]="keyboardSource"
-        [matchWidth]="true"
         fiboDataList
         [autoActivateFirst]="true"
         (itemTriggered)="expanded.set(false)"
         fiboSelectOne
         [(value)]="value"
-        class="popover-container"
       >
         @for (item of options(); track item) {
           <button
@@ -132,15 +128,22 @@ export class Combobox
       : [];
   });
 
-  readonly overlayConfig = computed(() => ({
-    templateRef: this.comboboxTemplateRef(),
-    referenceElement: this.fieldShell().overlayReferenceElement(),
-    interactionRoot: this.fieldShell().overlayInteractionRoot(),
-    focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
-    category: 'popover' as const,
-  }));
+  readonly strategy = computed(() => {
+    const templateRef = this.comboboxTemplateRef();
+    if (!templateRef) {
+      return null;
+    }
 
-  readonly overlayHandle = createOverlay(this.expanded, this.overlayConfig, overlay => {
+    return connectedOverlay({
+      templateRef,
+      referenceElement: this.fieldShell().overlayReferenceElement(),
+      interactionRoot: this.fieldShell().overlayInteractionRoot(),
+      focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
+      matchWidth: true,
+    });
+  });
+
+  readonly overlayHandle = createOverlay(this.expanded, this.strategy as any, overlay => {
     closeOnFocusLeave(overlay);
     closeOnOutsideClick(overlay);
     restoreTriggerFocusOnClose(overlay);

@@ -1,22 +1,9 @@
 @for (overlay of overlayStack.openOverlayList(); track overlay.id) {
-  <div [attr.data-overlay-container-id]="overlay.id"
-       [style.z-index]="overlay.zIndex"
-       style="position: relative"
-       (animationend)="handleOverlayAnimationEnd(overlay.id, $event)"
-       animate.leave="overlay-leave">
-    <ng-container
-      *ngTemplateOutlet="overlay.templateRef; injector: overlayInjector(overlay)"
-    ></ng-container>
+  <div class="overlay-layer" style="position: absolute; inset: 0; pointer-events: none;"
+       [attr.data-overlay-container-id]="overlay.id"
+        [style.z-index]="overlay.zIndex"
+        (animationend)="handleOverlayAnimationEnd(overlay.id, $event)"
+        animate.leave="overlay-leave">
+    <ng-container [ngComponentOutlet]="shellComponent(overlay)" [ngComponentOutletInjector]="overlayInjector(overlay)"></ng-container>
   </div>
 }
-
-<!--@for (overlay of overlayStack.openOverlayList(); track overlay.id) {-->
-<!--  <div [attr.data-overlay-container-id]="overlay.id"-->
-<!--       [style.z-index]="overlay.zIndex"-->
-<!--        fiboPopover-->
-<!--       animate.leave="overlay-leave">-->
-<!--    <ng-container-->
-<!--      *ngTemplateOutlet="overlay.templateRef; injector: overlayInjector(overlay)"-->
-<!--    ></ng-container>-->
-<!--  </div>-->
-<!--}-->

@@ -54,7 +54,7 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
   private panel = inject(MENU_PANEL);
 
   ngOnInit() {
-    this.popoverTrigger.overlayCategory.set('menu');
+    this.popoverTrigger.strategyKind.set('menu');
     this.panel.registerSubmenuTrigger(this);
   }
 

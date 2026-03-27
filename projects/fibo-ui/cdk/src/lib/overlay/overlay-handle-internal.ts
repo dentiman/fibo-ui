@@ -1,10 +1,12 @@
 import { Signal, TemplateRef, WritableSignal, signal } from '@angular/core';
 import type { OverlayCloseReason } from './overlay-types';
 import { OverlayCategory, OverlayHandle } from './overlay-handle';
+import type { OverlayStrategy } from './overlay-strategy';
 
 export interface CreateOverlayHandleOptions {
   templateRef: TemplateRef<any>;
   category?: OverlayCategory;
+  strategy: OverlayStrategy;
   referenceElement?: HTMLElement | null;
   interactionRoot?: HTMLElement | null;
   focusReturnTarget?: HTMLElement | null;
@@ -17,6 +19,7 @@ class OverlayHandleImpl implements OverlayHandle {
   readonly category: OverlayCategory;
   readonly zIndex: number;
   readonly firstInCategory: Signal<boolean>;
+  readonly strategy: OverlayStrategy;
 
   private readonly templateRefSignal: WritableSignal<TemplateRef<any> | undefined>;
   private readonly referenceElementSignal: WritableSignal<HTMLElement | null | undefined>;
@@ -52,6 +55,7 @@ class OverlayHandleImpl implements OverlayHandle {
     this.referenceElementSignal = signal(options.referenceElement);
     this.interactionRootSignal = signal(options.interactionRoot);
     this.focusReturnTargetSignal = signal(options.focusReturnTarget);
+    this.strategy = options.strategy;
     this.category = options.category ?? 'popover';
     this.zIndex = options.zIndex;
     this.firstInCategory = options.firstInCategory;

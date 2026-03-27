@@ -1,6 +1,7 @@
 import { InjectionToken } from '@angular/core';
 import type { Signal, TemplateRef } from '@angular/core';
 import type { OverlayCloseReason } from './overlay-types';
+import type { OverlayStrategy } from './overlay-strategy';
 
 export type OverlayCategory =
   | 'popover'
@@ -20,6 +21,7 @@ export interface OverlayHandle {
   readonly referenceElement: HTMLElement | null | undefined;
   readonly interactionRoot: HTMLElement | null | undefined;
   readonly focusReturnTarget: HTMLElement | null | undefined;
+  readonly strategy: OverlayStrategy;
   readonly closed: boolean;
   close(reason?: OverlayCloseReason): void;
 }

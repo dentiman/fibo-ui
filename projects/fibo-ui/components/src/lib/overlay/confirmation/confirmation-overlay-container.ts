@@ -10,7 +10,6 @@ import {
 import {NgTemplateOutlet} from '@angular/common';
 import {ConfirmationService} from './confirmation-service';
 import {LucideAngularModule} from 'lucide-angular';
-import {OverlayPanel, OverlayTitle} from '@fibo-ui/cdk';
 
 const DEFAULT_CONFIG = {
   title: 'Confirmation',
@@ -21,7 +20,7 @@ const DEFAULT_CONFIG = {
 
 @Component({
   selector: 'fibo-confirmation-overlay-container',
-  imports: [NgTemplateOutlet, LucideAngularModule, OverlayPanel, OverlayTitle],
+  imports: [NgTemplateOutlet, LucideAngularModule],
   templateUrl: './confirmation-overlay-container.html',
   encapsulation: ViewEncapsulation.None,
   styles: `
