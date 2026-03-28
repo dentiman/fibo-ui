@@ -13,7 +13,8 @@ export type OverlayBehaviorId =
   | 'closeOnFocusLeave'
   | 'trapOverlayFocus'
   | 'restoreTriggerFocusOnClose'
-  | 'closeOnScroll';
+  | 'closeOnScroll'
+  | 'blockScroll';
 
 export interface BaseOverlayStrategyOptions {
   templateRef: TemplateRef<any>;
@@ -28,10 +29,7 @@ export interface ConnectedOverlayOptions extends BaseOverlayStrategyOptions {
   offset?: number;
 }
 
-export interface ModalOverlayOptions extends BaseOverlayStrategyOptions {
-  backdropClosable?: boolean;
-  blockScroll?: boolean;
-}
+export interface ModalOverlayOptions extends BaseOverlayStrategyOptions {}
 
 export interface MenuOverlayOptions extends BaseOverlayStrategyOptions {
   placement?: Placement;
@@ -102,9 +100,11 @@ export function modalOverlay(options: ModalOverlayOptions): ModalOverlayStrategy
     kind: 'modal',
     shell: 'modal',
     category: 'dialog',
-    options: Object.freeze({ blockScroll: true, backdropClosable: true, ...options }),
+    options: Object.freeze({ ...options }),
     config: normalizeRenderConfig(options, 'dialog'),
     defaultBehaviors: Object.freeze([
+      'blockScroll',
+      'closeOnOutsideClick',
       'trapOverlayFocus',
       'restoreTriggerFocusOnClose',
     ]),

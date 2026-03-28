@@ -1,10 +1,6 @@
 import { Directive, ElementRef, computed, inject, input, model, TemplateRef } from '@angular/core';
 import { DataListItem } from '../data-list/data-list-item.directive';
-import {
-  closeOnFocusLeave,
-  closeOnOutsideClick,
-  restoreTriggerFocusOnClose,
-} from '../overlay/overlay-behaviors';
+import { restoreTriggerFocusOnClose } from '../overlay/overlay-behaviors';
 import { createOverlay } from '../overlay/overlay-stack';
 import { connectedOverlay, menuOverlay } from '../overlay/overlay-strategy';
 import type { Placement } from '@floating-ui/dom';
@@ -60,8 +56,6 @@ export class PopoverTrigger {
     this.isOpen,
     this.strategy,
     overlay => {
-      closeOnFocusLeave(overlay);
-      closeOnOutsideClick(overlay);
       restoreTriggerFocusOnClose(overlay);
     },
   );

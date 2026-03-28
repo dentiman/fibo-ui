@@ -27,7 +27,6 @@ export class DialogTrigger {
     return modalOverlay({
       templateRef,
       referenceElement: this.element,
-      backdropClosable: true,
     });
   });
 

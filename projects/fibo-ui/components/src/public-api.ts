@@ -27,6 +27,10 @@ export * from './lib/overlay/notification/notification-overlay-container';
 export * from './lib/overlay/notification/notifier';
 
 export * from './lib/overlay/permanent-overlay-container';
+export * from './lib/overlay/shell/overlay-stack-outlet';
+export * from './lib/overlay/shell/overlay-modal-shell.component';
+export * from './lib/overlay/shell/overlay-connected-shell.component';
+export * from './lib/overlay/shell/overlay-plain-shell.component';
 
 export * from './lib/form-controls/calendar/calendar';
 

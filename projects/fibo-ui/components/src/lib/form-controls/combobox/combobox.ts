@@ -15,8 +15,6 @@ import {
   KeyboardSource,
   connectedOverlay,
   SelectOne,
-  closeOnFocusLeave,
-  closeOnOutsideClick,
   createOverlay,
   provideFormValueControl,
   restoreTriggerFocusOnClose,
@@ -144,8 +142,6 @@ export class Combobox
   });
 
   readonly overlayHandle = createOverlay(this.expanded, this.strategy as any, overlay => {
-    closeOnFocusLeave(overlay);
-    closeOnOutsideClick(overlay);
     restoreTriggerFocusOnClose(overlay);
     overlay.beforeClose((_, __, reason) => {
       if (reason !== 'state') {

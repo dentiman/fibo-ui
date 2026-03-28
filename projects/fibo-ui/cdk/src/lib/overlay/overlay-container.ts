@@ -1,76 +1,77 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Injector,
-  ViewEncapsulation,
-  effect,
-  inject,
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { OVERLAY_HANDLE, OverlayHandle } from './overlay-handle';
+import { DestroyRef, Directive, ElementRef, inject, OnInit } from '@angular/core';
+import { blockScroll } from './overlay-behaviors';
+import { OverlayShellHost } from './overlay-shell-host';
 import { OverlayStack } from './overlay-stack';
-import { OverlayConnectedShellComponent } from './overlay-connected-shell.component';
-import { OverlayModalShellComponent } from './overlay-modal-shell.component';
-import { OverlayPlainShellComponent } from './overlay-plain-shell.component';
 
-// DOM container responsible for rendering the current overlay stack.
-@Component({
-  selector: 'fibo-cdk-overlay-container',
-  imports: [CommonModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  templateUrl: './overlay-container.html',
+/**
+ * Marks the content container element inside an overlay shell.
+ *
+ * Responsibilities:
+ * - Binds `data-overlay-container-id` for DOM-based overlay lookups
+ * - Auto-sets `interactionRoot` to the host element
+ * - Attaches `closeOnOutsideClick` / `closeOnFocusLeave` listeners
+ *   based on `strategy.defaultBehaviors`
+ */
+@Directive({
+  selector: '[fiboOverlayContainer]',
   host: {
-    '(document:keydown.escape)': 'overlayStack.closeTopmost()',
+    '[attr.data-overlay-container-id]': 'shellHost.handle().id',
   },
-  styles: `
-    :host {
-      display: contents;
-    }
-  `,
 })
-export class OverlayContainerComponent {
-  readonly overlayStack = inject(OverlayStack);
-  private readonly parentInjector = inject(Injector);
-  private readonly injectorCache = new Map<string, Injector>();
+export class OverlayContainer implements OnInit {
+  readonly shellHost = inject(OverlayShellHost);
+  private readonly elementRef = inject(ElementRef<HTMLElement>);
+  private readonly overlayStack = inject(OverlayStack);
+  private readonly destroyRef = inject(DestroyRef);
 
-  constructor() {
-    effect(() => {
-      const activeOverlayIds = new Set(
-        this.overlayStack.openOverlayList().map(overlay => overlay.id),
-      );
+  ngOnInit(): void {
+    const handle = this.shellHost.handle();
+    const behaviors = handle.strategy.defaultBehaviors;
 
-      for (const id of this.injectorCache.keys()) {
-        if (!activeOverlayIds.has(id)) {
-          this.injectorCache.delete(id);
-        }
-      }
-    });
-  }
+    handle.setInteractionRoot(this.elementRef.nativeElement);
 
-  overlayInjector(handle: OverlayHandle): Injector {
-    let injector = this.injectorCache.get(handle.id);
-    if (!injector) {
-      injector = Injector.create({
-        providers: [{ provide: OVERLAY_HANDLE, useValue: handle }],
-        parent: this.parentInjector,
-      });
-      this.injectorCache.set(handle.id, injector);
+    if (behaviors.includes('blockScroll')) {
+      blockScroll(this.destroyRef);
     }
 
-    return injector;
+    if (behaviors.includes('closeOnOutsideClick')) {
+      this.attachCloseOnOutsideClick();
+    }
+
+    if (behaviors.includes('closeOnFocusLeave')) {
+      this.attachCloseOnFocusLeave();
+    }
   }
 
-  shellComponent(handle: OverlayHandle): typeof OverlayConnectedShellComponent | typeof OverlayModalShellComponent | typeof OverlayPlainShellComponent {
-    switch (handle.strategy.kind) {
-      case 'modal':
-        return OverlayModalShellComponent;
-      case 'connected':
-      case 'menu':
-      case 'tooltip':
-        return OverlayConnectedShellComponent;
-      default:
-        return OverlayPlainShellComponent;
-    }
+  private isInsideSafeZone(target: Node): boolean {
+    const handle = this.shellHost.handle();
+
+    if (handle.referenceElement?.contains(target)) return true;
+    if (this.elementRef.nativeElement.contains(target)) return true;
+
+    const targetOverlayId = this.overlayStack.findOverlayContainerId(target);
+    return this.overlayStack.isOverlayInBranch(handle.id, targetOverlayId);
+  }
+
+  private attachCloseOnOutsideClick(): void {
+    const handler = (event: MouseEvent) => {
+      const target = event.target as Node | null;
+      if (!target || this.isInsideSafeZone(target)) return;
+      this.shellHost.handle().close('outside-click');
+    };
+
+    document.addEventListener('click', handler, true);
+    this.destroyRef.onDestroy(() => document.removeEventListener('click', handler, true));
+  }
+
+  private attachCloseOnFocusLeave(): void {
+    const handler = (event: FocusEvent) => {
+      const target = event.target as Node | null;
+      if (!target || this.isInsideSafeZone(target)) return;
+      this.shellHost.handle().close('focusout');
+    };
+
+    document.addEventListener('focusin', handler, true);
+    this.destroyRef.onDestroy(() => document.removeEventListener('focusin', handler, true));
   }
 }

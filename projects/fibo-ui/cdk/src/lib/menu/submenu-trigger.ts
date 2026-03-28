@@ -1,7 +1,7 @@
 import { Directive, ElementRef, computed, inject, input, model, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { DataListItem } from '../data-list/data-list-item.directive';
 import { KeyboardSource } from '../data-list/keyboard-source';
-import { closeOnFocusLeave, closeOnOutsideClick, restoreTriggerFocusOnClose } from '../overlay/overlay-behaviors';
+import { restoreTriggerFocusOnClose } from '../overlay/overlay-behaviors';
 import { createOverlay, OverlayStack } from '../overlay/overlay-stack';
 import { menuOverlay } from '../overlay/overlay-strategy';
 import { MENU_PANEL } from './menu-panel';
@@ -51,8 +51,6 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
   });
 
   overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
-    closeOnFocusLeave(overlay);
-    closeOnOutsideClick(overlay);
     restoreTriggerFocusOnClose(overlay);
   });
 

@@ -3,6 +3,7 @@ import type { Signal, TemplateRef } from '@angular/core';
 import type { OverlayCloseReason } from './overlay-types';
 import type { OverlayStrategy } from './overlay-strategy';
 
+
 export type OverlayCategory =
   | 'popover'
   | 'menu'

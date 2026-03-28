@@ -1,29 +1,35 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   DataListKeyboardBridge,
+  DialogTrigger,
   KeyboardTarget,
   PopoverTriggerToggle,
 } from '@fibo-ui/cdk';
-import { Menu, type MenuItemType } from '@fibo-ui/components';
+import { FiboDialog, Menu, type MenuItemType } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-playground-page',
-  standalone: true,
-  imports: [CommonModule, Menu, PopoverTriggerToggle, KeyboardTarget, DataListKeyboardBridge],
+  imports: [
+    Menu,
+    FiboDialog,
+    DialogTrigger,
+    PopoverTriggerToggle,
+    KeyboardTarget,
+    DataListKeyboardBridge,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="mx-auto max-w-3xl space-y-8 p-8">
+    <div class="space-y-8 p-8">
       <section class="space-y-3">
         <h1 class="text-2xl font-semibold">Playground</h1>
         <p class="text-sm text-foreground-secondary">
-          Menu-only debug page for overlay behavior. Open the menus below and verify
-          keyboard navigation, submenu open/close, and outside click behavior.
+          Debug page for overlay behavior. Scroll lock, outside click, keyboard navigation.
         </p>
       </section>
 
+      <!-- Menu section -->
       <section class="space-y-4 rounded-xl border border-border-primary bg-background-secondary p-5 shadow-sm">
-        <h2 class="text-lg font-medium text-foreground">Fibo Menu</h2>
+        <h2 class="text-lg font-medium text-foreground">Menu</h2>
 
         <div class="flex flex-wrap gap-3">
           <button
@@ -65,10 +71,116 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
           />
         </ng-template>
       </section>
+
+      <!-- Spacer before dialog -->
+      @for (i of spacerItemsTop; track i) {
+        <section class="rounded-xl border border-border-primary bg-background-secondary p-5 shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-medium text-foreground">Section {{ i }}</h3>
+              <p class="text-sm text-foreground-secondary">Scroll down to find the dialog triggers</p>
+            </div>
+            <div class="h-8 w-8 rounded-full bg-border-primary"></div>
+          </div>
+        </section>
+      }
+
+      <!-- Dialog section — in the middle -->
+      <section class="space-y-4 rounded-xl border-2 border-blue-500 bg-background-secondary p-5 shadow-sm">
+        <h2 class="text-lg font-medium text-foreground">Dialog (scroll lock test)</h2>
+        <p class="text-sm text-foreground-secondary">
+          Scroll here from top, open a dialog, verify scroll is locked. Close — scroll position restored.
+        </p>
+
+        <div class="flex flex-wrap gap-3">
+          <button
+            #dialogTrigger="DialogTrigger"
+            class="btn btn-primary"
+            fiboDialogTrigger
+            [content]="dialogTpl"
+          >
+            Open Dialog
+          </button>
+
+          <button
+            #nestedDialogTrigger="DialogTrigger"
+            class="btn btn-secondary"
+            fiboDialogTrigger
+            [content]="nestedDialogTpl"
+          >
+            Nested Dialogs
+          </button>
+        </div>
+
+        <ng-template #dialogTpl>
+          <fibo-dialog>
+            <div class="p-6 w-96">
+              <h2 class="text-lg font-semibold mb-2">Basic Dialog</h2>
+              <p class="text-sm text-foreground-secondary mb-4">
+                Body scroll should be locked while this dialog is open.
+              </p>
+              <div class="flex justify-end">
+                <button class="btn" (click)="dialogTrigger.close()">Close</button>
+              </div>
+            </div>
+          </fibo-dialog>
+        </ng-template>
+
+        <ng-template #nestedDialogTpl>
+          <fibo-dialog>
+            <div class="p-6 w-96">
+              <h2 class="text-lg font-semibold mb-2">First Dialog</h2>
+              <p class="text-sm text-foreground-secondary mb-4">
+                Open a second dialog. Scroll lock uses ref counting — stays locked until all dialogs close.
+              </p>
+
+              <button
+                #innerDialogTrigger="DialogTrigger"
+                class="btn btn-secondary mb-4"
+                fiboDialogTrigger
+                [content]="innerDialogTpl"
+              >
+                Open Second Dialog
+              </button>
+              <ng-template #innerDialogTpl>
+                <fibo-dialog>
+                  <div class="p-6 w-80">
+                    <h2 class="text-lg font-semibold mb-2">Second Dialog</h2>
+                    <p class="text-sm text-foreground-secondary mb-4">Stacked on top. Scroll still locked.</p>
+                    <div class="flex justify-end">
+                      <button class="btn" (click)="innerDialogTrigger.close()">Close</button>
+                    </div>
+                  </div>
+                </fibo-dialog>
+              </ng-template>
+
+              <div class="flex justify-end">
+                <button class="btn" (click)="nestedDialogTrigger.close()">Close</button>
+              </div>
+            </div>
+          </fibo-dialog>
+        </ng-template>
+      </section>
+
+      <!-- Spacer after dialog -->
+      @for (i of spacerItemsBottom; track i) {
+        <section class="rounded-xl border border-border-primary bg-background-secondary p-5 shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-medium text-foreground">Section {{ i }}</h3>
+              <p class="text-sm text-foreground-secondary">More content below the dialog section</p>
+            </div>
+            <div class="h-8 w-8 rounded-full bg-border-primary"></div>
+          </div>
+        </section>
+      }
     </div>
   `,
 })
 export class PlaygroundPageComponent {
+  readonly spacerItemsTop = Array.from({ length: 8 }, (_, i) => i + 1);
+  readonly spacerItemsBottom = Array.from({ length: 12 }, (_, i) => i + 1);
+
   readonly menuItems: MenuItemType[] = [
     { label: 'My Profile', icon: 'user', url: '/form-example' },
     {

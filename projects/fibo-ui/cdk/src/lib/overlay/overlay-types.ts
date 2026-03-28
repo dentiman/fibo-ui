@@ -7,7 +7,6 @@ export type OverlayCloseReason =
   | 'escape'
   | 'focusout'
   | 'outside-click'
-  | 'backdrop'
   | 'blur'
   | 'state'
   | 'destroy';

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {OverlayContainerComponent} from '@fibo-ui/cdk';
+import {OverlayStackOutlet} from './shell/overlay-stack-outlet';
 import {TooltipOverlayContainer} from './tooltip/tooltip-overlay-container';
 import {ConfirmationOverlayContainer} from './confirmation/confirmation-overlay-container';
 import {NotificationOverlayContainer} from './notification/notification-overlay-container';
@@ -7,7 +7,7 @@ import {NotificationOverlayContainer} from './notification/notification-overlay-
 @Component({
   selector: 'fibo-permanent-overlay-container',
   imports: [
-    OverlayContainerComponent,
+    OverlayStackOutlet,
     TooltipOverlayContainer,
     ConfirmationOverlayContainer,
     NotificationOverlayContainer,
@@ -18,7 +18,7 @@ import {NotificationOverlayContainer} from './notification/notification-overlay-
     <fibo-tooltip-overlay-container />
     <fibo-confirmation-overlay-container />
     <fibo-notification-overlay-container />
-    <fibo-cdk-overlay-container />
+    <fibo-overlay-stack-outlet />
   `,
 })
 export class PermanentOverlayContainer {}

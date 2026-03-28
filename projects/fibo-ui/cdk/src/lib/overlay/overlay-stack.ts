@@ -224,23 +224,11 @@ export class OverlayStack {
 
       this.removeOverlay(handle);
       if (afterCloseHandlers.length > 0) {
-        const waitsForLeaveAnimation =
-          handle.strategy.kind === 'connected' ||
-          handle.strategy.kind === 'menu' ||
-          handle.strategy.kind === 'tooltip' ||
-          handle.strategy.kind === 'modal';
-
-        if (waitsForLeaveAnimation) {
-          this.pendingAfterClose.set(handle.id, {
-            handle,
-            reason,
-            handlers: [...afterCloseHandlers],
-          });
-        } else {
-          for (const handler of afterCloseHandlers) {
-            handler(handle, reason);
-          }
-        }
+        this.pendingAfterClose.set(handle.id, {
+          handle,
+          reason,
+          handlers: [...afterCloseHandlers],
+        });
       }
 
       currentHandle = null;

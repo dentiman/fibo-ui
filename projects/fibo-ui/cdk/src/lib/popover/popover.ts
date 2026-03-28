@@ -5,7 +5,6 @@ import {
   effect,
   ElementRef,
   inject,
-  input,
   model,
   signal,
 } from '@angular/core';
@@ -35,11 +34,11 @@ import { OVERLAY_HANDLE } from '../overlay/overlay-handle';
 })
 export class Popover {
   private overlayHandle = inject(OVERLAY_HANDLE);
-  referenceElement = input<HTMLElement>();
-  matchWidth = input<boolean>(false);
+  referenceElement = model<HTMLElement | undefined>(undefined);
+  matchWidth = model<boolean>(false);
   placement = model<Placement>('bottom');
   elementRef = inject(ElementRef);
-  offset = input<number>(5);
+  offset = model<number>(5);
   arrow = contentChild(PopoverArrow);
   private positionSignal = signal<ComputePositionReturn | null>(null);
 
@@ -99,9 +98,5 @@ export class Popover {
 
   close() {
     this.overlayHandle.close();
-  }
-
-  setInteractionRoot(root: HTMLElement | null): void {
-    this.overlayHandle.setInteractionRoot(root);
   }
 }

@@ -1,8 +1,6 @@
 import { Component, ElementRef, TemplateRef, computed, inject, input, model, signal, viewChild } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
 import {
-  closeOnFocusLeave,
-  closeOnOutsideClick,
   createOverlay,
   DataList,
   DataListItem,
@@ -142,8 +140,6 @@ export class Select implements FormValueControl<string | number | null> {
     });
   });
   readonly overlayHandle = createOverlay(this.isOpen, this.strategy as any, overlay => {
-    closeOnFocusLeave(overlay);
-    closeOnOutsideClick(overlay);
     restoreTriggerFocusOnClose(overlay);
   });
 

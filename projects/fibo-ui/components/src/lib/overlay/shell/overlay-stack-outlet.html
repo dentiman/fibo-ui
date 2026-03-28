@@ -1,0 +1,19 @@
+@for (overlay of overlayStack.openOverlayList(); track overlay.id) {
+  @switch (overlay.strategy.kind) {
+    @case ('modal') {
+      <fibo-overlay-modal-shell [handle]="overlay" />
+    }
+    @case ('connected') {
+      <fibo-overlay-connected-shell [handle]="overlay" />
+    }
+    @case ('menu') {
+      <fibo-overlay-connected-shell [handle]="overlay" />
+    }
+    @case ('tooltip') {
+      <fibo-overlay-connected-shell [handle]="overlay" />
+    }
+    @default {
+      <fibo-overlay-plain-shell [handle]="overlay" />
+    }
+  }
+}

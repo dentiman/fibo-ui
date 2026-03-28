@@ -1,6 +1,61 @@
+import type { DestroyRef } from '@angular/core';
 import type { OverlayCloseContext } from './overlay-types';
 import type { OverlaySession } from './overlay-session';
 import type { OverlayCategory, OverlayHandle } from './overlay-handle';
+
+// --- Scroll Lock ---
+
+let scrollLockCount = 0;
+let scrollLockSavedY = 0;
+let scrollLockSavedX = 0;
+
+function lockScroll(): void {
+  scrollLockCount += 1;
+  if (scrollLockCount > 1) return;
+
+  scrollLockSavedY = window.scrollY;
+  scrollLockSavedX = window.scrollX;
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  const html = document.documentElement;
+
+  html.style.position = 'fixed';
+  html.style.top = `-${scrollLockSavedY}px`;
+  html.style.left = `-${scrollLockSavedX}px`;
+  html.style.width = '100%';
+  html.style.overflow = 'hidden';
+  html.style.overscrollBehavior = 'none';
+  document.body.style.touchAction = 'none';
+  if (scrollbarWidth > 0) {
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+  }
+}
+
+function unlockScroll(): void {
+  if (scrollLockCount === 0) return;
+
+  scrollLockCount -= 1;
+  if (scrollLockCount > 0) return;
+
+  const html = document.documentElement;
+  html.style.position = '';
+  html.style.top = '';
+  html.style.left = '';
+  html.style.width = '';
+  html.style.overflow = '';
+  html.style.overscrollBehavior = '';
+  document.body.style.touchAction = '';
+  document.body.style.paddingRight = '';
+  window.scrollTo(scrollLockSavedX, scrollLockSavedY);
+}
+
+/**
+ * Blocks document scroll while the overlay is open.
+ * Supports nested scroll locks via reference counting.
+ */
+export function blockScroll(destroyRef: DestroyRef): void {
+  lockScroll();
+  destroyRef.onDestroy(() => unlockScroll());
+}
 
 const TABBABLE_SELECTOR = [
   'a[href]:not([tabindex="-1"])',
