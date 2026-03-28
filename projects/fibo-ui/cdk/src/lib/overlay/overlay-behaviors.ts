@@ -112,89 +112,6 @@ export function restoreTriggerFocusOnClose(overlay: OverlaySession): void {
   );
 }
 
-/**
- * Closes the current overlay when focus leaves both the trigger element and the
- * rendered overlay container.
- */
-export function closeOnFocusLeave(overlay: OverlaySession): void {
-  const effectRef = overlay.effect(onCleanup => {
-    const handleFocusIn = (event: FocusEvent) => {
-      const nextTarget = event.target as Node | null;
-      if (!nextTarget) {
-        return;
-      }
-
-      const interactionRoot = overlay.handle.interactionRoot ?? overlay.handle.referenceElement;
-      if (!interactionRoot) {
-        return;
-      }
-
-      if (interactionRoot.contains(nextTarget) || overlay.isInOverlayBranch(nextTarget)) {
-        return;
-      }
-
-      overlay.requestClose('focusout', event);
-    };
-
-    document.addEventListener('focusin', handleFocusIn, true);
-    onCleanup(() => document.removeEventListener('focusin', handleFocusIn, true));
-  });
-
-  overlay.onCleanup(() => effectRef.destroy());
-}
-
-/**
- * Closes the current overlay when the user clicks outside both the trigger and
- * the rendered overlay container.
- */
-export function closeOnOutsideClick(overlay: OverlaySession): void {
-  const effectRef = overlay.effect(onCleanup => {
-    const handleClick = (event: MouseEvent) => {
-      const target = event.target as Node | null;
-      if (!target) {
-        return;
-      }
-
-      const interactionRoot = overlay.handle.interactionRoot ?? overlay.handle.referenceElement;
-      if (!interactionRoot) {
-        return;
-      }
-
-      if (interactionRoot.contains(target) || overlay.isInOverlayBranch(target)) {
-        return;
-      }
-
-      overlay.requestClose('outside-click', event);
-    };
-
-    document.addEventListener('click', handleClick, true);
-    onCleanup(() => document.removeEventListener('click', handleClick, true));
-  });
-
-  overlay.onCleanup(() => effectRef.destroy());
-}
-
-/**
- * Closes the overlay when the user scrolls outside the overlay container.
- * Useful for tooltips that lose context when the trigger scrolls away.
- */
-export function closeOnScroll(overlay: OverlaySession): void {
-  const effectRef = overlay.effect(onCleanup => {
-    const handleScroll = (event: Event) => {
-      const target = event.target;
-      if (target instanceof Element && isElementInsideOverlayContainer(target, overlay.handle.id)) {
-        return;
-      }
-      overlay.requestClose('blur', event);
-    };
-
-    document.addEventListener('scroll', handleScroll, true);
-    onCleanup(() => document.removeEventListener('scroll', handleScroll, true));
-  });
-
-  overlay.onCleanup(() => effectRef.destroy());
-}
-
 function getOverlayContainerElement(overlayId: string): HTMLElement | null {
   return document.querySelector<HTMLElement>(`[data-overlay-container-id="${overlayId}"]`);
 }
@@ -361,22 +278,6 @@ export function trapOverlayFocus(
   }
 }
 
-/**
- * Guards focus inside a modal overlay by redirecting any focus that escapes
- * back to the first focusable element in the overlay panel.
- *
- * This check is overlay-aware: focus inside descendant overlays
- * (e.g. a datepicker calendar opened from within a dialog)
- * is treated as "still inside" and is never redirected.
- */
-export function guardModalFocus(overlay: OverlaySession): void {
-  trapOverlayFocus(overlay, {
-    autoFocus: false,
-    loopTab: false,
-    guard: true,
-  });
-}
-
 export function isElementInsideOverlayContainer(
   target: EventTarget | null | undefined,
   overlayId: string | null | undefined,
@@ -388,14 +289,3 @@ export function isElementInsideOverlayContainer(
   return !!target.closest(`[data-overlay-container-id="${overlayId}"]`);
 }
 
-export function isFocusInsideTriggerOrOverlay(
-  target: EventTarget | null | undefined,
-  trigger: Node,
-  overlayId: string | null | undefined,
-): boolean {
-  if (!(target instanceof Node)) {
-    return false;
-  }
-
-  return trigger.contains(target) || isElementInsideOverlayContainer(target, overlayId);
-}

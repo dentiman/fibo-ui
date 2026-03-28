@@ -1,5 +1,5 @@
 import { DestroyRef, Directive, ElementRef, inject, OnInit } from '@angular/core';
-import { blockScroll } from './overlay-behaviors';
+import { blockScroll, isElementInsideOverlayContainer } from './overlay-behaviors';
 import { OverlayShellHost } from './overlay-shell-host';
 import { OverlayStack } from './overlay-stack';
 
@@ -9,8 +9,8 @@ import { OverlayStack } from './overlay-stack';
  * Responsibilities:
  * - Binds `data-overlay-container-id` for DOM-based overlay lookups
  * - Auto-sets `interactionRoot` to the host element
- * - Attaches `closeOnOutsideClick` / `closeOnFocusLeave` listeners
- *   based on `strategy.defaultBehaviors`
+ * - Attaches close-policy listeners based on `strategy.defaultBehaviors`:
+ *   `closeOnOutsideClick`, `closeOnFocusLeave`, `closeOnScroll`, `blockScroll`
  */
 @Directive({
   selector: '[fiboOverlayContainer]',
@@ -40,6 +40,10 @@ export class OverlayContainer implements OnInit {
 
     if (behaviors.includes('closeOnFocusLeave')) {
       this.attachCloseOnFocusLeave();
+    }
+
+    if (behaviors.includes('closeOnScroll')) {
+      this.attachCloseOnScroll();
     }
   }
 
@@ -73,5 +77,18 @@ export class OverlayContainer implements OnInit {
 
     document.addEventListener('focusin', handler, true);
     this.destroyRef.onDestroy(() => document.removeEventListener('focusin', handler, true));
+  }
+
+  private attachCloseOnScroll(): void {
+    const handle = this.shellHost.handle();
+
+    const handler = (event: Event) => {
+      const target = event.target;
+      if (target instanceof Element && isElementInsideOverlayContainer(target, handle.id)) return;
+      handle.close('blur');
+    };
+
+    document.addEventListener('scroll', handler, true);
+    this.destroyRef.onDestroy(() => document.removeEventListener('scroll', handler, true));
   }
 }

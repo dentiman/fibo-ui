@@ -125,23 +125,29 @@ The setup API exposes:
 - `effect(...)`
 - `onCleanup(...)`
 
-## Behavior Helpers
+## Default Behaviors
 
-Behavior helpers are reusable lifecycle policies that plug into `setup(...)`.
+Each strategy declares which behaviors apply automatically.
+`OverlayContainer` reads `strategy.defaultBehaviors` and attaches them when the shell renders —
+no manual setup calls needed.
 
-### `closeOnOutsideClick(...)`
+| Strategy | Auto-applied behaviors |
+|---|---|
+| `connectedOverlay` | closeOnOutsideClick, closeOnFocusLeave |
+| `modalOverlay` | blockScroll, closeOnOutsideClick |
+| `menuOverlay` | closeOnOutsideClick, closeOnFocusLeave |
+| `tooltipOverlay` | closeOnScroll |
+| `notificationOverlay` | — |
 
-Closes when the user clicks outside the reference element and outside the current overlay branch.
+## Setup Helpers
 
-### `closeOnFocusLeave(...)`
-
-Closes when focus leaves both the reference element and the current overlay branch.
+Some behaviors need access to `OverlaySession` lifecycle hooks and must be wired in `setup(...)`.
 
 ### `trapOverlayFocus(...)`
 
 Unified focus policy for overlays:
 
-- autofocus on open
+- autofocus on open (via `afterOpened`)
 - cyclic `Tab/Shift+Tab` inside current overlay container
 - branch-aware focus guard for modal categories (`dialog`, `confirmation`)
 
@@ -149,26 +155,8 @@ Use `[fiboFocusInitial]` marker on an element inside overlay content to override
 
 ### `restoreTriggerFocusOnClose(...)`
 
-Returns focus to the reference element when close completes from inside the same overlay branch.
-
-### `backdropClosable` / `blockScroll`
-
-Modal overlays can close on backdrop click and lock document scroll through strategy options:
-
-```ts
-createOverlay(isOpen, modalOverlay({
-  templateRef,
-  backdropClosable: true,
-  blockScroll: true,
-}), overlay => {
-  restoreTriggerFocusOnClose(overlay);
-  trapOverlayFocus(overlay);
-});
-```
-
-### `closeOnScroll(...)`
-
-Closes the overlay when the user scrolls outside the overlay container. Useful for tooltips and popovers that lose context when content scrolls.
+Returns focus to the reference element when close is initiated while focus is still inside the overlay.
+Registered as a `beforeClose` hook — captures active element at the right moment.
 
 ## Runtime Architecture
 

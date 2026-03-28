@@ -9,8 +9,6 @@ import {
   viewChild,
 } from '@angular/core';
 import {
-  closeOnFocusLeave,
-  closeOnOutsideClick,
   createOverlay,
   connectedOverlay,
   restoreTriggerFocusOnClose,
@@ -77,8 +75,6 @@ export class CdkOverlaysBasicExample {
   });
 
   readonly overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
-    closeOnFocusLeave(overlay);
-    closeOnOutsideClick(overlay);
     restoreTriggerFocusOnClose(overlay);
   });
 
