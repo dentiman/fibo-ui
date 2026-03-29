@@ -8,17 +8,36 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
+import {OverlayArrow} from '@fibo-ui/cdk';
 import {TooltipService} from './tooltip-service';
 
 @Component({
   selector: 'fibo-tooltip-overlay-container',
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, OverlayArrow],
   templateUrl: './tooltip-overlay-container.html',
   encapsulation: ViewEncapsulation.None,
   styles: `
     .tooltip-enter {
       animation: tooltip-in 150ms ease-out;
     }
+
+    .fibo-tooltip-shell {
+      max-height: none;
+      overflow: visible;
+    }
+
+    .fibo-overlay-arrow {
+      position: absolute;
+      z-index: -1;
+      width: 0.5rem;
+      height: 0.5rem;
+      transform: rotate(45deg);
+      background-color: var(--popover-bg);
+      outline: 1px solid var(--popover-outline);
+      outline-offset: -1px;
+      pointer-events: none;
+    }
+
     /* Leave — triggered by outlet's animate.leave="overlay-leave" */
     .overlay-leave .fibo-tooltip-container {
       animation: tooltip-out 100ms ease-in forwards;

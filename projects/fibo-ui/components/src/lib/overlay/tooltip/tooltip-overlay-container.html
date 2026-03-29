@@ -1,10 +1,13 @@
 <ng-template #root>
   @let tooltipRef = tooltipService.tooltipRef();
   @if (tooltipRef) {
-    @if (content()) {
-      {{ tooltipRef.content }}
-    } @else if (templateRef()) {
-      <ng-container *ngTemplateOutlet="templateRef()"></ng-container>
-    }
+    <div class="fibo-tooltip-container" [id]="tooltipRef.tooltipId" role="tooltip">
+      @if (content()) {
+        {{ tooltipRef.content }}
+      } @else if (templateRef()) {
+        <ng-container *ngTemplateOutlet="templateRef()"></ng-container>
+      }
+    </div>
+    <div fiboOverlayArrow class="fibo-overlay-arrow" aria-hidden="true"></div>
   }
 </ng-template>
