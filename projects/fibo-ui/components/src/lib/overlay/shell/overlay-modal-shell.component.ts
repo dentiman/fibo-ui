@@ -1,28 +1,23 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, Injector, ViewEncapsulation, inject, input } from '@angular/core';
-import { type OverlayHandle, OverlayContainer, OverlayShellHost, OverlayPanel } from '@fibo-ui/cdk';
+import { type OverlayHandle, OverlayContainer, OverlayPanel, OverlayShellHost } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-overlay-modal-shell',
-  imports: [NgTemplateOutlet, OverlayContainer, OverlayPanel],
+  imports: [NgTemplateOutlet],
   hostDirectives: [
-    {
-      directive: OverlayShellHost,
-      inputs: ['handle'],
-    },
+    { directive: OverlayShellHost, inputs: ['handle'] },
+    OverlayContainer,
+    OverlayPanel,
   ],
   template: `
-    <div
-      fiboOverlayContainer
-      class="overlay-modal-shell-panel pointer-events-auto relative overflow-hidden rounded-lg bg-background px-4 pt-5 pb-4 text-left shadow-xl sm:my-8 sm:w-full sm:max-w-lg sm:p-6 dark:outline dark:-outline-offset-1 dark:outline-white/8"
-    >
-      @if (handle().templateRef) {
-        <ng-container *ngTemplateOutlet="handle().templateRef; injector: injector"></ng-container>
-      }
-    </div>
+    @if (handle().templateRef) {
+      <ng-container *ngTemplateOutlet="handle().templateRef; injector: injector"></ng-container>
+    }
   `,
   host: {
-    'class': 'fixed inset-0 flex items-end justify-center p-4 text-center pointer-events-none sm:items-center sm:p-0',
+    'class':
+      'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto w-[calc(100%-2rem)] overflow-hidden rounded-lg bg-background px-4 pt-5 pb-4 text-left shadow-xl sm:max-w-lg sm:p-6 dark:outline dark:-outline-offset-1 dark:outline-white/8',
     'animate.enter': 'overlay-modal-enter',
     'animate.leave': 'overlay-modal-leave',
   },
@@ -36,31 +31,13 @@ import { type OverlayHandle, OverlayContainer, OverlayShellHost, OverlayPanel } 
     }
 
     @keyframes overlay-modal-enter {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from { opacity: 0; scale: 0.95; }
+      to { opacity: 1; scale: 1; }
     }
 
     @keyframes overlay-modal-leave {
-      from { opacity: 1; }
-      to { opacity: 0; }
-    }
-
-    .overlay-modal-enter .overlay-modal-shell-panel {
-      animation: overlay-modal-panel-enter 160ms ease-out;
-    }
-
-    .overlay-modal-leave .overlay-modal-shell-panel {
-      animation: overlay-modal-panel-leave 160ms ease-in forwards;
-    }
-
-    @keyframes overlay-modal-panel-enter {
-      from { transform: scale(0.95) translateY(8px); }
-      to { transform: scale(1) translateY(0); }
-    }
-
-    @keyframes overlay-modal-panel-leave {
-      from { transform: scale(1) translateY(0); }
-      to { transform: scale(0.95) translateY(8px); }
+      from { opacity: 1; scale: 1; }
+      to { opacity: 0; scale: 0.95; }
     }
   `,
   encapsulation: ViewEncapsulation.None,

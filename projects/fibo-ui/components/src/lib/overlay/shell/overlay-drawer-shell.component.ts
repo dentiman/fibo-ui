@@ -4,62 +4,38 @@ import { type OverlayHandle, OverlayContainer, OverlayPanel, OverlayShellHost } 
 
 @Component({
   selector: 'fibo-overlay-drawer-shell',
-  imports: [NgTemplateOutlet, OverlayContainer, OverlayPanel],
+  imports: [NgTemplateOutlet],
   hostDirectives: [
-    {
-      directive: OverlayShellHost,
-      inputs: ['handle'],
-    },
+    { directive: OverlayShellHost, inputs: ['handle'] },
+    OverlayContainer,
+    OverlayPanel,
   ],
   template: `
-    <div
-      fiboOverlayContainer
-      fiboOverlayPanel
-      class="overlay-drawer-shell-panel pointer-events-auto w-screen max-w-md overflow-y-auto bg-background shadow-xl focus:outline-none dark:outline dark:-outline-offset-1 dark:outline-white/8"
-    >
-      @if (handle().templateRef) {
-        <ng-container *ngTemplateOutlet="handle().templateRef; injector: injector"></ng-container>
-      }
-    </div>
+    @if (handle().templateRef) {
+      <ng-container *ngTemplateOutlet="handle().templateRef; injector: injector"></ng-container>
+    }
   `,
   host: {
-    'class': 'fixed inset-y-0 right-0 flex max-w-full pl-10 pointer-events-none',
+    'class':
+      'fixed inset-y-0 right-0 pointer-events-auto w-full max-w-md overflow-y-auto bg-background shadow-xl focus:outline-none dark:outline dark:-outline-offset-1 dark:outline-white/8',
     'animate.enter': 'overlay-drawer-enter',
     'animate.leave': 'overlay-drawer-leave',
   },
   styles: `
     .overlay-drawer-enter {
-      animation: overlay-drawer-host-enter 200ms ease-out;
+      animation: overlay-drawer-enter 200ms ease-out;
     }
 
     .overlay-drawer-leave {
-      animation: overlay-drawer-host-leave 150ms ease-in forwards;
+      animation: overlay-drawer-leave 150ms ease-in forwards;
     }
 
-    .overlay-drawer-enter .overlay-drawer-shell-panel {
-      animation: overlay-drawer-slide-in 200ms ease-out;
-    }
-
-    .overlay-drawer-leave .overlay-drawer-shell-panel {
-      animation: overlay-drawer-slide-out 150ms ease-in forwards;
-    }
-
-    @keyframes overlay-drawer-host-enter {
-      from { opacity: 1; }
-      to { opacity: 1; }
-    }
-
-    @keyframes overlay-drawer-host-leave {
-      from { opacity: 1; }
-      to { opacity: 1; }
-    }
-
-    @keyframes overlay-drawer-slide-in {
+    @keyframes overlay-drawer-enter {
       from { transform: translateX(100%); }
       to { transform: translateX(0); }
     }
 
-    @keyframes overlay-drawer-slide-out {
+    @keyframes overlay-drawer-leave {
       from { transform: translateX(0); }
       to { transform: translateX(100%); }
     }
