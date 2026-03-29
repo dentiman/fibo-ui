@@ -2,7 +2,7 @@ import type { TemplateRef } from '@angular/core';
 import type { Placement } from '@floating-ui/dom';
 import type { OverlayRenderConfig } from './overlay-session';
 
-export type OverlayStrategyKind = 'connected' | 'modal' | 'menu' | 'tooltip' | 'notification';
+export type OverlayStrategyKind = 'connected' | 'modal' | 'drawer' | 'menu' | 'tooltip' | 'notification';
 
 export type OverlayShellKind = OverlayStrategyKind;
 
@@ -63,6 +63,7 @@ export interface OverlayStrategyBase<TKind extends OverlayStrategyKind, TOptions
 
 export type ConnectedOverlayStrategy = OverlayStrategyBase<'connected', ConnectedOverlayOptions>;
 export type ModalOverlayStrategy = OverlayStrategyBase<'modal', ModalOverlayOptions>;
+export type DrawerOverlayStrategy = OverlayStrategyBase<'drawer', ModalOverlayOptions>;
 export type MenuOverlayStrategy = OverlayStrategyBase<'menu', MenuOverlayOptions>;
 export type TooltipOverlayStrategy = OverlayStrategyBase<'tooltip', TooltipOverlayOptions>;
 export type NotificationOverlayStrategy = OverlayStrategyBase<'notification', NotificationOverlayOptions>;
@@ -99,6 +100,22 @@ export function modalOverlay(options: ModalOverlayOptions): ModalOverlayStrategy
   return {
     kind: 'modal',
     shell: 'modal',
+    category: 'dialog',
+    options: Object.freeze({ ...options }),
+    config: normalizeRenderConfig(options, 'dialog'),
+    defaultBehaviors: Object.freeze([
+      'blockScroll',
+      'closeOnOutsideClick',
+      'trapOverlayFocus',
+      'restoreTriggerFocusOnClose',
+    ]),
+  };
+}
+
+export function drawerOverlay(options: ModalOverlayOptions): DrawerOverlayStrategy {
+  return {
+    kind: 'drawer',
+    shell: 'drawer',
     category: 'dialog',
     options: Object.freeze({ ...options }),
     config: normalizeRenderConfig(options, 'dialog'),
@@ -151,6 +168,7 @@ export function notificationOverlay(options: NotificationOverlayOptions): Notifi
 export type OverlayStrategy =
   | ConnectedOverlayStrategy
   | ModalOverlayStrategy
+  | DrawerOverlayStrategy
   | MenuOverlayStrategy
   | TooltipOverlayStrategy
   | NotificationOverlayStrategy;

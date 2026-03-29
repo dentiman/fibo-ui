@@ -12,21 +12,17 @@ import { type OverlayHandle, OverlayContainer, OverlayShellHost, OverlayPanel } 
     },
   ],
   template: `
-    <div class="overlay-modal-shell-backdrop fixed inset-0 pointer-events-auto bg-black/30 dark:bg-black/50"></div>
-
-    <div class="fixed inset-0 flex items-end justify-center p-4 text-center sm:items-center sm:p-0">
-      <div
-        fiboOverlayContainer
-        class="overlay-modal-shell-panel pointer-events-auto relative overflow-hidden rounded-lg bg-background px-4 pt-5 pb-4 text-left shadow-xl sm:my-8 sm:w-full sm:max-w-lg sm:p-6 dark:outline dark:-outline-offset-1 dark:outline-white/8"
-      >
-        @if (handle().templateRef) {
-          <ng-container *ngTemplateOutlet="handle().templateRef; injector: injector"></ng-container>
-        }
-      </div>
+    <div
+      fiboOverlayContainer
+      class="overlay-modal-shell-panel pointer-events-auto relative overflow-hidden rounded-lg bg-background px-4 pt-5 pb-4 text-left shadow-xl sm:my-8 sm:w-full sm:max-w-lg sm:p-6 dark:outline dark:-outline-offset-1 dark:outline-white/8"
+    >
+      @if (handle().templateRef) {
+        <ng-container *ngTemplateOutlet="handle().templateRef; injector: injector"></ng-container>
+      }
     </div>
   `,
   host: {
-    'class': 'fixed inset-0 pointer-events-none',
+    'class': 'fixed inset-0 flex items-end justify-center p-4 text-center pointer-events-none sm:items-center sm:p-0',
     'animate.enter': 'overlay-modal-enter',
     'animate.leave': 'overlay-modal-leave',
   },
