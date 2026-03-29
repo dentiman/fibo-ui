@@ -103,13 +103,6 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'datepicker-range',
-        loadComponent: () =>
-          import('./pages/components/form-controls/datepicker-range').then(
-            (m) => m.DatepickerRangePageComponent,
-          ),
-      },
-      {
         path: 'form-example',
         pathMatch: 'full',
         redirectTo: 'form-examples',
@@ -211,13 +204,6 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./pages/cdk/selection-model-page').then(
                 (m) => m.CdkSelectionModelPageComponent,
-              ),
-          },
-          {
-            path: 'composition',
-            loadComponent: () =>
-              import('./pages/cdk/composition-page').then(
-                (m) => m.CdkCompositionPageComponent,
               ),
           },
           { path: '', pathMatch: 'full', redirectTo: 'data-list' },

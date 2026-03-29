@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DocViewer } from '../../../common/doc-viewer/doc-viewer';
 import { EXAMPLE_REGISTRY } from '../../../common/doc-viewer/example-registry';
-import { ComboboxBasicTemplateExample } from './examples/combobox-basic-template-example';
 import { ComboboxComponentExample } from './examples/combobox-component-example';
 
 const EXAMPLES = new Map<string, any>([
-  ['combobox-basic-template', ComboboxBasicTemplateExample],
-  ['combobox-component', ComboboxComponentExample],
+  ['combobox', ComboboxComponentExample],
 ]);
 
 @Component({

@@ -11,7 +11,6 @@ export * from './lib/form/form-error/form-error-pipes';
 export * from './lib/form/form-error/form-error-service';
 export * from './lib/form/form-field/input';
 export * from './lib/form/form-field/form-field.directive';
-export * from './lib/form/form-field/form-field-trigger';
 export * from './lib/form/form-value-control-token';
 
 
@@ -38,11 +37,6 @@ export * from './lib/menu/menu-panel';
 export * from './lib/menu/submenu-trigger';
 export * from './lib/menu/menu-item.type';
 export * from './lib/menu/menu-active-route.utils';
-
-// Popover Directives
-export * from './lib/popover/popover-trigger';
-export * from './lib/popover/popover-arrow';
-export * from './lib/popover/popover';
 
 // Date primitives
 export * from './lib/date/date-adapter';

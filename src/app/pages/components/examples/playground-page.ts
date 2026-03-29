@@ -1,22 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import {
-  DataListKeyboardBridge,
-  DialogTrigger,
-  KeyboardTarget,
-  PopoverTriggerToggle,
-} from '@fibo-ui/cdk';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, signal, TemplateRef, viewChild } from '@angular/core';
+import { createOverlay, menuOverlay, DialogTrigger } from '@fibo-ui/cdk';
 import { FiboDialog, Menu, type MenuItemType } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-playground-page',
-  imports: [
-    Menu,
-    FiboDialog,
-    DialogTrigger,
-    PopoverTriggerToggle,
-    KeyboardTarget,
-    DataListKeyboardBridge,
-  ],
+  imports: [Menu, FiboDialog, DialogTrigger],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-8 p-8">
@@ -33,42 +21,30 @@ import { FiboDialog, Menu, type MenuItemType } from '@fibo-ui/components';
 
         <div class="flex flex-wrap gap-3">
           <button
+            #menuTriggerBtn
             type="button"
             class="btn btn-primary"
-            fiboKeyboardTarget
-            #keyboardTarget="KeyboardTarget"
-            fiboPopoverTriggerToggle
-            [content]="menuTpl"
-            placement="bottom-start"
+            (click)="toggleMenu()"
           >
             Open Menu
           </button>
 
           <button
+            #altMenuTriggerBtn
             type="button"
             class="btn btn-secondary"
-            fiboKeyboardTarget
-            #keyboardTargetAlt="KeyboardTarget"
-            fiboPopoverTriggerToggle
-            [content]="altMenuTpl"
-            placement="bottom-start"
+            (click)="toggleAltMenu()"
           >
             Open Quick Menu
           </button>
         </div>
 
         <ng-template #menuTpl>
-          <fibo-menu
-            [fiboDataListKeyboardBridge]="keyboardTarget"
-            [items]="menuItems"
-          />
+          <fibo-menu [items]="menuItems" (itemTriggered)="closeMenu()" />
         </ng-template>
 
         <ng-template #altMenuTpl>
-          <fibo-menu
-            [fiboDataListKeyboardBridge]="keyboardTargetAlt"
-            [items]="quickMenuItems"
-          />
+          <fibo-menu [items]="quickMenuItems" (itemTriggered)="closeAltMenu()" />
         </ng-template>
       </section>
 
@@ -181,13 +157,49 @@ export class PlaygroundPageComponent {
   readonly spacerItemsTop = Array.from({ length: 8 }, (_, i) => i + 1);
   readonly spacerItemsBottom = Array.from({ length: 12 }, (_, i) => i + 1);
 
+  // Menu state
+  readonly menuTemplate = viewChild.required<TemplateRef<unknown>>('menuTpl');
+  readonly altMenuTemplate = viewChild.required<TemplateRef<unknown>>('altMenuTpl');
+  readonly menuTrigger = viewChild.required<ElementRef<HTMLButtonElement>>('menuTriggerBtn');
+  readonly altMenuTrigger = viewChild.required<ElementRef<HTMLButtonElement>>('altMenuTriggerBtn');
+
+  readonly isMenuOpen = signal(false);
+  readonly isAltMenuOpen = signal(false);
+
+  readonly menuStrategy = computed(() => {
+    const tpl = this.menuTemplate();
+    const trigger = this.menuTrigger().nativeElement;
+    if (!tpl || !trigger) return null;
+    return menuOverlay({
+      templateRef: tpl,
+      referenceElement: trigger,
+      interactionRoot: trigger,
+      focusReturnTarget: trigger,
+    });
+  });
+
+  readonly altMenuStrategy = computed(() => {
+    const tpl = this.altMenuTemplate();
+    const trigger = this.altMenuTrigger().nativeElement;
+    if (!tpl || !trigger) return null;
+    return menuOverlay({
+      templateRef: tpl,
+      referenceElement: trigger,
+      interactionRoot: trigger,
+      focusReturnTarget: trigger,
+    });
+  });
+
+  readonly menuOverlayHandle = createOverlay(this.isMenuOpen, this.menuStrategy);
+  readonly altMenuOverlayHandle = createOverlay(this.isAltMenuOpen, this.altMenuStrategy);
+
   readonly menuItems: MenuItemType[] = [
-    { label: 'My Profile', icon: 'user', url: '/form-example' },
+    { label: 'My Profile', icon: 'user', url: '/' },
     {
       label: 'Settings',
       icon: 'settings',
       children: [
-        { label: 'Profile Settings', icon: 'user', url: '/form-example' },
+        { label: 'Profile Settings', icon: 'user', url: '/' },
         { label: 'Notifications', icon: 'bell', url: '/notifications' },
         { label: 'Appearance', icon: 'sun', url: '/theme-demo' },
       ],
@@ -196,7 +208,7 @@ export class PlaygroundPageComponent {
       label: 'Account & Security',
       icon: 'shield-check',
       children: [
-        { label: 'Edit Profile', icon: 'user', url: '/form-example' },
+        { label: 'Edit Profile', icon: 'user', url: '/' },
         { label: 'Change Password', icon: 'lock', url: '/input' },
         { label: 'Two-Factor Auth', icon: 'shield-check', url: '/switch' },
         { label: 'Active Sessions', icon: 'monitor', url: '/notifications' },
@@ -206,8 +218,24 @@ export class PlaygroundPageComponent {
   ];
 
   readonly quickMenuItems: MenuItemType[] = [
-    { label: 'Single Select', icon: 'list', url: '/select-single' },
+    { label: 'Single Select', icon: 'list', url: '/select-multiple' },
     { label: 'Multiple Select', icon: 'list-checks', url: '/select-multiple' },
     { label: 'Datepicker', icon: 'calendar', url: '/datepicker' },
   ];
+
+  toggleMenu() {
+    this.isMenuOpen.update(open => !open);
+  }
+
+  closeMenu() {
+    this.isMenuOpen.set(false);
+  }
+
+  toggleAltMenu() {
+    this.isAltMenuOpen.update(open => !open);
+  }
+
+  closeAltMenu() {
+    this.isAltMenuOpen.set(false);
+  }
 }

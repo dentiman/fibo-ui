@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DocViewer } from '../../../common/doc-viewer/doc-viewer';
 import { EXAMPLE_REGISTRY } from '../../../common/doc-viewer/example-registry';
-import { MenuOneLevelExample } from './examples/menu-one-level-example';
-import { MenuMultiLevelExample } from './examples/menu-multi-level-example';
+import { MenuComponentExample } from './examples/menu-component-example';
 
 const EXAMPLES = new Map<string, any>([
-  ['menu-one-level', MenuOneLevelExample],
-  ['menu-multi-level', MenuMultiLevelExample],
+  ['menu', MenuComponentExample],
 ]);
 
 @Component({

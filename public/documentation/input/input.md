@@ -1,29 +1,57 @@
 # Input
 
-Text input.
+Text input component with Signal Forms support.
 
 ## Basic Usage
 
-:::example input-basic
+:::example input
 
-```html {example="input-basic"}
-<form class="space-y-4">
-  <fibo-form-field-control label="Username" iconStart="user">
-    <input type="text" placeholder="Enter username" class="text-field-input" />
-  </fibo-form-field-control>
+```html {example="input"}
+<fibo-text-field
+  [formField]="userForm.username"
+  label="Username"
+  iconStart="user"
+  placeholder="Enter username"
+/>
 
-  <fibo-form-field-control label="Password" iconStart="lock">
-    <input type="password" placeholder="Enter password" class="text-field-input" />
-  </fibo-form-field-control>
-</form>
+<fibo-text-field
+  [formField]="userForm.email"
+  label="Email"
+  type="email"
+  iconStart="mail"
+  placeholder="Enter email"
+/>
+
+<fibo-text-field
+  [formField]="userForm.password"
+  label="Password"
+  type="password"
+  iconStart="lock"
+  placeholder="Enter password"
+/>
 ```
 
-```ts {example="input-basic"}
+```ts {example="input"}
 @Component({
-  selector: 'input-basic-example',
-  imports: [FormFieldControl],
+  selector: 'input-component-example',
+  imports: [FormField, TextField],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '...',
 })
-export class InputBasicExample {}
+export class InputComponentExample {
+  readonly user = signal({ username: '', email: '', password: '' });
+  readonly userForm = form(this.user);
+}
 ```
+
+## API
+
+### Inputs
+
+- `type: input<string>` - input type (default: 'text')
+- `label: input<string>` - field label
+- `hint: input<string>` - helper text
+- `placeholder: input<string>` - placeholder text
+- `iconStart: input<string>` - leading Lucide icon
+- `iconEnd: input<string>` - trailing Lucide icon
+- standard form-state inputs: `required`, `disabled`, `touched`, `invalid`, `dirty`, `errors`

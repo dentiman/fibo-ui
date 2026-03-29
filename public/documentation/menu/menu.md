@@ -2,75 +2,78 @@
 
 Floating menu component with support for nested items, icons, and badges.
 
-## One Level
+## Basic Usage
 
-:::example menu-one-level
+:::example menu
 
-```html {example="menu-one-level"}
-<button type="button" class="btn btn-primary" fiboPopoverTriggerToggle>
-  Menu (1 level)
-  <ng-template fiboPortalContent let-trigger>
-    <div
-      fiboPopover [trigger]="trigger"
-      fiboDataList (itemTriggered)="trigger.close()"
-      class="popover-container min-w-40"
-    >
-      <a fiboDataListItem [routerLink]="'/'" class="datalist-item">Single Select</a>
-      <a fiboDataListItem [routerLink]="'/select-multiple'" class="datalist-item">Multiple Select</a>
-      <a fiboDataListItem [routerLink]="'/datepicker'" class="datalist-item">Datepicker</a>
-    </div>
-  </ng-template>
+```html {example="menu"}
+<button
+  #triggerBtn
+  type="button"
+  class="btn btn-primary"
+  (click)="toggle()"
+>
+  Menu
 </button>
+
+<ng-template #menuTpl>
+  <fibo-menu [items]="menuItems"></fibo-menu>
+</ng-template>
 ```
 
-```ts {example="menu-one-level"}
+```ts {example="menu"}
 @Component({
-  selector: 'menu-one-level-example',
-  imports: [PopoverTriggerToggle, Popover, PortalContent, DataList, DataListItem, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'menu-component-example',
+  imports: [Menu],
   template: '...',
 })
-export class MenuOneLevelExample {}
-```
+export class MenuComponentExample {
+  readonly isOpen = signal(false);
 
-## Multi Level (Data Driven)
+  readonly strategy = computed(() => menuOverlay({
+    templateRef: this.menuTemplate(),
+    referenceElement: this.triggerBtn(),
+    interactionRoot: this.triggerBtn(),
+    focusReturnTarget: this.triggerBtn(),
+  }));
 
-:::example menu-multi-level
+  readonly overlayHandle = createOverlay(this.isOpen, this.strategy);
 
-```html {example="menu-multi-level"}
-<button class="btn btn-primary" fiboPopoverTriggerToggle>
-  User Profile
-  <ng-template fiboPortalContent let-trigger>
-    <fibo-menu
-      fiboPopover
-      [trigger]="trigger"
-      [items]="userProfileMenuItems"
-      placement="bottom-start"
-    ></fibo-menu>
-  </ng-template>
-</button>
-```
-
-```ts {example="menu-multi-level"}
-@Component({
-  selector: 'menu-multi-level-example',
-  imports: [PopoverTriggerToggle, Popover, PortalContent, Menu],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '...',
-})
-export class MenuMultiLevelExample {
-  readonly userProfileMenuItems: MenuItemType[] = [
-    { label: 'My Profile', icon: 'user', url: '/form-example' },
+  readonly menuItems: MenuItemType[] = [
+    { label: 'My Profile', icon: 'user', url: '/' },
     {
       label: 'Settings',
       icon: 'settings',
       children: [
-        { label: 'Profile Settings', icon: 'user', url: '/form-example' },
+        { label: 'Profile Settings', icon: 'user', url: '/' },
         { label: 'Notifications', icon: 'bell', url: '/notifications' },
-        { label: 'Appearance', icon: 'sun', url: '/theme-demo' },
       ],
     },
     { label: 'Log Out', icon: 'log-out', url: '/menu' },
   ];
+
+  toggle() {
+    this.isOpen.update(open => !open);
+  }
+}
+```
+
+## API
+
+### Inputs
+
+- `items: input<MenuItemType[]>` - menu items configuration
+- `menuContent: input<TemplateRef<any>>()` - optional template for custom content
+
+### Types
+
+```ts
+export interface MenuItemType {
+  label: string;
+  icon?: string;
+  url?: string;
+  children?: MenuItemType[];
+  disabled?: boolean;
+  badge?: string | number;
 }
 ```

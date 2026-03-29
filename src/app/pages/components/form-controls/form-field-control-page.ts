@@ -4,11 +4,9 @@ import { EXAMPLE_REGISTRY } from '../../../common/doc-viewer/example-registry';
 import { FormFieldControlBasicExample } from './examples/form-field-control-basic-example';
 import { FormFieldControlClearableExample } from './examples/form-field-control-clearable-example';
 import { FormExample } from './examples/form-example';
-import { FormFieldControlSignalFormExample } from './examples/form-field-control-signal-form-example';
 
 const EXAMPLES = new Map<string, any>([
   ['form-field-control-basic', FormFieldControlBasicExample],
-  ['form-field-control-signal-form', FormFieldControlSignalFormExample],
   ['form-field-control-clearable', FormFieldControlClearableExample],
   ['form-example', FormExample],
 ]);

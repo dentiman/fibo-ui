@@ -5,7 +5,7 @@
 // Loading Spin component
 export * from './lib/loading-spin/loading-spin';
 
-// Popover components
+// Dialog components
 export * from './lib/overlay/dialog/dialog';
 export * from './lib/overlay/dialog/drawer';
 

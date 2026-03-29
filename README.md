@@ -49,7 +49,7 @@ npm start          # Dev server at http://localhost:4200
 │   │       ├── popover/              # Popover + PopoverTrigger (Floating UI)
 │   │       ├── portal/              # OverlayRegistry, PortalContent, OverlayOutlet
 │   │       ├── data-list/           # DataList, DataListItem, SelectOne, SelectMulti
-│   │       ├── form/                # FormFieldDirective, FormFieldTrigger, FiboInput
+│   │       ├── form/                # FormFieldDirective, FiboInput
 │   │       ├── common/              # IsEmpty, RandomId
 │   │       └── utils/               # Property utilities
 │   │
@@ -84,7 +84,7 @@ Behavior-only primitives with no styling. Components library builds on these.
 - **Popover system** — `PopoverTrigger` (click/toggle variants) manages open state, `Popover` handles positioning via `@floating-ui/dom` and click-outside dismissal, `PopoverPosition` computes placement
 - **Portal system** — `PortalContent` directive marks template content, `OverlayOutlet` renders it at a different DOM location, `OverlayRegistry` connects them. Used by all floating UI (menus, selects, dialogs)
 - **DataList + Selection** — `DataList` manages a list of `DataListItem` directives with keyboard navigation (arrow keys, active state tracking). `SelectOne` and `SelectMulti` are selection model directives that plug into any DataList. Used by Select, Menu, Table, Listbox
-- **Form field directives** — `FormFieldDirective` tracks form state (touched, invalid, dirty, errors) via content projection. `FormFieldTrigger` extends PopoverTrigger for dropdown form fields
+- **Form field directives** — `FormFieldDirective` tracks form state (touched, invalid, dirty, errors) via content projection
 
 ### Components Layer (`@fibo-ui/components`)
 
@@ -126,25 +126,6 @@ userForm = form(this.userModel, (path) => {
 ```html
 <fibo-text-field [formField]="userForm.username" label="Username" />
 <fibo-datepicker [formField]="userForm.birthDate" label="Birth Date" />
-```
-
-### Select (CDK composition)
-
-```html
-<button fiboFormFieldTrigger [formField]="userForm.role" class="form-field-control">
-  <label class="form-field-label">Role</label>
-  <div>{{ user().role || 'Select Role' }}</div>
-
-  <div *fiboPortalContent="let trigger"
-       fiboPopover [trigger]="trigger" [matchWidth]="true"
-       fiboDataList (itemTriggered)="trigger.close()"
-       fiboSelectOne [(value)]="userForm.role().value"
-       class="popover-container">
-    @for (role of roles; track role) {
-      <a fiboDataListItem [value]="role" class="datalist-item">{{ role }}</a>
-    }
-  </div>
-</button>
 ```
 
 ### Dialog
