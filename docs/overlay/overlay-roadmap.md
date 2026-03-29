@@ -2,23 +2,7 @@
 
 Planned improvements not yet implemented. Ordered by priority.
 
-## 1. Дублирование позиционирования: `Popover` vs `OverlayPosition`
-
-**Проблема.** `Popover` директива (`cdk/popover/popover.ts`) содержит собственную логику
-Floating UI (`autoUpdate`, `flip`, `shift`, `offset`). Та же логика уже реализована в
-`OverlayPosition` директиве (`cdk/overlay/overlay-position.ts`), которую используют shell компоненты.
-Два параллельных позиционера для одной задачи.
-
-**Предложение.** Убрать позиционирование из `Popover`. Shell-компоненты уже используют
-`OverlayPosition` как host directive — это единственный правильный путь.
-`Popover` оставить тонкой: только `close()` через `OVERLAY_HANDLE` и поддержка arrow через
-`PopoverArrow` contentChild.
-
-**Затрагивает:** `cdk/popover/popover.ts`, `cdk/popover/popover-arrow.ts`.
-
----
-
-## 2. Singleton overlay pattern: Confirmation / Tooltip / Notification
+## 1. Singleton overlay pattern: Confirmation / Tooltip / Notification
 
 **Проблема.** Три сервиса (`ConfirmationService`, `TooltipService`, `Notifier`) повторяют
 один и тот же паттерн:
@@ -52,7 +36,7 @@ const { isOpen, overlayHandle, setContainerRef } = createSingletonOverlay(
 
 ---
 
-## 3. Унификация типов: `OverlayCategory` / `OverlayStrategyKind` / `OverlayRuntimeCategory`
+## 2. Унификация типов: `OverlayCategory` / `OverlayStrategyKind` / `OverlayRuntimeCategory`
 
 **Проблема.** Три похожих типа описывают "тип оверлея":
 
@@ -74,7 +58,7 @@ const { isOpen, overlayHandle, setContainerRef } = createSingletonOverlay(
 
 ---
 
-## 4. Анимации `animate.enter` / `animate.leave`
+## 3. Анимации `animate.enter` / `animate.leave`
 
 **Проблема.** Shell компоненты используют нестандартный API в host metadata:
 
