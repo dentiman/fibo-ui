@@ -1,30 +1,22 @@
-# Overlay TODO (Best Practices, осталось сделать)
+# Overlay TODO
 
-Актуально на 2026-03-01.
+Актуально на 2026-03-29.
 
 ## P1
-
-- Обновить `projects/fibo-ui/components/README.md` под текущий API overlay:
-  - убрать устаревшие примеры с `fiboPortalContent`;
-  - оставить только текущий flow через `[content]` и единый `<fibo-overlay-outlet />`.
-
-- Сделать `scroll-lock` в `projects/fibo-ui/cdk/src/lib/portal/overlay-outlet.ts` через отдельный lock-manager:
-  - хранить и восстанавливать предыдущее значение `overflow`;
-  - сделать stack-safe механику;
-  - добавить SSR-safe guard.
-
-
-
-## P2
-
-
 
 - Добавить role-модель для `DataList`/`DataListItem`:
   - корректные `role` для сценариев listbox/menu;
   - согласовать с текущей клавиатурной навигацией.
 
+- Задокументировать `animate.enter` / `animate.leave` host binding паттерн:
+  - кто читает эти атрибуты;
+  - как работает переход leave → `completeAfterClose`.
+
+## P2
+
 - Добавить тесты для overlay-критичных сценариев:
-  - `OverlayRegistry` (`register/unregister/closeTopmost/closeAllByCategory`);
+  - `OverlayStack` (`createOverlay`, `closeTopmost`, `closeAllByTag`);
+  - keyboard dismiss (`Escape`) в `OverlayStackOutlet`.
 
-  - keyboard dismiss (`Escape`) в `OverlayOutlet`.
-
+- Рассмотреть `createSingletonOverlay()` utility для сокращения boilerplate
+  в `ConfirmationService`, `TooltipService`, `Notifier`.

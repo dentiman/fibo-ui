@@ -1,18 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Injector,
   Type,
   ViewEncapsulation,
   inject,
 } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
-import { OverlayStack } from '@fibo-ui/cdk';
-import type { OverlayStrategyKind } from '@fibo-ui/cdk';
+import { type OverlayHandle, OverlayStack } from '@fibo-ui/cdk';
 import { OverlayBackdropShellComponent } from './overlay-backdrop-shell.component';
-import { OverlayConnectedShellComponent } from './overlay-connected-shell.component';
-import { OverlayDrawerShellComponent } from './overlay-drawer-shell.component';
-import { OverlayModalShellComponent } from './overlay-modal-shell.component';
-import { OverlayPlainShellComponent } from './overlay-plain-shell.component';
 
 @Component({
   selector: 'fibo-overlay-stack-outlet',
@@ -31,25 +27,13 @@ import { OverlayPlainShellComponent } from './overlay-plain-shell.component';
 })
 export class OverlayStackOutlet {
   readonly overlayStack = inject(OverlayStack);
+  private readonly injector = inject(Injector);
 
-  // TEMP: backdrop decision is keyed by strategy kinds (modal/drawer) for now.
-  // This condition will be revisited when category model is refactored.
-  needsBackdropShell(kind: OverlayStrategyKind): boolean {
-    return kind === 'modal' || kind === 'drawer';
+  resolveShell(handle: OverlayHandle): Type<unknown> {
+    return this.injector.get(handle.config.shell);
   }
 
-  resolveShell(kind: OverlayStrategyKind): Type<unknown> {
-    switch (kind) {
-      case 'modal':
-        return OverlayModalShellComponent;
-      case 'drawer':
-        return OverlayDrawerShellComponent;
-      case 'connected':
-      case 'menu':
-      case 'tooltip':
-        return OverlayConnectedShellComponent;
-      default:
-        return OverlayPlainShellComponent;
-    }
+  needsBackdrop(handle: OverlayHandle): boolean {
+    return handle.config.needsBackdrop ?? false;
   }
 }

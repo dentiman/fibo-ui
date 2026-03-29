@@ -1,76 +1,118 @@
-# Overlay System (Current)
+# Overlay System
 
-This document describes the current overlay runtime in `@fibo-ui/cdk`.
+Full architecture and API reference for `@fibo-ui/cdk`.
 
-It covers only active architecture and APIs.
+## Runtime Model
 
-## 1) Runtime Model
+The overlay runtime is config-driven and signal-driven.
 
-The runtime is strategy-driven and signal-driven.
-
-- Entry point: `createOverlay(isOpen, strategy, setup?)`
+- Entry point: `createOverlay(isOpen, config, setup?)`
 - Global coordinator: `OverlayStack`
-- Render host: `OverlayContainerComponent`
+- Render host: `OverlayStackOutlet` (components layer)
 - Runtime object per open overlay: `OverlayHandle`
 - Lifecycle API for one open cycle: `OverlaySession`
 
-Current rendering is shell-based:
+Shell routing is token-based: each config carries `shell: InjectionToken<Type<any>>`.
+The outlet resolves the shell component via `injector.get(handle.config.shell)`.
 
-- `OverlayConnectedShellComponent` for `connected | menu | tooltip`
-- `OverlayModalShellComponent` for `modal`
-- `OverlayPlainShellComponent` fallback
-
-There is no extra `overlay-layer` wrapper in container template now. Shell roots carry overlay identity (`data-overlay-container-id`) and z-index.
-
-## 2) Core API
+## Core API
 
 ### `createOverlay(...)`
-
-Defined in `projects/fibo-ui/cdk/src/lib/overlay/overlay-stack.ts`.
 
 ```ts
 createOverlay(
   isOpen: WritableSignal<boolean>,
-  strategy: OverlayStrategy | Signal<OverlayStrategy | null | undefined> | null | undefined,
+  config: OverlayConfig | Signal<OverlayConfig | null | undefined> | null | undefined,
   setup?: (overlay: OverlaySession) => void,
 ): Signal<OverlayHandle | null>
 ```
 
-Behavior:
-
-- Opens when `isOpen()` becomes `true` and strategy has `templateRef`.
+- Opens when `isOpen()` becomes `true` and config has `templateRef`.
 - Closes when `isOpen()` becomes `false` or close is requested.
-- Keeps render config synced while overlay is open.
-- Supports close guards with `overlay.canClose(...)`.
+- Auto-applies `trapOverlayFocus({ guard: true })` when `config.trapFocus === true`.
+- Auto-applies `restoreTriggerFocusOnClose` when `config.restoreFocus === true`.
+- Keeps `templateRef`, `referenceElement`, `focusReturnTarget` synced while open.
+- Supports close guards via `overlay.canClose(...)`.
+
+### `OverlayConfig`
+
+Flat config object — one type for all overlay kinds.
+
+```ts
+interface OverlayConfig {
+  readonly templateRef: TemplateRef<any>;
+  readonly position: OverlayPositionConfig;      // GlobalPosition | ConnectedPosition | CoordinatePosition
+  readonly shell: InjectionToken<Type<any>>;      // resolved to shell component by outlet
+  readonly tag?: string;                          // freeform tag, e.g. 'menu' for closeAllByTag
+
+  // Close policies
+  readonly needsBackdrop?: boolean;
+  readonly closeOnEscape?: boolean;              // default: true (closeTopmost skips if false)
+  readonly closeOnOutsideClick?: boolean;
+  readonly closeOnFocusLeave?: boolean;
+  readonly closeOnScroll?: boolean;
+  readonly blockScroll?: boolean;
+
+  // Session behaviors (auto-applied in createOverlay)
+  readonly trapFocus?: boolean;                  // calls trapOverlayFocus({ guard: true })
+  readonly restoreFocus?: boolean;               // calls restoreTriggerFocusOnClose
+
+  // Reference elements
+  readonly referenceElement?: HTMLElement | null;
+  readonly focusReturnTarget?: HTMLElement | null;
+}
+```
+
+### Position types
+
+```ts
+type OverlayPositionConfig = GlobalPosition | ConnectedPosition | CoordinatePosition;
+
+globalPosition()                           // for modals, drawers
+connectedPosition(options?)                // for popovers, menus, tooltips
+coordinatePosition(x, y, options?)         // for context menus
+```
+
+`ConnectedPosition` options: `placement?`, `matchWidth?`, `offset?`
+
+### Shell tokens (CDK)
+
+```ts
+MODAL_SHELL_TOKEN        // OverlayModalShellComponent
+CONNECTED_SHELL_TOKEN    // OverlayConnectedShellComponent
+NOTIFICATION_SHELL_TOKEN // OverlayPlainShellComponent
+DRAWER_SHELL_TOKEN       // app-provided (use withShell)
+```
+
+Tokens throw a clear error if not provided. Register defaults via `provideOverlays()`.
 
 ### `OverlayHandle`
 
-Defined in `projects/fibo-ui/cdk/src/lib/overlay/overlay-handle.ts`.
+Runtime object for one currently open overlay.
 
-Important fields:
-
-- `id: string`
-- `category: 'popover' | 'menu' | 'dialog' | 'tooltip' | 'confirmation' | 'notification'`
-- `zIndex: number`
-- `templateRef`, `referenceElement`, `interactionRoot`, `focusReturnTarget`
-- `strategy: OverlayStrategy`
-- `closed: boolean`
-
-Methods:
-
-- `close(reason?: OverlayCloseReason)`
-- `setInteractionRoot(root: HTMLElement | null)`
+```ts
+interface OverlayHandle {
+  readonly id: string;
+  readonly config: OverlayConfig;
+  readonly zIndex: number;
+  readonly templateRef: TemplateRef<any> | undefined;
+  readonly referenceElement: HTMLElement | null | undefined;
+  readonly interactionRoot: HTMLElement | null | undefined;
+  readonly focusReturnTarget: HTMLElement | null | undefined;
+  readonly closed: boolean;
+  close(reason?: OverlayCloseReason): void;
+  setInteractionRoot(root: HTMLElement | null): void;
+}
+```
 
 ### `OverlaySession`
 
-Defined in `projects/fibo-ui/cdk/src/lib/overlay/overlay-session.ts`.
-
-Use this API inside `setup` only.
+Temporary lifecycle API inside `setup(...)`.
 
 - `requestClose(reason, event?)`
 - `afterOpened(handler)`
-- `beforeClose(handler)`
-- `afterClose(handler)`
+- `beforeClose(handler)` — runs before isOpen flips to false
+- `afterClose(handler)` — runs after leave animation
 - `canClose(guard)`
 - `effect(runner)`
 - `onCleanup(cleanup)`
@@ -78,8 +120,6 @@ Use this API inside `setup` only.
 - `isInOverlayBranch(target)`
 
 ### Close reasons
-
-Defined in `projects/fibo-ui/cdk/src/lib/overlay/overlay-types.ts`.
 
 ```ts
 type OverlayCloseReason =
@@ -92,204 +132,138 @@ type OverlayCloseReason =
   | 'destroy';
 ```
 
-## 3) Strategy Presets
+## Behavior Model
 
-Defined in `projects/fibo-ui/cdk/src/lib/overlay/overlay-strategy.ts`.
+### DOM behaviors — applied by `OverlayContainer` directive (`ngOnInit`)
 
-Kinds:
+`OverlayContainer` reads flat booleans from `handle.config`:
+
+| Config flag | Behavior |
+|---|---|
+| `blockScroll` | Locks document scroll (reference-counted for nesting) |
+| `closeOnOutsideClick` | Closes on click outside `interactionRoot` and overlay branch |
+| `closeOnFocusLeave` | Closes on focus leaving `interactionRoot` and overlay branch |
+| `closeOnScroll` | Closes on document scroll outside overlay container |
+
+### Session behaviors — auto-applied by `createOverlay`
+
+| Config flag | Applied behavior |
+|---|---|
+| `trapFocus: true` | `trapOverlayFocus(session, { guard: true })` |
+| `restoreFocus: true` | `restoreTriggerFocusOnClose(session)` |
+
+These are still importable and callable directly in `setup` for custom options.
+
+### `trapOverlayFocus(overlay, options?)`
+
+- Autofocuses on open (via `afterOpened`)
+- Cyclic Tab/Shift+Tab inside overlay container
+- `guard: true` — prevents focus escaping (for modals)
+- Use `[fiboFocusInitial]` to override initial focus target
+
+### `restoreTriggerFocusOnClose(overlay)`
+
+- Registers `beforeClose` hook
+- Restores focus to reference/interaction element when focus was inside at close time
+
+## `OverlayStack` API
 
 ```ts
-type OverlayStrategyKind = 'connected' | 'modal' | 'menu' | 'tooltip' | 'notification';
+overlayStack.openOverlayList()       // Signal<OverlayHandle[]>
+overlayStack.topmost()               // Signal<OverlayHandle | null>
+overlayStack.closeTopmost()          // closes top overlay where config.closeOnEscape !== false
+overlayStack.closeAllByTag(tag)      // closes all overlays with matching config.tag
+overlayStack.completeAfterClose(id)  // called by shell panel after leave animation
 ```
 
-Factories:
+## Shell Architecture
 
-- `connectedOverlay(options)` — category: `popover`, defaultBehaviors: `closeOnOutsideClick`, `closeOnFocusLeave`, `restoreTriggerFocusOnClose`
-- `modalOverlay(options)` — category: `dialog`, defaultBehaviors: `blockScroll`, `closeOnOutsideClick`, `trapOverlayFocus`, `restoreTriggerFocusOnClose`
-- `menuOverlay(options)` — category: `menu`, defaultBehaviors: `closeOnOutsideClick`, `closeOnFocusLeave`, `restoreTriggerFocusOnClose`
-- `tooltipOverlay(options)` — category: `tooltip`, defaultBehaviors: `closeOnScroll`
-- `notificationOverlay(options)` — category: `notification`, defaultBehaviors: none
+### `OverlayStackOutlet`
 
-Notes:
-
-- `menuOverlay` default placement is `right-start`, default offset is `1`.
-- `defaultBehaviors` is declarative metadata consumed by `OverlayContainer` directive.
-
-## 4) Behavior Helpers
-
-Defined in `projects/fibo-ui/cdk/src/lib/overlay/overlay-behaviors.ts`.
-
-### Auto-applied by `OverlayContainer` (based on `defaultBehaviors`)
-
-These are **not** called in `setup` — `OverlayContainer` directive reads `strategy.defaultBehaviors`
-and attaches them automatically when the shell renders:
-
-- `blockScroll` — locks document scroll (reference-counted for nested modals)
-- `closeOnOutsideClick` — closes on click outside `interactionRoot` and overlay branch
-- `closeOnFocusLeave` — closes on focus leaving `interactionRoot` and overlay branch
-- `closeOnScroll` — closes when document scrolls outside the overlay container (tooltips)
-
-### Used in `setup` callback (focus lifecycle, needs `OverlaySession` hooks)
-
-- `restoreTriggerFocusOnClose(overlay)` — registers `beforeClose` hook, restores focus to trigger when focus was inside at close time
-- `trapOverlayFocus(overlay, options?)` — auto-focus on open, cyclic Tab loop, modal focus guard
-
-How safe zone checks work (in `OverlayContainer`):
-
-- Compare event target with `handle.referenceElement` and `elementRef.nativeElement`.
-- Respect nested branch boundaries using `overlayStack.isOverlayInBranch(id, targetId)`.
-
-## 5) Rendering and Animation Lifecycle
-
-Container template (`projects/fibo-ui/cdk/src/lib/overlay/overlay-container.html`) renders shell components directly:
+Renders the active overlay list. Resolves shell via `injector.get(handle.config.shell)`.
+Shows backdrop if `handle.config.needsBackdrop`.
 
 ```html
 @for (overlay of overlayStack.openOverlayList(); track overlay.id) {
+  @if (needsBackdrop(overlay)) {
+    <fibo-overlay-backdrop-shell [handle]="overlay" />
+  }
   <ng-container
-    [ngComponentOutlet]="shellComponent(overlay)"
-    [ngComponentOutletInjector]="overlayInjector(overlay)"
-  ></ng-container>
+    [ngComponentOutlet]="resolveShell(overlay)"
+    [ngComponentOutletInputs]="{ handle: overlay }"
+  />
 }
 ```
 
-Animation ownership is on shell roots:
+### Shell components
 
-- `OverlayConnectedShellComponent`: `animate.enter="overlay-connected-enter"`, `animate.leave="overlay-connected-leave"`
-- `OverlayModalShellComponent`: `animate.enter="overlay-modal-enter"`, `animate.leave="overlay-modal-leave"`
+Each shell has `hostDirectives: [OverlayShellHost, OverlayContainer, ...]` and carries:
+- `data-overlay-container-id` — for branch tracking
+- `animate.enter` / `animate.leave` — animation class names
+- Shell calls `overlayStack.completeAfterClose(id)` on leave animation end
 
-On leave animation end, shell calls:
+Available shells:
+- `OverlayModalShellComponent` — fixed centered, scale animation
+- `OverlayConnectedShellComponent` — absolute positioned via `OverlayPosition` directive
+- `OverlayPlainShellComponent` — display:contents, no styling (notification containers)
+- `OverlayBackdropShellComponent` — semi-transparent fullscreen backdrop
+- `OverlayDrawerShellComponent` — slide-in from right (app must register via `withShell`)
 
-```ts
-overlayStack.completeAfterClose(handle.id)
-```
+### `OverlayPosition` directive
 
-This finalizes deferred `afterClose` handlers for strategies that wait for leave animation.
+Used by `OverlayConnectedShellComponent`. Reads `handle.config.position`:
 
-## 6) Z-Index and Escape
+- `type: 'connected'` — uses `referenceElement` + `autoUpdate` from floating-ui
+- `type: 'coordinate'` — uses virtual element at `(x, y)` for context menus
 
-`OverlayStack` uses category tiers:
+Applies `placement`, `matchWidth`, `offset` from the position config.
 
-- dialog: 500
-- confirmation: 600
-- popover/menu: 1000
-- tooltip: 2000
-- notification: 3000
-
-Escape handling is centralized in `OverlayContainerComponent` host:
-
-- `document:keydown.escape -> overlayStack.closeTopmost()`
-- skips closing `notification` and `tooltip` categories.
-
-## 7) Accessibility API
-
-Defined in `projects/fibo-ui/cdk/src/lib/overlay/overlay-panel.ts`.
-
-- `[fiboOverlayPanel]`
-  - sets `data-dialog-panel`
-  - wires `role`, `aria-modal`, `aria-labelledby`, `aria-describedby`
-- `[fiboOverlayTitle]`
-- `[fiboOverlayDescription]`
-
-Use for dialog-like overlays.
-
-## 8) High-Level Trigger APIs
-
-### Popover trigger directives
-
-Defined in `projects/fibo-ui/cdk/src/lib/popover/popover-trigger.ts`.
-
-- `[fiboPopoverTrigger]` (base)
-- `[fiboPopoverTriggerClick]`
-- `[fiboPopoverTriggerToggle]`
-
-Supported inputs on trigger directives:
-
-- `content: TemplateRef<any>`
-- `strategyKind: 'connected' | 'menu'`
-- `placement: Placement`
-- `offset: number`
-- `matchWidth: boolean`
-- `delegatesFocus: boolean`
-
-### Menu panel directives
-
-Defined in `projects/fibo-ui/cdk/src/lib/menu/menu-panel.ts` and `submenu-trigger.ts`.
-
-- `MenuPanel` coordinates submenu trigger registry and open/close delays.
-- `SubmenuTrigger` opens submenu via `createOverlay(..., menuOverlay(...))` directly.
-
-## 9) Usage Examples
-
-### Connected overlay (custom popover)
-
-`closeOnOutsideClick`, `closeOnFocusLeave` are auto-applied by `OverlayContainer` via `defaultBehaviors`.
-Only `restoreTriggerFocusOnClose` stays in setup (needs `beforeClose` hook).
+## Bootstrap
 
 ```ts
-readonly strategy = computed(() => {
-  const templateRef = this.popoverTpl();
-  if (!templateRef) return null;
-
-  return connectedOverlay({
-    templateRef,
-    referenceElement: this.triggerEl.nativeElement,
-    placement: 'bottom-start',
-    matchWidth: true,
-  });
-});
-
-readonly overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
-  restoreTriggerFocusOnClose(overlay);
-});
+// app.config.ts
+provideOverlays(
+  withShell(DRAWER_SHELL_TOKEN, DrawerShellComponent)  // only needed if using drawers
+)
 ```
 
-### Modal overlay
+`provideOverlays()` registers `MODAL_SHELL_TOKEN`, `CONNECTED_SHELL_TOKEN`, `NOTIFICATION_SHELL_TOKEN` with the library defaults. Custom shells via `withShell(token, component)`.
 
-`blockScroll`, `closeOnOutsideClick` are auto-applied. `trapOverlayFocus` and `restoreTriggerFocusOnClose`
-stay in setup (need `afterOpened` and `beforeClose` hooks).
+## Z-Index and Stacking
 
-```ts
-readonly strategy = computed(() => {
-  const templateRef = this.dialogTpl();
-  if (!templateRef) return null;
+All overlays are assigned incrementing z-indices from base 1000. Visual stacking follows DOM insertion order (outlet renders in `openOverlayList()` order).
 
-  return modalOverlay({
-    templateRef,
-    referenceElement: this.triggerEl.nativeElement,
-  });
-});
+Escape handling is centralized:
+- `document:keydown.escape` → `overlayStack.closeTopmost()`
+- Skips overlays where `config.closeOnEscape === false`
 
-readonly overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
-  trapOverlayFocus(overlay);
-  restoreTriggerFocusOnClose(overlay);
-});
-```
+## Nested Overlay Branches
 
-### Menu overlay
+When an overlay opens from inside another overlay container, it becomes part of that parent branch.
 
-```ts
-readonly strategy = computed(() => {
-  const templateRef = this.menuTpl();
-  if (!templateRef) return null;
+- Click inside child overlay is not treated as outside click for parent
+- Focus moving from parent to child is not treated as focus-leave
+- `isOverlayInBranch(ownerOverlayId, targetOverlayId)` traverses parent chain
 
-  return menuOverlay({
-    templateRef,
-    referenceElement: this.triggerEl.nativeElement,
-    placement: 'right-start',
-    offset: 1,
-  });
-});
+## Lifecycle
 
-readonly overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
-  restoreTriggerFocusOnClose(overlay);
-});
-```
+1. `isOpen` → `true`
+2. Overlay opens when `templateRef` is ready (pending effect if config not ready)
+3. DOM behaviors attached in `OverlayContainer.ngOnInit()`
+4. Session behaviors auto-applied from config, then `setup(session)` runs
+5. `afterOpened` fires after first render
+6. Close requested (any reason)
+7. `beforeClose` hooks run (focus restore)
+8. `isOpen` → `false`
+9. Shell leave animation plays
+10. `afterClose` handlers run
 
-## 10) Current Rules
+## Current Rules
 
-- Keep `isOpen` as source of truth.
-- Use strategy factories, not ad-hoc config objects.
-- Close-policy behaviors (`closeOnOutsideClick`, `closeOnFocusLeave`, `closeOnScroll`, `blockScroll`) are declared in `defaultBehaviors` and applied automatically by `OverlayContainer`. Do not call them in `setup`.
-- Focus behaviors (`trapOverlayFocus`, `restoreTriggerFocusOnClose`) go in `setup` — they need `OverlaySession` lifecycle hooks.
-- Keep animations on shell roots, not in container wrappers.
+- `isOpen` is source of truth — never call `overlay.close()` when you mean `isOpen.set(false)`.
+- Use `OverlayConfig` flat objects or presets from `@fibo-ui/components`.
+- DOM behaviors (blockScroll, closeOnOutside, etc.) are config booleans — `OverlayContainer` attaches them automatically.
+- Focus behaviors (`trapFocus`, `restoreFocus`) can be set on config or called manually in `setup`.
+- `setup` callback is for app-specific logic: `canClose`, `afterClose`, `beforeClose`, custom effects.
+- Keep animations on shell roots (`animate.enter` / `animate.leave`).
 - Use `fiboOverlayPanel` + title/description directives for modal semantics.

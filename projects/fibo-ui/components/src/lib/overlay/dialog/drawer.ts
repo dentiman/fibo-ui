@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  inject,
   ViewEncapsulation,
 } from '@angular/core';
-import { OVERLAY_HANDLE, OverlayPanel } from '@fibo-ui/cdk';
+import { OverlayPanel } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-drawer',
@@ -14,7 +13,7 @@ import { OVERLAY_HANDLE, OverlayPanel } from '@fibo-ui/cdk';
     <div class="fixed inset-0"
          animate.enter="drawer-enter">
 
-      <div [class]="'drawer-backdrop fixed inset-0' + (firstDrawer() ? ' bg-black/30 dark:bg-black/50' : '')">
+      <div class="drawer-backdrop fixed inset-0 bg-black/30 dark:bg-black/50">
       </div>
 
       <div class="drawer-panel pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
@@ -67,7 +66,4 @@ import { OVERLAY_HANDLE, OverlayPanel } from '@fibo-ui/cdk';
   `,
 })
 export class FiboDrawer {
-  private overlayHandle = inject(OVERLAY_HANDLE);
-
-  firstDrawer = this.overlayHandle.firstInCategory;
 }

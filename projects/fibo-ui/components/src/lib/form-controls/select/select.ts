@@ -6,10 +6,10 @@ import {
   DataListItem,
   KeyboardSource,
   SelectOne,
-  connectedOverlay,
   provideFormValueControl,
   restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
+import { connectedConfig } from '../../overlay/overlay-presets';
 import { FieldShell } from '../form/field-shell';
 import { FieldTargetDirective } from '../form/field-target';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
@@ -131,15 +131,14 @@ export class Select implements FormValueControl<string | number | null> {
       return null;
     }
 
-    return connectedOverlay({
+    return connectedConfig({
       templateRef,
       referenceElement: this.fieldShell().overlayReferenceElement(),
-      interactionRoot: this.fieldShell().overlayInteractionRoot(),
       focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
       matchWidth: true,
     });
   });
-  readonly overlayHandle = createOverlay(this.isOpen, this.strategy as any, overlay => {
+  readonly overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
     restoreTriggerFocusOnClose(overlay);
   });
 

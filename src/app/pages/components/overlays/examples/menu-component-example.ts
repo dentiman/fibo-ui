@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, ElementRef, signal, TemplateRef, viewChild } from '@angular/core';
-import { createOverlay, menuOverlay } from '@fibo-ui/cdk';
+import { createOverlay } from '@fibo-ui/cdk';
+import { menuConfig } from '@fibo-ui/components';
 import { Menu, type MenuItemType } from '@fibo-ui/components';
 
 @Component({
@@ -33,10 +34,9 @@ export class MenuComponentExample {
     const templateRef = this.menuTemplate();
     const trigger = this.triggerBtn().nativeElement;
     if (!templateRef || !trigger) return null;
-    return menuOverlay({
+    return menuConfig({
       templateRef,
       referenceElement: trigger,
-      interactionRoot: trigger,
       focusReturnTarget: trigger,
     });
   });

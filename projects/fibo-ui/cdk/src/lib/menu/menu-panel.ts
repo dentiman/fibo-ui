@@ -80,7 +80,7 @@ export class MenuPanel {
   }
 
   closeAll() {
-    this.overlayStack.closeAllByCategory('menu');
+    this.overlayStack.closeAllByTag('menu');
   }
 
   closeAllSoon() {

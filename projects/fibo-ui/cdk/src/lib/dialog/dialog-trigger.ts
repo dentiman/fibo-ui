@@ -1,7 +1,7 @@
 import { Directive, ElementRef, computed, inject, input, model, TemplateRef } from '@angular/core';
-import { restoreTriggerFocusOnClose, trapOverlayFocus } from '../overlay/overlay-behaviors';
 import { createOverlay } from '../overlay/overlay-stack';
-import { modalOverlay } from '../overlay/overlay-strategy';
+import { globalPosition } from '../overlay/overlay-config';
+import { MODAL_SHELL_TOKEN } from '../overlay/overlay-shell-tokens';
 
 @Directive({
   selector: '[fiboDialogTrigger]',
@@ -18,27 +18,26 @@ export class DialogTrigger {
   isOpen = model(false, { alias: 'open' });
   content = input<TemplateRef<any>>();
 
-  private readonly strategy = computed(() => {
+  private readonly config = computed(() => {
     const templateRef = this.content();
-    if (!templateRef) {
-      return null;
-    }
-
-    return modalOverlay({
+    if (!templateRef) return null;
+    return {
       templateRef,
+      position: globalPosition(),
+      shell: MODAL_SHELL_TOKEN,
+      needsBackdrop: true,
+      blockScroll: true,
+      closeOnOutsideClick: true,
+      trapFocus: true,
+      restoreFocus: true,
       referenceElement: this.element,
-    });
+    };
   });
 
-  overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
-    restoreTriggerFocusOnClose(overlay);
-    trapOverlayFocus(overlay);
-  });
+  overlayHandle = createOverlay(this.isOpen, this.config);
 
   open() {
-    if (!this.isOpen()) {
-      this.isOpen.set(true);
-    }
+    if (!this.isOpen()) this.isOpen.set(true);
   }
 
   close() {

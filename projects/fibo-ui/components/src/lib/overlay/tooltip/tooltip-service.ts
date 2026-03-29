@@ -1,7 +1,8 @@
-import {computed, Injectable, signal, TemplateRef} from '@angular/core';
-import {Subject, takeUntil, timer} from 'rxjs';
-import {Placement} from '@floating-ui/dom';
-import {connectedOverlay, createOverlay} from '@fibo-ui/cdk';
+import { computed, Injectable, signal, TemplateRef } from '@angular/core';
+import { Subject, takeUntil, timer } from 'rxjs';
+import { Placement } from '@floating-ui/dom';
+import { createOverlay } from '@fibo-ui/cdk';
+import { tooltipConfig } from '../overlay-presets';
 
 @Injectable({
   providedIn: 'root',
@@ -21,43 +22,38 @@ export class TooltipService {
 
   private _interactionRequest = new Subject<'open' | 'close'>();
   private isOpen = signal(false);
-  strategy = computed(() => {
-    const templateRef = this.containerTemplateRef();
-    const tooltipRef = this.tooltipRef();
-    if (!templateRef || !tooltipRef) {
-      return null;
-    }
 
-    return connectedOverlay({
+  overlayConfig = computed(() => {
+    const templateRef = this.containerTemplateRef();
+    const ref = this.tooltipRef();
+    if (!templateRef || !ref) return null;
+
+    return tooltipConfig({
       templateRef,
-      referenceElement: tooltipRef.referenceElement,
-      placement: tooltipRef.placement,
+      referenceElement: ref.referenceElement,
+      placement: ref.placement,
     });
   });
 
-  overlayHandle = createOverlay(
-    this.isOpen,
-    this.strategy as any,
-    overlay => {
-      overlay.afterClose(() => {
-        if (!this.isOpen()) {
-          this.tooltipRef.set(null);
-        }
-      });
-    },
-  );
+  overlayHandle = createOverlay(this.isOpen, this.overlayConfig, overlay => {
+    overlay.afterClose(() => {
+      if (!this.isOpen()) {
+        this.tooltipRef.set(null);
+      }
+    });
+  });
 
   open(
     content: string | TemplateRef<unknown>,
     referenceElement: HTMLElement,
     placement: Placement,
-    tooltipId: string
+    tooltipId: string,
   ) {
     this._interactionRequest.next('open');
     timer(this.openDelay())
       .pipe(takeUntil(this._interactionRequest))
       .subscribe(() => {
-        this.tooltipRef.set({content, referenceElement, placement, tooltipId});
+        this.tooltipRef.set({ content, referenceElement, placement, tooltipId });
         this.isOpen.set(true);
       });
   }

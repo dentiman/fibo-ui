@@ -1,22 +1,28 @@
 # Overlay Docs Index
 
-This folder contains only the current overlay architecture and usage docs.
+Internal developer documentation for the overlay system.
 
 ## Read Order
 
-1. `overlay-system.md` - full architecture and API reference
-2. `overlay-strategies.md` - strategy presets and defaults
-3. `overlays.md` - quick implementation cookbook
+1. `overlay-system.md` — full architecture and API reference
+2. `overlay-strategies.md` — config presets and usage patterns
+3. `overlays.md` — quick implementation cookbook
 
 ## Scope
 
-- Strategy-driven runtime (`createOverlay(isOpen, strategy, setup?)`)
-- Shell-based rendering (`connected`, `modal`, `plain`)
-- Current close/focus/outside-click behavior model
-- Current animation lifecycle (leave completion via shell)
+- Config-driven runtime (`createOverlay(isOpen, config, setup?)`)
+- Token-based shell routing (`InjectionToken<Type<any>>` on config)
+- Bootstrap via `provideOverlays(withShell(...))` (components layer)
+- Flat behavior flags on `OverlayConfig` (no strategy types, no categories)
+- Position types: `GlobalPosition`, `ConnectedPosition`, `CoordinatePosition`
+- Shell components: modal, connected, plain, backdrop, drawer (app-provided)
+- Animation lifecycle (leave completion via shell panel)
 
-## Out Of Scope
+## Key Design Decisions
 
-- Historical migration notes
-- Old portal-era implementation
-- Superseded proposals/status reports
+- **One config type** (`OverlayConfig`) replaces all strategy factories and kind/category types.
+- **Shell tokens** instead of switch-case routing — extensible via `withShell(token, component)`.
+- **Flat booleans** for behaviors — no `defaultBehaviors` array, no category-based auto-detection.
+- **Session behaviors** (`trapFocus`, `restoreFocus`) auto-applied from config in `createOverlay`, not deferred to `setup`.
+- **DOM order** determines visual stacking — all overlays share base z-index (1000+counter).
+- **`tag` field** for grouping — replaces category-based `closeAllByCategory` with `closeAllByTag`.

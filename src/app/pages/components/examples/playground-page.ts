@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, ElementRef, signal, TemplateRef, viewChild } from '@angular/core';
-import { createOverlay, menuOverlay, DialogTrigger } from '@fibo-ui/cdk';
+import { createOverlay, DialogTrigger } from '@fibo-ui/cdk';
+import { menuConfig } from '@fibo-ui/components';
 import { FiboDialog, Menu, type MenuItemType } from '@fibo-ui/components';
 
 @Component({
@@ -170,10 +171,9 @@ export class PlaygroundPageComponent {
     const tpl = this.menuTemplate();
     const trigger = this.menuTrigger().nativeElement;
     if (!tpl || !trigger) return null;
-    return menuOverlay({
+    return menuConfig({
       templateRef: tpl,
       referenceElement: trigger,
-      interactionRoot: trigger,
       focusReturnTarget: trigger,
     });
   });
@@ -182,10 +182,9 @@ export class PlaygroundPageComponent {
     const tpl = this.altMenuTemplate();
     const trigger = this.altMenuTrigger().nativeElement;
     if (!tpl || !trigger) return null;
-    return menuOverlay({
+    return menuConfig({
       templateRef: tpl,
       referenceElement: trigger,
-      interactionRoot: trigger,
       focusReturnTarget: trigger,
     });
   });

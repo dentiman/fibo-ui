@@ -1,25 +1,20 @@
-import { Signal, TemplateRef, WritableSignal, signal } from '@angular/core';
+import { TemplateRef, WritableSignal, signal } from '@angular/core';
 import type { OverlayCloseReason } from './overlay-types';
-import { OverlayCategory, OverlayHandle } from './overlay-handle';
-import type { OverlayStrategy } from './overlay-strategy';
+import { OverlayHandle } from './overlay-handle';
+import type { OverlayConfig } from './overlay-config';
 
 export interface CreateOverlayHandleOptions {
-  templateRef: TemplateRef<any>;
-  category?: OverlayCategory;
-  strategy: OverlayStrategy;
+  config: OverlayConfig;
   referenceElement?: HTMLElement | null;
   interactionRoot?: HTMLElement | null;
   focusReturnTarget?: HTMLElement | null;
   zIndex: number;
-  firstInCategory: Signal<boolean>;
 }
 
 class OverlayHandleImpl implements OverlayHandle {
   readonly id: string;
-  readonly category: OverlayCategory;
+  readonly config: OverlayConfig;
   readonly zIndex: number;
-  readonly firstInCategory: Signal<boolean>;
-  readonly strategy: OverlayStrategy;
 
   private readonly templateRefSignal: WritableSignal<TemplateRef<any> | undefined>;
   private readonly referenceElementSignal: WritableSignal<HTMLElement | null | undefined>;
@@ -51,21 +46,16 @@ class OverlayHandleImpl implements OverlayHandle {
 
   constructor(options: CreateOverlayHandleOptions) {
     this.id = `overlay-${nextOverlayId++}`;
-    this.templateRefSignal = signal(options.templateRef);
-    this.referenceElementSignal = signal(options.referenceElement);
+    this.config = options.config;
+    this.templateRefSignal = signal(options.config.templateRef);
+    this.referenceElementSignal = signal(options.referenceElement ?? options.config.referenceElement);
     this.interactionRootSignal = signal(options.interactionRoot);
-    this.focusReturnTargetSignal = signal(options.focusReturnTarget);
-    this.strategy = options.strategy;
-    this.category = options.category ?? 'popover';
+    this.focusReturnTargetSignal = signal(options.focusReturnTarget ?? options.config.focusReturnTarget);
     this.zIndex = options.zIndex;
-    this.firstInCategory = options.firstInCategory;
   }
 
   close(reason?: OverlayCloseReason): void {
-    if (this.closedState) {
-      return;
-    }
-
+    if (this.closedState) return;
     this.requestClose?.(reason ?? 'programmatic');
   }
 

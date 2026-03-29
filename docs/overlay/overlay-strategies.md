@@ -1,101 +1,156 @@
-# Overlay Strategies
+# Overlay Presets
 
-Current strategy presets in `projects/fibo-ui/cdk/src/lib/overlay/overlay-strategy.ts`.
+Convenience factories in `@fibo-ui/components` for common overlay types.
+All return a plain `OverlayConfig` object — no inheritance, no class instances.
 
-## Shared Base Options
+## Source
 
-Every strategy accepts:
-
-- `templateRef: TemplateRef<any>`
-- `referenceElement?: HTMLElement | null`
-- `interactionRoot?: HTMLElement | null`
-- `focusReturnTarget?: HTMLElement | null`
-
-`createOverlay(...)` uses `strategy.config` to sync render inputs while open.
-
-## Strategy Kinds
-
-```ts
-type OverlayStrategyKind = 'connected' | 'modal' | 'menu' | 'tooltip' | 'notification';
+```
+projects/fibo-ui/components/src/lib/overlay/overlay-presets.ts
 ```
 
-## Presets
+## Preset Factories
 
-### `connectedOverlay(options)`
+### `dialogConfig(options)`
 
-For anchored interactive popovers (select, combobox, datepicker, custom popover).
+For modal dialogs and confirmations.
 
-Extra options:
+```ts
+dialogConfig({
+  templateRef,
+  referenceElement?,   // used for focus restore
+  focusReturnTarget?,  // overrides focus restore target
+})
+```
 
-- `placement?: Placement` (default in shell: `'bottom'`)
-- `matchWidth?: boolean` (default `false`)
-- `offset?: number` (default in shell: `5`)
+Resulting config:
+- `position: globalPosition()`
+- `shell: MODAL_SHELL_TOKEN`
+- `needsBackdrop: true`
+- `blockScroll: true`
+- `closeOnOutsideClick: true`
+- `closeOnEscape: true`
+- `trapFocus: true` — auto-applies `trapOverlayFocus({ guard: true })`
+- `restoreFocus: true` — auto-applies `restoreTriggerFocusOnClose`
 
-Defaults metadata:
+### `drawerConfig(options)`
 
-- `category: 'popover'`
-- `defaultBehaviors: ['closeOnOutsideClick', 'closeOnFocusLeave', 'restoreTriggerFocusOnClose']`
+For slide-in drawer panels. Requires `DRAWER_SHELL_TOKEN` registered via `withShell`.
 
-### `modalOverlay(options)`
+```ts
+drawerConfig({
+  templateRef,
+  referenceElement?,
+  focusReturnTarget?,
+})
+```
 
-For dialogs and confirmations.
+Same behavior flags as `dialogConfig`, but `shell: DRAWER_SHELL_TOKEN`.
 
-Extra options:
+### `connectedConfig(options)`
 
-- `backdropClosable?: boolean` (default `true`)
-- `blockScroll?: boolean` (default `true`)
+For anchored popovers (select, combobox, datepicker, custom dropdown).
 
-Defaults metadata:
+```ts
+connectedConfig({
+  templateRef,
+  referenceElement?,
+  placement?,           // Placement, default: 'bottom'
+  offset?,              // number, default: 5
+  matchWidth?,          // boolean
+  focusReturnTarget?,
+  trapFocus?,           // boolean (not set by default)
+  restoreFocus?,        // boolean, default: true
+})
+```
 
-- `category: 'dialog'`
-- `defaultBehaviors: ['trapOverlayFocus', 'restoreTriggerFocusOnClose']`
+Resulting config:
+- `position: connectedPosition({ placement, offset, matchWidth })`
+- `shell: CONNECTED_SHELL_TOKEN`
+- `closeOnOutsideClick: true`
+- `closeOnFocusLeave: true`
+- `closeOnEscape: true`
+- `restoreFocus: true` (unless overridden)
 
-### `menuOverlay(options)`
+### `menuConfig(options)`
 
-For root menus and submenus.
+For root menus and submenu panels.
 
-Extra options:
+```ts
+menuConfig({
+  templateRef,
+  referenceElement?,
+  placement?,           // default: 'right-start'
+  offset?,              // default: 1
+  focusReturnTarget?,
+})
+```
 
-- `placement?: Placement` (default `'right-start'`)
-- `offset?: number` (default `1`)
-- `openDelay?: number` (default `0`)
-- `closeDelay?: number` (default `0`)
+Like `connectedConfig` plus `tag: 'menu'` — allows `overlayStack.closeAllByTag('menu')`.
 
-Defaults metadata:
-
-- `category: 'menu'`
-- `defaultBehaviors: ['closeOnOutsideClick', 'closeOnFocusLeave', 'restoreTriggerFocusOnClose']`
-
-### `tooltipOverlay(options)`
+### `tooltipConfig(options)`
 
 For passive floating hints.
 
-Extra options:
+```ts
+tooltipConfig({
+  templateRef,
+  referenceElement?,
+  placement?,           // default: 'top'
+})
+```
 
-- `placement?: Placement` (default in shell: `'top'`)
-- `showDelay?: number` (default `0`)
-- `hideDelay?: number` (default `0`)
+Resulting config:
+- `closeOnScroll: true`
+- `closeOnEscape: false`
+- No backdrop, no focus trap, no focus restore
 
-Defaults metadata:
+### `notificationConfig(options)`
 
-- `category: 'tooltip'`
-- `defaultBehaviors: ['closeOnScroll']`
-
-### `notificationOverlay(options)`
-
-For global toast/notification containers.
-
-Defaults metadata:
-
-- `category: 'notification'`
-- `defaultBehaviors: []`
-
-## Important Notes
-
-- `defaultBehaviors` are strategy metadata. Behaviors are still attached in `setup` manually.
-- `category` affects z-index tier and Escape handling.
-- Runtime entry point stays the same for all presets:
+For toast/notification containers.
 
 ```ts
-createOverlay(isOpenSignal, strategySignalOrValue, setup?);
+notificationConfig({ templateRef })
+```
+
+Resulting config:
+- `shell: NOTIFICATION_SHELL_TOKEN`
+- `closeOnEscape: false`
+- No backdrop, no close behaviors
+
+## Direct Config
+
+Presets are convenience only. Any component can build `OverlayConfig` directly:
+
+```ts
+readonly config = computed(() => {
+  const templateRef = this.tpl();
+  if (!templateRef) return null;
+  return {
+    templateRef,
+    position: connectedPosition({ placement: 'bottom-start' }),
+    shell: CONNECTED_SHELL_TOKEN,
+    closeOnOutsideClick: true,
+    closeOnFocusLeave: true,
+    restoreFocus: true,
+    referenceElement: this.trigger().nativeElement,
+  };
+});
+
+createOverlay(this.isOpen, this.config);
+```
+
+## Custom Shells
+
+App-specific shell components (e.g. drawer):
+
+```ts
+// my-drawer-shell.ts
+export const MY_DRAWER_TOKEN = new InjectionToken<Type<any>>('MyDrawerShell');
+
+// app.config.ts
+provideOverlays(withShell(MY_DRAWER_TOKEN, MyDrawerShellComponent))
+
+// usage
+drawerConfig({ templateRef }) // or custom config with shell: MY_DRAWER_TOKEN
 ```

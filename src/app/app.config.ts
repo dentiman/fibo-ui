@@ -3,6 +3,12 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 
 import { routes } from './app.routes';
+import { DRAWER_SHELL_TOKEN } from '@fibo-ui/cdk';
+import {
+  OverlayDrawerShellComponent,
+  provideOverlays,
+  withShell,
+} from '@fibo-ui/components';
 import {
   ArrowRight,
   Apple,
@@ -145,6 +151,7 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(),
+    provideOverlays(withShell(DRAWER_SHELL_TOKEN, OverlayDrawerShellComponent)),
     { provide: LUCIDE_ICONS, multi: true, useValue: new LucideIconProvider(icons) }
   ]
 };

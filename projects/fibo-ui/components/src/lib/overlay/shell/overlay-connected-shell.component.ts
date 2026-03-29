@@ -23,7 +23,6 @@ import { type OverlayHandle, OverlayContainer, OverlayShellHost, OverlayPosition
   `,
   host: {
     'class': 'popover-container',
-    '[class.fibo-tooltip-shell]': 'handle().strategy.kind === "tooltip"',
     'animate.enter': 'overlay-connected-enter',
     'animate.leave': 'overlay-connected-leave',
   },

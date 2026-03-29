@@ -5,11 +5,11 @@ import {
   DataList,
   DataListItem,
   KeyboardSource,
-  connectedOverlay,
   SelectMulti,
   provideFormValueControl,
   restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
+import { connectedConfig } from '../../overlay/overlay-presets';
 import { LucideAngularModule } from 'lucide-angular';
 import { FieldActionDirective } from '../form/field-action';
 import { FieldShell } from '../form/field-shell';
@@ -142,15 +142,14 @@ export class MultiSelect implements FormValueControl<(string | number)[] | null>
       return null;
     }
 
-    return connectedOverlay({
+    return connectedConfig({
       templateRef,
       referenceElement: this.fieldShell().overlayReferenceElement(),
-      interactionRoot: this.fieldShell().overlayInteractionRoot(),
       focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
       matchWidth: true,
     });
   });
-  readonly overlayHandle = createOverlay(this.isOpen, this.strategy as any, overlay => {
+  readonly overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
     restoreTriggerFocusOnClose(overlay);
   });
 

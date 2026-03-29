@@ -9,7 +9,7 @@ import { OverlayStack } from './overlay-stack';
  * Responsibilities:
  * - Binds `data-overlay-container-id` for DOM-based overlay lookups
  * - Auto-sets `interactionRoot` to the host element
- * - Attaches close-policy listeners based on `strategy.defaultBehaviors`:
+ * - Attaches close-policy listeners based on `config` booleans:
  *   `closeOnOutsideClick`, `closeOnFocusLeave`, `closeOnScroll`, `blockScroll`
  */
 @Directive({
@@ -26,23 +26,23 @@ export class OverlayContainer implements OnInit {
 
   ngOnInit(): void {
     const handle = this.shellHost.handle();
-    const behaviors = handle.strategy.defaultBehaviors;
+    const config = handle.config;
 
     handle.setInteractionRoot(this.elementRef.nativeElement);
 
-    if (behaviors.includes('blockScroll')) {
+    if (config.blockScroll) {
       blockScroll(this.destroyRef);
     }
 
-    if (behaviors.includes('closeOnOutsideClick')) {
+    if (config.closeOnOutsideClick) {
       this.attachCloseOnOutsideClick();
     }
 
-    if (behaviors.includes('closeOnFocusLeave')) {
+    if (config.closeOnFocusLeave) {
       this.attachCloseOnFocusLeave();
     }
 
-    if (behaviors.includes('closeOnScroll')) {
+    if (config.closeOnScroll) {
       this.attachCloseOnScroll();
     }
   }

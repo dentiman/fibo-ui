@@ -1,5 +1,6 @@
-import {computed, Injectable, signal, TemplateRef} from '@angular/core';
-import {createOverlay, modalOverlay, restoreTriggerFocusOnClose, trapOverlayFocus} from '@fibo-ui/cdk';
+import { computed, Injectable, signal, TemplateRef } from '@angular/core';
+import { createOverlay } from '@fibo-ui/cdk';
+import { dialogConfig } from '../overlay-presets';
 
 export type ConfirmationContent =
   | {
@@ -28,31 +29,23 @@ export class ConfirmationService {
   // content is visible while the outlet wrapper fades out.
   config = signal<ConfirmationConfig | null>(null);
 
-  strategy = computed(() => {
+  overlayConfig = computed(() => {
     const templateRef = this.containerTemplateRef();
-    if (!templateRef) {
-      return null;
-    }
+    if (!templateRef) return null;
 
-    return modalOverlay({
+    return dialogConfig({
       templateRef,
       referenceElement: this.config()?.referenceElement ?? null,
     });
   });
 
-  overlayHandle = createOverlay(
-    this.isOpen,
-    this.strategy,
-    overlay => {
-      restoreTriggerFocusOnClose(overlay);
-      trapOverlayFocus(overlay);
-      overlay.afterClose(() => {
-        if (!this.isOpen()) {
-          this.config.set(null);
-        }
-      });
-    },
-  );
+  overlayHandle = createOverlay(this.isOpen, this.overlayConfig, overlay => {
+    overlay.afterClose(() => {
+      if (!this.isOpen()) {
+        this.config.set(null);
+      }
+    });
+  });
 
   open(config: ConfirmationConfig) {
     this.config.set(config);

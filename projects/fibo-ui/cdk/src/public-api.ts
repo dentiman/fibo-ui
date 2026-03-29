@@ -46,10 +46,11 @@ export * from './lib/date/select-date-range';
 // Overlay Components and Services
 export * from './lib/dialog/dialog-trigger';
 export * from './lib/dialog/drawer-trigger';
-export { OVERLAY_HANDLE, type OverlayCategory, type OverlayHandle } from './lib/overlay/overlay-handle';
+export { OVERLAY_HANDLE, type OverlayHandle } from './lib/overlay/overlay-handle';
+export * from './lib/overlay/overlay-config';
+export * from './lib/overlay/overlay-shell-tokens';
 export * from './lib/overlay/overlay-session';
 export * from './lib/overlay/overlay-types';
-export * from './lib/overlay/overlay-strategy';
 export * from './lib/overlay/overlay-stack';
 export * from './lib/overlay/overlay-behaviors';
 export * from './lib/overlay/overlay-container';

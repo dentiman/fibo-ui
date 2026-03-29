@@ -12,7 +12,7 @@ import {
   untracked,
 } from '@angular/core';
 import type { Signal, WritableSignal } from '@angular/core';
-import type { OverlayCategory, OverlayHandle } from './overlay-handle';
+import type { OverlayHandle } from './overlay-handle';
 import {
   CreateOverlayHandleOptions,
   createOverlayHandleInternal,
@@ -21,26 +21,15 @@ import {
   syncOverlayHandleRenderConfigInternal,
 } from './overlay-handle-internal';
 import type { OverlayCloseContext, OverlayCloseReason } from './overlay-types';
-import {
-  OverlaySession,
-  OverlayStackEntry,
-} from './overlay-session';
-import type { OverlayStrategy } from './overlay-strategy';
+import { OverlaySession, OverlayStackEntry } from './overlay-session';
+import type { OverlayConfig } from './overlay-config';
+import { trapOverlayFocus, restoreTriggerFocusOnClose } from './overlay-behaviors';
 
-type OverlayInput = OverlayStrategy | null | undefined;
+type OverlayInput = OverlayConfig | null | undefined;
 
-const BASE_Z_INDEX: Record<OverlayCategory, number> = {
-  dialog: 500,
-  confirmation: 600,
-  popover: 1000,
-  menu: 1000,
-  tooltip: 2000,
-  notification: 3000,
-};
+const OVERLAY_Z_INDEX = 1000;
 
-const ESCAPE_SKIP_CATEGORIES: Set<OverlayCategory> = new Set(['notification', 'tooltip']);
-
-type RegisterOverlayOptions = Omit<CreateOverlayHandleOptions, 'zIndex' | 'firstInCategory'>;
+type RegisterOverlayOptions = Omit<CreateOverlayHandleOptions, 'zIndex'>;
 
 // Global stack that coordinates open overlays, ordering and close completion.
 @Injectable({
@@ -57,36 +46,24 @@ export class OverlayStack {
     return overlays.sort((left, right) => left.zIndex - right.zIndex);
   });
 
-  readonly openDialogs = computed(() =>
-    this.openOverlayList().filter(overlay => overlay.category === 'dialog')
-  );
-
-  readonly hasOpenDialogs = computed(() => this.openDialogs().length > 0);
-
-  readonly dialogCount = computed(() => this.openDialogs().length);
-
   readonly topmost = computed(() => {
     const list = this.openOverlayList();
     return list.length > 0 ? list[list.length - 1] : null;
   });
 
-  openByCategory(category: OverlayCategory): OverlayHandle[] {
-    return this.openOverlayList().filter(overlay => overlay.category === category);
-  }
-
   closeTopmost(): void {
     const list = this.openOverlayList();
     for (let index = list.length - 1; index >= 0; index--) {
       const overlay = list[index];
-      if (!ESCAPE_SKIP_CATEGORIES.has(overlay.category)) {
+      if (overlay.config.closeOnEscape !== false) {
         overlay.close('escape');
         return;
       }
     }
   }
 
-  closeAllByCategory(category: OverlayCategory): void {
-    const overlays = this.openByCategory(category);
+  closeAllByTag(tag: string): void {
+    const overlays = this.openOverlayList().filter(o => o.config.tag === tag);
     for (const overlay of [...overlays].reverse()) {
       overlay.close();
     }
@@ -139,26 +116,13 @@ export class OverlayStack {
 
   createOverlay(
     isOpen: WritableSignal<boolean>,
-    strategy: Signal<OverlayStrategy | null | undefined> | OverlayStrategy | null | undefined,
-    setup?: (overlay: OverlaySession) => void,
-  ): Signal<OverlayHandle | null>;
-  createOverlay(
-    isOpen: WritableSignal<boolean>,
-    configOrStrategy: Signal<OverlayStrategy | null | undefined> | OverlayStrategy | null | undefined,
+    config: Signal<OverlayConfig | null | undefined> | OverlayConfig | null | undefined,
     setup?: (overlay: OverlaySession) => void,
   ): Signal<OverlayHandle | null> {
-    const readOverlayInput = (): OverlayInput =>
-      typeof configOrStrategy === 'function' ? configOrStrategy() : configOrStrategy;
+    const readInput = (): OverlayInput =>
+      typeof config === 'function' ? config() : config;
 
-    const isStrategy = (input: OverlayInput): input is OverlayStrategy =>
-      !!input && typeof input === 'object' && 'kind' in input;
-    const toStrategy = (input: OverlayInput): OverlayStrategy | null => {
-      if (!input) {
-        return null;
-      }
-
-      return isStrategy(input) ? input : null;
-    };
+    const toConfig = (input: OverlayInput): OverlayConfig | null => input ?? null;
 
     const overlayHandle = signal<OverlayHandle | null>(null);
     const destroyRef = inject(DestroyRef);
@@ -256,21 +220,18 @@ export class OverlayStack {
     };
 
     const openOverlay = (initialInput: OverlayInput) => {
-      const initialStrategy = toStrategy(initialInput);
+      const initialConfig = toConfig(initialInput);
 
-      if (currentHandle || !initialStrategy) {
+      if (currentHandle || !initialConfig) {
         return false;
       }
 
       destroyPendingOpen();
 
       const handle = this.addOverlay({
-        strategy: initialStrategy,
-        templateRef: initialStrategy.config.templateRef,
-        category: initialStrategy.category,
-        referenceElement: initialStrategy.config.referenceElement,
-        interactionRoot: initialStrategy.config.interactionRoot,
-        focusReturnTarget: initialStrategy.config.focusReturnTarget,
+        config: initialConfig,
+        referenceElement: initialConfig.referenceElement,
+        focusReturnTarget: initialConfig.focusReturnTarget,
       });
 
       setOverlayHandleRequestCloseInternal(handle, (reason, event) =>
@@ -282,34 +243,43 @@ export class OverlayStack {
       untracked(() => {
         configSyncEffect = effect(
           () => {
-            const nextStrategy = toStrategy(readOverlayInput());
-            if (!nextStrategy) {
+            const nextConfig = toConfig(readInput());
+            if (!nextConfig) {
               return;
             }
             syncOverlayHandleRenderConfigInternal(handle, {
-              templateRef: nextStrategy.config.templateRef,
-              referenceElement: nextStrategy.config.referenceElement,
-              interactionRoot: nextStrategy.config.interactionRoot,
-              focusReturnTarget: nextStrategy.config.focusReturnTarget,
+              templateRef: nextConfig.templateRef,
+              referenceElement: nextConfig.referenceElement,
+              focusReturnTarget: nextConfig.focusReturnTarget,
             });
           },
           { injector },
         );
 
+        const session: OverlaySession = {
+          handle,
+          requestClose: (reason, event) => requestClose(handle, reason, event),
+          findOverlayContainerId: target => this.findOverlayContainerId(target),
+          isInOverlayBranch: target =>
+            this.isOverlayInBranch(handle.id, this.findOverlayContainerId(target)),
+          afterOpened: handler => afterOpenedHandlers.push(handler),
+          afterClose: handler => afterCloseHandlers.push(handler),
+          beforeClose: handler => beforeCloseHandlers.push(handler),
+          canClose: guard => closeGuards.push(guard),
+          effect: runner => effect(runner, { injector }),
+          onCleanup: cleanup => setupCleanups.push(cleanup),
+        };
+
+        if (initialConfig.trapFocus) {
+          trapOverlayFocus(session, { guard: true });
+        }
+
+        if (initialConfig.restoreFocus) {
+          restoreTriggerFocusOnClose(session);
+        }
+
         if (setup) {
-          setup({
-            handle,
-            requestClose: (reason, event) => requestClose(handle, reason, event),
-            findOverlayContainerId: target => this.findOverlayContainerId(target),
-            isInOverlayBranch: target =>
-              this.isOverlayInBranch(handle.id, this.findOverlayContainerId(target)),
-            afterOpened: handler => afterOpenedHandlers.push(handler),
-            afterClose: handler => afterCloseHandlers.push(handler),
-            beforeClose: handler => beforeCloseHandlers.push(handler),
-            canClose: guard => closeGuards.push(guard),
-            effect: runner => effect(runner, { injector }),
-            onCleanup: cleanup => setupCleanups.push(cleanup),
-          });
+          setup(session);
         }
 
         afterOpenedRenderRef = afterNextRender(
@@ -345,12 +315,12 @@ export class OverlayStack {
               return;
             }
 
-            const pendingStrategy = toStrategy(readOverlayInput());
-            if (!pendingStrategy?.config.templateRef) {
+            const pendingConfig = toConfig(readInput());
+            if (!pendingConfig?.templateRef) {
               return;
             }
 
-            openOverlay(pendingStrategy);
+            openOverlay(pendingConfig);
           },
           { injector },
         );
@@ -363,7 +333,7 @@ export class OverlayStack {
           return;
         }
 
-        const initialInput = untracked(readOverlayInput);
+        const initialInput = untracked(readInput);
         if (!openOverlay(initialInput)) {
           ensurePendingOpen();
         }
@@ -384,18 +354,10 @@ export class OverlayStack {
     return overlayHandle.asReadonly();
   }
 
-  private addOverlay(options: RegisterOverlayOptions & { strategy: OverlayStrategy }): OverlayHandle {
-    const category = options.category ?? 'popover';
-    const zIndex = BASE_Z_INDEX[category] + ++this.zIndexCounter;
+  private addOverlay(options: RegisterOverlayOptions): OverlayHandle {
+    const zIndex = OVERLAY_Z_INDEX + ++this.zIndexCounter;
     const parentOverlayId = this.findOverlayContainerId(options.referenceElement);
-    let handle!: OverlayHandle;
-
-    const firstInCategory = computed(() => {
-      const firstOverlay = this.openOverlayList().find(overlay => overlay.category === category);
-      return firstOverlay?.id === handle.id;
-    });
-
-    handle = createOverlayHandleInternal({ ...options, zIndex, firstInCategory });
+    const handle = createOverlayHandleInternal({ ...options, zIndex });
 
     this.openOverlays.update(map => {
       const nextMap = new Map(map);
@@ -419,14 +381,9 @@ export class OverlayStack {
 
 export function createOverlay(
   isOpen: WritableSignal<boolean>,
-  configOrStrategy: Signal<OverlayStrategy | null | undefined> | OverlayStrategy | null | undefined,
-  setup?: (overlay: OverlaySession) => void,
-): Signal<OverlayHandle | null>;
-export function createOverlay(
-  isOpen: WritableSignal<boolean>,
-  configOrStrategy: Signal<OverlayStrategy | null | undefined> | OverlayStrategy | null | undefined,
+  config: Signal<OverlayConfig | null | undefined> | OverlayConfig | null | undefined,
   setup?: (overlay: OverlaySession) => void,
 ): Signal<OverlayHandle | null> {
   const overlayStack = inject(OverlayStack);
-  return overlayStack.createOverlay(isOpen, configOrStrategy, setup);
+  return overlayStack.createOverlay(isOpen, config, setup);
 }

@@ -3,7 +3,8 @@ import { DataListItem } from '../data-list/data-list-item.directive';
 import { KeyboardSource } from '../data-list/keyboard-source';
 import { restoreTriggerFocusOnClose } from '../overlay/overlay-behaviors';
 import { createOverlay, OverlayStack } from '../overlay/overlay-stack';
-import { menuOverlay } from '../overlay/overlay-strategy';
+import { connectedPosition } from '../overlay/overlay-config';
+import { CONNECTED_SHELL_TOKEN } from '../overlay/overlay-shell-tokens';
 import { MENU_PANEL } from './menu-panel';
 
 @Directive({
@@ -36,21 +37,23 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
   content = input<TemplateRef<any>>();
   isOpen = model(false, { alias: 'open' });
 
-  strategy = computed(() => {
+  config = computed(() => {
     const templateRef = this.content();
-    if (!templateRef) {
-      return null;
-    }
-
-    return menuOverlay({
+    if (!templateRef) return null;
+    return {
       templateRef,
+      position: connectedPosition({ placement: 'right-start', offset: 1 }),
+      shell: CONNECTED_SHELL_TOKEN,
+      tag: 'menu',
+      closeOnOutsideClick: true,
+      closeOnFocusLeave: true,
+      closeOnEscape: true,
+      restoreFocus: true,
       referenceElement: this.element,
-      placement: 'right-start',
-      offset: 1,
-    });
+    };
   });
 
-  overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
+  overlayHandle = createOverlay(this.isOpen, this.config, overlay => {
     restoreTriggerFocusOnClose(overlay);
   });
 

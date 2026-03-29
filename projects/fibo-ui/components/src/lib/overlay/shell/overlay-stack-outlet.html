@@ -1,10 +1,10 @@
 @for (overlay of overlayStack.openOverlayList(); track overlay.id) {
-  @if (needsBackdropShell(overlay.strategy.kind)) {
+  @if (needsBackdrop(overlay)) {
     <fibo-overlay-backdrop-shell [handle]="overlay" />
   }
 
   <ng-container
-    [ngComponentOutlet]="resolveShell(overlay.strategy.kind)"
+    [ngComponentOutlet]="resolveShell(overlay)"
     [ngComponentOutletInputs]="{ handle: overlay }"
   />
 }

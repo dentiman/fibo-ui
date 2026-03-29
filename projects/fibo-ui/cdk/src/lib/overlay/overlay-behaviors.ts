@@ -1,7 +1,7 @@
 import type { DestroyRef } from '@angular/core';
 import type { OverlayCloseContext } from './overlay-types';
 import type { OverlaySession } from './overlay-session';
-import type { OverlayCategory, OverlayHandle } from './overlay-handle';
+import type { OverlayHandle } from './overlay-handle';
 
 // --- Scroll Lock ---
 
@@ -68,7 +68,6 @@ const TABBABLE_SELECTOR = [
 
 const DEFAULT_FOCUS_INITIAL_SELECTOR = '[fiboFocusInitial]';
 const DEFAULT_FOCUS_ROOT_SELECTOR = '[data-dialog-panel]';
-const MODAL_FOCUS_CATEGORIES: ReadonlySet<OverlayCategory> = new Set(['dialog', 'confirmation']);
 
 export interface TrapOverlayFocusOptions {
   guard?: boolean;
@@ -185,9 +184,7 @@ function focusOverlayFallbackTarget(
  * Unified overlay focus policy:
  * - autofocuses on open
  * - keeps Tab/Shift+Tab navigation cyclic inside current overlay container
- * - optionally guards focus escape for modal categories
- *
- * Guard is enabled automatically for modal categories (dialog, confirmation).
+ * - optionally guards focus escape (set `guard: true` for modal overlays)
  */
 export function trapOverlayFocus(
   overlay: OverlaySession,
@@ -198,7 +195,7 @@ export function trapOverlayFocus(
   const preventScroll = options.preventScroll ?? true;
   const initialSelector = options.initialSelector ?? DEFAULT_FOCUS_INITIAL_SELECTOR;
   const rootSelector = options.rootSelector ?? DEFAULT_FOCUS_ROOT_SELECTOR;
-  const guard = options.guard ?? MODAL_FOCUS_CATEGORIES.has(overlay.handle.category);
+  const guard = options.guard ?? false;
 
   if (autoFocus) {
     overlay.afterOpened(() => {
@@ -288,4 +285,3 @@ export function isElementInsideOverlayContainer(
 
   return !!target.closest(`[data-overlay-container-id="${overlayId}"]`);
 }
-

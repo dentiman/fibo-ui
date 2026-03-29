@@ -10,9 +10,9 @@ import {
 } from '@angular/core';
 import {
   createOverlay,
-  connectedOverlay,
   restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
+import { connectedConfig } from '@fibo-ui/components';
 
 @Component({
   selector: 'cdk-overlays-basic-example',
@@ -68,7 +68,7 @@ export class CdkOverlaysBasicExample {
 
   readonly strategy = computed(() => {
     const templateRef = this.overlayTpl();
-    return connectedOverlay({
+    return connectedConfig({
       templateRef,
       referenceElement: this.triggerButton().nativeElement,
     });

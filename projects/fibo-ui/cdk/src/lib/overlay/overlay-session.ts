@@ -1,6 +1,6 @@
 import { effect } from '@angular/core';
 import type { EffectRef, Signal, TemplateRef } from '@angular/core';
-import type { OverlayCategory, OverlayHandle } from './overlay-handle';
+import type { OverlayHandle } from './overlay-handle';
 import type { OverlayCloseContext, OverlayCloseReason } from './overlay-types';
 
 // Declarative render inputs for one overlay cycle.
@@ -9,7 +9,6 @@ export interface OverlayRenderConfig {
   referenceElement?: HTMLElement | null;
   interactionRoot?: HTMLElement | null;
   focusReturnTarget?: HTMLElement | null;
-  category: OverlayCategory;
 }
 
 /**

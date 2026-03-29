@@ -1,5 +1,6 @@
-import {computed, Injectable, signal, TemplateRef} from '@angular/core';
-import {createOverlay, notificationOverlay} from '@fibo-ui/cdk';
+import { computed, Injectable, signal, TemplateRef } from '@angular/core';
+import { createOverlay } from '@fibo-ui/cdk';
+import { notificationConfig } from '../overlay-presets';
 
 export type NotificationType = 'info' | 'success' | 'warning' | 'danger';
 export interface NotificationConfig {
@@ -22,27 +23,19 @@ export class Notifier {
   containerTemplateRef = signal<TemplateRef<any> | null>(null);
 
   private isOpen = signal(false);
-  strategy = computed(() => {
-    const templateRef = this.containerTemplateRef();
-    if (!templateRef) {
-      return null;
-    }
 
-    return notificationOverlay({
-      templateRef,
-    });
+  overlayConfig = computed(() => {
+    const templateRef = this.containerTemplateRef();
+    if (!templateRef) return null;
+    return notificationConfig({ templateRef });
   });
 
-  overlayHandle = createOverlay(this.isOpen, this.strategy as any);
+  overlayHandle = createOverlay(this.isOpen, this.overlayConfig);
 
   push(config: NotificationConfig) {
     const id = Symbol('notification-id');
     const duration = config.duration ?? this.DEFAULT_DURATION;
-    const notification: NotificationConfig = {
-      ...config,
-      duration,
-      id,
-    };
+    const notification: NotificationConfig = { ...config, duration, id };
 
     this.notifications.update(value => [...value, notification]);
     this.isOpen.set(true);
@@ -70,38 +63,18 @@ export class Notifier {
   }
 
   success(message: string, duration?: number) {
-    this.push({
-      type: 'success',
-      title: 'Success',
-      message,
-      duration: duration ?? this.DEFAULT_DURATION
-    });
+    this.push({ type: 'success', title: 'Success', message, duration: duration ?? this.DEFAULT_DURATION });
   }
 
   error(message: string, duration?: number) {
-    this.push({
-      type: 'danger',
-      title: 'Error',
-      message,
-      duration
-    });
+    this.push({ type: 'danger', title: 'Error', message, duration });
   }
 
   warning(message: string, duration?: number) {
-    this.push({
-      type: 'warning',
-      title: 'Warning',
-      message,
-      duration
-    });
+    this.push({ type: 'warning', title: 'Warning', message, duration });
   }
 
   info(message: string, duration?: number) {
-    this.push({
-      type: 'info',
-      title: 'Information',
-      message,
-      duration
-    });
+    this.push({ type: 'info', title: 'Information', message, duration });
   }
 }
