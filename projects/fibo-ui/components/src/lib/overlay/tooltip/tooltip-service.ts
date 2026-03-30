@@ -42,6 +42,11 @@ export class TooltipService {
 
   open(content: string | TemplateRef<unknown>, referenceElement: HTMLElement, placement: Placement) {
     this._interactionRequest.next('open');
+
+    if (this.isOpen() && this.tooltipRef()?.referenceElement !== referenceElement) {
+      this.isOpen.set(false);
+    }
+
     timer(this.openDelay())
       .pipe(takeUntil(this._interactionRequest))
       .subscribe(() => {

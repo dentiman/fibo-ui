@@ -1,6 +1,7 @@
-import { Component, input, ViewEncapsulation } from '@angular/core';
+import { Component, inject, input, ViewEncapsulation } from '@angular/core';
 import { type OverlayHandle, OverlayArrow, OverlayContainer, OverlayPosition, OverlayShellHost } from '@fibo-ui/cdk';
 import { OverlayContent } from '../shell/overlay-content.component';
+import { TooltipService } from './tooltip-service';
 
 @Component({
   selector: 'fibo-overlay-tooltip-shell',
@@ -19,10 +20,13 @@ import { OverlayContent } from '../shell/overlay-content.component';
     'role': 'tooltip',
     'animate.enter': 'tooltip-enter',
     'animate.leave': 'tooltip-leave',
+    '(mouseenter)': 'tooltipService.keepOpen()',
+    '(mouseleave)': 'tooltipService.close()',
   },
   styleUrl: './tooltip-shell.component.css',
   encapsulation: ViewEncapsulation.None,
 })
 export class TooltipShellComponent {
   readonly handle = input.required<OverlayHandle>();
+  protected readonly tooltipService = inject(TooltipService);
 }
