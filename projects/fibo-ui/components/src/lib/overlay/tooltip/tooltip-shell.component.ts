@@ -34,37 +34,7 @@ import { type OverlayHandle, OverlayArrow, OverlayContainer, OverlayPosition, Ov
     'animate.enter': 'tooltip-enter',
     'animate.leave': 'tooltip-leave',
   },
-  styles: `
-    .fibo-overlay-arrow {
-      position: absolute;
-      z-index: -1;
-      width: 0.5rem;
-      height: 0.5rem;
-      transform: rotate(45deg);
-      background-color: var(--popover-bg);
-      outline: 1px solid var(--popover-outline);
-      outline-offset: -1px;
-      pointer-events: none;
-    }
-
-    .tooltip-enter {
-      animation: tooltip-in 150ms ease-out;
-    }
-
-    .tooltip-leave {
-      animation: tooltip-out 100ms ease-in forwards;
-    }
-
-    @keyframes tooltip-in {
-      from { opacity: 0; transform: scale(0.95); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-
-    @keyframes tooltip-out {
-      from { opacity: 1; transform: scale(1); }
-      to   { opacity: 0; transform: scale(0.95); }
-    }
-  `,
+  styleUrl: './tooltip-shell.component.css',
   encapsulation: ViewEncapsulation.None,
 })
 export class TooltipShellComponent {
