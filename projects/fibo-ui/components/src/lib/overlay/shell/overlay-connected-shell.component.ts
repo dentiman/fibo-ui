@@ -1,10 +1,10 @@
-import { NgTemplateOutlet } from '@angular/common';
-import { Component, Injector, TemplateRef, ViewEncapsulation, inject, input } from '@angular/core';
+import { Component, ViewEncapsulation, input } from '@angular/core';
 import { type OverlayHandle, OverlayContainer, OverlayShellHost, OverlayPosition } from '@fibo-ui/cdk';
+import { OverlayContent } from './overlay-content.component';
 
 @Component({
   selector: 'fibo-overlay-connected-shell',
-  imports: [NgTemplateOutlet],
+  imports: [OverlayContent],
   hostDirectives: [
     {
       directive: OverlayShellHost,
@@ -16,16 +16,7 @@ import { type OverlayHandle, OverlayContainer, OverlayShellHost, OverlayPosition
     },
     OverlayContainer,
   ],
-  template: `
-    @let content = handle().content;
-    @if (content) {
-      @if (isString(content)) {
-        {{ content }}
-      } @else {
-        <ng-container *ngTemplateOutlet="$any(content); injector: injector"></ng-container>
-      }
-    }
-  `,
+  template: `<fibo-overlay-content [handle]="handle()" />`,
   host: {
     'class': 'popover-container',
     'animate.enter': 'overlay-connected-enter',
@@ -54,9 +45,4 @@ import { type OverlayHandle, OverlayContainer, OverlayShellHost, OverlayPosition
 })
 export class OverlayConnectedShellComponent {
   readonly handle = input.required<OverlayHandle>();
-  readonly injector = inject(Injector);
-
-  protected isString(content: TemplateRef<any> | string): content is string {
-    return typeof content === 'string';
-  }
 }

@@ -1,31 +1,17 @@
-import {
-  Component,
-  inject,
-  Injector,
-  input,
-  TemplateRef,
-  ViewEncapsulation,
-} from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
+import { Component, input, ViewEncapsulation } from '@angular/core';
 import { type OverlayHandle, OverlayArrow, OverlayContainer, OverlayPosition, OverlayShellHost } from '@fibo-ui/cdk';
+import { OverlayContent } from '../shell/overlay-content.component';
 
 @Component({
   selector: 'fibo-overlay-tooltip-shell',
-  imports: [NgTemplateOutlet, OverlayArrow],
+  imports: [OverlayContent, OverlayArrow],
   hostDirectives: [
     { directive: OverlayShellHost, inputs: ['handle'] },
     { directive: OverlayPosition, inputs: ['handle'] },
     OverlayContainer,
   ],
   template: `
-    @let content = handle().content;
-    @if (content) {
-      @if (isString(content)) {
-        {{ content }}
-      } @else {
-        <ng-container *ngTemplateOutlet="asTemplateRef(content); injector: injector"></ng-container>
-      }
-    }
+    <fibo-overlay-content [handle]="handle()" />
     <div fiboOverlayArrow class="fibo-overlay-arrow" aria-hidden="true"></div>
   `,
   host: {
@@ -39,13 +25,4 @@ import { type OverlayHandle, OverlayArrow, OverlayContainer, OverlayPosition, Ov
 })
 export class TooltipShellComponent {
   readonly handle = input.required<OverlayHandle>();
-  protected readonly injector = inject(Injector);
-
-  protected isString(content: TemplateRef<any> | string): content is string {
-    return typeof content === 'string';
-  }
-
-  protected asTemplateRef(content: TemplateRef<any> | string): TemplateRef<any> {
-    return content as TemplateRef<any>;
-  }
 }

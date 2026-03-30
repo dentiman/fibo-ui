@@ -1,25 +1,16 @@
-import { NgTemplateOutlet } from '@angular/common';
-import { Component, Injector, TemplateRef, ViewEncapsulation, inject, input } from '@angular/core';
+import { Component, ViewEncapsulation, input } from '@angular/core';
 import { type OverlayHandle, OverlayContainer, OverlayPanel, OverlayShellHost } from '@fibo-ui/cdk';
+import { OverlayContent } from './overlay-content.component';
 
 @Component({
   selector: 'fibo-overlay-drawer-shell',
-  imports: [NgTemplateOutlet],
+  imports: [OverlayContent],
   hostDirectives: [
     { directive: OverlayShellHost, inputs: ['handle'] },
     OverlayContainer,
     OverlayPanel,
   ],
-  template: `
-    @let content = handle().content;
-    @if (content) {
-      @if (isString(content)) {
-        {{ content }}
-      } @else {
-        <ng-container *ngTemplateOutlet="$any(content); injector: injector"></ng-container>
-      }
-    }
-  `,
+  template: `<fibo-overlay-content [handle]="handle()" />`,
   host: {
     'class':
       'fixed inset-y-0 right-0 pointer-events-auto w-full max-w-md overflow-y-auto bg-background shadow-xl focus:outline-none dark:outline dark:-outline-offset-1 dark:outline-white/8',
@@ -49,9 +40,4 @@ import { type OverlayHandle, OverlayContainer, OverlayPanel, OverlayShellHost } 
 })
 export class OverlayDrawerShellComponent {
   readonly handle = input.required<OverlayHandle>();
-  readonly injector = inject(Injector);
-
-  protected isString(content: TemplateRef<any> | string): content is string {
-    return typeof content === 'string';
-  }
 }

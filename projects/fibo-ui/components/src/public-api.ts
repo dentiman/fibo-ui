@@ -27,6 +27,7 @@ export * from './lib/overlay/notification/notification-overlay-container';
 export * from './lib/overlay/notification/notifier';
 
 export * from './lib/overlay/permanent-overlay-container';
+export * from './lib/overlay/shell/overlay-content.component';
 export * from './lib/overlay/shell/overlay-stack-outlet';
 export * from './lib/overlay/shell/overlay-backdrop-shell.component';
 export * from './lib/overlay/shell/overlay-modal-shell.component';
