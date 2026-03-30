@@ -248,7 +248,7 @@ export class OverlayStack {
               return;
             }
             syncOverlayHandleRenderConfigInternal(handle, {
-              templateRef: nextConfig.templateRef,
+              content: nextConfig.content,
               referenceElement: nextConfig.referenceElement,
               focusReturnTarget: nextConfig.focusReturnTarget,
             });
@@ -316,7 +316,7 @@ export class OverlayStack {
             }
 
             const pendingConfig = toConfig(readInput());
-            if (!pendingConfig?.templateRef) {
+            if (!pendingConfig?.content) {
               return;
             }
 

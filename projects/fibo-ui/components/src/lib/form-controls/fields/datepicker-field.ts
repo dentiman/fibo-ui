@@ -88,20 +88,15 @@ export class DatePickerField implements FormValueControl<string> {
   readonly placeholder = input<string>('');
   readonly iconStart = input<string>('');
   readonly dialogId = computed(() => this.fieldShell().idFor('dialog'));
-  readonly strategy = computed(() => {
-    const templateRef = this.calendarTemplate();
-    if (!templateRef) {
-      return null;
-    }
-
-    return connectedConfig({
-      templateRef,
+  readonly strategy = computed(() =>
+    connectedConfig({
+      content: this.calendarTemplate() ?? '',
       referenceElement: this.fieldShell().overlayReferenceElement(),
       focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
       trapFocus: true,
       restoreFocus: true,
-    });
-  });
+    }),
+  );
   readonly overlayHandle = createOverlay(this.isOpen, this.strategy);
 
   onInput(event: Event) {

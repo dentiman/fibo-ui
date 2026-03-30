@@ -22,7 +22,7 @@ export interface CoordinatePosition {
 export type OverlayPositionConfig = GlobalPosition | ConnectedPosition | CoordinatePosition;
 
 export interface OverlayConfig {
-  readonly templateRef: TemplateRef<any>;
+  readonly content: TemplateRef<any> | string;
   readonly position: OverlayPositionConfig;
   readonly shell: InjectionToken<Type<any>>;
   readonly tag?: string;

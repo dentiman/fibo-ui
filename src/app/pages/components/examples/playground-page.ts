@@ -168,22 +168,18 @@ export class PlaygroundPageComponent {
   readonly isAltMenuOpen = signal(false);
 
   readonly menuStrategy = computed(() => {
-    const tpl = this.menuTemplate();
     const trigger = this.menuTrigger().nativeElement;
-    if (!tpl || !trigger) return null;
     return menuConfig({
-      templateRef: tpl,
+      content: this.menuTemplate() ?? '',
       referenceElement: trigger,
       focusReturnTarget: trigger,
     });
   });
 
   readonly altMenuStrategy = computed(() => {
-    const tpl = this.altMenuTemplate();
     const trigger = this.altMenuTrigger().nativeElement;
-    if (!tpl || !trigger) return null;
     return menuConfig({
-      templateRef: tpl,
+      content: this.altMenuTemplate() ?? '',
       referenceElement: trigger,
       focusReturnTarget: trigger,
     });

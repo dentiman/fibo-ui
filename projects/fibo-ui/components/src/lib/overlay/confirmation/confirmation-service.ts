@@ -26,9 +26,9 @@ export class ConfirmationService {
   config = signal<ConfirmationConfig | null>(null);
 
   readonly overlay = createSingletonOverlay(
-    templateRef =>
+    tpl =>
       dialogConfig({
-        templateRef,
+        content: tpl,
         referenceElement: this.config()?.referenceElement ?? null,
       }),
     session => {

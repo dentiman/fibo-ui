@@ -125,19 +125,14 @@ export class Combobox
       : [];
   });
 
-  readonly strategy = computed(() => {
-    const templateRef = this.comboboxTemplateRef();
-    if (!templateRef) {
-      return null;
-    }
-
-    return connectedConfig({
-      templateRef,
+  readonly strategy = computed(() =>
+    connectedConfig({
+      content: this.comboboxTemplateRef() ?? '',
       referenceElement: this.fieldShell().overlayReferenceElement(),
       focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
       matchWidth: true,
-    });
-  });
+    }),
+  );
 
   readonly overlayHandle = createOverlay(this.expanded, this.strategy, overlay => {
     overlay.beforeClose((_, __, reason) => {

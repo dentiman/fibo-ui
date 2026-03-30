@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, Injector, ViewEncapsulation, inject, input } from '@angular/core';
+import { Component, Injector, TemplateRef, ViewEncapsulation, inject, input } from '@angular/core';
 import { type OverlayHandle, OverlayContainer, OverlayPanel, OverlayShellHost } from '@fibo-ui/cdk';
 
 @Component({
@@ -11,8 +11,13 @@ import { type OverlayHandle, OverlayContainer, OverlayPanel, OverlayShellHost } 
     OverlayPanel,
   ],
   template: `
-    @if (handle().templateRef) {
-      <ng-container *ngTemplateOutlet="handle().templateRef; injector: injector"></ng-container>
+    @let content = handle().content;
+    @if (content) {
+      @if (isString(content)) {
+        {{ content }}
+      } @else {
+        <ng-container *ngTemplateOutlet="$any(content); injector: injector"></ng-container>
+      }
     }
   `,
   host: {
@@ -45,4 +50,8 @@ import { type OverlayHandle, OverlayContainer, OverlayPanel, OverlayShellHost } 
 export class OverlayDrawerShellComponent {
   readonly handle = input.required<OverlayHandle>();
   readonly injector = inject(Injector);
+
+  protected isString(content: TemplateRef<any> | string): content is string {
+    return typeof content === 'string';
+  }
 }

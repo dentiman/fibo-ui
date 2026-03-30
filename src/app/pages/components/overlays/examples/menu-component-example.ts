@@ -30,16 +30,13 @@ export class MenuComponentExample {
 
   readonly isOpen = signal(false);
 
-  readonly strategy = computed(() => {
-    const templateRef = this.menuTemplate();
-    const trigger = this.triggerBtn().nativeElement;
-    if (!templateRef || !trigger) return null;
-    return menuConfig({
-      templateRef,
-      referenceElement: trigger,
-      focusReturnTarget: trigger,
-    });
-  });
+  readonly strategy = computed(() =>
+    menuConfig({
+      content: this.menuTemplate(),
+      referenceElement: this.triggerBtn().nativeElement,
+      focusReturnTarget: this.triggerBtn().nativeElement,
+    }),
+  );
 
   readonly overlayHandle = createOverlay(this.isOpen, this.strategy);
 

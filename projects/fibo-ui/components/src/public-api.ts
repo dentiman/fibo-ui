@@ -9,7 +9,7 @@ export * from './lib/loading-spin/loading-spin';
 export * from './lib/overlay/dialog/dialog';
 export * from './lib/overlay/dialog/drawer';
 
-export * from './lib/overlay/tooltip/tooltip-overlay-container';
+export * from './lib/overlay/tooltip/tooltip-shell.component';
 export * from './lib/overlay/tooltip/tooltip-service';
 export * from './lib/overlay/tooltip/tooltip';
 

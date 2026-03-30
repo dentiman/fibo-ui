@@ -8,7 +8,7 @@ export interface OverlayHandle {
   readonly id: string;
   readonly config: OverlayConfig;
   readonly zIndex: number;
-  readonly templateRef: TemplateRef<any> | undefined;
+  readonly content: TemplateRef<any> | string | undefined;
   readonly referenceElement: HTMLElement | null | undefined;
   readonly focusReturnTarget: HTMLElement | null | undefined;
   readonly closed: boolean;

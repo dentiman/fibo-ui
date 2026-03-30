@@ -135,19 +135,14 @@ export class MultiSelect implements FormValueControl<(string | number)[] | null>
     if (!currentValue || !Array.isArray(currentValue)) return [];
     return this.items().filter((item) => item.value !== null && currentValue.includes(item.value));
   });
-  readonly strategy = computed(() => {
-    const templateRef = this.multiSelectTemplate();
-    if (!templateRef) {
-      return null;
-    }
-
-    return connectedConfig({
-      templateRef,
+  readonly strategy = computed(() =>
+    connectedConfig({
+      content: this.multiSelectTemplate() ?? '',
       referenceElement: this.fieldShell().overlayReferenceElement(),
       focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
       matchWidth: true,
-    });
-  });
+    }),
+  );
   readonly overlayHandle = createOverlay(this.isOpen, this.strategy);
 
   focus(options?: FocusOptions) {

@@ -25,3 +25,9 @@ export const DRAWER_SHELL_TOKEN = new InjectionToken<Type<any>>('fibo-ui/DrawerS
     );
   },
 });
+
+export const TOOLTIP_SHELL_TOKEN = new InjectionToken<Type<any>>('fibo-ui/TooltipShell', {
+  factory: () => {
+    throw new Error('[fibo-ui] No tooltip shell registered. Call provideOverlays() in app providers.');
+  },
+});

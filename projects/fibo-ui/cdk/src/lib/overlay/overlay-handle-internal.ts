@@ -15,7 +15,7 @@ class OverlayHandleImpl implements OverlayHandle {
   readonly config: OverlayConfig;
   readonly zIndex: number;
 
-  private readonly templateRefSignal: WritableSignal<TemplateRef<any> | undefined>;
+  private readonly contentSignal: WritableSignal<TemplateRef<any> | string | undefined>;
   private readonly referenceElementSignal: WritableSignal<HTMLElement | null | undefined>;
   private readonly interactionRootSignal: WritableSignal<HTMLElement | null | undefined>;
   private readonly focusReturnTargetSignal: WritableSignal<HTMLElement | null | undefined>;
@@ -23,8 +23,8 @@ class OverlayHandleImpl implements OverlayHandle {
   private closedState = false;
   private requestClose?: (reason: OverlayCloseReason, event?: Event) => void;
 
-  get templateRef(): TemplateRef<any> | undefined {
-    return this.templateRefSignal();
+  get content(): TemplateRef<any> | string | undefined {
+    return this.contentSignal();
   }
 
   get referenceElement(): HTMLElement | null | undefined {
@@ -46,7 +46,7 @@ class OverlayHandleImpl implements OverlayHandle {
   constructor(options: CreateOverlayHandleOptions) {
     this.id = `overlay-${nextOverlayId++}`;
     this.config = options.config;
-    this.templateRefSignal = signal(options.config.templateRef);
+    this.contentSignal = signal(options.config.content);
     this.referenceElementSignal = signal(options.referenceElement ?? options.config.referenceElement);
     this.interactionRootSignal = signal<HTMLElement | null | undefined>(undefined);
     this.focusReturnTargetSignal = signal(options.focusReturnTarget ?? options.config.focusReturnTarget);
@@ -71,11 +71,11 @@ class OverlayHandleImpl implements OverlayHandle {
   }
 
   syncRenderConfig(config: {
-    templateRef?: TemplateRef<any>;
+    content?: TemplateRef<any> | string;
     referenceElement?: HTMLElement | null;
     focusReturnTarget?: HTMLElement | null;
   }): void {
-    this.templateRefSignal.set(config.templateRef);
+    this.contentSignal.set(config.content);
     this.referenceElementSignal.set(config.referenceElement);
     this.focusReturnTargetSignal.set(config.focusReturnTarget);
   }
@@ -99,7 +99,7 @@ export function markOverlayHandleClosedInternal(handle: OverlayHandle): void {
 export function syncOverlayHandleRenderConfigInternal(
   handle: OverlayHandle,
   config: {
-    templateRef?: TemplateRef<any>;
+    content?: TemplateRef<any> | string;
     referenceElement?: HTMLElement | null;
     focusReturnTarget?: HTMLElement | null;
   },

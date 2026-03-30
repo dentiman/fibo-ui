@@ -24,7 +24,7 @@ export class Tooltip {
   placement = input<Placement>('top');
 
   open() {
-    this.tooltipService.open(this.content(), this.element, this.placement(), this.tooltipId);
+    this.tooltipService.open(this.content(), this.element, this.placement());
   }
 
   close() {

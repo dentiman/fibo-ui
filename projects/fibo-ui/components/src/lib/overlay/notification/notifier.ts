@@ -20,7 +20,7 @@ export class Notifier {
   notifications = signal<NotificationConfig[]>([]);
   private readonly timers = new Map<symbol, ReturnType<typeof setTimeout>>();
 
-  readonly overlay = createSingletonOverlay(templateRef => notificationConfig({ templateRef }));
+  readonly overlay = createSingletonOverlay(tpl => notificationConfig({ content: tpl }));
 
   push(config: NotificationConfig) {
     const id = Symbol('notification-id');

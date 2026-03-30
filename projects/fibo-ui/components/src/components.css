@@ -29,6 +29,19 @@
     outline-offset: -1px;
   }
 
+  /* Tooltip component */
+  .tooltip-container {
+    padding: 0.375rem 0.625rem;
+    border-radius: 0.375rem;
+    box-shadow: var(--shadow-xl);
+    background-color: var(--popover-bg);
+    outline: 1px solid var(--popover-outline);
+    outline-offset: -1px;
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+    overflow: visible;
+  }
+
   .fibo-card {
     background-color: var(--card-bg);
     outline: 1px solid var(--card-outline);

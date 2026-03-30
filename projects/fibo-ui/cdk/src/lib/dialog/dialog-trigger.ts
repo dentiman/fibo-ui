@@ -18,21 +18,17 @@ export class DialogTrigger {
   isOpen = model(false, { alias: 'open' });
   content = input<TemplateRef<any>>();
 
-  private readonly config = computed(() => {
-    const templateRef = this.content();
-    if (!templateRef) return null;
-    return {
-      templateRef,
-      position: globalPosition(),
-      shell: MODAL_SHELL_TOKEN,
-      needsBackdrop: true,
-      blockScroll: true,
-      closeOnOutsideClick: true,
-      trapFocus: true,
-      restoreFocus: true,
-      referenceElement: this.element,
-    };
-  });
+  private readonly config = computed(() => ({
+    content: this.content() ?? '',
+    position: globalPosition(),
+    shell: MODAL_SHELL_TOKEN,
+    needsBackdrop: true,
+    blockScroll: true,
+    closeOnOutsideClick: true,
+    trapFocus: true,
+    restoreFocus: true,
+    referenceElement: this.element,
+  }));
 
   overlayHandle = createOverlay(this.isOpen, this.config);
 

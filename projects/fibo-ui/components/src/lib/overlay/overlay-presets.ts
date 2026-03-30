@@ -11,14 +11,14 @@ import {
 } from '@fibo-ui/cdk';
 
 export interface DialogConfigOptions {
-  templateRef: TemplateRef<any>;
+  content: TemplateRef<any> | string;
   referenceElement?: HTMLElement | null;
   focusReturnTarget?: HTMLElement | null;
 }
 
 export function dialogConfig(options: DialogConfigOptions): OverlayConfig {
   return {
-    templateRef: options.templateRef,
+    content: options.content,
     position: globalPosition(),
     shell: MODAL_SHELL_TOKEN,
     needsBackdrop: true,
@@ -33,14 +33,14 @@ export function dialogConfig(options: DialogConfigOptions): OverlayConfig {
 }
 
 export interface DrawerConfigOptions {
-  templateRef: TemplateRef<any>;
+  content: TemplateRef<any> | string;
   referenceElement?: HTMLElement | null;
   focusReturnTarget?: HTMLElement | null;
 }
 
 export function drawerConfig(options: DrawerConfigOptions): OverlayConfig {
   return {
-    templateRef: options.templateRef,
+    content: options.content,
     position: globalPosition(),
     shell: DRAWER_SHELL_TOKEN,
     needsBackdrop: true,
@@ -55,7 +55,7 @@ export function drawerConfig(options: DrawerConfigOptions): OverlayConfig {
 }
 
 export interface ConnectedConfigOptions {
-  templateRef: TemplateRef<any>;
+  content: TemplateRef<any> | string;
   referenceElement?: HTMLElement | null;
   placement?: Placement;
   offset?: number;
@@ -67,7 +67,7 @@ export interface ConnectedConfigOptions {
 
 export function connectedConfig(options: ConnectedConfigOptions): OverlayConfig {
   return {
-    templateRef: options.templateRef,
+    content: options.content,
     position: connectedPosition({
       placement: options.placement,
       offset: options.offset,
@@ -85,7 +85,7 @@ export function connectedConfig(options: ConnectedConfigOptions): OverlayConfig 
 }
 
 export interface MenuConfigOptions {
-  templateRef: TemplateRef<any>;
+  content: TemplateRef<any> | string;
   referenceElement?: HTMLElement | null;
   placement?: Placement;
   offset?: number;
@@ -94,7 +94,7 @@ export interface MenuConfigOptions {
 
 export function menuConfig(options: MenuConfigOptions): OverlayConfig {
   return {
-    templateRef: options.templateRef,
+    content: options.content,
     position: connectedPosition({
       placement: options.placement ?? 'right-start',
       offset: options.offset ?? 1,
@@ -110,30 +110,13 @@ export function menuConfig(options: MenuConfigOptions): OverlayConfig {
   };
 }
 
-export interface TooltipConfigOptions {
-  templateRef: TemplateRef<any>;
-  referenceElement?: HTMLElement | null;
-  placement?: Placement;
-}
-
-export function tooltipConfig(options: TooltipConfigOptions): OverlayConfig {
-  return {
-    templateRef: options.templateRef,
-    position: connectedPosition({ placement: options.placement ?? 'top' }),
-    shell: CONNECTED_SHELL_TOKEN,
-    closeOnScroll: true,
-    closeOnEscape: false,
-    referenceElement: options.referenceElement,
-  };
-}
-
 export interface NotificationConfigOptions {
-  templateRef: TemplateRef<any>;
+  content: TemplateRef<any> | string;
 }
 
 export function notificationConfig(options: NotificationConfigOptions): OverlayConfig {
   return {
-    templateRef: options.templateRef,
+    content: options.content,
     position: globalPosition(),
     shell: NOTIFICATION_SHELL_TOKEN,
     closeOnEscape: false,

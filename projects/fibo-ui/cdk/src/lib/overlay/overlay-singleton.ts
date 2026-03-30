@@ -15,8 +15,8 @@ export interface SingletonOverlay {
 }
 
 /**
- * Reduces the `containerTemplateRef / isOpen / overlayConfig / createOverlay` boilerplate
- * common to service-driven overlays (ConfirmationService, TooltipService, Notifier, etc.).
+ * Reduces the `templateRef / isOpen / overlayConfig / createOverlay` boilerplate
+ * common to service-driven overlays (ConfirmationService, Notifier, etc.).
  *
  * `configFn` runs inside a `computed` — it can read other signals reactively.
  * Return `null` to defer opening until required data is available.
@@ -24,8 +24,8 @@ export interface SingletonOverlay {
  * Must be called in an injection context (field initializer or constructor).
  *
  * @example
- * readonly overlay = createSingletonOverlay(templateRef =>
- *   dialogConfig({ templateRef, referenceElement: this.config()?.referenceElement ?? null }),
+ * readonly overlay = createSingletonOverlay(tpl =>
+ *   dialogConfig({ content: tpl, referenceElement: this.config()?.referenceElement ?? null }),
  *   session => { session.afterClose(() => this.cleanup()); },
  * );
  */

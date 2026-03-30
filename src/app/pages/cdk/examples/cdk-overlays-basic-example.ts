@@ -66,13 +66,12 @@ export class CdkOverlaysBasicExample {
   readonly isOpen = signal(false);
   readonly actionCount = signal(0);
 
-  readonly strategy = computed(() => {
-    const templateRef = this.overlayTpl();
-    return connectedConfig({
-      templateRef,
+  readonly strategy = computed(() =>
+    connectedConfig({
+      content: this.overlayTpl(),
       referenceElement: this.triggerButton().nativeElement,
-    });
-  });
+    }),
+  );
 
   readonly overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
     restoreTriggerFocusOnClose(overlay);

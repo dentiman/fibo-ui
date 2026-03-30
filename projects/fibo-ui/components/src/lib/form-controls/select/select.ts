@@ -124,19 +124,14 @@ export class Select implements FormValueControl<string | number | null> {
   readonly selectedLabel = computed(() => this.selectedItem()?.label ?? null);
   readonly canClear = computed(() => this.clearValue() !== undefined && this.value() !== this.clearValue());
 
-  readonly strategy = computed(() => {
-    const templateRef = this.selectTemplate();
-    if (!templateRef) {
-      return null;
-    }
-
-    return connectedConfig({
-      templateRef,
+  readonly strategy = computed(() =>
+    connectedConfig({
+      content: this.selectTemplate() ?? '',
       referenceElement: this.fieldShell().overlayReferenceElement(),
       focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
       matchWidth: true,
-    });
-  });
+    }),
+  );
   readonly overlayHandle = createOverlay(this.isOpen, this.strategy);
 
   focus(options?: FocusOptions) {
