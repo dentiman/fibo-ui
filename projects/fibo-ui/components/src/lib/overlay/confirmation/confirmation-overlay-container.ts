@@ -96,7 +96,7 @@ export class ConfirmationOverlayContainer {
 
   constructor() {
     afterNextRender(() => {
-      this.confirmation.containerTemplateRef.set(this.root());
+      this.confirmation.overlay.templateRef.set(this.root());
     });
   }
 }

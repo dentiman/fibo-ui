@@ -82,7 +82,7 @@ export class TooltipOverlayContainer {
 
   constructor() {
     afterNextRender(() => {
-      this.tooltipService.containerTemplateRef.set(this.root());
+      this.tooltipService.overlay.templateRef.set(this.root());
     });
   }
 }

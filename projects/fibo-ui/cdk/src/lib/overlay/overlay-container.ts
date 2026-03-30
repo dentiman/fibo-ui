@@ -1,5 +1,6 @@
 import { DestroyRef, Directive, ElementRef, inject, OnInit } from '@angular/core';
 import { blockScroll, isElementInsideOverlayContainer } from './overlay-behaviors';
+import { setOverlayHandleInteractionRootInternal } from './overlay-handle-internal';
 import { OverlayShellHost } from './overlay-shell-host';
 import { OverlayStack } from './overlay-stack';
 
@@ -28,7 +29,7 @@ export class OverlayContainer implements OnInit {
     const handle = this.shellHost.handle();
     const config = handle.config;
 
-    handle.setInteractionRoot(this.elementRef.nativeElement);
+    setOverlayHandleInteractionRootInternal(handle, this.elementRef.nativeElement);
 
     if (config.blockScroll) {
       blockScroll(this.destroyRef);

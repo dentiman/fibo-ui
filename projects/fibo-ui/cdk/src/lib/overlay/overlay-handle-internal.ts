@@ -6,7 +6,6 @@ import type { OverlayConfig } from './overlay-config';
 export interface CreateOverlayHandleOptions {
   config: OverlayConfig;
   referenceElement?: HTMLElement | null;
-  interactionRoot?: HTMLElement | null;
   focusReturnTarget?: HTMLElement | null;
   zIndex: number;
 }
@@ -49,7 +48,7 @@ class OverlayHandleImpl implements OverlayHandle {
     this.config = options.config;
     this.templateRefSignal = signal(options.config.templateRef);
     this.referenceElementSignal = signal(options.referenceElement ?? options.config.referenceElement);
-    this.interactionRootSignal = signal(options.interactionRoot);
+    this.interactionRootSignal = signal<HTMLElement | null | undefined>(undefined);
     this.focusReturnTargetSignal = signal(options.focusReturnTarget ?? options.config.focusReturnTarget);
     this.zIndex = options.zIndex;
   }
@@ -74,12 +73,10 @@ class OverlayHandleImpl implements OverlayHandle {
   syncRenderConfig(config: {
     templateRef?: TemplateRef<any>;
     referenceElement?: HTMLElement | null;
-    interactionRoot?: HTMLElement | null;
     focusReturnTarget?: HTMLElement | null;
   }): void {
     this.templateRefSignal.set(config.templateRef);
     this.referenceElementSignal.set(config.referenceElement);
-    this.interactionRootSignal.set(config.interactionRoot);
     this.focusReturnTargetSignal.set(config.focusReturnTarget);
   }
 }
@@ -104,11 +101,23 @@ export function syncOverlayHandleRenderConfigInternal(
   config: {
     templateRef?: TemplateRef<any>;
     referenceElement?: HTMLElement | null;
-    interactionRoot?: HTMLElement | null;
     focusReturnTarget?: HTMLElement | null;
   },
 ): void {
   (handle as OverlayHandleImpl).syncRenderConfig(config);
+}
+
+export function setOverlayHandleInteractionRootInternal(
+  handle: OverlayHandle,
+  root: HTMLElement | null,
+): void {
+  (handle as OverlayHandleImpl).setInteractionRoot(root);
+}
+
+export function getOverlayHandleInteractionRootInternal(
+  handle: OverlayHandle,
+): HTMLElement | null | undefined {
+  return (handle as OverlayHandleImpl).interactionRoot;
 }
 
 let nextOverlayId = 1;

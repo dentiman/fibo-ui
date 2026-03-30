@@ -16,7 +16,6 @@ import {
   SelectOne,
   createOverlay,
   provideFormValueControl,
-  restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
 import { connectedConfig } from '../../overlay/overlay-presets';
 import { type ComboboxControl, provideComboboxControl } from './combobox-control-token';
@@ -141,7 +140,6 @@ export class Combobox
   });
 
   readonly overlayHandle = createOverlay(this.expanded, this.strategy, overlay => {
-    restoreTriggerFocusOnClose(overlay);
     overlay.beforeClose((_, __, reason) => {
       if (reason !== 'state') {
         this.resetQueryToValue();

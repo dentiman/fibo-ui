@@ -5,7 +5,6 @@ import {
   OverlayPanel,
   SelectDate,
   provideFormValueControl,
-  restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
 import { connectedConfig } from '../../overlay/overlay-presets';
 import { Calendar } from '../calendar/calendar';

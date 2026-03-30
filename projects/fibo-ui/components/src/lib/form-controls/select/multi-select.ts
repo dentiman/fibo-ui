@@ -7,7 +7,6 @@ import {
   KeyboardSource,
   SelectMulti,
   provideFormValueControl,
-  restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
 import { connectedConfig } from '../../overlay/overlay-presets';
 import { LucideAngularModule } from 'lucide-angular';
@@ -149,9 +148,7 @@ export class MultiSelect implements FormValueControl<(string | number)[] | null>
       matchWidth: true,
     });
   });
-  readonly overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
-    restoreTriggerFocusOnClose(overlay);
-  });
+  readonly overlayHandle = createOverlay(this.isOpen, this.strategy);
 
   focus(options?: FocusOptions) {
     this.triggerSurface().nativeElement.focus(options);

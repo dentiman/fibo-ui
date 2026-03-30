@@ -7,7 +7,6 @@ import type { OverlayCloseContext, OverlayCloseReason } from './overlay-types';
 export interface OverlayRenderConfig {
   templateRef?: TemplateRef<any>;
   referenceElement?: HTMLElement | null;
-  interactionRoot?: HTMLElement | null;
   focusReturnTarget?: HTMLElement | null;
 }
 

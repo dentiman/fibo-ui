@@ -1,15 +1,13 @@
-import { computed, Injectable, signal, TemplateRef } from '@angular/core';
+import { Injectable, signal, TemplateRef } from '@angular/core';
 import { Subject, takeUntil, timer } from 'rxjs';
 import { Placement } from '@floating-ui/dom';
-import { createOverlay } from '@fibo-ui/cdk';
+import { createSingletonOverlay } from '@fibo-ui/cdk';
 import { tooltipConfig } from '../overlay-presets';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TooltipService {
-  containerTemplateRef = signal<TemplateRef<any> | null>(null);
-
   tooltipRef = signal<{
     content: string | TemplateRef<unknown>;
     referenceElement: HTMLElement;
@@ -21,27 +19,25 @@ export class TooltipService {
   closeDelay = signal<number>(100);
 
   private _interactionRequest = new Subject<'open' | 'close'>();
-  private isOpen = signal(false);
 
-  overlayConfig = computed(() => {
-    const templateRef = this.containerTemplateRef();
-    const ref = this.tooltipRef();
-    if (!templateRef || !ref) return null;
-
-    return tooltipConfig({
-      templateRef,
-      referenceElement: ref.referenceElement,
-      placement: ref.placement,
-    });
-  });
-
-  overlayHandle = createOverlay(this.isOpen, this.overlayConfig, overlay => {
-    overlay.afterClose(() => {
-      if (!this.isOpen()) {
-        this.tooltipRef.set(null);
-      }
-    });
-  });
+  readonly overlay = createSingletonOverlay(
+    templateRef => {
+      const ref = this.tooltipRef();
+      if (!ref) return null;
+      return tooltipConfig({
+        templateRef,
+        referenceElement: ref.referenceElement,
+        placement: ref.placement,
+      });
+    },
+    session => {
+      session.afterClose(() => {
+        if (!this.overlay.isOpen()) {
+          this.tooltipRef.set(null);
+        }
+      });
+    },
+  );
 
   open(
     content: string | TemplateRef<unknown>,
@@ -54,7 +50,7 @@ export class TooltipService {
       .pipe(takeUntil(this._interactionRequest))
       .subscribe(() => {
         this.tooltipRef.set({ content, referenceElement, placement, tooltipId });
-        this.isOpen.set(true);
+        this.overlay.isOpen.set(true);
       });
   }
 
@@ -67,7 +63,7 @@ export class TooltipService {
     timer(this.closeDelay())
       .pipe(takeUntil(this._interactionRequest))
       .subscribe(() => {
-        this.isOpen.set(false);
+        this.overlay.isOpen.set(false);
       });
   }
 }

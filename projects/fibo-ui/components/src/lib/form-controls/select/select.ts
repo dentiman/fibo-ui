@@ -7,7 +7,6 @@ import {
   KeyboardSource,
   SelectOne,
   provideFormValueControl,
-  restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
 import { connectedConfig } from '../../overlay/overlay-presets';
 import { FieldShell } from '../form/field-shell';
@@ -138,9 +137,7 @@ export class Select implements FormValueControl<string | number | null> {
       matchWidth: true,
     });
   });
-  readonly overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
-    restoreTriggerFocusOnClose(overlay);
-  });
+  readonly overlayHandle = createOverlay(this.isOpen, this.strategy);
 
   focus(options?: FocusOptions) {
     this.triggerButton().nativeElement.focus(options);

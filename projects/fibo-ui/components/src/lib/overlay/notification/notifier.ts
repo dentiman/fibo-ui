@@ -1,5 +1,5 @@
-import { computed, Injectable, signal, TemplateRef } from '@angular/core';
-import { createOverlay } from '@fibo-ui/cdk';
+import { Injectable, signal, TemplateRef } from '@angular/core';
+import { createSingletonOverlay } from '@fibo-ui/cdk';
 import { notificationConfig } from '../overlay-presets';
 
 export type NotificationType = 'info' | 'success' | 'warning' | 'danger';
@@ -20,17 +20,7 @@ export class Notifier {
   notifications = signal<NotificationConfig[]>([]);
   private readonly timers = new Map<symbol, ReturnType<typeof setTimeout>>();
 
-  containerTemplateRef = signal<TemplateRef<any> | null>(null);
-
-  private isOpen = signal(false);
-
-  overlayConfig = computed(() => {
-    const templateRef = this.containerTemplateRef();
-    if (!templateRef) return null;
-    return notificationConfig({ templateRef });
-  });
-
-  overlayHandle = createOverlay(this.isOpen, this.overlayConfig);
+  readonly overlay = createSingletonOverlay(templateRef => notificationConfig({ templateRef }));
 
   push(config: NotificationConfig) {
     const id = Symbol('notification-id');
@@ -38,7 +28,7 @@ export class Notifier {
     const notification: NotificationConfig = { ...config, duration, id };
 
     this.notifications.update(value => [...value, notification]);
-    this.isOpen.set(true);
+    this.overlay.isOpen.set(true);
 
     if (duration > 0) {
       const timerId = setTimeout(() => {
@@ -58,7 +48,7 @@ export class Notifier {
     this.notifications.update(notifications => notifications.filter(n => n !== notification));
 
     if (this.notifications().length === 0) {
-      this.isOpen.set(false);
+      this.overlay.isOpen.set(false);
     }
   }
 

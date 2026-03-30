@@ -1,5 +1,5 @@
-import { computed, Injectable, signal, TemplateRef } from '@angular/core';
-import { createOverlay } from '@fibo-ui/cdk';
+import { Injectable, signal, TemplateRef } from '@angular/core';
+import { createSingletonOverlay } from '@fibo-ui/cdk';
 import { dialogConfig } from '../overlay-presets';
 
 export type ConfirmationContent =
@@ -21,35 +21,28 @@ export interface ConfirmationConfig {
   providedIn: 'root',
 })
 export class ConfirmationService {
-  containerTemplateRef = signal<TemplateRef<any> | null>(null);
-
-  // Business state — reflects logical open/closed immediately.
-  isOpen = signal(false);
   // Render data — stays valid during animate.leave so the template
   // content is visible while the outlet wrapper fades out.
   config = signal<ConfirmationConfig | null>(null);
 
-  overlayConfig = computed(() => {
-    const templateRef = this.containerTemplateRef();
-    if (!templateRef) return null;
-
-    return dialogConfig({
-      templateRef,
-      referenceElement: this.config()?.referenceElement ?? null,
-    });
-  });
-
-  overlayHandle = createOverlay(this.isOpen, this.overlayConfig, overlay => {
-    overlay.afterClose(() => {
-      if (!this.isOpen()) {
-        this.config.set(null);
-      }
-    });
-  });
+  readonly overlay = createSingletonOverlay(
+    templateRef =>
+      dialogConfig({
+        templateRef,
+        referenceElement: this.config()?.referenceElement ?? null,
+      }),
+    session => {
+      session.afterClose(() => {
+        if (!this.overlay.isOpen()) {
+          this.config.set(null);
+        }
+      });
+    },
+  );
 
   open(config: ConfirmationConfig) {
     this.config.set(config);
-    this.isOpen.set(true);
+    this.overlay.isOpen.set(true);
   }
 
   confirm() {
@@ -62,6 +55,6 @@ export class ConfirmationService {
   }
 
   close() {
-    this.isOpen.set(false);
+    this.overlay.isOpen.set(false);
   }
 }

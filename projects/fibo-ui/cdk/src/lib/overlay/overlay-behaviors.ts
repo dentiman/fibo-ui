@@ -2,6 +2,7 @@ import type { DestroyRef } from '@angular/core';
 import type { OverlayCloseContext } from './overlay-types';
 import type { OverlaySession } from './overlay-session';
 import type { OverlayHandle } from './overlay-handle';
+import { getOverlayHandleInteractionRootInternal } from './overlay-handle-internal';
 
 // --- Scroll Lock ---
 
@@ -90,7 +91,7 @@ export function restoreTriggerFocus(
     isElementInsideOverlayContainer(target, overlay.id),
 ): void {
   const focusTarget =
-    overlay.focusReturnTarget ?? overlay.interactionRoot ?? overlay.referenceElement;
+    overlay.focusReturnTarget ?? getOverlayHandleInteractionRootInternal(overlay) ?? overlay.referenceElement;
   const shouldRestore =
     !ctx.activeElement ||
     ctx.activeElement === document.body ||
