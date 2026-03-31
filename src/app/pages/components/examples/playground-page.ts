@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, signal, TemplateRef, viewChild } from '@angular/core';
-import { createOverlay, DialogTrigger } from '@fibo-ui/cdk';
-import { menuConfig } from '@fibo-ui/components';
+import { ChangeDetectionStrategy, Component, ElementRef, signal, TemplateRef, viewChild } from '@angular/core';
+import { createOverlay, connectedPosition, restoreTriggerFocusOnClose, DialogTrigger } from '@fibo-ui/cdk';
+import { menuBehavior } from '@fibo-ui/components';
 import { FiboDialog, Menu, type MenuItemType } from '@fibo-ui/components';
 
 @Component({
@@ -167,26 +167,21 @@ export class PlaygroundPageComponent {
   readonly isMenuOpen = signal(false);
   readonly isAltMenuOpen = signal(false);
 
-  readonly menuStrategy = computed(() => {
-    const trigger = this.menuTrigger().nativeElement;
-    return menuConfig({
-      content: this.menuTemplate() ?? '',
-      referenceElement: trigger,
-      focusReturnTarget: trigger,
-    });
-  });
+  readonly menuOverlayHandle = createOverlay(
+    this.isMenuOpen,
+    menuBehavior(),
+    connectedPosition(() => ({ referenceElement: this.menuTrigger().nativeElement })),
+    this.menuTemplate,
+    session => { restoreTriggerFocusOnClose(session, () => this.menuTrigger().nativeElement); },
+  );
 
-  readonly altMenuStrategy = computed(() => {
-    const trigger = this.altMenuTrigger().nativeElement;
-    return menuConfig({
-      content: this.altMenuTemplate() ?? '',
-      referenceElement: trigger,
-      focusReturnTarget: trigger,
-    });
-  });
-
-  readonly menuOverlayHandle = createOverlay(this.isMenuOpen, this.menuStrategy);
-  readonly altMenuOverlayHandle = createOverlay(this.isAltMenuOpen, this.altMenuStrategy);
+  readonly altMenuOverlayHandle = createOverlay(
+    this.isAltMenuOpen,
+    menuBehavior(),
+    connectedPosition(() => ({ referenceElement: this.altMenuTrigger().nativeElement })),
+    this.altMenuTemplate,
+    session => { restoreTriggerFocusOnClose(session, () => this.altMenuTrigger().nativeElement); },
+  );
 
   readonly menuItems: MenuItemType[] = [
     { label: 'My Profile', icon: 'user', url: '/' },

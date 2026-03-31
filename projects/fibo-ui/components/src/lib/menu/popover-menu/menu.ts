@@ -22,7 +22,7 @@ import { MenuItemType } from '../menu-item.type';
 })
 export class Menu {
   items = input<MenuItemType[]>();
-  menuContent = input<TemplateRef<any>>();
+  menuContent = input<TemplateRef<unknown>>();
   itemsHaveIcons = computed(() => this.items()?.some((item) => !!item.icon));
   menuPanel = inject(MenuPanel);
   private readonly router = inject(Router);

@@ -1,6 +1,6 @@
 import { Injectable, signal, TemplateRef } from '@angular/core';
-import { createSingletonOverlay } from '@fibo-ui/cdk';
-import { dialogConfig } from '../overlay-presets';
+import { createSingletonOverlay, globalPosition, trapOverlayFocus, restoreTriggerFocusOnClose } from '@fibo-ui/cdk';
+import { dialogBehavior } from '../overlay-presets';
 
 export type ConfirmationContent =
   | {
@@ -25,20 +25,18 @@ export class ConfirmationService {
   // content is visible while the outlet wrapper fades out.
   config = signal<ConfirmationConfig | null>(null);
 
-  readonly overlay = createSingletonOverlay(
-    tpl =>
-      dialogConfig({
-        content: tpl,
-        referenceElement: this.config()?.referenceElement ?? null,
-      }),
-    session => {
-      session.afterClose(() => {
-        if (!this.overlay.isOpen()) {
-          this.config.set(null);
-        }
-      });
-    },
-  );
+  private readonly behavior = dialogBehavior();
+  private readonly position = signal(globalPosition());
+
+  readonly overlay = createSingletonOverlay(this.behavior, this.position, session => {
+    trapOverlayFocus(session, { guard: true });
+    restoreTriggerFocusOnClose(session, () => this.config()?.referenceElement ?? null);
+    session.afterClose(() => {
+      if (!this.overlay.isOpen()) {
+        this.config.set(null);
+      }
+    });
+  });
 
   open(config: ConfirmationConfig) {
     this.config.set(config);

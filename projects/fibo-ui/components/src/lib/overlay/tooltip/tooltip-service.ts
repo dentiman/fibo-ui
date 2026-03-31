@@ -1,7 +1,8 @@
 import { computed, Injectable, signal, TemplateRef } from '@angular/core';
 import { Subject, takeUntil, timer } from 'rxjs';
 import { Placement } from '@floating-ui/dom';
-import { connectedPosition, createOverlay, type OverlayConfig, TOOLTIP_SHELL_TOKEN } from '@fibo-ui/cdk';
+import { createOverlay, connectedPosition, type OverlayBehaviorConfig } from '@fibo-ui/cdk';
+import { tooltipBehavior } from '../overlay-presets';
 
 @Injectable({
   providedIn: 'root',
@@ -19,20 +20,16 @@ export class TooltipService {
   private _interactionRequest = new Subject<'open' | 'close'>();
   private readonly isOpen = signal(false);
 
-  private readonly overlayConfig = computed<OverlayConfig | null>(() => {
-    const ref = this.tooltipRef();
-    if (!ref) return null;
-    return {
-      content: ref.content,
-      position: connectedPosition({ placement: ref.placement ?? 'top' }),
-      shell: TOOLTIP_SHELL_TOKEN,
-      closeOnScroll: true,
-      closeOnEscape: false,
-      referenceElement: ref.referenceElement,
-    };
-  });
+  private readonly behavior: OverlayBehaviorConfig = tooltipBehavior();
 
-  readonly overlayHandle = createOverlay(this.isOpen, this.overlayConfig, session => {
+  private readonly position = connectedPosition(() => ({
+    referenceElement: this.tooltipRef()?.referenceElement ?? null,
+    placement: this.tooltipRef()?.placement ?? 'top',
+  }));
+
+  private readonly content = computed(() => this.tooltipRef()?.content ?? null);
+
+  readonly overlayHandle = createOverlay(this.isOpen, this.behavior, this.position, this.content, session => {
     session.afterClose(() => {
       if (!this.isOpen()) {
         this.tooltipRef.set(null);
@@ -42,10 +39,6 @@ export class TooltipService {
 
   open(content: string | TemplateRef<unknown>, referenceElement: HTMLElement, placement: Placement) {
     this._interactionRequest.next('open');
-
-    if (this.isOpen() && this.tooltipRef()?.referenceElement !== referenceElement) {
-      this.isOpen.set(false);
-    }
 
     timer(this.openDelay())
       .pipe(takeUntil(this._interactionRequest))

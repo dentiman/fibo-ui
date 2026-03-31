@@ -30,10 +30,10 @@ export class OverlayStackOutlet {
   private readonly injector = inject(Injector);
 
   resolveShell(handle: OverlayHandle): Type<unknown> {
-    return this.injector.get(handle.config.shell);
+    return this.injector.get(handle.behavior.shell);
   }
 
   needsBackdrop(handle: OverlayHandle): boolean {
-    return handle.config.needsBackdrop ?? false;
+    return handle.behavior.needsBackdrop ?? false;
   }
 }

@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, signal, TemplateRef, viewChild } from '@angular/core';
-import { createOverlay } from '@fibo-ui/cdk';
-import { menuConfig } from '@fibo-ui/components';
+import { ChangeDetectionStrategy, Component, ElementRef, signal, TemplateRef, viewChild } from '@angular/core';
+import { createOverlay, connectedPosition, restoreTriggerFocusOnClose } from '@fibo-ui/cdk';
+import { menuBehavior } from '@fibo-ui/components';
 import { Menu, type MenuItemType } from '@fibo-ui/components';
 
 @Component({
@@ -30,15 +30,13 @@ export class MenuComponentExample {
 
   readonly isOpen = signal(false);
 
-  readonly strategy = computed(() =>
-    menuConfig({
-      content: this.menuTemplate(),
-      referenceElement: this.triggerBtn().nativeElement,
-      focusReturnTarget: this.triggerBtn().nativeElement,
-    }),
+  readonly overlayHandle = createOverlay(
+    this.isOpen,
+    menuBehavior(),
+    connectedPosition(() => ({ referenceElement: this.triggerBtn().nativeElement })),
+    this.menuTemplate,
+    session => { restoreTriggerFocusOnClose(session, () => this.triggerBtn().nativeElement); },
   );
-
-  readonly overlayHandle = createOverlay(this.isOpen, this.strategy);
 
   readonly menuItems: MenuItemType[] = [
     { label: 'My Profile', icon: 'user', url: '/' },

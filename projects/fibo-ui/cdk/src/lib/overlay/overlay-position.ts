@@ -41,7 +41,7 @@ export class OverlayPosition {
   readonly position = this.positionSignal.asReadonly();
 
   private readonly positionConfig = computed(() => {
-    const pos = this.handle().config.position;
+    const pos = this.handle().position();
     return pos.type === 'connected' || pos.type === 'coordinate'
       ? (pos as ConnectedPosition | CoordinatePosition)
       : null;
@@ -70,7 +70,10 @@ export class OverlayPosition {
         getBoundingClientRect: () => DOMRect.fromRect({ x, y, width: 0, height: 0 }),
       };
     }
-    return this.handle().referenceElement ?? undefined;
+    if (pos?.type === 'connected') {
+      return pos.referenceElement ?? undefined;
+    }
+    return undefined;
   });
 
   readonly middleware = computed<Middleware[]>(() => {
@@ -90,7 +93,9 @@ export class OverlayPosition {
 
   readonly width = computed(() => {
     this.position();
-    return this.matchWidth() ? (this.handle().referenceElement?.offsetWidth) : undefined;
+    const pos = this.positionConfig();
+    const refEl = pos?.type === 'connected' ? pos.referenceElement : null;
+    return this.matchWidth() ? (refEl?.offsetWidth) : undefined;
   });
 
   registerArrowElement(element: HTMLElement | null): void {

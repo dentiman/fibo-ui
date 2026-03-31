@@ -10,7 +10,7 @@ import { OverlayStack } from './overlay-stack';
  * Responsibilities:
  * - Binds `data-overlay-container-id` for DOM-based overlay lookups
  * - Auto-sets `interactionRoot` to the host element
- * - Attaches close-policy listeners based on `config` booleans:
+ * - Attaches close-policy listeners based on `behavior` booleans:
  *   `closeOnOutsideClick`, `closeOnFocusLeave`, `closeOnScroll`, `blockScroll`
  */
 @Directive({
@@ -27,31 +27,33 @@ export class OverlayContainer implements OnInit {
 
   ngOnInit(): void {
     const handle = this.shellHost.handle();
-    const config = handle.config;
+    const behavior = handle.behavior;
 
     setOverlayHandleInteractionRootInternal(handle, this.elementRef.nativeElement);
 
-    if (config.blockScroll) {
+    if (behavior.blockScroll) {
       blockScroll(this.destroyRef);
     }
 
-    if (config.closeOnOutsideClick) {
+    if (behavior.closeOnOutsideClick) {
       this.attachCloseOnOutsideClick();
     }
 
-    if (config.closeOnFocusLeave) {
+    if (behavior.closeOnFocusLeave) {
       this.attachCloseOnFocusLeave();
     }
 
-    if (config.closeOnScroll) {
+    if (behavior.closeOnScroll) {
       this.attachCloseOnScroll();
     }
   }
 
   private isInsideSafeZone(target: Node): boolean {
     const handle = this.shellHost.handle();
+    const pos = handle.position();
+    const referenceElement = pos.type === 'connected' ? pos.referenceElement : null;
 
-    if (handle.referenceElement?.contains(target)) return true;
+    if (referenceElement?.contains(target)) return true;
     if (this.elementRef.nativeElement.contains(target)) return true;
 
     const targetOverlayId = this.overlayStack.findOverlayContainerId(target);

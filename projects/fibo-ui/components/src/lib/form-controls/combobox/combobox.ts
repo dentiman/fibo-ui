@@ -15,9 +15,11 @@ import {
   KeyboardSource,
   SelectOne,
   createOverlay,
+  connectedPosition,
+  restoreTriggerFocusOnClose,
   provideFormValueControl,
 } from '@fibo-ui/cdk';
-import { connectedConfig } from '../../overlay/overlay-presets';
+import { connectedBehavior } from '../../overlay/overlay-presets';
 import { type ComboboxControl, provideComboboxControl } from './combobox-control-token';
 import { ComboboxInput } from './combobox-input';
 import { ComboboxList } from './combobox-list';
@@ -125,22 +127,18 @@ export class Combobox
       : [];
   });
 
-  readonly strategy = computed(() =>
-    connectedConfig({
-      content: this.comboboxTemplateRef() ?? '',
-      referenceElement: this.fieldShell().overlayReferenceElement(),
-      focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
-      matchWidth: true,
-    }),
+  readonly overlayHandle = createOverlay(
+    this.expanded,
+    connectedBehavior(),
+    connectedPosition(() => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true })),
+    this.comboboxTemplateRef,
+    overlay => {
+      restoreTriggerFocusOnClose(overlay, () => this.fieldShell().overlayFocusReturnTarget());
+      overlay.beforeClose((_, __, reason) => {
+        if (reason !== 'state') this.resetQueryToValue();
+      });
+    },
   );
-
-  readonly overlayHandle = createOverlay(this.expanded, this.strategy, overlay => {
-    overlay.beforeClose((_, __, reason) => {
-      if (reason !== 'state') {
-        this.resetQueryToValue();
-      }
-    });
-  });
 
   private resetQueryToValue() {
     const value = this.value();

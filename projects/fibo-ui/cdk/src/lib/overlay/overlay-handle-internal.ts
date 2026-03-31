@@ -1,42 +1,38 @@
 import { TemplateRef, WritableSignal, signal } from '@angular/core';
+import type { Signal } from '@angular/core';
 import type { OverlayCloseReason } from './overlay-types';
 import { OverlayHandle } from './overlay-handle';
-import type { OverlayConfig } from './overlay-config';
+import type { OverlayBehaviorConfig, OverlayPositionConfig } from './overlay-config';
 
 export interface CreateOverlayHandleOptions {
-  config: OverlayConfig;
-  referenceElement?: HTMLElement | null;
-  focusReturnTarget?: HTMLElement | null;
+  behavior: OverlayBehaviorConfig;
+  position: OverlayPositionConfig;
+  content: TemplateRef<any> | string;
   zIndex: number;
 }
 
 class OverlayHandleImpl implements OverlayHandle {
   readonly id: string;
-  readonly config: OverlayConfig;
   readonly zIndex: number;
+  readonly behavior: OverlayBehaviorConfig;
 
+  private readonly positionSignal: WritableSignal<OverlayPositionConfig>;
   private readonly contentSignal: WritableSignal<TemplateRef<any> | string | undefined>;
-  private readonly referenceElementSignal: WritableSignal<HTMLElement | null | undefined>;
   private readonly interactionRootSignal: WritableSignal<HTMLElement | null | undefined>;
-  private readonly focusReturnTargetSignal: WritableSignal<HTMLElement | null | undefined>;
 
   private closedState = false;
-  private requestClose?: (reason: OverlayCloseReason, event?: Event) => void;
+  private requestCloseFn?: (reason: OverlayCloseReason, event?: Event) => void;
 
-  get content(): TemplateRef<any> | string | undefined {
-    return this.contentSignal();
+  get position(): Signal<OverlayPositionConfig> {
+    return this.positionSignal.asReadonly();
   }
 
-  get referenceElement(): HTMLElement | null | undefined {
-    return this.referenceElementSignal();
+  get content(): Signal<TemplateRef<any> | string | undefined> {
+    return this.contentSignal.asReadonly();
   }
 
   get interactionRoot(): HTMLElement | null | undefined {
     return this.interactionRootSignal();
-  }
-
-  get focusReturnTarget(): HTMLElement | null | undefined {
-    return this.focusReturnTargetSignal();
   }
 
   get closed(): boolean {
@@ -45,39 +41,36 @@ class OverlayHandleImpl implements OverlayHandle {
 
   constructor(options: CreateOverlayHandleOptions) {
     this.id = `overlay-${nextOverlayId++}`;
-    this.config = options.config;
-    this.contentSignal = signal(options.config.content);
-    this.referenceElementSignal = signal(options.referenceElement ?? options.config.referenceElement);
-    this.interactionRootSignal = signal<HTMLElement | null | undefined>(undefined);
-    this.focusReturnTargetSignal = signal(options.focusReturnTarget ?? options.config.focusReturnTarget);
     this.zIndex = options.zIndex;
+    this.behavior = options.behavior;
+    this.positionSignal = signal(options.position);
+    this.contentSignal = signal<TemplateRef<any> | string | undefined>(options.content);
+    this.interactionRootSignal = signal<HTMLElement | null | undefined>(undefined);
   }
 
   close(reason?: OverlayCloseReason): void {
     if (this.closedState) return;
-    this.requestClose?.(reason ?? 'programmatic');
+    this.requestCloseFn?.(reason ?? 'programmatic');
   }
 
   setInteractionRoot(root: HTMLElement | null): void {
     this.interactionRootSignal.set(root);
   }
 
-  setRequestClose(requestClose: (reason: OverlayCloseReason, event?: Event) => void): void {
-    this.requestClose = requestClose;
+  setRequestClose(cb: (reason: OverlayCloseReason, event?: Event) => void): void {
+    this.requestCloseFn = cb;
   }
 
   markClosed(): void {
     this.closedState = true;
   }
 
-  syncRenderConfig(config: {
-    content?: TemplateRef<any> | string;
-    referenceElement?: HTMLElement | null;
-    focusReturnTarget?: HTMLElement | null;
-  }): void {
-    this.contentSignal.set(config.content);
-    this.referenceElementSignal.set(config.referenceElement);
-    this.focusReturnTargetSignal.set(config.focusReturnTarget);
+  updatePosition(position: OverlayPositionConfig): void {
+    this.positionSignal.set(position);
+  }
+
+  updateContent(content: TemplateRef<any> | string): void {
+    this.contentSignal.set(content);
   }
 }
 
@@ -96,15 +89,18 @@ export function markOverlayHandleClosedInternal(handle: OverlayHandle): void {
   (handle as OverlayHandleImpl).markClosed();
 }
 
-export function syncOverlayHandleRenderConfigInternal(
+export function syncOverlayHandlePositionInternal(
   handle: OverlayHandle,
-  config: {
-    content?: TemplateRef<any> | string;
-    referenceElement?: HTMLElement | null;
-    focusReturnTarget?: HTMLElement | null;
-  },
+  position: OverlayPositionConfig,
 ): void {
-  (handle as OverlayHandleImpl).syncRenderConfig(config);
+  (handle as OverlayHandleImpl).updatePosition(position);
+}
+
+export function syncOverlayHandleContentInternal(
+  handle: OverlayHandle,
+  content: TemplateRef<any> | string,
+): void {
+  (handle as OverlayHandleImpl).updateContent(content);
 }
 
 export function setOverlayHandleInteractionRootInternal(

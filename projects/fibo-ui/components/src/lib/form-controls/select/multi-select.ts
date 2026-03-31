@@ -2,13 +2,15 @@ import { Component, ElementRef, TemplateRef, computed, inject, input, model, sig
 import { FormValueControl } from '@angular/forms/signals';
 import {
   createOverlay,
+  connectedPosition,
+  restoreTriggerFocusOnClose,
   DataList,
   DataListItem,
   KeyboardSource,
   SelectMulti,
   provideFormValueControl,
 } from '@fibo-ui/cdk';
-import { connectedConfig } from '../../overlay/overlay-presets';
+import { connectedBehavior } from '../../overlay/overlay-presets';
 import { LucideAngularModule } from 'lucide-angular';
 import { FieldActionDirective } from '../form/field-action';
 import { FieldShell } from '../form/field-shell';
@@ -135,15 +137,13 @@ export class MultiSelect implements FormValueControl<(string | number)[] | null>
     if (!currentValue || !Array.isArray(currentValue)) return [];
     return this.items().filter((item) => item.value !== null && currentValue.includes(item.value));
   });
-  readonly strategy = computed(() =>
-    connectedConfig({
-      content: this.multiSelectTemplate() ?? '',
-      referenceElement: this.fieldShell().overlayReferenceElement(),
-      focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
-      matchWidth: true,
-    }),
+  readonly overlayHandle = createOverlay(
+    this.isOpen,
+    connectedBehavior(),
+    connectedPosition(() => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true })),
+    this.multiSelectTemplate,
+    session => { restoreTriggerFocusOnClose(session, () => this.fieldShell().overlayFocusReturnTarget()); },
   );
-  readonly overlayHandle = createOverlay(this.isOpen, this.strategy);
 
   focus(options?: FocusOptions) {
     this.triggerSurface().nativeElement.focus(options);

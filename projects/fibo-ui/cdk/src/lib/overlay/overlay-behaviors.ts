@@ -87,15 +87,20 @@ export interface TrapOverlayFocusOptions {
 export function restoreTriggerFocus(
   ctx: OverlayCloseContext,
   overlay: OverlayHandle,
-  isInOverlayBranch: (target: EventTarget | null | undefined) => boolean = target =>
-    isElementInsideOverlayContainer(target, overlay.id),
+  options: {
+    getTarget?: () => HTMLElement | null;
+    isInOverlayBranch?: (target: EventTarget | null | undefined) => boolean;
+  } = {},
 ): void {
   const focusTarget =
-    overlay.focusReturnTarget ?? getOverlayHandleInteractionRootInternal(overlay) ?? overlay.referenceElement;
+    options.getTarget?.() ?? getOverlayHandleInteractionRootInternal(overlay) ?? null;
+  const isInBranch =
+    options.isInOverlayBranch ?? ((target: EventTarget | null | undefined) =>
+      isElementInsideOverlayContainer(target, overlay.id));
   const shouldRestore =
     !ctx.activeElement ||
     ctx.activeElement === document.body ||
-    isInOverlayBranch(ctx.activeElement);
+    isInBranch(ctx.activeElement);
 
   if (shouldRestore) {
     focusTarget?.focus();
@@ -104,11 +109,18 @@ export function restoreTriggerFocus(
 
 /**
  * Connects a close policy that returns focus to the trigger before the overlay
- * switches to the closed state.
+ * switches to the closed state. Pass `getTarget` to specify the element to focus;
+ * if omitted, falls back to the overlay interaction root.
  */
-export function restoreTriggerFocusOnClose(overlay: OverlaySession): void {
+export function restoreTriggerFocusOnClose(
+  overlay: OverlaySession,
+  getTarget?: () => HTMLElement | null,
+): void {
   overlay.beforeClose((ctx, handle) =>
-    restoreTriggerFocus(ctx, handle, target => overlay.isInOverlayBranch(target)),
+    restoreTriggerFocus(ctx, handle, {
+      getTarget,
+      isInOverlayBranch: target => overlay.isInOverlayBranch(target),
+    }),
   );
 }
 

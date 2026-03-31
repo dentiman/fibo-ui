@@ -19,7 +19,7 @@ import {TreeMenuChain} from './tree-menu-chain.component';
 })
 export class TreeMenu {
   items = input<MenuItemType[]>([]);
-  menuContent = input<TemplateRef<any>>()
+  menuContent = input<TemplateRef<unknown>>()
   level = input<number>(0);
   removeChainFromLevel = input<number|null>(null);
 }

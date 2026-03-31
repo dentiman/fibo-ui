@@ -1,8 +1,8 @@
 import { computed, signal } from '@angular/core';
 import type { Signal, TemplateRef, WritableSignal } from '@angular/core';
-import type { OverlayConfig } from './overlay-config';
 import type { OverlayHandle } from './overlay-handle';
 import type { OverlaySession } from './overlay-session';
+import type { OverlayBehaviorConfig, OverlayPositionConfig } from './overlay-config';
 import { createOverlay } from './overlay-stack';
 
 export interface SingletonOverlay {
@@ -15,31 +15,32 @@ export interface SingletonOverlay {
 }
 
 /**
- * Reduces the `templateRef / isOpen / overlayConfig / createOverlay` boilerplate
+ * Reduces the `templateRef / isOpen / createOverlay` boilerplate
  * common to service-driven overlays (ConfirmationService, Notifier, etc.).
  *
- * `configFn` runs inside a `computed` — it can read other signals reactively.
- * Return `null` to defer opening until required data is available.
+ * Content is derived from `templateRef` — open is deferred until the template
+ * is available. Position and behavior are provided by the caller.
  *
  * Must be called in an injection context (field initializer or constructor).
  *
  * @example
- * readonly overlay = createSingletonOverlay(tpl =>
- *   dialogConfig({ content: tpl, referenceElement: this.config()?.referenceElement ?? null }),
- *   session => { session.afterClose(() => this.cleanup()); },
+ * readonly overlay = createSingletonOverlay(
+ *   dialogBehavior(),
+ *   signal({ type: 'global' }),
+ *   session => {
+ *     trapOverlayFocus(session, { guard: true });
+ *     restoreTriggerFocusOnClose(session, () => this.config()?.referenceElement ?? null);
+ *   },
  * );
  */
 export function createSingletonOverlay(
-  configFn: (templateRef: TemplateRef<any>) => OverlayConfig | null,
+  behavior: OverlayBehaviorConfig,
+  position: Signal<OverlayPositionConfig>,
   setup?: (session: OverlaySession) => void,
 ): SingletonOverlay {
   const templateRef = signal<TemplateRef<any> | null>(null);
   const isOpen = signal(false);
-  const overlayConfig = computed(() => {
-    const tpl = templateRef();
-    if (!tpl) return null;
-    return configFn(tpl);
-  });
-  const handle = createOverlay(isOpen, overlayConfig, setup);
+  const content = computed(() => templateRef() ?? null);
+  const handle = createOverlay(isOpen, behavior, position, content, setup);
   return { templateRef, isOpen, handle };
 }

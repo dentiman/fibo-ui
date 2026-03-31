@@ -3,16 +3,16 @@ import {
   Component,
   ElementRef,
   TemplateRef,
-  computed,
   inject,
   signal,
   viewChild,
 } from '@angular/core';
 import {
   createOverlay,
+  connectedPosition,
   restoreTriggerFocusOnClose,
 } from '@fibo-ui/cdk';
-import { connectedConfig } from '@fibo-ui/components';
+import { connectedBehavior } from '@fibo-ui/components';
 
 @Component({
   selector: 'cdk-overlays-basic-example',
@@ -61,21 +61,18 @@ import { connectedConfig } from '@fibo-ui/components';
 })
 export class CdkOverlaysBasicExample {
   private readonly triggerButton = viewChild.required<ElementRef<HTMLElement>>('triggerButton');
-  private readonly overlayTpl = viewChild.required<TemplateRef<any>>('overlayTpl');
+  private readonly overlayTpl = viewChild.required<TemplateRef<unknown>>('overlayTpl');
 
   readonly isOpen = signal(false);
   readonly actionCount = signal(0);
 
-  readonly strategy = computed(() =>
-    connectedConfig({
-      content: this.overlayTpl(),
-      referenceElement: this.triggerButton().nativeElement,
-    }),
+  readonly overlayHandle = createOverlay(
+    this.isOpen,
+    connectedBehavior(),
+    connectedPosition(() => ({ referenceElement: this.triggerButton().nativeElement })),
+    this.overlayTpl,
+    session => { restoreTriggerFocusOnClose(session, () => this.triggerButton().nativeElement); },
   );
-
-  readonly overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
-    restoreTriggerFocusOnClose(overlay);
-  });
 
   toggle() {
     this.isOpen.update(value => !value);

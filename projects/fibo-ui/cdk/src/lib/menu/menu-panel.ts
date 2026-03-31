@@ -39,7 +39,7 @@ export const MENU_PANEL = new InjectionToken<MenuPanel>('MenuPanel');
 export class MenuPanel {
   dataList = inject(DataList);
   private overlayStack = inject(OverlayStack);
-  private overlayHandle = inject(OVERLAY_HANDLE);
+  private overlayHandle = inject(OVERLAY_HANDLE, { optional: true });
   private destroyRef = inject(DestroyRef);
   private openTimeout: ReturnType<typeof setTimeout> | undefined;
   private closeTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -88,7 +88,9 @@ export class MenuPanel {
   }
 
   focusToTrigger(event: Event) {
-    const referenceElement = this.overlayHandle.referenceElement;
+    if (!this.overlayHandle) return;
+    const pos = this.overlayHandle.position();
+    const referenceElement = pos.type === 'connected' ? pos.referenceElement : null;
     // Only handle ArrowLeft for submenus (reference element is inside another overlay container).
     if (!referenceElement?.closest('[data-overlay-container-id]')) return;
 
@@ -101,10 +103,13 @@ export class MenuPanel {
   constructor() {
     this.destroyRef.onDestroy(() => this.clearTimeouts());
 
-    this.dataList.mouseleaveResetGuard.set((event: MouseEvent) => {
-      const targetOverlayId = this.overlayStack.findOverlayContainerId(event.relatedTarget as EventTarget);
-      return !this.overlayStack.isOverlayInBranch(this.overlayHandle.id, targetOverlayId);
-    });
+    if (this.overlayHandle) {
+      const handle = this.overlayHandle;
+      this.dataList.mouseleaveResetGuard.set((event: MouseEvent) => {
+        const targetOverlayId = this.overlayStack.findOverlayContainerId(event.relatedTarget as EventTarget);
+        return !this.overlayStack.isOverlayInBranch(handle.id, targetOverlayId);
+      });
+    }
 
     effect((onCleanup) => {
       const keyboardSource = this.keyboardSource();

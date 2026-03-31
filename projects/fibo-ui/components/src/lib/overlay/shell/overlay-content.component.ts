@@ -6,7 +6,7 @@ import { type OverlayHandle } from '@fibo-ui/cdk';
   selector: 'fibo-overlay-content',
   imports: [NgTemplateOutlet],
   template: `
-    @let content = handle().content;
+    @let content = handle().content();
     @if (content) {
       @if (isString(content)) {
         {{ content }}

@@ -1,14 +1,7 @@
 import { effect } from '@angular/core';
-import type { EffectRef, Signal, TemplateRef } from '@angular/core';
+import type { EffectRef } from '@angular/core';
 import type { OverlayHandle } from './overlay-handle';
 import type { OverlayCloseContext, OverlayCloseReason } from './overlay-types';
-
-// Declarative render inputs for one overlay cycle.
-export interface OverlayRenderConfig {
-  templateRef?: TemplateRef<any>;
-  referenceElement?: HTMLElement | null;
-  focusReturnTarget?: HTMLElement | null;
-}
 
 /**
  * Guard that can prevent an overlay from closing.
@@ -41,5 +34,3 @@ export interface OverlayStackEntry {
   reason: OverlayCloseReason;
   handlers: Array<(overlay: OverlayHandle, reason: OverlayCloseReason) => void>;
 }
-
-export type OverlayRenderConfigSignal = Signal<OverlayRenderConfig>;

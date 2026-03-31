@@ -1,9 +1,10 @@
-import { Directive, ElementRef, computed, inject, input, model, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Directive, ElementRef, inject, input, model, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { DataListItem } from '../data-list/data-list-item.directive';
 import { KeyboardSource } from '../data-list/keyboard-source';
 import { restoreTriggerFocusOnClose } from '../overlay/overlay-behaviors';
 import { createOverlay, OverlayStack } from '../overlay/overlay-stack';
 import { connectedPosition } from '../overlay/overlay-config';
+import type { OverlayBehaviorConfig } from '../overlay/overlay-config';
 import { CONNECTED_SHELL_TOKEN } from '../overlay/overlay-shell-tokens';
 import { MENU_PANEL } from './menu-panel';
 
@@ -34,24 +35,24 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
   private readonly panel = inject(MENU_PANEL);
   private readonly overlayStack = inject(OverlayStack);
 
-  content = input<TemplateRef<any>>();
+  content = input.required<TemplateRef<unknown>>();
   isOpen = model(false, { alias: 'open' });
 
-  config = computed(() => ({
-    content: this.content() ?? '',
-    position: connectedPosition({ placement: 'right-start', offset: 1 }),
+  private readonly behavior: OverlayBehaviorConfig = {
     shell: CONNECTED_SHELL_TOKEN,
     tag: 'menu',
     closeOnOutsideClick: true,
     closeOnFocusLeave: true,
     closeOnEscape: true,
-    restoreFocus: true,
-    referenceElement: this.element,
-  }));
+  };
 
-  overlayHandle = createOverlay(this.isOpen, this.config, overlay => {
-    restoreTriggerFocusOnClose(overlay);
-  });
+  overlayHandle = createOverlay(
+    this.isOpen,
+    this.behavior,
+    connectedPosition(() => ({ placement: 'right-start', offset: 1, referenceElement: this.element })),
+    this.content,
+    overlay => { restoreTriggerFocusOnClose(overlay, () => this.element); },
+  );
 
   ngOnInit() {
     this.panel.registerSubmenuTrigger(this);
