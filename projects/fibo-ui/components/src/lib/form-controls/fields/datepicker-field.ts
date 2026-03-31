@@ -69,7 +69,6 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         [modal]="false"
         [(value)]="value"
         (itemTriggered)="close()"
-        class="popover-container"
       />
     </ng-template>
   `,

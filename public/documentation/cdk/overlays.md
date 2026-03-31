@@ -47,7 +47,7 @@ export class CdkOverlaysBasicExample {
 
   readonly strategy = computed(() =>
     connectedConfig({
-      templateRef: this.overlayTpl(),
+      content: this.overlayTpl(),
       referenceElement: this.triggerButton().nativeElement,
     })
   );
@@ -80,7 +80,7 @@ A single flat config object covers all overlay types.
 
 ```ts
 interface OverlayConfig {
-  templateRef: TemplateRef<any>;
+  content: TemplateRef<any> | string;
   position: GlobalPosition | ConnectedPosition | CoordinatePosition;
   shell: InjectionToken<Type<any>>;
 
@@ -98,6 +98,8 @@ interface OverlayConfig {
   tag?: string;
 }
 ```
+
+`content` accepts a `TemplateRef` or a plain string. Pass an empty string `''` as a sentinel when the template ref is not yet initialized — the overlay will not open until content is truthy.
 
 ### Position types
 
@@ -145,10 +147,9 @@ Behavior flags on `OverlayConfig` are applied automatically — no manual wiring
 | `drawerConfig(opts)` | `DRAWER_SHELL_TOKEN` | same as dialog |
 | `connectedConfig(opts)` | `CONNECTED_SHELL_TOKEN` | outsideClick, focusLeave, escape, restoreFocus |
 | `menuConfig(opts)` | `CONNECTED_SHELL_TOKEN` | same as connected + `tag: 'menu'` |
-| `tooltipConfig(opts)` | `CONNECTED_SHELL_TOKEN` | closeOnScroll, no escape |
 | `notificationConfig(opts)` | `NOTIFICATION_SHELL_TOKEN` | no escape |
 
-All presets return a plain `OverlayConfig` — no magic, just defaults.
+All presets accept `content: TemplateRef<any> | string` and return a plain `OverlayConfig`.
 
 ## Setup Function
 
@@ -186,14 +187,53 @@ createOverlay(this.isOpen, this.config, session => {
 Runtime object for one currently open overlay. Returned by `createOverlay()`.
 
 ```ts
-handle.id           // unique string
-handle.config       // the OverlayConfig used to open
-handle.zIndex       // numeric z-index
-handle.templateRef  // current rendered template
+handle.id               // unique string
+handle.config           // the OverlayConfig used to open
+handle.zIndex           // numeric z-index
+handle.content          // current rendered content (TemplateRef | string | undefined)
 handle.referenceElement
+handle.focusReturnTarget
 handle.closed
 handle.close(reason?)
 ```
+
+## createSingletonOverlay
+
+Reduces the `templateRef / isOpen / overlayConfig / createOverlay` boilerplate common to service-driven overlays (e.g. `ConfirmationService`, `Notifier`).
+
+```ts
+createSingletonOverlay(configFn, setup?): SingletonOverlay
+```
+
+- `configFn(templateRef)` — runs inside a `computed`, receives the resolved `TemplateRef`, returns `OverlayConfig | null`
+- `setup` — same as in `createOverlay`
+
+```ts
+// Inside a service (injection context required)
+readonly overlay = createSingletonOverlay(tpl =>
+  dialogConfig({
+    content: tpl,
+    referenceElement: this.config()?.referenceElement ?? null,
+  }),
+  session => {
+    session.afterClose(() => this.cleanup());
+  },
+);
+
+// Bind the template ref from the host component
+ngAfterViewInit() {
+  this.overlay.templateRef.set(this.tpl());
+}
+
+// Open / close
+open() { this.overlay.isOpen.set(true); }
+close() { this.overlay.isOpen.set(false); }
+```
+
+`SingletonOverlay` exposes:
+- `templateRef` — `WritableSignal<TemplateRef | null>` — bind from host via `viewChild`
+- `isOpen` — `WritableSignal<boolean>` — open/close state
+- `handle` — `Signal<OverlayHandle | null>` — current runtime handle
 
 ## Nested Overlays
 
@@ -206,7 +246,7 @@ The child becomes part of the parent branch:
 
 ## Bootstrap
 
-Register shell components once at application startup:
+Register overlay shells once at application startup with `provideOverlays()`:
 
 ```ts
 // app.config.ts
@@ -216,13 +256,13 @@ import { DRAWER_SHELL_TOKEN } from '@fibo-ui/cdk';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideOverlays(
-      withShell(DRAWER_SHELL_TOKEN, DrawerShellComponent),  // if using drawers
+      withShell(DRAWER_SHELL_TOKEN, DrawerShellComponent),  // required for drawers
     ),
   ]
 };
 ```
 
-`provideOverlays()` registers the default modal and connected shells. Use `withShell` for custom shells.
+`provideOverlays()` registers the default shells for modal, connected, notification, and tooltip overlays. Use `withShell` to register additional shells (e.g. `DRAWER_SHELL_TOKEN`) or override defaults with a custom component.
 
 Place `<fibo-overlay-stack-outlet>` once in the root component template:
 
@@ -247,7 +287,7 @@ type OverlayCloseReason =
 ## Lifecycle
 
 1. `isOpen` → `true`
-2. Overlay opens when `templateRef` is available
+2. Overlay opens when `content` is truthy
 3. `setup(session)` runs, behaviors are attached
 4. `afterOpened` fires after first render
 5. Close requested → `beforeClose` hooks run

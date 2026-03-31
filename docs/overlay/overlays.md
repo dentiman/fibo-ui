@@ -19,7 +19,7 @@ import { createOverlay } from '@fibo-ui/cdk';
 import { connectedConfig } from '@fibo-ui/components';
 
 readonly config = computed(() => connectedConfig({
-  templateRef: this.popoverTpl(),
+  content: this.popoverTpl(),
   referenceElement: this.triggerEl().nativeElement,
   placement: 'bottom-start',
   matchWidth: true,
@@ -36,7 +36,7 @@ import { createOverlay } from '@fibo-ui/cdk';
 import { dialogConfig } from '@fibo-ui/components';
 
 readonly config = computed(() => dialogConfig({
-  templateRef: this.dialogTpl(),
+  content: this.dialogTpl(),
   referenceElement: this.triggerEl().nativeElement,
 }));
 
@@ -59,23 +59,9 @@ readonly overlayHandle = createOverlay(this.isOpen, this.config, session => {
 import { menuConfig } from '@fibo-ui/components';
 
 readonly config = computed(() => menuConfig({
-  templateRef: this.menuTpl(),
+  content: this.menuTpl(),
   referenceElement: this.triggerEl().nativeElement,
   placement: 'bottom-start',
-}));
-
-readonly overlayHandle = createOverlay(this.isOpen, this.config);
-```
-
-### Tooltip
-
-```ts
-import { tooltipConfig } from '@fibo-ui/components';
-
-readonly config = computed(() => tooltipConfig({
-  templateRef: this.tooltipTpl(),
-  referenceElement: this.hostEl().nativeElement,
-  placement: 'top',
 }));
 
 readonly overlayHandle = createOverlay(this.isOpen, this.config);
@@ -88,7 +74,7 @@ import { drawerConfig } from '@fibo-ui/components';
 // DRAWER_SHELL_TOKEN must be registered via provideOverlays(withShell(...))
 
 readonly config = computed(() => drawerConfig({
-  templateRef: this.drawerTpl(),
+  content: this.drawerTpl(),
   referenceElement: this.triggerEl().nativeElement,
 }));
 
@@ -101,7 +87,7 @@ readonly overlayHandle = createOverlay(this.isOpen, this.config);
 import { createOverlay, connectedPosition, CONNECTED_SHELL_TOKEN } from '@fibo-ui/cdk';
 
 readonly config = computed(() => ({
-  templateRef: this.tpl(),
+  content: this.tpl(),
   position: connectedPosition({ placement: 'bottom', offset: 8 }),
   shell: CONNECTED_SHELL_TOKEN,
   closeOnOutsideClick: true,
@@ -122,7 +108,7 @@ readonly config = signal<OverlayConfig | null>(null);
 onContextMenu(event: MouseEvent) {
   event.preventDefault();
   this.config.set({
-    templateRef: this.menuTpl(),
+    content: this.menuTpl(),
     position: coordinatePosition(event.clientX, event.clientY, { placement: 'right-start' }),
     shell: CONNECTED_SHELL_TOKEN,
     closeOnOutsideClick: true,
@@ -132,6 +118,30 @@ onContextMenu(event: MouseEvent) {
   this.isOpen.set(true);
 }
 ```
+
+### Service-driven overlay (singleton)
+
+Use `createSingletonOverlay` to reduce boilerplate in services that own both the template and the open state (e.g. `ConfirmationService`, `Notifier`).
+
+```ts
+import { createSingletonOverlay } from '@fibo-ui/cdk';
+import { dialogConfig } from '@fibo-ui/components';
+
+// Inside service (injection context required)
+readonly overlay = createSingletonOverlay(tpl =>
+  dialogConfig({ content: tpl, referenceElement: this.config()?.referenceElement ?? null }),
+  session => { session.afterClose(() => this.cleanup()); },
+);
+
+// Host component binds the template ref
+this.overlay.templateRef.set(this.tpl());
+
+// Open / close
+open() { this.overlay.isOpen.set(true); }
+close() { this.overlay.isOpen.set(false); }
+```
+
+`SingletonOverlay` exposes `templateRef`, `isOpen`, and `handle` signals.
 
 ## Useful APIs
 
@@ -156,12 +166,14 @@ overlayStack.closeAllByTag('menu')   // close all overlays with config.tag === '
 // app.config.ts
 import { provideOverlays, withShell } from '@fibo-ui/components';
 import { DRAWER_SHELL_TOKEN } from '@fibo-ui/cdk';
-import { DrawerShellComponent } from './drawer-shell.component';
 
 provideOverlays(
-  withShell(DRAWER_SHELL_TOKEN, DrawerShellComponent),
+  withShell(DRAWER_SHELL_TOKEN, DrawerShellComponent), // required for drawers
 )
 ```
+
+`provideOverlays()` registers modal, connected, notification, and tooltip shells by default.
+`DRAWER_SHELL_TOKEN` is intentionally not included — register it explicitly via `withShell`.
 
 ## Shell Animation Rule
 
