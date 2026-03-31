@@ -8,12 +8,10 @@ export interface CreateOverlayHandleOptions {
   behavior: OverlayBehaviorConfig;
   position: OverlayPositionConfig;
   content: TemplateRef<any> | string;
-  zIndex: number;
 }
 
 class OverlayHandleImpl implements OverlayHandle {
   readonly id: string;
-  readonly zIndex: number;
   readonly behavior: OverlayBehaviorConfig;
 
   private readonly positionSignal: WritableSignal<OverlayPositionConfig>;
@@ -41,7 +39,6 @@ class OverlayHandleImpl implements OverlayHandle {
 
   constructor(options: CreateOverlayHandleOptions) {
     this.id = `overlay-${nextOverlayId++}`;
-    this.zIndex = options.zIndex;
     this.behavior = options.behavior;
     this.positionSignal = signal(options.position);
     this.contentSignal = signal<TemplateRef<any> | string | undefined>(options.content);

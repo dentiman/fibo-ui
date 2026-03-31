@@ -6,7 +6,6 @@ import {
   Injectable,
   Injector,
   TemplateRef,
-  computed,
   effect,
   inject,
   signal,
@@ -24,8 +23,6 @@ import {
 import type { OverlayCloseContext, OverlayCloseReason } from './overlay-types';
 import { OverlaySession, OverlayStackEntry } from './overlay-session';
 import type { OverlayBehaviorConfig, OverlayPositionConfig } from './overlay-config';
-
-const OVERLAY_Z_INDEX = 1000;
 
 // Encapsulates all mutable state for one open/close cycle.
 class OverlayCycle {
@@ -62,20 +59,11 @@ class OverlayCycle {
   providedIn: 'root',
 })
 export class OverlayStack {
-  private readonly openOverlays = signal<Map<string, OverlayHandle>>(new Map());
+  private readonly openOverlays = signal<OverlayHandle[]>([]);
   private readonly overlayParentIds = new Map<string, string | null>();
   private readonly pendingAfterClose = new Map<string, OverlayStackEntry>();
-  private zIndexCounter = 0;
 
-  readonly openOverlayList = computed(() => {
-    const overlays = Array.from(this.openOverlays().values());
-    return overlays.sort((left, right) => left.zIndex - right.zIndex);
-  });
-
-  readonly topmost = computed(() => {
-    const list = this.openOverlayList();
-    return list.length > 0 ? list[list.length - 1] : null;
-  });
+  readonly openOverlayList: Signal<OverlayHandle[]> = this.openOverlays.asReadonly();
 
   closeTopmost(): void {
     const list = this.openOverlayList();
@@ -269,28 +257,19 @@ export class OverlayStack {
     position: OverlayPositionConfig,
     content: TemplateRef<any> | string,
   ): OverlayHandle {
-    const zIndex = OVERLAY_Z_INDEX + ++this.zIndexCounter;
     const parentOverlayId = this.findOverlayContainerId(
       position.type === 'connected' ? position.referenceElement : null,
     );
-    const handle = createOverlayHandleInternal({ behavior, position, content, zIndex });
+    const handle = createOverlayHandleInternal({ behavior, position, content });
 
-    this.openOverlays.update(map => {
-      const nextMap = new Map(map);
-      nextMap.set(handle.id, handle);
-      return nextMap;
-    });
+    this.openOverlays.update(overlays => [...overlays, handle]);
     this.overlayParentIds.set(handle.id, parentOverlayId);
 
     return handle;
   }
 
   private removeOverlay(handle: OverlayHandle): void {
-    this.openOverlays.update(map => {
-      const nextMap = new Map(map);
-      nextMap.delete(handle.id);
-      return nextMap;
-    });
+    this.openOverlays.update(overlays => overlays.filter(o => o.id !== handle.id));
     this.overlayParentIds.delete(handle.id);
   }
 }

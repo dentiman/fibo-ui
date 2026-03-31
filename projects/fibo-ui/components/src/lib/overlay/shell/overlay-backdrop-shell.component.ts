@@ -8,7 +8,7 @@ import type { OverlayHandle } from '@fibo-ui/cdk';
   template: '',
   host: {
     'class': 'fixed inset-0 pointer-events-auto bg-black/30 dark:bg-black/50',
-    '[style.z-index]': 'handle().zIndex',
+    'style': 'z-index: 1000',
     'animate.enter': 'overlay-backdrop-enter',
     'animate.leave': 'overlay-backdrop-leave',
   },

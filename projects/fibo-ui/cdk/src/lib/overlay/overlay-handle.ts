@@ -9,7 +9,6 @@ export interface OverlayHandle {
   readonly behavior: OverlayBehaviorConfig;
   readonly position: Signal<OverlayPositionConfig>;
   readonly content: Signal<TemplateRef<any> | string | undefined>;
-  readonly zIndex: number;
   readonly closed: boolean;
   close(reason?: OverlayCloseReason): void;
 }

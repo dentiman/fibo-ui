@@ -8,7 +8,6 @@ import { OverlayStack } from './overlay-stack';
  * Responsibilities:
  * - Accepts the `OverlayHandle` as input
  * - Provides `OVERLAY_HANDLE` via DI (resolves to the input value)
- * - Binds `z-index` on the host element
  * - Calls `completeAfterClose` when the shell is destroyed
  */
 @Directive({
@@ -20,7 +19,7 @@ import { OverlayStack } from './overlay-stack';
     },
   ],
   host: {
-    '[style.z-index]': 'handle().zIndex',
+    'style': 'z-index: 1000',
   },
 })
 export class OverlayShellHost {
