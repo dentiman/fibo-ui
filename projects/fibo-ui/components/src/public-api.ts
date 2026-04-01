@@ -5,9 +5,6 @@
 // Loading Spin component
 export * from './lib/loading-spin/loading-spin';
 
-// Dialog components
-export * from './lib/overlay/dialog/dialog';
-export * from './lib/overlay/dialog/drawer';
 
 export * from './lib/overlay/tooltip/tooltip-shell.component';
 export * from './lib/overlay/tooltip/tooltip-service';
@@ -26,9 +23,7 @@ export * from './lib/overlay/confirmation/confirmation-trigger';
 export * from './lib/overlay/notification/notification-overlay-container';
 export * from './lib/overlay/notification/notifier';
 
-export * from './lib/overlay/permanent-overlay-container';
 export * from './lib/overlay/shell/overlay-content.component';
-export * from './lib/overlay/shell/overlay-stack-outlet';
 export * from './lib/overlay/shell/overlay-backdrop-shell.component';
 export * from './lib/overlay/shell/overlay-modal-shell.component';
 export * from './lib/overlay/shell/overlay-drawer-shell.component';

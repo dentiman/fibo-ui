@@ -221,7 +221,7 @@ export function trapOverlayFocus(
   }
 
   if (loopTab) {
-    const effectRef = overlay.effect(onCleanup => {
+    overlay.effect(onCleanup => {
       const handleKeydown = (event: KeyboardEvent) => {
         if (event.key !== 'Tab') {
           return;
@@ -266,12 +266,10 @@ export function trapOverlayFocus(
       document.addEventListener('keydown', handleKeydown, true);
       onCleanup(() => document.removeEventListener('keydown', handleKeydown, true));
     });
-
-    overlay.onCleanup(() => effectRef.destroy());
   }
 
   if (guard) {
-    const effectRef = overlay.effect(onCleanup => {
+    overlay.effect(onCleanup => {
       const handleFocusIn = (event: FocusEvent) => {
         if (overlay.isInOverlayBranch(event.target)) {
           return;
@@ -283,8 +281,6 @@ export function trapOverlayFocus(
       document.addEventListener('focusin', handleFocusIn, true);
       onCleanup(() => document.removeEventListener('focusin', handleFocusIn, true));
     });
-
-    overlay.onCleanup(() => effectRef.destroy());
   }
 }
 

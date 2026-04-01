@@ -31,3 +31,5 @@ export const TOOLTIP_SHELL_TOKEN = new InjectionToken<Type<any>>('fibo-ui/Toolti
     throw new Error('[fibo-ui] No tooltip shell registered. Call provideOverlays() in app providers.');
   },
 });
+
+export const OVERLAY_BACKDROP_SHELL = new InjectionToken<Type<any>>('fibo-ui/OverlayBackdropShell');

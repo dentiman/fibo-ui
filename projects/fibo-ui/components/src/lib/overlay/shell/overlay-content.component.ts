@@ -11,7 +11,7 @@ import { type OverlayHandle } from '@fibo-ui/cdk';
       @if (isString(content)) {
         {{ content }}
       } @else {
-        <ng-container *ngTemplateOutlet="content; context: { $implicit: handle() }"></ng-container>
+        <ng-container *ngTemplateOutlet="content; context: { $implicit: close }"></ng-container>
       }
     }
   `,
@@ -20,6 +20,8 @@ import { type OverlayHandle } from '@fibo-ui/cdk';
 })
 export class OverlayContent {
   readonly handle = input.required<OverlayHandle>();
+
+  protected readonly close = () => this.handle().close();
 
   protected isString(content: TemplateRef<any> | string): content is string {
     return typeof content === 'string';

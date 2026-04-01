@@ -1,80 +1,72 @@
 import { Component, signal } from '@angular/core';
-import {FiboDialog, Select, SelectItem, Tooltip} from '@fibo-ui/components';
+import { Select, SelectItem, Tooltip } from '@fibo-ui/components';
 import { DialogTrigger } from '@fibo-ui/cdk';
 import { FormExample } from '../form-controls/examples/form-example';
 import { FormField, form } from '@angular/forms/signals';
 
 @Component({
-  imports: [FiboDialog, FormExample, Select, FormField, Tooltip, DialogTrigger],
+  imports: [FormExample, Select, FormField, Tooltip, DialogTrigger],
   template: `
     <div class="flex gap-4 p-8">
 
       <!-- Basic dialog with select -->
-      <button #dialogTrigger="DialogTrigger" class="btn" fiboDialogTrigger [content]="dialogTpl">
+      <button class="btn" fiboDialogTrigger [content]="dialogTpl">
         Open Dialog
       </button>
-      <ng-template #dialogTpl>
-        <fibo-dialog>
-          <div class="p-6 w-96">
-            <h2 class="text-lg font-semibold mb-4">Dialog with Select</h2>
-            <fibo-select
-              [fiboTooltip]="'Some text'"
-              [formField]="myForm.country"
-              label="Country"
-              placeholder="Select a country"
-              [items]="countries"
-            />
-            <div class="mt-4 flex justify-end">
-              <button class="btn" (click)="dialogTrigger.close()">Close</button>
-            </div>
+      <ng-template #dialogTpl let-close>
+        <div class="p-6 w-96">
+          <h2 class="text-lg font-semibold mb-4">Dialog with Select</h2>
+          <fibo-select
+            [fiboTooltip]="'Some text'"
+            [formField]="myForm.country"
+            label="Country"
+            placeholder="Select a country"
+            [items]="countries"
+          />
+          <div class="mt-4 flex justify-end">
+            <button class="btn" (click)="close()">Close</button>
           </div>
-        </fibo-dialog>
+        </div>
       </ng-template>
 
       <!-- Dialog with form -->
-      <button #formDialogTrigger="DialogTrigger" class="btn" fiboDialogTrigger [content]="formDialogTpl">
+      <button class="btn" fiboDialogTrigger [content]="formDialogTpl">
         Dialog with Form
       </button>
-      <ng-template #formDialogTpl>
-        <fibo-dialog>
-          <div class="overflow-hidden overflow-y-auto">
-            <form-example />
-            <div class="p-4 pt-0 flex justify-end">
-              <button class="btn" (click)="formDialogTrigger.close()">Close</button>
-            </div>
+      <ng-template #formDialogTpl let-close>
+        <div class="overflow-hidden overflow-y-auto">
+          <form-example />
+          <div class="p-4 pt-0 flex justify-end">
+            <button class="btn" (click)="close()">Close</button>
           </div>
-        </fibo-dialog>
+        </div>
       </ng-template>
 
       <!-- Nested dialogs -->
-      <button #nestedDialogTrigger="DialogTrigger" class="btn" fiboDialogTrigger [content]="nestedTpl">
+      <button class="btn" fiboDialogTrigger [content]="nestedTpl">
         Nested Dialogs
       </button>
-      <ng-template #nestedTpl>
-        <fibo-dialog>
-          <div class="p-6">
-            <h2 class="text-lg font-semibold mb-4">First Dialog</h2>
-            <p class="mb-4">Click below to open a second dialog on top.</p>
+      <ng-template #nestedTpl let-close>
+        <div class="p-6">
+          <h2 class="text-lg font-semibold mb-4">First Dialog</h2>
+          <p class="mb-4">Click below to open a second dialog on top.</p>
 
-            <button #nestedDialog2Trigger="DialogTrigger" class="btn" fiboDialogTrigger [content]="nestedTpl2">
-              Open Second Dialog
-            </button>
-            <ng-template #nestedTpl2>
-              <fibo-dialog>
-                <div class="p-6">
-                  <h2 class="text-lg font-semibold mb-4">Second Dialog</h2>
-                  <p class="mb-4">This is stacked on top of the first dialog.</p>
-                  <div class="mt-4 flex justify-end">
-                    <button class="btn" (click)="nestedDialog2Trigger.close()">Close</button>
-                  </div>
-                </div>
-              </fibo-dialog>
-            </ng-template>
-            <div class="mt-4 flex justify-end">
-              <button class="btn" (click)="nestedDialogTrigger.close()">Close</button>
+          <button class="btn" fiboDialogTrigger [content]="nestedTpl2">
+            Open Second Dialog
+          </button>
+          <ng-template #nestedTpl2 let-close>
+            <div class="p-6">
+              <h2 class="text-lg font-semibold mb-4">Second Dialog</h2>
+              <p class="mb-4">This is stacked on top of the first dialog.</p>
+              <div class="mt-4 flex justify-end">
+                <button class="btn" (click)="close()">Close</button>
+              </div>
             </div>
+          </ng-template>
+          <div class="mt-4 flex justify-end">
+            <button class="btn" (click)="close()">Close</button>
           </div>
-        </fibo-dialog>
+        </div>
       </ng-template>
 
     </div>

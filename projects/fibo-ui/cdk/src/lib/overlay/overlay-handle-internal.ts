@@ -6,28 +6,20 @@ import type { OverlayBehaviorConfig, OverlayPositionConfig } from './overlay-con
 
 export interface CreateOverlayHandleOptions {
   behavior: OverlayBehaviorConfig;
-  position: OverlayPositionConfig;
-  content: TemplateRef<any> | string;
+  position: Signal<OverlayPositionConfig>;
+  content: Signal<TemplateRef<any> | string | undefined>;
 }
 
 class OverlayHandleImpl implements OverlayHandle {
   readonly id: string;
   readonly behavior: OverlayBehaviorConfig;
+  readonly position: Signal<OverlayPositionConfig>;
+  readonly content: Signal<TemplateRef<any> | string | undefined>;
 
-  private readonly positionSignal: WritableSignal<OverlayPositionConfig>;
-  private readonly contentSignal: WritableSignal<TemplateRef<any> | string | undefined>;
   private readonly interactionRootSignal: WritableSignal<HTMLElement | null | undefined>;
 
   private closedState = false;
   private requestCloseFn?: (reason: OverlayCloseReason, event?: Event) => void;
-
-  get position(): Signal<OverlayPositionConfig> {
-    return this.positionSignal.asReadonly();
-  }
-
-  get content(): Signal<TemplateRef<any> | string | undefined> {
-    return this.contentSignal.asReadonly();
-  }
 
   get interactionRoot(): HTMLElement | null | undefined {
     return this.interactionRootSignal();
@@ -40,8 +32,8 @@ class OverlayHandleImpl implements OverlayHandle {
   constructor(options: CreateOverlayHandleOptions) {
     this.id = `overlay-${nextOverlayId++}`;
     this.behavior = options.behavior;
-    this.positionSignal = signal(options.position);
-    this.contentSignal = signal<TemplateRef<any> | string | undefined>(options.content);
+    this.position = options.position;
+    this.content = options.content;
     this.interactionRootSignal = signal<HTMLElement | null | undefined>(undefined);
   }
 
@@ -61,14 +53,6 @@ class OverlayHandleImpl implements OverlayHandle {
   markClosed(): void {
     this.closedState = true;
   }
-
-  updatePosition(position: OverlayPositionConfig): void {
-    this.positionSignal.set(position);
-  }
-
-  updateContent(content: TemplateRef<any> | string): void {
-    this.contentSignal.set(content);
-  }
 }
 
 export function createOverlayHandleInternal(options: CreateOverlayHandleOptions): OverlayHandle {
@@ -84,20 +68,6 @@ export function setOverlayHandleRequestCloseInternal(
 
 export function markOverlayHandleClosedInternal(handle: OverlayHandle): void {
   (handle as OverlayHandleImpl).markClosed();
-}
-
-export function syncOverlayHandlePositionInternal(
-  handle: OverlayHandle,
-  position: OverlayPositionConfig,
-): void {
-  (handle as OverlayHandleImpl).updatePosition(position);
-}
-
-export function syncOverlayHandleContentInternal(
-  handle: OverlayHandle,
-  content: TemplateRef<any> | string,
-): void {
-  (handle as OverlayHandleImpl).updateContent(content);
 }
 
 export function setOverlayHandleInteractionRootInternal(

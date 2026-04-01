@@ -28,16 +28,18 @@ Floating menu component with support for nested items, icons, and badges.
   template: '...',
 })
 export class MenuComponentExample {
+  private readonly triggerBtn = viewChild.required<ElementRef<HTMLButtonElement>>('triggerBtn');
+  private readonly menuTemplate = viewChild.required<TemplateRef<unknown>>('menuTpl');
+
   readonly isOpen = signal(false);
 
-  readonly strategy = computed(() => menuOverlay({
-    templateRef: this.menuTemplate(),
-    referenceElement: this.triggerBtn(),
-    interactionRoot: this.triggerBtn(),
-    focusReturnTarget: this.triggerBtn(),
-  }));
-
-  readonly overlayHandle = createOverlay(this.isOpen, this.strategy);
+  readonly overlayHandle = createOverlay(
+    this.isOpen,
+    menuBehavior(),
+    connectedPosition(() => ({ referenceElement: this.triggerBtn().nativeElement })),
+    this.menuTemplate,
+    session => { restoreTriggerFocusOnClose(session, () => this.triggerBtn().nativeElement); },
+  );
 
   readonly menuItems: MenuItemType[] = [
     { label: 'My Profile', icon: 'user', url: '/' },
@@ -63,7 +65,7 @@ export class MenuComponentExample {
 ### Inputs
 
 - `items: input<MenuItemType[]>` - menu items configuration
-- `menuContent: input<TemplateRef<any>>()` - optional template for custom content
+- `menuContent: input<TemplateRef<unknown>>()` - optional template for custom content
 
 ### Types
 

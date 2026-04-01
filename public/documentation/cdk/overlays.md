@@ -17,10 +17,18 @@
     </span>
   </div>
 
+  <p class="mt-3 text-sm text-foreground-secondary">
+    This overlay is created directly from component state through
+    <code>createOverlay(...)</code>.
+  </p>
+
   <ng-template #overlayTpl>
-    <div class="fixed top-28 left-1/2 z-10 w-80 -translate-x-1/2 rounded-xl bg-background p-4 shadow-lg">
-      <div class="text-sm font-medium">Overlay is open</div>
-      <div class="mt-4 flex gap-2">
+    <div class="w-64 rounded-xl bg-background p-4 shadow-lg outline-1 -outline-offset-1 outline-black/13 dark:outline-white/5">
+      <div class="text-sm font-medium">Overlay lifecycle</div>
+      <p class="mt-2 text-sm text-foreground-secondary">
+        Close it with outside click, focus leave, or the explicit action below.
+      </p>
+      <div class="mt-4 flex items-center gap-2">
         <button type="button" class="btn btn-sm" (click)="increment()">Action</button>
         <button type="button" class="btn btn-sm btn-inverse" (click)="close()">Close</button>
       </div>
@@ -40,21 +48,18 @@
 })
 export class CdkOverlaysBasicExample {
   private readonly triggerButton = viewChild.required<ElementRef<HTMLElement>>('triggerButton');
-  private readonly overlayTpl = viewChild.required<TemplateRef<any>>('overlayTpl');
+  private readonly overlayTpl = viewChild.required<TemplateRef<unknown>>('overlayTpl');
 
   readonly isOpen = signal(false);
   readonly actionCount = signal(0);
 
-  readonly strategy = computed(() =>
-    connectedConfig({
-      content: this.overlayTpl(),
-      referenceElement: this.triggerButton().nativeElement,
-    })
+  readonly overlayHandle = createOverlay(
+    this.isOpen,
+    connectedBehavior(),
+    connectedPosition(() => ({ referenceElement: this.triggerButton().nativeElement })),
+    this.overlayTpl,
+    session => { restoreTriggerFocusOnClose(session, () => this.triggerButton().nativeElement); },
   );
-
-  readonly overlayHandle = createOverlay(this.isOpen, this.strategy, overlay => {
-    restoreTriggerFocusOnClose(overlay);
-  });
 
   toggle() { this.isOpen.update(v => !v); }
   close() { this.isOpen.set(false); }
@@ -64,111 +69,110 @@ export class CdkOverlaysBasicExample {
 
 ## Core Contract
 
-`createOverlay(isOpen, config, setup?)` connects component state to the overlay runtime.
-
-- `isOpen` — `WritableSignal<boolean>` is the source of truth for open and closed
-- `config` — `OverlayConfig` or `Signal<OverlayConfig | null>` describes what and how to render
-- `setup(session)` — optional, called once per open cycle for app-specific lifecycle logic
+`createOverlay` accepts four required arguments and an optional setup function:
 
 ```ts
-createOverlay(isOpen, config, setup?): Signal<OverlayHandle | null>
+createOverlay(
+  isOpen: WritableSignal<boolean>,
+  behavior: OverlayBehaviorConfig,
+  position: Signal<OverlayPositionConfig>,
+  content: Signal<TemplateRef | string | null>,
+  setup?: (session: OverlaySession) => void,
+): Signal<OverlayHandle | null>
 ```
 
-## OverlayConfig
+- `isOpen` — source of truth for open/closed state
+- `behavior` — static flags: which shell to use, which close triggers to attach
+- `position` — reactive positioning; use `connectedPosition()` or `signal(globalPosition())`
+- `content` — reactive content; `null` defers opening until a template is available
+- `setup(session)` — optional, called once per open cycle for lifecycle hooks
 
-A single flat config object covers all overlay types.
+## Behavior Config
+
+`OverlayBehaviorConfig` is a plain object — build it with a preset or inline:
 
 ```ts
-interface OverlayConfig {
-  content: TemplateRef<any> | string;
-  position: GlobalPosition | ConnectedPosition | CoordinatePosition;
+interface OverlayBehaviorConfig {
   shell: InjectionToken<Type<any>>;
 
   needsBackdrop?: boolean;
-  closeOnEscape?: boolean;
+  closeOnEscape?: boolean;         // default true for most presets
   closeOnOutsideClick?: boolean;
   closeOnFocusLeave?: boolean;
   closeOnScroll?: boolean;
   blockScroll?: boolean;
-  trapFocus?: boolean;        // auto-applies trapOverlayFocus({ guard: true })
-  restoreFocus?: boolean;     // auto-applies restoreTriggerFocusOnClose
-
-  referenceElement?: HTMLElement | null;
-  focusReturnTarget?: HTMLElement | null;
-  tag?: string;
+  tag?: string;                    // e.g. 'menu' — used by closeAllByTag
 }
 ```
 
-`content` accepts a `TemplateRef` or a plain string. Pass an empty string `''` as a sentinel when the template ref is not yet initialized — the overlay will not open until content is truthy.
+## Position
 
-### Position types
+### `connectedPosition(factory)`
 
-| Factory | Use case |
-|---|---|
-| `globalPosition()` | Modal, drawer — centered or fixed |
-| `connectedPosition(options?)` | Popover, menu, tooltip — anchored to reference element |
-| `coordinatePosition(x, y, options?)` | Context menu — anchored to cursor position |
+Pass a factory function — `connectedPosition` wraps it in `computed()` and returns a reactive `Signal<ConnectedPosition>`:
 
 ```ts
-connectedPosition({
-  placement?: Placement,   // floating-ui placement, e.g. 'bottom-start'
+connectedPosition(() => ({
+  referenceElement: this.triggerEl().nativeElement,
+  placement?: Placement,   // floating-ui placement string, e.g. 'bottom-start'
   matchWidth?: boolean,    // match reference element width
   offset?: number,         // gap in px
-})
+}))
 ```
 
-## Behavior Flags
+### `globalPosition()`
 
-Behavior flags on `OverlayConfig` are applied automatically — no manual wiring needed.
+For centered modals and drawers:
 
-### Applied by `OverlayContainer` (DOM listeners)
+```ts
+signal(globalPosition())  // → Signal<{ type: 'global' }>
+```
 
-| Flag | Behavior |
-|---|---|
-| `blockScroll` | Locks document scroll while open |
-| `closeOnOutsideClick` | Closes on click outside overlay |
-| `closeOnFocusLeave` | Closes when focus leaves overlay |
-| `closeOnScroll` | Closes on document scroll (for tooltips) |
+## Behavior Presets
 
-### Applied by `createOverlay` (session behaviors)
+`@fibo-ui/components` provides preset factories that fill in sensible defaults:
 
-| Flag | Applied behavior |
-|---|---|
-| `trapFocus: true` | Auto-focus on open, cyclic Tab inside overlay, focus guard |
-| `restoreFocus: true` | Returns focus to trigger when overlay closes |
-
-## Presets
-
-`@fibo-ui/components` provides preset factories that fill in defaults:
-
-| Function | shell | behaviors |
+| Function | Shell | Close triggers |
 |---|---|---|
-| `dialogConfig(opts)` | `MODAL_SHELL_TOKEN` | backdrop, blockScroll, outsideClick, escape, trapFocus, restoreFocus |
-| `drawerConfig(opts)` | `DRAWER_SHELL_TOKEN` | same as dialog |
-| `connectedConfig(opts)` | `CONNECTED_SHELL_TOKEN` | outsideClick, focusLeave, escape, restoreFocus |
-| `menuConfig(opts)` | `CONNECTED_SHELL_TOKEN` | same as connected + `tag: 'menu'` |
-| `notificationConfig(opts)` | `NOTIFICATION_SHELL_TOKEN` | no escape |
+| `dialogBehavior()` | `MODAL_SHELL_TOKEN` | backdrop, blockScroll, outsideClick, escape |
+| `drawerBehavior()` | `DRAWER_SHELL_TOKEN` | backdrop, blockScroll, outsideClick, escape |
+| `connectedBehavior()` | `CONNECTED_SHELL_TOKEN` | outsideClick, focusLeave, escape |
+| `menuBehavior()` | `CONNECTED_SHELL_TOKEN` | same as connected + `tag: 'menu'` |
+| `tooltipBehavior()` | `TOOLTIP_SHELL_TOKEN` | scroll, no escape |
+| `notificationBehavior()` | `NOTIFICATION_SHELL_TOKEN` | no escape |
 
-All presets accept `content: TemplateRef<any> | string` and return a plain `OverlayConfig`.
+## Template Context
+
+Overlay content templates receive a `close` function as `$implicit` context:
+
+```html
+<ng-template #dialogTpl let-close>
+  <div class="p-6">
+    <h2 class="text-lg font-semibold mb-2">Confirm action</h2>
+    <div class="mt-4 flex justify-end gap-2">
+      <button class="btn" (click)="close()">Cancel</button>
+      <button class="btn btn-primary" (click)="confirm(); close()">Confirm</button>
+    </div>
+  </div>
+</ng-template>
+```
 
 ## Setup Function
 
-`setup(session)` runs once per open cycle. Use it for app-specific logic:
+`setup(session)` runs once per open cycle. Use it for hooks not covered by behavior flags:
 
 ```ts
-createOverlay(this.isOpen, this.config, session => {
+createOverlay(this.isOpen, behavior, position, content, session => {
   // close guard
   session.canClose(reason => reason !== 'outside-click' || !this.isDirty());
 
-  // custom after-close cleanup
+  // after-close cleanup
   session.afterClose(() => this.formData.set(null));
 
-  // custom effect scoped to overlay lifetime
-  session.effect(() => console.log('overlay open with', session.handle.config));
+  // effect scoped to overlay lifetime (auto-destroyed on close)
+  session.effect(() => console.log('open, items:', this.items()));
 });
 ```
-
-`setup` is **not** needed for standard behaviors — those come from config flags.
 
 ### Session API
 
@@ -184,48 +188,46 @@ createOverlay(this.isOpen, this.config, session => {
 
 ## OverlayHandle
 
-Runtime object for one currently open overlay. Returned by `createOverlay()`.
+Runtime object for one currently open overlay:
 
 ```ts
-handle.id               // unique string
-handle.config           // the OverlayConfig used to open
-handle.zIndex           // numeric z-index
-handle.content          // current rendered content (TemplateRef | string | undefined)
-handle.referenceElement
-handle.focusReturnTarget
-handle.closed
+handle.id          // unique string
+handle.behavior    // OverlayBehaviorConfig used to open
+handle.position    // Signal<OverlayPositionConfig>
+handle.content     // Signal<TemplateRef | string | undefined>
+handle.closed      // boolean
 handle.close(reason?)
 ```
 
 ## createSingletonOverlay
 
-Reduces the `templateRef / isOpen / overlayConfig / createOverlay` boilerplate common to service-driven overlays (e.g. `ConfirmationService`, `Notifier`).
+Reduces boilerplate for service-driven overlays (e.g. `ConfirmationService`, `Notifier`).
 
 ```ts
-createSingletonOverlay(configFn, setup?): SingletonOverlay
+createSingletonOverlay(
+  behavior: OverlayBehaviorConfig,
+  position: Signal<OverlayPositionConfig>,
+  setup?: (session: OverlaySession) => void,
+): SingletonOverlay
 ```
-
-- `configFn(templateRef)` — runs inside a `computed`, receives the resolved `TemplateRef`, returns `OverlayConfig | null`
-- `setup` — same as in `createOverlay`
 
 ```ts
 // Inside a service (injection context required)
-readonly overlay = createSingletonOverlay(tpl =>
-  dialogConfig({
-    content: tpl,
-    referenceElement: this.config()?.referenceElement ?? null,
-  }),
+readonly overlay = createSingletonOverlay(
+  dialogBehavior(),
+  signal(globalPosition()),
   session => {
+    trapOverlayFocus(session, { guard: true });
+    restoreTriggerFocusOnClose(session, () => this.config()?.referenceElement ?? null);
     session.afterClose(() => this.cleanup());
   },
 );
 
-// Bind the template ref from the host component
-ngAfterViewInit() {
+// Bind the template ref from the host component (afterNextRender ensures viewChild is ready)
+afterNextRender(() => {
   this.overlay.templateRef.set(this.tpl());
-}
+});
 
-// Open / close
 open() { this.overlay.isOpen.set(true); }
 close() { this.overlay.isOpen.set(false); }
 ```
@@ -237,9 +239,8 @@ close() { this.overlay.isOpen.set(false); }
 
 ## Nested Overlays
 
-Overlays can open from within other overlays.
+Overlays can open from within other overlays. The child becomes part of the parent branch:
 
-The child becomes part of the parent branch:
 - Click inside child is **not** treated as outside click for the parent
 - Focus moving from parent to child is **not** treated as focus-leave
 - `session.isInOverlayBranch(target)` traverses the parent chain
@@ -250,24 +251,26 @@ Register overlay shells once at application startup with `provideOverlays()`:
 
 ```ts
 // app.config.ts
-import { provideOverlays, withShell } from '@fibo-ui/components';
+import { provideOverlays, withShell, OverlayDrawerShellComponent } from '@fibo-ui/components';
 import { DRAWER_SHELL_TOKEN } from '@fibo-ui/cdk';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideOverlays(
-      withShell(DRAWER_SHELL_TOKEN, DrawerShellComponent),  // required for drawers
+      withShell(DRAWER_SHELL_TOKEN, OverlayDrawerShellComponent),  // required for drawers
     ),
-  ]
+  ],
 };
 ```
 
-`provideOverlays()` registers the default shells for modal, connected, notification, and tooltip overlays. Use `withShell` to register additional shells (e.g. `DRAWER_SHELL_TOKEN`) or override defaults with a custom component.
+`provideOverlays()` registers the default shells for modal, connected, notification, and tooltip overlays. Use `withShell` to add or override shells.
 
-Place `<fibo-overlay-stack-outlet>` once in the root component template:
+Place these in the root component template:
 
 ```html
 <router-outlet />
+<fibo-confirmation-overlay-container />
+<fibo-notification-overlay-container />
 <fibo-overlay-stack-outlet />
 ```
 
@@ -287,7 +290,7 @@ type OverlayCloseReason =
 ## Lifecycle
 
 1. `isOpen` → `true`
-2. Overlay opens when `content` is truthy
+2. Overlay opens when `content` is non-null
 3. `setup(session)` runs, behaviors are attached
 4. `afterOpened` fires after first render
 5. Close requested → `beforeClose` hooks run

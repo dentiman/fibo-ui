@@ -54,11 +54,13 @@ For overlay controls such as `Select`:
 FormUiState
 └─ FieldShell
    └─ button[fiboFieldTarget fieldTargetMode="click"]
-      └─ createOverlay({
-           referenceElement: shell,
-           interactionRoot: shell,
-           focusReturnTarget: button
-         })
+      └─ createOverlay(
+           isOpen,
+           connectedBehavior(),
+           connectedPosition(() => shell),   // referenceElement
+           template,
+           session => restoreTriggerFocusOnClose(session, () => button),
+         )
 ```
 
 ## Why This Split Exists
@@ -141,13 +143,15 @@ What happens here:
 ```
 
 ```ts
-readonly overlayConfig = computed(() => ({
-  templateRef: this.selectTemplate(),
-  referenceElement: this.fieldShell().overlayReferenceElement(),
-  interactionRoot: this.fieldShell().overlayInteractionRoot(),
-  focusReturnTarget: this.fieldShell().overlayFocusReturnTarget(),
-  category: 'popover' as const,
-}));
+readonly isOpen = signal(false);
+
+readonly overlayHandle = createOverlay(
+  this.isOpen,
+  connectedBehavior(),
+  connectedPosition(() => ({ referenceElement: this.fieldShell().overlayReferenceElement() })),
+  this.selectTemplate,
+  session => { restoreTriggerFocusOnClose(session, () => this.fieldShell().overlayFocusReturnTarget()); },
+);
 ```
 
 Here the shell click opens the button because `FieldTarget` is configured with `fieldTargetMode="click"`.
@@ -171,11 +175,10 @@ For overlay fields, `FieldShell` works together with `createOverlay()`.
 
 Recommended mapping:
 
-| Overlay config field | Recommended value |
+| `createOverlay` argument | Recommended value |
 | --- | --- |
-| `referenceElement` | shell or explicit `FieldOverlayAnchor` |
-| `interactionRoot` | shell |
-| `focusReturnTarget` | primary `FieldTarget` |
+| `connectedPosition` referenceElement | shell or explicit `FieldOverlayAnchor` |
+| `restoreTriggerFocusOnClose` target | primary `FieldTarget` |
 
 This gives the right behaviour:
 - overlay width can match the full field shell

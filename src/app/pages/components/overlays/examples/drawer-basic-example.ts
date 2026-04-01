@@ -10,16 +10,16 @@ import { DrawerTrigger } from '@fibo-ui/cdk';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="p-8">
-      <button #drawerTrigger="DrawerTrigger" class="btn btn-primary" fiboDrawerTrigger [content]="drawerTpl">
+      <button class="btn btn-primary" fiboDrawerTrigger [content]="drawerTpl">
         Open Drawer
       </button>
 
-      <ng-template #drawerTpl>
+      <ng-template #drawerTpl let-close>
         <div class="flex h-full flex-col p-6">
           <h2 class="mb-4 text-lg font-semibold">Drawer Title</h2>
           <p class="text-sm text-muted">Drawer content goes here.</p>
           <div class="mt-6">
-            <button class="btn btn-primary" (click)="drawerTrigger.close()">Close Drawer</button>
+            <button class="btn btn-primary" (click)="close()">Close Drawer</button>
           </div>
         </div>
       </ng-template>

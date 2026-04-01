@@ -46,6 +46,10 @@ export class OverlayContainer implements OnInit {
     if (behavior.closeOnScroll) {
       this.attachCloseOnScroll();
     }
+
+    if (behavior.closeOnEscape !== false) {
+      this.attachCloseOnEscape();
+    }
   }
 
   private isInsideSafeZone(target: Node): boolean {
@@ -80,6 +84,21 @@ export class OverlayContainer implements OnInit {
 
     document.addEventListener('focusin', handler, true);
     this.destroyRef.onDestroy(() => document.removeEventListener('focusin', handler, true));
+  }
+
+  private attachCloseOnEscape(): void {
+    const handle = this.shellHost.handle();
+
+    const handler = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      const list = this.overlayStack.openOverlayList();
+      const topmost = [...list].reverse().find(o => o.behavior.closeOnEscape !== false);
+      if (topmost?.id !== handle.id) return;
+      handle.close('escape');
+    };
+
+    document.addEventListener('keydown', handler, true);
+    this.destroyRef.onDestroy(() => document.removeEventListener('keydown', handler, true));
   }
 
   private attachCloseOnScroll(): void {

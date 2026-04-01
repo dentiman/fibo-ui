@@ -7,18 +7,26 @@ import {
   inject,
 } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
-import { type OverlayHandle, OverlayStack } from '@fibo-ui/cdk';
-import { OverlayBackdropShellComponent } from './overlay-backdrop-shell.component';
+import { OverlayStack } from './overlay-stack';
+import { OVERLAY_BACKDROP_SHELL } from './overlay-shell-tokens';
+import type { OverlayHandle } from './overlay-handle';
 
 @Component({
   selector: 'fibo-overlay-stack-outlet',
-  imports: [NgComponentOutlet, OverlayBackdropShellComponent],
+  imports: [NgComponentOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  templateUrl: './overlay-stack-outlet.html',
-  host: {
-    '(document:keydown.escape)': 'overlayStack.closeTopmost()',
-  },
+  template: `
+    @for (overlay of overlayStack.openOverlayList(); track overlay.id) {
+      @if (needsBackdrop(overlay) && backdropShell) {
+        <ng-container [ngComponentOutlet]="backdropShell" [ngComponentOutletInputs]="{ handle: overlay }" />
+      }
+      <ng-container
+        [ngComponentOutlet]="resolveShell(overlay)"
+        [ngComponentOutletInputs]="{ handle: overlay }"
+      />
+    }
+  `,
   styles: `
     :host {
       display: contents;
@@ -28,6 +36,7 @@ import { OverlayBackdropShellComponent } from './overlay-backdrop-shell.componen
 export class OverlayStackOutlet {
   readonly overlayStack = inject(OverlayStack);
   private readonly injector = inject(Injector);
+  readonly backdropShell = inject(OVERLAY_BACKDROP_SHELL, { optional: true });
 
   resolveShell(handle: OverlayHandle): Type<unknown> {
     return this.injector.get(handle.behavior.shell);

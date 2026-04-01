@@ -59,3 +59,4 @@ export * from './lib/overlay/overlay-shell-host';
 export * from './lib/overlay/overlay-position';
 export * from './lib/overlay/overlay-arrow';
 export * from './lib/overlay/overlay-panel';
+export * from './lib/overlay/overlay-stack-outlet';

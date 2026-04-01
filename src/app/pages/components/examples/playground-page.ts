@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, ElementRef, signal, TemplateRef, viewChild } from '@angular/core';
 import { createOverlay, connectedPosition, restoreTriggerFocusOnClose, DialogTrigger } from '@fibo-ui/cdk';
 import { menuBehavior } from '@fibo-ui/components';
-import { FiboDialog, Menu, type MenuItemType } from '@fibo-ui/components';
+import { Menu, type MenuItemType } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-playground-page',
-  imports: [Menu, FiboDialog, DialogTrigger],
+  imports: [Menu, DialogTrigger],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-8 p-8">
@@ -90,52 +90,46 @@ import { FiboDialog, Menu, type MenuItemType } from '@fibo-ui/components';
         </div>
 
         <ng-template #dialogTpl>
-          <fibo-dialog>
-            <div class="p-6 w-96">
-              <h2 class="text-lg font-semibold mb-2">Basic Dialog</h2>
-              <p class="text-sm text-foreground-secondary mb-4">
-                Body scroll should be locked while this dialog is open.
-              </p>
-              <div class="flex justify-end">
-                <button class="btn" (click)="dialogTrigger.close()">Close</button>
-              </div>
+          <div class="p-6 w-96">
+            <h2 class="text-lg font-semibold mb-2">Basic Dialog</h2>
+            <p class="text-sm text-foreground-secondary mb-4">
+              Body scroll should be locked while this dialog is open.
+            </p>
+            <div class="flex justify-end">
+              <button class="btn" (click)="dialogTrigger.close()">Close</button>
             </div>
-          </fibo-dialog>
+          </div>
         </ng-template>
 
         <ng-template #nestedDialogTpl>
-          <fibo-dialog>
-            <div class="p-6 w-96">
-              <h2 class="text-lg font-semibold mb-2">First Dialog</h2>
-              <p class="text-sm text-foreground-secondary mb-4">
-                Open a second dialog. Scroll lock uses ref counting — stays locked until all dialogs close.
-              </p>
+          <div class="p-6 w-96">
+            <h2 class="text-lg font-semibold mb-2">First Dialog</h2>
+            <p class="text-sm text-foreground-secondary mb-4">
+              Open a second dialog. Scroll lock uses ref counting — stays locked until all dialogs close.
+            </p>
 
-              <button
-                #innerDialogTrigger="DialogTrigger"
-                class="btn btn-secondary mb-4"
-                fiboDialogTrigger
-                [content]="innerDialogTpl"
-              >
-                Open Second Dialog
-              </button>
-              <ng-template #innerDialogTpl>
-                <fibo-dialog>
-                  <div class="p-6 w-80">
-                    <h2 class="text-lg font-semibold mb-2">Second Dialog</h2>
-                    <p class="text-sm text-foreground-secondary mb-4">Stacked on top. Scroll still locked.</p>
-                    <div class="flex justify-end">
-                      <button class="btn" (click)="innerDialogTrigger.close()">Close</button>
-                    </div>
-                  </div>
-                </fibo-dialog>
-              </ng-template>
-
-              <div class="flex justify-end">
-                <button class="btn" (click)="nestedDialogTrigger.close()">Close</button>
+            <button
+              #innerDialogTrigger="DialogTrigger"
+              class="btn btn-secondary mb-4"
+              fiboDialogTrigger
+              [content]="innerDialogTpl"
+            >
+              Open Second Dialog
+            </button>
+            <ng-template #innerDialogTpl>
+              <div class="p-6 w-80">
+                <h2 class="text-lg font-semibold mb-2">Second Dialog</h2>
+                <p class="text-sm text-foreground-secondary mb-4">Stacked on top. Scroll still locked.</p>
+                <div class="flex justify-end">
+                  <button class="btn" (click)="innerDialogTrigger.close()">Close</button>
+                </div>
               </div>
+            </ng-template>
+
+            <div class="flex justify-end">
+              <button class="btn" (click)="nestedDialogTrigger.close()">Close</button>
             </div>
-          </fibo-dialog>
+          </div>
         </ng-template>
       </section>
 

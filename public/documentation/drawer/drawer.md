@@ -8,9 +8,8 @@ Register the drawer shell once at app bootstrap:
 
 ```ts
 // app.config.ts
-import { provideOverlays, withShell } from '@fibo-ui/components';
+import { provideOverlays, withShell, OverlayDrawerShellComponent } from '@fibo-ui/components';
 import { DRAWER_SHELL_TOKEN } from '@fibo-ui/cdk';
-import { OverlayDrawerShellComponent } from '@fibo-ui/components';
 
 provideOverlays(
   withShell(DRAWER_SHELL_TOKEN, OverlayDrawerShellComponent),
@@ -34,16 +33,19 @@ Use `[fiboDrawerTrigger]` with an `ng-template`:
 <button
   type="button"
   class="btn btn-primary"
-  [fiboDrawerTrigger]
+  fiboDrawerTrigger
   [content]="drawerContent"
 >
   Open Drawer
 </button>
 
-<ng-template #drawerContent>
+<ng-template #drawerContent let-close>
   <div class="flex h-full flex-col p-6">
     <h2 class="text-lg font-semibold mb-4">Drawer Title</h2>
     <p class="text-sm text-foreground-secondary">Drawer content goes here.</p>
+    <div class="mt-6">
+      <button class="btn btn-primary" (click)="close()">Close Drawer</button>
+    </div>
   </div>
 </ng-template>
 ```
@@ -60,51 +62,49 @@ export class DrawerBasicExample {}
 
 ## Programmatic Control
 
-Use `createOverlay` directly with `drawerConfig`:
+Use `createOverlay` directly with `drawerBehavior()` and `globalPosition()`:
 
 ```ts
-import { createOverlay } from '@fibo-ui/cdk';
-import { drawerConfig } from '@fibo-ui/components';
+import { createOverlay, globalPosition, signal } from '@fibo-ui/cdk';
+import { drawerBehavior } from '@fibo-ui/components';
 
-readonly config = computed(() => {
-  const templateRef = this.drawerTpl();
-  if (!templateRef) return null;
-  return drawerConfig({
-    templateRef,
-    referenceElement: this.triggerEl().nativeElement,
-  });
-});
+private readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
+private readonly drawerTpl = viewChild.required<TemplateRef<unknown>>('drawerTpl');
+readonly isOpen = signal(false);
 
-readonly overlayHandle = createOverlay(this.isOpen, this.config);
+readonly overlayHandle = createOverlay(
+  this.isOpen,
+  drawerBehavior(),
+  signal(globalPosition()),
+  this.drawerTpl,
+  session => { restoreTriggerFocusOnClose(session, () => this.triggerEl().nativeElement); },
+);
 ```
 
 ## Closing
 
-Drawer closes automatically on backdrop click, Escape key, and outside click.
+Templates receive a `close` function as `$implicit` context — no need to hold a trigger reference:
 
-To close programmatically from inside the template, use `OVERLAY_HANDLE`:
-
-```ts
-// inside drawer content component
-private readonly handle = inject(OVERLAY_HANDLE);
-
-close() {
-  this.handle.close();
-}
+```html
+<ng-template #drawerContent let-close>
+  <div class="p-6">
+    <button (click)="close()">Close</button>
+  </div>
+</ng-template>
 ```
 
 ## Architecture
 
 | Piece | Role |
 |---|---|
-| `[fiboDrawerTrigger]` | Directive that manages `isOpen` signal and builds `drawerConfig` |
-| `DRAWER_SHELL_TOKEN` | InjectionToken resolved by outlet to the drawer shell component |
+| `[fiboDrawerTrigger]` | Directive that manages `isOpen` signal and overlay creation |
+| `DRAWER_SHELL_TOKEN` | InjectionToken resolved by the outlet to the drawer shell component |
 | `OverlayDrawerShellComponent` | Visual shell: fixed right-side panel, slide animation |
 | `<fibo-overlay-stack-outlet>` | Renders all open overlays including the drawer |
 
 ## Custom Drawer Shell
 
-To use a custom shell component:
+Register a custom token and component via `withShell`:
 
 ```ts
 export const MY_DRAWER_TOKEN = new InjectionToken<Type<any>>('MyDrawerShell');
@@ -113,9 +113,12 @@ export const MY_DRAWER_TOKEN = new InjectionToken<Type<any>>('MyDrawerShell');
 provideOverlays(withShell(MY_DRAWER_TOKEN, MyDrawerShellComponent))
 
 // usage
-const config = drawerConfig({ templateRef });
-// override shell token:
-createOverlay(this.isOpen, { ...config, shell: MY_DRAWER_TOKEN });
+readonly overlayHandle = createOverlay(
+  this.isOpen,
+  { shell: MY_DRAWER_TOKEN, needsBackdrop: true, blockScroll: true, closeOnEscape: true, closeOnOutsideClick: true },
+  signal(globalPosition()),
+  this.drawerTpl,
+);
 ```
 
 ## API
@@ -128,16 +131,5 @@ createOverlay(this.isOpen, { ...config, shell: MY_DRAWER_TOKEN });
 | Package | `@fibo-ui/cdk` |
 
 Inputs:
-- `content: TemplateRef<any>` — the drawer template
+- `content: TemplateRef<unknown>` — the drawer template
 - `open: boolean` — two-way model for open state
-
-### `drawerConfig(options)`
-
-| | |
-|---|---|
-| Package | `@fibo-ui/components` |
-
-Options:
-- `templateRef: TemplateRef<any>`
-- `referenceElement?: HTMLElement | null`
-- `focusReturnTarget?: HTMLElement | null`

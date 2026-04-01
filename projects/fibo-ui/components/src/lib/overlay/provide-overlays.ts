@@ -4,7 +4,8 @@ import {
   Type,
   makeEnvironmentProviders,
 } from '@angular/core';
-import { CONNECTED_SHELL_TOKEN, MODAL_SHELL_TOKEN, NOTIFICATION_SHELL_TOKEN, TOOLTIP_SHELL_TOKEN } from '@fibo-ui/cdk';
+import { CONNECTED_SHELL_TOKEN, MODAL_SHELL_TOKEN, NOTIFICATION_SHELL_TOKEN, OVERLAY_BACKDROP_SHELL, TOOLTIP_SHELL_TOKEN } from '@fibo-ui/cdk';
+import { OverlayBackdropShellComponent } from './shell/overlay-backdrop-shell.component';
 import { OverlayConnectedShellComponent } from './shell/overlay-connected-shell.component';
 import { OverlayModalShellComponent } from './shell/overlay-modal-shell.component';
 import { OverlayPlainShellComponent } from './shell/overlay-plain-shell.component';
@@ -24,6 +25,7 @@ export function provideOverlays(...features: OverlayFeature[]): EnvironmentProvi
     { provide: CONNECTED_SHELL_TOKEN, useValue: OverlayConnectedShellComponent },
     { provide: NOTIFICATION_SHELL_TOKEN, useValue: OverlayPlainShellComponent },
     { provide: TOOLTIP_SHELL_TOKEN, useValue: TooltipShellComponent },
+    { provide: OVERLAY_BACKDROP_SHELL, useValue: OverlayBackdropShellComponent },
     features.map(f => f.ɵproviders),
   ]);
 }

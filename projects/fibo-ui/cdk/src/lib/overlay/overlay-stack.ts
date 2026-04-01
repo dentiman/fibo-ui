@@ -2,10 +2,10 @@ import {
   afterNextRender,
   AfterRenderRef,
   DestroyRef,
-  EffectRef,
   Injectable,
   Injector,
   TemplateRef,
+  computed,
   effect,
   inject,
   signal,
@@ -17,8 +17,6 @@ import {
   createOverlayHandleInternal,
   markOverlayHandleClosedInternal,
   setOverlayHandleRequestCloseInternal,
-  syncOverlayHandleContentInternal,
-  syncOverlayHandlePositionInternal,
 } from './overlay-handle-internal';
 import type { OverlayCloseContext, OverlayCloseReason } from './overlay-types';
 import { OverlaySession, OverlayStackEntry } from './overlay-session';
@@ -27,8 +25,6 @@ import type { OverlayBehaviorConfig, OverlayPositionConfig } from './overlay-con
 // Encapsulates all mutable state for one open/close cycle.
 class OverlayCycle {
   handle: OverlayHandle | null = null;
-  positionSyncEffect: EffectRef | null = null;
-  contentSyncEffect: EffectRef | null = null;
   afterOpenedRenderRef: AfterRenderRef | null = null;
   readonly cleanups: Array<() => void> = [];
   readonly afterOpened: Array<(handle: OverlayHandle) => void> = [];
@@ -39,10 +35,6 @@ class OverlayCycle {
   readonly guards: Array<(reason: OverlayCloseReason, event?: Event) => boolean | void> = [];
 
   reset(): void {
-    this.positionSyncEffect?.destroy();
-    this.positionSyncEffect = null;
-    this.contentSyncEffect?.destroy();
-    this.contentSyncEffect = null;
     this.afterOpenedRenderRef?.destroy();
     this.afterOpenedRenderRef = null;
     for (const cleanup of this.cleanups.splice(0)) cleanup();
@@ -64,17 +56,6 @@ export class OverlayStack {
   private readonly pendingAfterClose = new Map<string, OverlayStackEntry>();
 
   readonly openOverlayList: Signal<OverlayHandle[]> = this.openOverlays.asReadonly();
-
-  closeTopmost(): void {
-    const list = this.openOverlayList();
-    for (let index = list.length - 1; index >= 0; index--) {
-      const overlay = list[index];
-      if (overlay.behavior.closeOnEscape !== false) {
-        overlay.close('escape');
-        return;
-      }
-    }
-  }
 
   closeAllByTag(tag: string): void {
     const overlays = this.openOverlayList().filter(o => o.behavior.tag === tag);
@@ -181,8 +162,9 @@ export class OverlayStack {
       isOpen.set(false);
     };
 
-    const openOverlay = (initialPosition: OverlayPositionConfig, initialContent: TemplateRef<any> | string) => {
-      const handle = this.addOverlay(behavior, initialPosition, initialContent);
+    const openOverlay = () => {
+      const contentSignal = computed(() => content() ?? undefined);
+      const handle = this.addOverlay(behavior, position, contentSignal);
       setOverlayHandleRequestCloseInternal(handle, (reason, event) =>
         requestClose(handle, reason, event),
       );
@@ -190,19 +172,6 @@ export class OverlayStack {
       overlayHandle.set(handle);
 
       untracked(() => {
-        cycle.positionSyncEffect = effect(
-          () => syncOverlayHandlePositionInternal(handle, position()),
-          { injector },
-        );
-
-        cycle.contentSyncEffect = effect(
-          () => {
-            const c = content();
-            if (c !== null) syncOverlayHandleContentInternal(handle, c);
-          },
-          { injector },
-        );
-
         const session: OverlaySession = {
           handle,
           requestClose: (reason, event) => requestClose(handle, reason, event),
@@ -213,7 +182,11 @@ export class OverlayStack {
           afterClose: handler => cycle.afterClose.push(handler),
           beforeClose: handler => cycle.beforeClose.push(handler),
           canClose: guard => cycle.guards.push(guard),
-          effect: runner => effect(runner, { injector }),
+          effect: runner => {
+            const effectRef = effect(runner, { injector });
+            cycle.cleanups.push(() => effectRef.destroy());
+            return effectRef;
+          },
           onCleanup: cleanup => cycle.cleanups.push(cleanup),
         };
 
@@ -241,10 +214,9 @@ export class OverlayStack {
 
       if (cycle.handle) return;
 
-      const initialContent = content();
-      if (initialContent === null) return;
+      if (content() === null) return;
 
-      openOverlay(position(), initialContent);
+      openOverlay();
     });
 
     destroyRef.onDestroy(() => teardown('destroy'));
@@ -254,11 +226,12 @@ export class OverlayStack {
 
   private addOverlay(
     behavior: OverlayBehaviorConfig,
-    position: OverlayPositionConfig,
-    content: TemplateRef<any> | string,
+    position: Signal<OverlayPositionConfig>,
+    content: Signal<TemplateRef<any> | string | undefined>,
   ): OverlayHandle {
+    const initialPos = untracked(position);
     const parentOverlayId = this.findOverlayContainerId(
-      position.type === 'connected' ? position.referenceElement : null,
+      initialPos.type === 'connected' ? initialPos.referenceElement : null,
     );
     const handle = createOverlayHandleInternal({ behavior, position, content });
 

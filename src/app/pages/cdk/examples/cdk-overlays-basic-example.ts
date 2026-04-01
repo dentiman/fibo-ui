@@ -3,15 +3,10 @@ import {
   Component,
   ElementRef,
   TemplateRef,
-  inject,
   signal,
   viewChild,
 } from '@angular/core';
-import {
-  createOverlay,
-  connectedPosition,
-  restoreTriggerFocusOnClose,
-} from '@fibo-ui/cdk';
+import { createOverlay, connectedPosition, restoreTriggerFocusOnClose } from '@fibo-ui/cdk';
 import { connectedBehavior } from '@fibo-ui/components';
 
 @Component({
@@ -34,9 +29,7 @@ import { connectedBehavior } from '@fibo-ui/components';
       </p>
 
       <ng-template #overlayTpl>
-        <div
-          class="fixed top-28 left-1/2 z-10 w-80 -translate-x-1/2 rounded-xl bg-background p-4 shadow-lg outline-1 -outline-offset-1 outline-black/13 dark:outline-white/5"
-        >
+        <div class="w-64 rounded-xl bg-background p-4 shadow-lg outline-1 -outline-offset-1 outline-black/13 dark:outline-white/5">
           <div class="text-sm font-medium">Overlay lifecycle</div>
           <p class="mt-2 text-sm text-foreground-secondary">
             Close it with outside click, focus leave, or the explicit action below.
