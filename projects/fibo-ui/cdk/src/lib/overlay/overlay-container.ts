@@ -1,28 +1,19 @@
-import { DestroyRef, Directive, ElementRef, InjectionToken, inject, input, OnInit } from '@angular/core';
+import { DestroyRef, Directive, ElementRef, inject, input, OnInit } from '@angular/core';
 import { blockScroll, isElementInsideOverlayContainer } from './overlay-behaviors';
 import { OverlayHandle, OVERLAY_HANDLE } from './overlay-handle';
 import { OverlayStack } from './overlay-stack';
-
-/**
- * Injection token for the nearest ancestor `OverlayContainer`.
- *
- * Used by `createOverlay()` to determine the parent overlay via DI
- * instead of fragile `document.activeElement` lookups.
- */
-export const OVERLAY_CONTAINER = new InjectionToken<OverlayContainer>('OverlayContainer');
 
 /**
  * Host directive for all overlay shell components.
  *
  * Responsibilities:
  * - Accepts `OverlayHandle` as input and provides it via `OVERLAY_HANDLE` DI token
- * - Provides itself via `OVERLAY_CONTAINER` so child overlays can find their parent
  * - Binds `data-overlay-container-id` for DOM-based overlay lookups
- * - Auto-sets `interactionRoot` to the host element
+ * - Sets `hostElement` on the handle for outside-click detection
  * - Calls `completeAfterClose` when the shell is destroyed
  * - Attaches close-policy listeners based on `behavior` booleans:
  *   `closeOnFocusLeave`, `closeOnScroll`, `blockScroll`, `closeOnEscape`
- * - Outside-click is handled centrally by `OverlayStackOutlet` via `viewChildren`
+ * - Outside-click is handled centrally by `OverlayStackOutlet`
  */
 @Directive({
   selector: '[fiboOverlayContainer]',
@@ -30,10 +21,6 @@ export const OVERLAY_CONTAINER = new InjectionToken<OverlayContainer>('OverlayCo
     {
       provide: OVERLAY_HANDLE,
       useFactory: () => inject(OverlayContainer).handle(),
-    },
-    {
-      provide: OVERLAY_CONTAINER,
-      useExisting: OverlayContainer,
     },
   ],
   host: {

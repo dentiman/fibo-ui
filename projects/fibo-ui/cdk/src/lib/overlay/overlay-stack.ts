@@ -17,7 +17,6 @@ import { createOverlayHandle } from './overlay-handle-internal';
 import type { OverlayCloseContext, OverlayCloseReason } from './overlay-types';
 import { OverlaySession, OverlayStackEntry } from './overlay-session';
 import type { OverlayBehaviorConfig, OverlayPositionConfig } from './overlay-config';
-import { OVERLAY_CONTAINER } from './overlay-container';
 
 // Encapsulates all mutable state for one open/close cycle.
 class OverlayCycle {
@@ -114,7 +113,6 @@ export class OverlayStack {
     position: Signal<OverlayPositionConfig>,
     content: Signal<TemplateRef<any> | string | null>,
     setup?: (overlay: OverlaySession) => void,
-    parentOverlayId?: string | null,
   ): Signal<OverlayHandle | null> {
     const overlayHandle = signal<OverlayHandle | null>(null);
     const destroyRef = inject(DestroyRef);
@@ -167,7 +165,7 @@ export class OverlayStack {
       const contentSignal = computed(() => content() ?? undefined);
       const handle = createOverlayHandle(behavior, position, contentSignal, requestClose);
 
-      this.addOverlay(handle, parentOverlayId ?? null);
+      this.addOverlay(handle);
       cycle.handle = handle;
       overlayHandle.set(handle);
 
@@ -224,7 +222,11 @@ export class OverlayStack {
     return overlayHandle.asReadonly();
   }
 
-  private addOverlay(handle: OverlayHandle, parentOverlayId: string | null): void {
+  private addOverlay(handle: OverlayHandle): void {
+    const pos = untracked(handle.position);
+    const anchor = pos.type === 'connected' ? pos.referenceElement : document.activeElement;
+    const parentOverlayId = this.findOverlayContainerId(anchor);
+
     this.openOverlays.update(overlays => [...overlays, handle]);
     this.overlayParentIds.set(handle.id, parentOverlayId);
   }
@@ -242,8 +244,5 @@ export function createOverlay(
   content: Signal<TemplateRef<any> | string | null>,
   setup?: (overlay: OverlaySession) => void,
 ): Signal<OverlayHandle | null> {
-  const overlayStack = inject(OverlayStack);
-  const parentContainer = inject(OVERLAY_CONTAINER, { optional: true });
-  const parentOverlayId = parentContainer?.handle().id ?? null;
-  return overlayStack.createOverlay(isOpen, behavior, position, content, setup, parentOverlayId);
+  return inject(OverlayStack).createOverlay(isOpen, behavior, position, content, setup);
 }
