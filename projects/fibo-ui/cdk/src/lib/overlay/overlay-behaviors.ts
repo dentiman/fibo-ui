@@ -270,12 +270,18 @@ export function trapOverlayFocus(
 
   if (guard) {
     overlay.effect(onCleanup => {
-      const handleFocusIn = (event: FocusEvent) => {
-        if (overlay.isInOverlayBranch(event.target)) {
-          return;
-        }
+      let isRefocusing = false;
 
-        focusOverlayFallbackTarget(overlay.handle.id, { preventScroll, rootSelector });
+      const handleFocusIn = (event: FocusEvent) => {
+        if (isRefocusing) return;
+        if (overlay.isInOverlayBranch(event.target)) return;
+
+        isRefocusing = true;
+        try {
+          focusOverlayFallbackTarget(overlay.handle.id, { preventScroll, rootSelector });
+        } finally {
+          isRefocusing = false;
+        }
       };
 
       document.addEventListener('focusin', handleFocusIn, true);
