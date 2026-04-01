@@ -230,9 +230,8 @@ export class OverlayStack {
     content: Signal<TemplateRef<any> | string | undefined>,
   ): OverlayHandle {
     const initialPos = untracked(position);
-    const parentOverlayId = this.findOverlayContainerId(
-      initialPos.type === 'connected' ? initialPos.referenceElement : null,
-    );
+    const anchorElement = initialPos.type === 'connected' ? initialPos.referenceElement : document.activeElement;
+    const parentOverlayId = this.findOverlayContainerId(anchorElement);
     const handle = createOverlayHandleInternal({ behavior, position, content });
 
     this.openOverlays.update(overlays => [...overlays, handle]);
