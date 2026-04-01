@@ -1,42 +1,66 @@
-import { DestroyRef, Directive, ElementRef, inject, OnInit } from '@angular/core';
+import { DestroyRef, Directive, ElementRef, InjectionToken, inject, input, OnInit } from '@angular/core';
 import { blockScroll, isElementInsideOverlayContainer } from './overlay-behaviors';
-import { setOverlayHandleInteractionRootInternal } from './overlay-handle-internal';
-import { OverlayShellHost } from './overlay-shell-host';
+import { OverlayHandle, OVERLAY_HANDLE } from './overlay-handle';
 import { OverlayStack } from './overlay-stack';
 
 /**
- * Marks the content container element inside an overlay shell.
+ * Injection token for the nearest ancestor `OverlayContainer`.
+ *
+ * Used by `createOverlay()` to determine the parent overlay via DI
+ * instead of fragile `document.activeElement` lookups.
+ */
+export const OVERLAY_CONTAINER = new InjectionToken<OverlayContainer>('OverlayContainer');
+
+/**
+ * Host directive for all overlay shell components.
  *
  * Responsibilities:
+ * - Accepts `OverlayHandle` as input and provides it via `OVERLAY_HANDLE` DI token
+ * - Provides itself via `OVERLAY_CONTAINER` so child overlays can find their parent
  * - Binds `data-overlay-container-id` for DOM-based overlay lookups
  * - Auto-sets `interactionRoot` to the host element
+ * - Calls `completeAfterClose` when the shell is destroyed
  * - Attaches close-policy listeners based on `behavior` booleans:
- *   `closeOnOutsideClick`, `closeOnFocusLeave`, `closeOnScroll`, `blockScroll`
+ *   `closeOnFocusLeave`, `closeOnScroll`, `blockScroll`, `closeOnEscape`
+ * - Outside-click is handled centrally by `OverlayStackOutlet` via `viewChildren`
  */
 @Directive({
   selector: '[fiboOverlayContainer]',
+  providers: [
+    {
+      provide: OVERLAY_HANDLE,
+      useFactory: () => inject(OverlayContainer).handle(),
+    },
+    {
+      provide: OVERLAY_CONTAINER,
+      useExisting: OverlayContainer,
+    },
+  ],
   host: {
-    '[attr.data-overlay-container-id]': 'shellHost.handle().id',
+    'style': 'z-index: 1000',
+    '[attr.data-overlay-container-id]': 'handle().id',
   },
 })
 export class OverlayContainer implements OnInit {
-  readonly shellHost = inject(OverlayShellHost);
-  private readonly elementRef = inject(ElementRef<HTMLElement>);
+  readonly handle = input.required<OverlayHandle>();
+  readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly overlayStack = inject(OverlayStack);
   private readonly destroyRef = inject(DestroyRef);
 
+  constructor() {
+    this.destroyRef.onDestroy(() =>
+      this.overlayStack.completeAfterClose(this.handle().id),
+    );
+  }
+
   ngOnInit(): void {
-    const handle = this.shellHost.handle();
+    const handle = this.handle();
     const behavior = handle.behavior;
 
-    setOverlayHandleInteractionRootInternal(handle, this.elementRef.nativeElement);
+    handle.hostElement.set(this.elementRef.nativeElement);
 
     if (behavior.blockScroll) {
       blockScroll(this.destroyRef);
-    }
-
-    if (behavior.closeOnOutsideClick) {
-      this.attachCloseOnOutsideClick();
     }
 
     if (behavior.closeOnFocusLeave) {
@@ -52,34 +76,15 @@ export class OverlayContainer implements OnInit {
     }
   }
 
-  private isInsideSafeZone(target: Node): boolean {
-    const handle = this.shellHost.handle();
-    const pos = handle.position();
-    const referenceElement = pos.type === 'connected' ? pos.referenceElement : null;
-
-    if (referenceElement?.contains(target)) return true;
-    if (this.elementRef.nativeElement.contains(target)) return true;
-
-    const targetOverlayId = this.overlayStack.findOverlayContainerId(target);
-    return this.overlayStack.isOverlayInBranch(handle.id, targetOverlayId);
-  }
-
-  private attachCloseOnOutsideClick(): void {
-    const handler = (event: MouseEvent) => {
-      const target = event.target as Node | null;
-      if (!target || this.isInsideSafeZone(target)) return;
-      this.shellHost.handle().close('outside-click');
-    };
-
-    document.addEventListener('click', handler, true);
-    this.destroyRef.onDestroy(() => document.removeEventListener('click', handler, true));
-  }
-
   private attachCloseOnFocusLeave(): void {
+    const handle = this.handle();
     const handler = (event: FocusEvent) => {
       const target = event.target as Node | null;
-      if (!target || this.isInsideSafeZone(target)) return;
-      this.shellHost.handle().close('focusout');
+      if (!target) return;
+      const pos = handle.position();
+      if (pos.type === 'connected' && pos.referenceElement?.contains(target)) return;
+      if (this.elementRef.nativeElement.contains(target)) return;
+      handle.close('focusout');
     };
 
     document.addEventListener('focusin', handler, true);
@@ -87,7 +92,7 @@ export class OverlayContainer implements OnInit {
   }
 
   private attachCloseOnEscape(): void {
-    const handle = this.shellHost.handle();
+    const handle = this.handle();
 
     const handler = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
@@ -102,7 +107,7 @@ export class OverlayContainer implements OnInit {
   }
 
   private attachCloseOnScroll(): void {
-    const handle = this.shellHost.handle();
+    const handle = this.handle();
 
     const handler = (event: Event) => {
       const target = event.target;

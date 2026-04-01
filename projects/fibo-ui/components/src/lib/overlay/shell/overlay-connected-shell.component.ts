@@ -1,20 +1,13 @@
 import { Component, ViewEncapsulation, input } from '@angular/core';
-import { type OverlayHandle, OverlayContainer, OverlayShellHost, OverlayPosition } from '@fibo-ui/cdk';
+import { type OverlayHandle, OverlayContainer, OverlayPosition } from '@fibo-ui/cdk';
 import { OverlayContent } from './overlay-content.component';
 
 @Component({
   selector: 'fibo-overlay-connected-shell',
   imports: [OverlayContent],
   hostDirectives: [
-    {
-      directive: OverlayShellHost,
-      inputs: ['handle'],
-    },
-    {
-      directive: OverlayPosition,
-      inputs: ['handle'],
-    },
-    OverlayContainer,
+    { directive: OverlayContainer, inputs: ['handle'] },
+    { directive: OverlayPosition, inputs: ['handle'] },
   ],
   template: `<fibo-overlay-content [handle]="handle()" />`,
   host: {

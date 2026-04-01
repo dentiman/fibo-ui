@@ -13,18 +13,16 @@ import {
 } from '@angular/core';
 import type { Signal, WritableSignal } from '@angular/core';
 import type { OverlayHandle } from './overlay-handle';
-import {
-  createOverlayHandleInternal,
-  markOverlayHandleClosedInternal,
-  setOverlayHandleRequestCloseInternal,
-} from './overlay-handle-internal';
+import { createOverlayHandle } from './overlay-handle-internal';
 import type { OverlayCloseContext, OverlayCloseReason } from './overlay-types';
 import { OverlaySession, OverlayStackEntry } from './overlay-session';
 import type { OverlayBehaviorConfig, OverlayPositionConfig } from './overlay-config';
+import { OVERLAY_CONTAINER } from './overlay-container';
 
 // Encapsulates all mutable state for one open/close cycle.
 class OverlayCycle {
   handle: OverlayHandle | null = null;
+  closed = false;
   afterOpenedRenderRef: AfterRenderRef | null = null;
   readonly cleanups: Array<() => void> = [];
   readonly afterOpened: Array<(handle: OverlayHandle) => void> = [];
@@ -43,6 +41,7 @@ class OverlayCycle {
     this.beforeClose.length = 0;
     this.guards.length = 0;
     this.handle = null;
+    this.closed = false;
   }
 }
 
@@ -115,6 +114,7 @@ export class OverlayStack {
     position: Signal<OverlayPositionConfig>,
     content: Signal<TemplateRef<any> | string | null>,
     setup?: (overlay: OverlaySession) => void,
+    parentOverlayId?: string | null,
   ): Signal<OverlayHandle | null> {
     const overlayHandle = signal<OverlayHandle | null>(null);
     const destroyRef = inject(DestroyRef);
@@ -132,7 +132,7 @@ export class OverlayStack {
       const handle = cycle.handle;
       if (!handle) return;
 
-      if (!handle.closed) {
+      if (!cycle.closed) {
         runBeforeClose(handle, reason);
       }
 
@@ -150,31 +150,31 @@ export class OverlayStack {
       overlayHandle.set(null);
     };
 
-    const requestClose = (handle: OverlayHandle, reason: OverlayCloseReason, event?: Event) => {
-      if (handle !== cycle.handle || handle.closed) return;
+    const requestClose = (reason: OverlayCloseReason, event?: Event) => {
+      const handle = cycle.handle;
+      if (!handle || cycle.closed) return;
 
       for (const guard of cycle.guards) {
         if (guard(reason, event) === false) return;
       }
 
-      markOverlayHandleClosedInternal(handle);
+      cycle.closed = true;
       runBeforeClose(handle, reason);
       isOpen.set(false);
     };
 
     const openOverlay = () => {
       const contentSignal = computed(() => content() ?? undefined);
-      const handle = this.addOverlay(behavior, position, contentSignal);
-      setOverlayHandleRequestCloseInternal(handle, (reason, event) =>
-        requestClose(handle, reason, event),
-      );
+      const handle = createOverlayHandle(behavior, position, contentSignal, requestClose);
+
+      this.addOverlay(handle, parentOverlayId ?? null);
       cycle.handle = handle;
       overlayHandle.set(handle);
 
       untracked(() => {
         const session: OverlaySession = {
           handle,
-          requestClose: (reason, event) => requestClose(handle, reason, event),
+          requestClose: (reason, event) => requestClose(reason, event),
           findOverlayContainerId: target => this.findOverlayContainerId(target),
           isInOverlayBranch: target =>
             this.isOverlayInBranch(handle.id, this.findOverlayContainerId(target)),
@@ -196,7 +196,7 @@ export class OverlayStack {
 
         cycle.afterOpenedRenderRef = afterNextRender(
           () => {
-            if (cycle.handle !== handle || handle.closed) return;
+            if (cycle.handle !== handle || cycle.closed) return;
             for (const handler of cycle.afterOpened) handler(handle);
             cycle.afterOpened.length = 0;
             cycle.afterOpenedRenderRef = null;
@@ -224,20 +224,9 @@ export class OverlayStack {
     return overlayHandle.asReadonly();
   }
 
-  private addOverlay(
-    behavior: OverlayBehaviorConfig,
-    position: Signal<OverlayPositionConfig>,
-    content: Signal<TemplateRef<any> | string | undefined>,
-  ): OverlayHandle {
-    const initialPos = untracked(position);
-    const anchorElement = initialPos.type === 'connected' ? initialPos.referenceElement : document.activeElement;
-    const parentOverlayId = this.findOverlayContainerId(anchorElement);
-    const handle = createOverlayHandleInternal({ behavior, position, content });
-
+  private addOverlay(handle: OverlayHandle, parentOverlayId: string | null): void {
     this.openOverlays.update(overlays => [...overlays, handle]);
     this.overlayParentIds.set(handle.id, parentOverlayId);
-
-    return handle;
   }
 
   private removeOverlay(handle: OverlayHandle): void {
@@ -254,5 +243,7 @@ export function createOverlay(
   setup?: (overlay: OverlaySession) => void,
 ): Signal<OverlayHandle | null> {
   const overlayStack = inject(OverlayStack);
-  return overlayStack.createOverlay(isOpen, behavior, position, content, setup);
+  const parentContainer = inject(OVERLAY_CONTAINER, { optional: true });
+  const parentOverlayId = parentContainer?.handle().id ?? null;
+  return overlayStack.createOverlay(isOpen, behavior, position, content, setup, parentOverlayId);
 }

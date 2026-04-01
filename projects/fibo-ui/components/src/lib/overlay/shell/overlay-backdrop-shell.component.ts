@@ -9,6 +9,7 @@ import type { OverlayHandle } from '@fibo-ui/cdk';
   host: {
     'class': 'fixed inset-0 pointer-events-auto bg-black/30 dark:bg-black/50',
     'style': 'z-index: 1000',
+    '[attr.data-overlay-backdrop-id]': 'handle().id',
     'animate.enter': 'overlay-backdrop-enter',
     'animate.leave': 'overlay-backdrop-leave',
   },

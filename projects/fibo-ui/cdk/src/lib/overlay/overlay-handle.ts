@@ -1,4 +1,4 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken, WritableSignal } from '@angular/core';
 import type { Signal, TemplateRef } from '@angular/core';
 import type { OverlayCloseReason } from './overlay-types';
 import type { OverlayBehaviorConfig, OverlayPositionConfig } from './overlay-config';
@@ -9,7 +9,8 @@ export interface OverlayHandle {
   readonly behavior: OverlayBehaviorConfig;
   readonly position: Signal<OverlayPositionConfig>;
   readonly content: Signal<TemplateRef<any> | string | undefined>;
-  readonly closed: boolean;
+  /** Host element of the overlay shell, set by OverlayContainer on init. */
+  readonly hostElement: WritableSignal<HTMLElement | null>;
   close(reason?: OverlayCloseReason): void;
 }
 

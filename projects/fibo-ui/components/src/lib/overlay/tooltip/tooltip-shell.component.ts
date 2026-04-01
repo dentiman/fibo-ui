@@ -1,5 +1,5 @@
 import { Component, inject, input, ViewEncapsulation } from '@angular/core';
-import { type OverlayHandle, OverlayArrow, OverlayContainer, OverlayPosition, OverlayShellHost } from '@fibo-ui/cdk';
+import { type OverlayHandle, OverlayArrow, OverlayContainer, OverlayPosition } from '@fibo-ui/cdk';
 import { OverlayContent } from '../shell/overlay-content.component';
 import { TooltipService } from './tooltip-service';
 
@@ -7,9 +7,8 @@ import { TooltipService } from './tooltip-service';
   selector: 'fibo-overlay-tooltip-shell',
   imports: [OverlayContent, OverlayArrow],
   hostDirectives: [
-    { directive: OverlayShellHost, inputs: ['handle'] },
+    { directive: OverlayContainer, inputs: ['handle'] },
     { directive: OverlayPosition, inputs: ['handle'] },
-    OverlayContainer,
   ],
   template: `
     <fibo-overlay-content [handle]="handle()" />

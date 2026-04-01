@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   Injector,
   Type,
   ViewEncapsulation,
+  effect,
   inject,
 } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
@@ -36,7 +38,12 @@ import type { OverlayHandle } from './overlay-handle';
 export class OverlayStackOutlet {
   readonly overlayStack = inject(OverlayStack);
   private readonly injector = inject(Injector);
+  private readonly destroyRef = inject(DestroyRef);
   readonly backdropShell = inject(OVERLAY_BACKDROP_SHELL, { optional: true });
+
+  constructor() {
+    this.setupOutsideClickDispatcher();
+  }
 
   resolveShell(handle: OverlayHandle): Type<unknown> {
     return this.injector.get(handle.behavior.shell);
@@ -44,5 +51,59 @@ export class OverlayStackOutlet {
 
   needsBackdrop(handle: OverlayHandle): boolean {
     return handle.behavior.needsBackdrop ?? false;
+  }
+
+  private setupOutsideClickDispatcher(): void {
+    let attached = false;
+
+    const handler = (event: MouseEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+
+      const overlays = this.overlayStack.openOverlayList();
+      for (let i = overlays.length - 1; i >= 0; i--) {
+        const handle = overlays[i];
+
+        // Click is inside this overlay's content or its reference element — stop
+        if (this.isInsideOverlay(handle, target)) break;
+
+        if (handle.behavior.closeOnOutsideClick) {
+          handle.close('outside-click');
+        }
+
+        // Click was on this overlay's own backdrop — stop propagating to parents
+        if (this.isOnOwnBackdrop(handle, target)) break;
+      }
+    };
+
+    // Attach/detach the global click listener based on whether overlays are open.
+    effect(() => {
+      const hasOverlays = this.overlayStack.openOverlayList().length > 0;
+      if (hasOverlays && !attached) {
+        document.addEventListener('click', handler, true);
+        attached = true;
+      } else if (!hasOverlays && attached) {
+        document.removeEventListener('click', handler, true);
+        attached = false;
+      }
+    });
+
+    this.destroyRef.onDestroy(() => {
+      if (attached) {
+        document.removeEventListener('click', handler, true);
+        attached = false;
+      }
+    });
+  }
+
+  private isInsideOverlay(handle: OverlayHandle, target: Node): boolean {
+    const pos = handle.position();
+    if (pos.type === 'connected' && pos.referenceElement?.contains(target)) return true;
+    return handle.hostElement()?.contains(target) ?? false;
+  }
+
+  private isOnOwnBackdrop(handle: OverlayHandle, target: Node): boolean {
+    const element = target instanceof Element ? target : (target as Node).parentElement;
+    return element?.closest(`[data-overlay-backdrop-id="${handle.id}"]`) != null;
   }
 }

@@ -55,7 +55,6 @@ export * from './lib/overlay/overlay-stack';
 export * from './lib/overlay/overlay-singleton';
 export * from './lib/overlay/overlay-behaviors';
 export * from './lib/overlay/overlay-container';
-export * from './lib/overlay/overlay-shell-host';
 export * from './lib/overlay/overlay-position';
 export * from './lib/overlay/overlay-arrow';
 export * from './lib/overlay/overlay-panel';
