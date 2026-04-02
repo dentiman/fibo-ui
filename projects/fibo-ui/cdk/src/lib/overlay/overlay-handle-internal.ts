@@ -6,6 +6,13 @@ import type { OverlayBehaviorConfig, OverlayPositionConfig } from './overlay-con
 
 let nextOverlayId = 1;
 
+/**
+ * Creates a plain `OverlayHandle` object.
+ *
+ * Called by `OverlayStack.openOverlay()` once per open cycle.
+ * The `requestClose` callback is wired to the cycle's close logic
+ * (guards, beforeClose, teardown) so consumers just call `handle.close()`.
+ */
 export function createOverlayHandle(
   behavior: OverlayBehaviorConfig,
   position: Signal<OverlayPositionConfig>,
