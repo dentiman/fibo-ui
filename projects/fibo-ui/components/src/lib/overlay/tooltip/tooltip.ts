@@ -9,8 +9,6 @@ let nextId = 0;
   host: {
     '(mouseenter)': 'open()',
     '(mouseleave)': 'close()',
-    '(focusin)': 'open()',
-    '(focusout)': 'close()',
     '[attr.aria-describedby]': 'tooltipId',
   },
 })

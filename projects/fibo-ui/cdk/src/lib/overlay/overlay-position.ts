@@ -107,11 +107,18 @@ export class OverlayPosition {
       const reference = this.referenceElement();
       if (!reference) return;
 
+      const handle = this.handle();
       const floatingElement = this.elementRef.nativeElement as HTMLElement;
       const currentPlacement = this.placement();
       const middleware = this.middleware();
 
       const updatePosition = () => {
+        // Close overlay if reference element was removed from DOM.
+        if (reference instanceof HTMLElement && !reference.isConnected) {
+          handle.close('state');
+          return;
+        }
+
         computePosition(reference as HTMLElement, floatingElement, {
           placement: currentPlacement,
           middleware,
