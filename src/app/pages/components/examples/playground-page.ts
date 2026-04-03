@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, ElementRef, signal, TemplateRef, viewChild } from '@angular/core';
-import { createOverlay, connectedPosition, restoreTriggerFocusOnClose, DialogTrigger } from '@fibo-ui/cdk';
+import { createOverlay, connectedPosition, restoreTriggerFocusOnClose, DialogTrigger, KeyboardSource } from '@fibo-ui/cdk';
 import { menuBehavior } from '@fibo-ui/components';
 import { Menu, type MenuItemType } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-playground-page',
-  imports: [Menu, DialogTrigger],
+  imports: [Menu, DialogTrigger, KeyboardSource],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-8 p-8">
@@ -23,6 +23,8 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
         <div class="flex flex-wrap gap-3">
           <button
             #menuTriggerBtn
+            fiboKeyboardSource
+            #menuKbSource="KeyboardSource"
             type="button"
             class="btn btn-primary"
             (click)="toggleMenu()"
@@ -32,6 +34,8 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
 
           <button
             #altMenuTriggerBtn
+            fiboKeyboardSource
+            #altMenuKbSource="KeyboardSource"
             type="button"
             class="btn btn-secondary"
             (click)="toggleAltMenu()"
@@ -41,11 +45,11 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
         </div>
 
         <ng-template #menuTpl>
-          <fibo-menu [items]="menuItems" (itemTriggered)="closeMenu()" />
+          <fibo-menu [keyboardSource]="menuKbSource" [items]="menuItems" (itemTriggered)="closeMenu()" />
         </ng-template>
 
         <ng-template #altMenuTpl>
-          <fibo-menu [items]="quickMenuItems" (itemTriggered)="closeAltMenu()" />
+          <fibo-menu [keyboardSource]="altMenuKbSource" [items]="quickMenuItems" (itemTriggered)="closeAltMenu()" />
         </ng-template>
       </section>
 
@@ -184,7 +188,15 @@ export class PlaygroundPageComponent {
       icon: 'settings',
       children: [
         { label: 'Profile Settings', icon: 'user', url: '/' },
-        { label: 'Notifications', icon: 'bell', url: '/notifications' },
+        {
+          label: 'Notifications',
+          icon: 'bell',
+          children: [
+            { label: 'Email Notifications', url: '/notifications' },
+            { label: 'Push Notifications', url: '/notifications' },
+            { label: 'SMS Notifications', url: '/notifications' },
+          ],
+        },
         { label: 'Appearance', icon: 'sun', url: '/theme-demo' },
       ],
     },
@@ -194,7 +206,15 @@ export class PlaygroundPageComponent {
       children: [
         { label: 'Edit Profile', icon: 'user', url: '/' },
         { label: 'Change Password', icon: 'lock', url: '/input' },
-        { label: 'Two-Factor Auth', icon: 'shield-check', url: '/switch' },
+        {
+          label: 'Two-Factor Auth',
+          icon: 'shield-check',
+          children: [
+            { label: 'Authenticator App', url: '/switch' },
+            { label: 'SMS Verification', url: '/switch' },
+            { label: 'Recovery Codes', url: '/switch' },
+          ],
+        },
         { label: 'Active Sessions', icon: 'monitor', url: '/notifications' },
       ],
     },

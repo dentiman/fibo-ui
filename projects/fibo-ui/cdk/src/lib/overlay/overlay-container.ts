@@ -71,6 +71,8 @@ export class OverlayContainer implements OnInit {
       const pos = handle.position();
       if (pos.type === 'connected' && pos.referenceElement?.contains(target)) return;
       if (this.elementRef.nativeElement.contains(target)) return;
+      const targetOverlayId = this.overlayStack.findOverlayContainerId(target);
+      if (targetOverlayId && this.overlayStack.isOverlayInBranch(handle.id, targetOverlayId)) return;
       handle.close('focusout');
     };
 

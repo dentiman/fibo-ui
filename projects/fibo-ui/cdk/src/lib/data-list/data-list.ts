@@ -39,6 +39,9 @@ export class DataList implements KeydownDelegate {
 
   activeDataListItem = this._activeDataListItem.asReadonly();
 
+  /** Tracks how the active item was last changed: 'mouse', 'keyboard', or null. */
+  readonly lastActivationSource = signal<'mouse' | 'keyboard' | null>(null);
+
   constructor() {
     effect(() => {
       const options = this.options();
@@ -178,6 +181,7 @@ export class DataList implements KeydownDelegate {
     const targetIsInput = event.target instanceof HTMLInputElement;
     switch (event.key) {
       case 'ArrowDown':
+        this.lastActivationSource.set('keyboard');
         this.setActiveDataListItem(this.findNextDataListItem(this._activeDataListItem()));
         event.preventDefault();
         if (!targetIsInput) {
@@ -190,6 +194,7 @@ export class DataList implements KeydownDelegate {
         event.stopPropagation();
         break;
       case 'ArrowUp':
+        this.lastActivationSource.set('keyboard');
         this.setActiveDataListItem(this.findPreviousDataListItem(this._activeDataListItem()));
         event.preventDefault();
         if (!targetIsInput) {
@@ -207,11 +212,13 @@ export class DataList implements KeydownDelegate {
         event.stopPropagation();
         break;
       case 'Home':
+        this.lastActivationSource.set('keyboard');
         this.setActiveDataListItem(this.options().find(option => !option.disabled()) ?? null);
         event.preventDefault();
         event.stopPropagation();
         break;
       case 'End': {
+        this.lastActivationSource.set('keyboard');
         const options = [...this.options()].reverse();
         this.setActiveDataListItem(options.find(option => !option.disabled()) ?? null);
         event.preventDefault();

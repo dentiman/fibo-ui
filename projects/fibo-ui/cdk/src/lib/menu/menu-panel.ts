@@ -103,13 +103,21 @@ export class MenuPanel {
   constructor() {
     this.destroyRef.onDestroy(() => this.clearTimeouts());
 
-    if (this.overlayHandle) {
-      const handle = this.overlayHandle;
-      this.dataList.mouseleaveResetGuard.set((event: MouseEvent) => {
-        const targetOverlayId = this.overlayStack.findOverlayContainerId(event.relatedTarget as EventTarget);
-        return !this.overlayStack.isOverlayInBranch(handle.id, targetOverlayId);
+    this.dataList.mouseleaveResetGuard.set((event: MouseEvent) => {
+      const targetOverlayId = this.overlayStack.findOverlayContainerId(event.relatedTarget as EventTarget);
+      if (!targetOverlayId) return true;
+
+      // Don't reset when mouse moves into a child overlay of this panel's own overlay
+      if (this.overlayHandle && this.overlayStack.isOverlayInBranch(this.overlayHandle.id, targetOverlayId)) {
+        return false;
+      }
+
+      // Don't reset when mouse moves into an open submenu's overlay
+      return !this.submenuTriggers().some(trigger => {
+        const submenuHandle = trigger.overlayHandle();
+        return submenuHandle && this.overlayStack.isOverlayInBranch(submenuHandle.id, targetOverlayId);
       });
-    }
+    });
 
     effect((onCleanup) => {
       const keyboardSource = this.keyboardSource();
@@ -139,6 +147,7 @@ export class MenuPanel {
   private handleActiveDataListItemChange(activeItem: DataListItem | null) {
     const activeTrigger = this.findTriggerByDataListItem(activeItem);
     const openTrigger = this.submenuTriggers().find(trigger => trigger.isOpen());
+    const isMouseActivation = this.dataList.lastActivationSource() === 'mouse';
 
     if (activeTrigger && openTrigger && activeTrigger !== openTrigger) {
       this.scheduleClose(openTrigger);
@@ -148,7 +157,10 @@ export class MenuPanel {
       if (activeTrigger.isOpen()) {
         this.clearCloseTimeout();
       }
-      this.scheduleOpen(activeTrigger);
+      // Only auto-open submenus on mouse hover; keyboard requires Enter/ArrowRight.
+      if (isMouseActivation) {
+        this.scheduleOpen(activeTrigger);
+      }
       return;
     }
 
