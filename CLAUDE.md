@@ -52,19 +52,3 @@ Two separate documentation directories with different purposes:
 | `zart`       | Zard UI (zard-ui/zardui) | Angular компоненты на базе Shadcn/ui + ng-zorro |
 
 Чтобы поискать паттерн во всех ref-libs: `grep -r "паттерн" /Users/dentiman/dev/projects/fibo-stack/{angular,components,spartan,taiga-ui,zart}`.
-
-## Code Conventions
-
-- **Standalone components only** — do NOT set `standalone: true` (it's the default in Angular 21)
-- **Signals everywhere** — use `signal()` for state, `computed()` for derived state, `model()` for two-way binding
-- **`input()` / `output()` functions** — not `@Input()` / `@Output()` decorators
-- **`inject()` function** — not constructor injection
-- **`ChangeDetectionStrategy.OnPush`** on all components
-- **Native control flow** — `@if`, `@for`, `@switch` (not `*ngIf`, `*ngFor`)
-- **`host` object** in decorator — not `@HostBinding` / `@HostListener`
-- **Class/style bindings** — not `ngClass` / `ngStyle`
-- **`ViewEncapsulation.None`** on components that need global styling
-- **Inline templates** preferred for small components
-- **Icons:** Lucide Angular, registered in `app.config.ts` — tree-shakeable, use `<lucide-icon name="..." />`
-- **Prettier:** 100 char width, single quotes, Angular HTML parser
-- **Indentation:** 2 spaces

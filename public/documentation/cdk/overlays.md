@@ -1,6 +1,15 @@
 # Overlays
 
-`createOverlay` is the signal-driven entry point for all temporary UI: modals, popovers, menus, tooltips, drawers, and notifications.
+`createOverlay` is the signal-driven primitive for all temporary UI: modals, popovers, menus, tooltips, drawers, and notifications.
+
+The overlay system handles:
+
+- **Rendering** — any `ng-template` projected into a portal outside the component tree
+- **Positioning** — connected (anchored to an element), global (centered), coordinate (x/y)
+- **Behaviors** — outside click, focus leave, escape, scroll, backdrop, scroll lock
+- **Stacking** — ordered stack with parent-child branch awareness for nested overlays
+- **Focus** — auto-focus on open, Tab cycling, focus trap for modals, focus restore on close
+- **Lifecycle** — open/close guards, before/after hooks, scoped effects per open cycle
 
 ## Basic Usage
 
@@ -26,7 +35,7 @@ export class CdkOverlaysBasicExample {
 
   readonly handle = createOverlay(
     this.isOpen,
-    connectedBehavior(),
+    { shell: CONNECTED_SHELL_TOKEN, closeOnOutsideClick: true, closeOnFocusLeave: true, closeOnEscape: true },
     connectedPosition(() => ({ referenceElement: this.btn().nativeElement })),
     this.tpl,
     session => { restoreTriggerFocusOnClose(session, () => this.btn().nativeElement); },
@@ -37,107 +46,7 @@ export class CdkOverlaysBasicExample {
 }
 ```
 
-## Triggers
-
-Ready-made directives that compose `createOverlay` with behavior, position, and focus management. Import from `@fibo-ui/cdk`.
-
-:::example cdk-popover-trigger
-
-**`[fiboPopoverTrigger]`** — connected overlay anchored to the trigger. Closes on outside click, focus leave, and Escape. Toggle semantics.
-
-```html {example="cdk-popover-trigger" title="Template"}
-<button type="button" class="btn btn-primary" fiboPopoverTrigger [content]="popoverTpl">
-  Open Popover
-</button>
-
-<!-- exportAs gives access to open() / close() / toggle() from inside the template -->
-<button
-  #ref="PopoverTrigger"
-  type="button"
-  class="btn btn-secondary"
-  fiboPopoverTrigger
-  placement="bottom-start"
-  [content]="actionsTpl"
->
-  With actions
-</button>
-
-<ng-template #popoverTpl>
-  <div class="w-64 p-3"> ... </div>
-</ng-template>
-
-<ng-template #actionsTpl>
-  <div class="w-48">
-    <button (click)="ref.close()">Action one</button>
-    <button (click)="ref.close()">Action two</button>
-  </div>
-</ng-template>
-```
-
-```ts {example="cdk-popover-trigger" title="Component"}
-@Component({
-  imports: [PopoverTrigger],
-  template: '...',
-})
-export class MyComponent {}
-```
-
-| Input | Type | Description |
-|---|---|---|
-| `content` | `TemplateRef<unknown>` | Required. Template rendered inside the overlay |
-| `open` | `boolean` | Two-way model for open state |
-| `placement` | `Placement` | Floating-UI placement, e.g. `'bottom-start'` |
-| `offset` | `number` | Gap in px between trigger and overlay |
-
-Methods via `exportAs: 'PopoverTrigger'`: `open()`, `close()`, `toggle()`.
-
----
-
-**`[fiboDialogTrigger]`** — global-position overlay with backdrop, scroll lock, and focus trap. Opens on click or Enter.
-
-```html
-<button fiboDialogTrigger [content]="dialogTpl">Open Dialog</button>
-
-<ng-template #dialogTpl>
-  <div class="p-6 w-96">
-    <h2 class="text-lg font-semibold mb-2">Dialog Title</h2>
-  </div>
-</ng-template>
-```
-
-| Input | Type | Description |
-|---|---|---|
-| `content` | `TemplateRef<unknown>` | Required. Dialog body template |
-| `open` | `boolean` | Two-way model for open state |
-
-Methods via `exportAs: 'DialogTrigger'`: `open()`, `close()`.
-
----
-
-**`[fiboDrawerTrigger]`** — global-position overlay with backdrop and scroll lock via `DRAWER_SHELL_TOKEN`. Requires the drawer shell registered in `provideOverlays()`.
-
-```html
-<button fiboDrawerTrigger [content]="drawerTpl">Open Drawer</button>
-
-<ng-template #drawerTpl let-close>
-  <div class="flex h-full flex-col p-6">
-    <div class="mt-auto">
-      <button class="btn" (click)="close()">Close</button>
-    </div>
-  </div>
-</ng-template>
-```
-
-| Input | Type | Description |
-|---|---|---|
-| `content` | `TemplateRef<unknown>` | Required. Drawer body template |
-| `open` | `boolean` | Two-way model for open state |
-
-Methods via `exportAs: 'DrawerTrigger'`: `open()`, `close()`.
-
 ## createOverlay
-
-`createOverlay` signature:
 
 ```ts
 createOverlay(
@@ -148,6 +57,12 @@ createOverlay(
   setup?: (session: OverlaySession) => void,
 ): Signal<OverlayHandle | null>
 ```
+
+- `isOpen` — source of truth; the overlay opens/closes reactively with this signal
+- `behavior` — which shell to render into and which close triggers to attach
+- `position` — reactive; use `connectedPosition()` or `signal(globalPosition())`
+- `content` — `null` defers opening until a template is available
+- `setup(session)` — optional, called once per open cycle for lifecycle hooks
 
 **Behavior config** — `OverlayBehaviorConfig`:
 
@@ -163,17 +78,6 @@ interface OverlayBehaviorConfig {
   tag?: string;           // e.g. 'menu' — used by closeAllByTag
 }
 ```
-
-**Behavior presets** from `@fibo-ui/components`:
-
-| Function | Shell | Close triggers |
-|---|---|---|
-| `dialogBehavior()` | `MODAL_SHELL_TOKEN` | backdrop, blockScroll, outsideClick, escape |
-| `drawerBehavior()` | `DRAWER_SHELL_TOKEN` | backdrop, blockScroll, outsideClick, escape |
-| `connectedBehavior()` | `CONNECTED_SHELL_TOKEN` | outsideClick, focusLeave, escape |
-| `menuBehavior()` | `CONNECTED_SHELL_TOKEN` | same + `tag: 'menu'` |
-| `tooltipBehavior()` | `TOOLTIP_SHELL_TOKEN` | scroll, no escape |
-| `notificationBehavior()` | `NOTIFICATION_SHELL_TOKEN` | no escape |
 
 **Position** — `connectedPosition(factory)` wraps the factory in `computed()`:
 
@@ -287,3 +191,114 @@ Exposes: `templateRef`, `isOpen`, `handle`.
 **Lifecycle**: `isOpen → true` → overlay opens (when content is non-null) → `setup(session)` → `afterOpened` → close requested → `beforeClose` → `isOpen → false` → `afterClose`.
 
 **Close reasons**: `'programmatic'` | `'escape'` | `'focusout'` | `'outside-click'` | `'blur'` | `'state'` | `'destroy'`.
+
+## Behavior Presets
+
+`@fibo-ui/components` provides preset factories that fill in sensible defaults for `OverlayBehaviorConfig`:
+
+| Function | Shell | Close triggers |
+|---|---|---|
+| `dialogBehavior()` | `MODAL_SHELL_TOKEN` | backdrop, blockScroll, outsideClick, escape |
+| `drawerBehavior()` | `DRAWER_SHELL_TOKEN` | backdrop, blockScroll, outsideClick, escape |
+| `connectedBehavior()` | `CONNECTED_SHELL_TOKEN` | outsideClick, focusLeave, escape |
+| `menuBehavior()` | `CONNECTED_SHELL_TOKEN` | same + `tag: 'menu'` |
+| `tooltipBehavior()` | `TOOLTIP_SHELL_TOKEN` | scroll, no escape |
+| `notificationBehavior()` | `NOTIFICATION_SHELL_TOKEN` | no escape |
+
+## Triggers
+
+Ready-made directives that compose `createOverlay` with the right behavior, position, and focus management. Import from `@fibo-ui/cdk`.
+
+:::example cdk-popover-trigger
+
+**`[fiboPopoverTrigger]`** — connected overlay anchored to the trigger. Closes on outside click, focus leave, and Escape. Toggle semantics.
+
+```html {example="cdk-popover-trigger" title="Template"}
+<button type="button" class="btn btn-primary" fiboPopoverTrigger [content]="popoverTpl">
+  Open Popover
+</button>
+
+<!-- exportAs gives access to open() / close() / toggle() from inside the template -->
+<button
+  #ref="PopoverTrigger"
+  type="button"
+  class="btn btn-secondary"
+  fiboPopoverTrigger
+  placement="bottom-start"
+  [content]="actionsTpl"
+>
+  With actions
+</button>
+
+<ng-template #popoverTpl>
+  <div class="w-64 p-3"> ... </div>
+</ng-template>
+
+<ng-template #actionsTpl>
+  <div class="w-48">
+    <button (click)="ref.close()">Action one</button>
+    <button (click)="ref.close()">Action two</button>
+  </div>
+</ng-template>
+```
+
+```ts {example="cdk-popover-trigger" title="Component"}
+@Component({
+  imports: [PopoverTrigger],
+  template: '...',
+})
+export class MyComponent {}
+```
+
+| Input | Type | Description |
+|---|---|---|
+| `content` | `TemplateRef<unknown>` | Required. Template rendered inside the overlay |
+| `open` | `boolean` | Two-way model for open state |
+| `placement` | `Placement` | Floating-UI placement, e.g. `'bottom-start'` |
+| `offset` | `number` | Gap in px between trigger and overlay |
+
+Methods via `exportAs: 'PopoverTrigger'`: `open()`, `close()`, `toggle()`.
+
+---
+
+**`[fiboDialogTrigger]`** — global-position overlay with backdrop, scroll lock, and focus trap. Opens on click or Enter.
+
+```html
+<button fiboDialogTrigger [content]="dialogTpl">Open Dialog</button>
+
+<ng-template #dialogTpl>
+  <div class="p-6 w-96">
+    <h2 class="text-lg font-semibold mb-2">Dialog Title</h2>
+  </div>
+</ng-template>
+```
+
+| Input | Type | Description |
+|---|---|---|
+| `content` | `TemplateRef<unknown>` | Required. Dialog body template |
+| `open` | `boolean` | Two-way model for open state |
+
+Methods via `exportAs: 'DialogTrigger'`: `open()`, `close()`.
+
+---
+
+**`[fiboDrawerTrigger]`** — global-position overlay with backdrop and scroll lock via `DRAWER_SHELL_TOKEN`. Requires the drawer shell registered in `provideOverlays()`.
+
+```html
+<button fiboDrawerTrigger [content]="drawerTpl">Open Drawer</button>
+
+<ng-template #drawerTpl let-close>
+  <div class="flex h-full flex-col p-6">
+    <div class="mt-auto">
+      <button class="btn" (click)="close()">Close</button>
+    </div>
+  </div>
+</ng-template>
+```
+
+| Input | Type | Description |
+|---|---|---|
+| `content` | `TemplateRef<unknown>` | Required. Drawer body template |
+| `open` | `boolean` | Two-way model for open state |
+
+Methods via `exportAs: 'DrawerTrigger'`: `open()`, `close()`.

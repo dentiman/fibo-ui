@@ -6,8 +6,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { createOverlay, connectedPosition, restoreTriggerFocusOnClose } from '@fibo-ui/cdk';
-import { connectedBehavior } from '@fibo-ui/components';
+import { createOverlay, connectedPosition, restoreTriggerFocusOnClose, CONNECTED_SHELL_TOKEN } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'cdk-overlays-basic-example',
@@ -33,7 +32,7 @@ export class CdkOverlaysBasicExample {
 
   readonly handle = createOverlay(
     this.isOpen,
-    connectedBehavior(),
+    { shell: CONNECTED_SHELL_TOKEN, closeOnOutsideClick: true, closeOnFocusLeave: true, closeOnEscape: true },
     connectedPosition(() => ({ referenceElement: this.btn().nativeElement })),
     this.tpl,
     session => { restoreTriggerFocusOnClose(session, () => this.btn().nativeElement); },
