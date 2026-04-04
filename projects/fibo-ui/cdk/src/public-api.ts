@@ -44,8 +44,7 @@ export * from './lib/date/select-date';
 export * from './lib/date/select-date-range';
 
 // Overlay Components and Services
-export * from './lib/dialog/dialog-trigger';
-export * from './lib/dialog/drawer-trigger';
+export * from './lib/overlay/overlay-triggers';
 export { OVERLAY_HANDLE, type OverlayHandle } from './lib/overlay/overlay-handle';
 export * from './lib/overlay/overlay-config';
 export * from './lib/overlay/overlay-shell-tokens';

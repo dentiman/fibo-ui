@@ -13,69 +13,32 @@ import { connectedBehavior } from '@fibo-ui/components';
   selector: 'cdk-overlays-basic-example',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="mx-auto w-full max-w-xl p-6">
-      <div class="flex items-center gap-3">
-        <button #triggerButton type="button" class="btn btn-primary" (click)="toggle()">
-          Toggle overlay
-        </button>
-        <span class="text-sm text-foreground-secondary">
-          Open: {{ isOpen() ? 'yes' : 'no' }}
-        </span>
-      </div>
+    <div class="p-6">
+      <button #btn type="button" class="btn btn-primary" (click)="toggle()">Open</button>
 
-      <p class="mt-3 text-sm text-foreground-secondary">
-        This overlay is created directly from component state through
-        <code>createOverlay(...)</code>.
-      </p>
-
-      <ng-template #overlayTpl>
-        <div class="w-64 rounded-xl bg-background p-4 shadow-lg outline-1 -outline-offset-1 outline-black/13 dark:outline-white/5">
-          <div class="text-sm font-medium">Overlay lifecycle</div>
-          <p class="mt-2 text-sm text-foreground-secondary">
-            Close it with outside click, focus leave, or the explicit action below.
-          </p>
-
-          <div class="mt-4 flex items-center gap-2">
-            <button type="button" class="btn btn-sm" (click)="increment()">
-              Action
-            </button>
-            <button type="button" class="btn btn-sm btn-inverse" (click)="close()">
-              Close
-            </button>
-          </div>
-
-          <div class="mt-3 text-xs text-foreground-secondary">
-            Action count: {{ actionCount() }}
-          </div>
+      <ng-template #tpl>
+        <div class="flex items-center justify-between gap-6 p-3">
+          <span class="text-sm">Popover content</span>
+          <button type="button" class="btn btn-sm" (click)="close()">Close</button>
         </div>
       </ng-template>
-    </section>
+    </div>
   `,
 })
 export class CdkOverlaysBasicExample {
-  private readonly triggerButton = viewChild.required<ElementRef<HTMLElement>>('triggerButton');
-  private readonly overlayTpl = viewChild.required<TemplateRef<unknown>>('overlayTpl');
+  private readonly btn = viewChild.required<ElementRef<HTMLElement>>('btn');
+  private readonly tpl = viewChild.required<TemplateRef<unknown>>('tpl');
 
   readonly isOpen = signal(false);
-  readonly actionCount = signal(0);
 
-  readonly overlayHandle = createOverlay(
+  readonly handle = createOverlay(
     this.isOpen,
     connectedBehavior(),
-    connectedPosition(() => ({ referenceElement: this.triggerButton().nativeElement })),
-    this.overlayTpl,
-    session => { restoreTriggerFocusOnClose(session, () => this.triggerButton().nativeElement); },
+    connectedPosition(() => ({ referenceElement: this.btn().nativeElement })),
+    this.tpl,
+    session => { restoreTriggerFocusOnClose(session, () => this.btn().nativeElement); },
   );
 
-  toggle() {
-    this.isOpen.update(value => !value);
-  }
-
-  close() {
-    this.isOpen.set(false);
-  }
-
-  increment() {
-    this.actionCount.update(v => v + 1);
-  }
+  toggle() { this.isOpen.update(v => !v); }
+  close() { this.isOpen.set(false); }
 }
