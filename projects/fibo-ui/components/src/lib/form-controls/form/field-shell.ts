@@ -6,6 +6,7 @@ import {
   inject,
   input,
   output,
+  viewChild,
 } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { FieldActionDirective } from './field-action';
@@ -24,6 +25,7 @@ let nextFieldShellId = 0;
   },
   template: `
     <div
+      #controlContainer
       class="form-field-control"
       (click)="onContainerClick($event)"
       [attr.aria-disabled]="disabled() || null"
@@ -83,6 +85,7 @@ export class FieldShell {
   readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly formUiState = inject(FormUiState, { optional: true });
   private readonly fieldTarget = contentChild(FieldTargetDirective, { descendants: true });
+  private readonly controlContainer = viewChild.required<ElementRef<HTMLElement>>('controlContainer');
   private readonly overlayAnchor = contentChild(FieldOverlayAnchorDirective, { descendants: true });
   private readonly generatedBaseId = `field-${nextFieldShellId++}`;
 
@@ -115,7 +118,7 @@ export class FieldShell {
   }
 
   overlayReferenceElement(): HTMLElement {
-    return this.overlayAnchor()?.element() ?? this.elementRef.nativeElement;
+    return this.overlayAnchor()?.element() ?? this.controlContainer().nativeElement;
   }
 
   overlayInteractionRoot(): HTMLElement {
