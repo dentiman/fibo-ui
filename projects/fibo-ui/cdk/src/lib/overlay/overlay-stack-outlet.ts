@@ -21,11 +21,11 @@ import type { OverlayHandle } from './overlay-handle';
   template: `
     @for (overlay of overlayStack.openOverlayList(); track overlay.id) {
       @if (needsBackdrop(overlay) && backdropShell) {
-        <ng-container [ngComponentOutlet]="backdropShell" [ngComponentOutletInputs]="{ handle: overlay }" />
+        <ng-container [ngComponentOutlet]="backdropShell" [ngComponentOutletInputs]="{ overlay: overlay }" />
       }
       <ng-container
         [ngComponentOutlet]="resolveShell(overlay)"
-        [ngComponentOutletInputs]="{ handle: overlay }"
+        [ngComponentOutletInputs]="{ overlay: overlay }"
       />
     }
   `,
@@ -62,17 +62,17 @@ export class OverlayStackOutlet {
 
       const overlays = this.overlayStack.openOverlayList();
       for (let i = overlays.length - 1; i >= 0; i--) {
-        const handle = overlays[i];
+        const overlay = overlays[i];
 
         // Click is inside this overlay's content or its reference element — stop
-        if (this.isInsideOverlay(handle, target)) break;
+        if (this.isInsideOverlay(overlay, target)) break;
 
-        if (handle.behavior.closeOnOutsideClick) {
-          handle.close('outside-click');
+        if (overlay.behavior.closeOnOutsideClick) {
+          overlay.close('outside-click');
         }
 
         // Click was on this overlay's own backdrop — stop propagating to parents
-        if (this.isOnOwnBackdrop(handle, target)) break;
+        if (this.isOnOwnBackdrop(overlay, target)) break;
       }
     };
 

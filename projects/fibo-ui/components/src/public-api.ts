@@ -23,7 +23,6 @@ export * from './lib/overlay/confirmation/confirmation-trigger';
 export * from './lib/overlay/notification/notification-overlay-container';
 export * from './lib/overlay/notification/notifier';
 
-export * from './lib/overlay/shell/overlay-content.component';
 export * from './lib/overlay/shell/overlay-backdrop-shell.component';
 export * from './lib/overlay/shell/overlay-modal-shell.component';
 export * from './lib/overlay/shell/overlay-drawer-shell.component';

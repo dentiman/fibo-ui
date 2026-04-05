@@ -15,10 +15,10 @@ import { createOverlay, connectedPosition, restoreTriggerFocusOnClose, CONNECTED
     <div class="p-6">
       <button #btn type="button" class="btn btn-primary" (click)="toggle()">Open</button>
 
-      <ng-template #tpl>
+      <ng-template #tpl let-overlay>
         <div class="flex items-center justify-between gap-6 p-3">
           <span class="text-sm">Popover content</span>
-          <button type="button" class="btn btn-sm" (click)="close()">Close</button>
+          <button type="button" class="btn btn-sm" (click)="overlay.close()">Close</button>
         </div>
       </ng-template>
     </div>
@@ -39,5 +39,4 @@ export class CdkOverlaysBasicExample {
   );
 
   toggle() { this.isOpen.update(v => !v); }
-  close() { this.isOpen.set(false); }
 }

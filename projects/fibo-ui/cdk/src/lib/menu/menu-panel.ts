@@ -4,7 +4,7 @@ import { DataList } from '../data-list/data-list';
 import { DataListItem } from '../data-list/data-list-item.directive';
 import { KeyboardSource } from '../data-list/keyboard-source';
 import { SubmenuTrigger } from './submenu-trigger';
-import { OVERLAY_HANDLE } from '../overlay/overlay-handle';
+import { type OverlayHandle } from '../overlay/overlay-handle';
 import { OverlayStack } from '../overlay/overlay-stack';
 
 /**
@@ -39,7 +39,6 @@ export const MENU_PANEL = new InjectionToken<MenuPanel>('MenuPanel');
 export class MenuPanel {
   dataList = inject(DataList);
   private overlayStack = inject(OverlayStack);
-  private overlayHandle = inject(OVERLAY_HANDLE, { optional: true });
   private destroyRef = inject(DestroyRef);
   private openTimeout: ReturnType<typeof setTimeout> | undefined;
   private closeTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -50,6 +49,7 @@ export class MenuPanel {
   /** Delay in milliseconds before opening submenu on hover (default 300ms) */
   openDelay = input(300);
   keyboardSource = input<KeyboardSource | null>(null);
+  overlay = input<OverlayHandle | null>(null);
 
   registerSubmenuTrigger(trigger: SubmenuTrigger) {
     const currentTriggers = this.submenuTriggers();
@@ -88,8 +88,9 @@ export class MenuPanel {
   }
 
   focusToTrigger(event: Event) {
-    if (!this.overlayHandle) return;
-    const pos = this.overlayHandle.position();
+    const overlay = this.overlay();
+    if (!overlay) return;
+    const pos = overlay.position();
     const referenceElement = pos.type === 'connected' ? pos.referenceElement : null;
     // Only handle ArrowLeft for submenus (reference element is inside another overlay container).
     if (!referenceElement?.closest('[data-overlay-container-id]')) return;
@@ -108,7 +109,8 @@ export class MenuPanel {
       if (!targetOverlayId) return true;
 
       // Don't reset when mouse moves into a child overlay of this panel's own overlay
-      if (this.overlayHandle && this.overlayStack.isOverlayInBranch(this.overlayHandle.id, targetOverlayId)) {
+      const overlay = this.overlay();
+      if (overlay && this.overlayStack.isOverlayInBranch(overlay.id, targetOverlayId)) {
         return false;
       }
 
@@ -121,17 +123,27 @@ export class MenuPanel {
 
     effect((onCleanup) => {
       const keyboardSource = this.keyboardSource();
-      if (!keyboardSource) {
+
+      if (keyboardSource) {
+        keyboardSource.delegate.set(this.dataList);
+        onCleanup(() => {
+          if (keyboardSource.delegate() === this.dataList) {
+            keyboardSource.delegate.set(null);
+          }
+        });
         return;
       }
 
-      keyboardSource.delegate.set(this.dataList);
+      // Fallback: auto-wire keydown from referenceElement when no keyboardSource is provided.
+      // This allows PopoverTrigger (and similar) to drive menu keyboard navigation
+      // without requiring explicit fiboKeyboardSource boilerplate.
+      const pos = this.overlay()?.position();
+      const refEl = pos?.type === 'connected' ? pos.referenceElement : null;
+      if (!refEl) return;
 
-      onCleanup(() => {
-        if (keyboardSource.delegate() === this.dataList) {
-          keyboardSource.delegate.set(null);
-        }
-      });
+      const handler = (e: KeyboardEvent) => this.dataList.onKeydown(e);
+      refEl.addEventListener('keydown', handler);
+      onCleanup(() => refEl.removeEventListener('keydown', handler));
     });
 
     // Open/close submenu with symmetric delay when active option changes

@@ -11,7 +11,7 @@ let nextOverlayId = 1;
  *
  * Called by `OverlayStack.openOverlay()` once per open cycle.
  * The `requestClose` callback is wired to the cycle's close logic
- * (guards, beforeClose, teardown) so consumers just call `handle.close()`.
+ * (guards, beforeClose, teardown) so consumers just call `overlay.close()`.
  */
 export function createOverlayHandle(
   behavior: OverlayBehaviorConfig,

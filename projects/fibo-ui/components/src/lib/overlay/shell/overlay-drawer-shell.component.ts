@@ -1,15 +1,14 @@
 import { Component, ViewEncapsulation, input } from '@angular/core';
-import { type OverlayHandle, OverlayContainer, OverlayPanel } from '@fibo-ui/cdk';
-import { OverlayContent } from './overlay-content.component';
+import { type OverlayHandle, type OverlayShell, OverlayContainer, OverlayContent, OverlayPanel } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-overlay-drawer-shell',
   imports: [OverlayContent],
   hostDirectives: [
-    { directive: OverlayContainer, inputs: ['handle'] },
+    { directive: OverlayContainer, inputs: ['overlay'] },
     OverlayPanel,
   ],
-  template: `<fibo-overlay-content [handle]="handle()" />`,
+  template: `<fibo-overlay-content [overlay]="overlay()" />`,
   host: {
     'class':
       'fixed inset-y-0 right-0 pointer-events-auto w-full max-w-md overflow-y-auto bg-background shadow-xl focus:outline-none dark:outline dark:-outline-offset-1 dark:outline-white/8',
@@ -37,6 +36,6 @@ import { OverlayContent } from './overlay-content.component';
   `,
   encapsulation: ViewEncapsulation.None,
 })
-export class OverlayDrawerShellComponent {
-  readonly handle = input.required<OverlayHandle>();
+export class OverlayDrawerShellComponent implements OverlayShell {
+  readonly overlay = input.required<OverlayHandle>();
 }

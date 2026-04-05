@@ -1,5 +1,5 @@
 import { InjectionToken, WritableSignal } from '@angular/core';
-import type { Signal, TemplateRef } from '@angular/core';
+import type { InputSignal, Signal, TemplateRef } from '@angular/core';
 import type { OverlayCloseReason } from './overlay-types';
 import type { OverlayBehaviorConfig, OverlayPositionConfig } from './overlay-config';
 
@@ -29,3 +29,21 @@ export interface OverlayHandle {
 
 /** DI token to inject the current overlay's handle from within shell content. */
 export const OVERLAY_HANDLE = new InjectionToken<OverlayHandle>('OVERLAY_HANDLE');
+
+/**
+ * Contract that every overlay shell component must satisfy.
+ *
+ * `OverlayStackOutlet` renders shell components dynamically via `NgComponentOutlet`
+ * and passes a single input `overlay` of type `OverlayHandle`.
+ * Any custom shell component registered via shell tokens must implement this interface.
+ *
+ * @example
+ * ```ts
+ * export class MyCustomShellComponent implements OverlayShell {
+ *   readonly overlay = input.required<OverlayHandle>();
+ * }
+ * ```
+ */
+export interface OverlayShell {
+  readonly overlay: InputSignal<OverlayHandle>;
+}

@@ -1,15 +1,14 @@
 import { Component, ViewEncapsulation, input } from '@angular/core';
-import { type OverlayHandle, OverlayContainer, OverlayPanel } from '@fibo-ui/cdk';
-import { OverlayContent } from './overlay-content.component';
+import { type OverlayHandle, type OverlayShell, OverlayContainer, OverlayContent, OverlayPanel } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-overlay-modal-shell',
   imports: [OverlayContent],
   hostDirectives: [
-    { directive: OverlayContainer, inputs: ['handle'] },
+    { directive: OverlayContainer, inputs: ['overlay'] },
     OverlayPanel,
   ],
-  template: `<fibo-overlay-content [handle]="handle()" />`,
+  template: `<fibo-overlay-content [overlay]="overlay()" />`,
   host: {
     'class':
       'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto w-[calc(100%-2rem)] overflow-hidden rounded-lg bg-background px-4 pt-5 pb-4 text-left shadow-xl sm:max-w-lg sm:p-6 dark:outline dark:-outline-offset-1 dark:outline-white/8',
@@ -37,6 +36,6 @@ import { OverlayContent } from './overlay-content.component';
   `,
   encapsulation: ViewEncapsulation.None,
 })
-export class OverlayModalShellComponent {
-  readonly handle = input.required<OverlayHandle>();
+export class OverlayModalShellComponent implements OverlayShell {
+  readonly overlay = input.required<OverlayHandle>();
 }

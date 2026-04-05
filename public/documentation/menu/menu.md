@@ -18,8 +18,8 @@ Attach `fiboPopoverTrigger` to any button and pass the menu template via `[conte
   Menu
 </button>
 
-<ng-template #menuTpl>
-  <fibo-menu>
+<ng-template #menuTpl let-overlay>
+  <fibo-menu [overlay]="overlay">
     <button type="button" fiboMenuItem>My Profile</button>
     <button type="button" fiboMenuItem>Settings</button>
     <button type="button" fiboMenuItem>Log Out</button>
@@ -53,8 +53,8 @@ Nest items arbitrarily deep using `children`. Each level opens as a connected su
   User Profile
 </button>
 
-<ng-template #menuTpl>
-  <fibo-menu [items]="menuItems"></fibo-menu>
+<ng-template #menuTpl let-overlay>
+  <fibo-menu [overlay]="overlay" [items]="menuItems"></fibo-menu>
 </ng-template>
 ```
 
@@ -165,6 +165,7 @@ toggle() {
 
 | Input | Type | Description |
 |---|---|---|
+| `overlay` | `OverlayHandle \| null` | The overlay handle passed via `let-overlay` from the template context. Required for ArrowLeft focus-return and submenu branch tracking |
 | `items` | `MenuItemType[]` | List of menu items to render |
 | `menuContent` | `TemplateRef<unknown>` | Optional custom content appended after items |
 | `keyboardSource` | `KeyboardSource` | Connects an external keyboard source for arrow-key navigation |

@@ -18,10 +18,10 @@ The overlay system handles:
 ```html {example="cdk-overlays-basic"}
 <button #btn type="button" class="btn btn-primary" (click)="toggle()">Open</button>
 
-<ng-template #tpl>
+<ng-template #tpl let-overlay>
   <div class="flex items-center justify-between gap-6 p-3">
     <span class="text-sm">Popover content</span>
-    <button type="button" class="btn btn-sm" (click)="close()">Close</button>
+    <button type="button" class="btn btn-sm" (click)="overlay.close()">Close</button>
   </div>
 </ng-template>
 ```
@@ -42,7 +42,6 @@ export class CdkOverlaysBasicExample {
   );
 
   toggle() { this.isOpen.update(v => !v); }
-  close() { this.isOpen.set(false); }
 }
 ```
 
@@ -92,11 +91,11 @@ connectedPosition(() => ({
 
 For centered modals and drawers: `signal(globalPosition())`.
 
-**Template context** — templates receive `close` as `$implicit`:
+**Template context** — templates receive the `OverlayHandle` as `$implicit`:
 
 ```html
-<ng-template #tpl let-close>
-  <button (click)="close()">Close</button>
+<ng-template #tpl let-overlay>
+  <button (click)="overlay.close()">Close</button>
 </ng-template>
 ```
 
@@ -287,10 +286,10 @@ Methods via `exportAs: 'DialogTrigger'`: `open()`, `close()`.
 ```html
 <button fiboDrawerTrigger [content]="drawerTpl">Open Drawer</button>
 
-<ng-template #drawerTpl let-close>
+<ng-template #drawerTpl let-overlay>
   <div class="flex h-full flex-col p-6">
     <div class="mt-auto">
-      <button class="btn" (click)="close()">Close</button>
+      <button class="btn" (click)="overlay.close()">Close</button>
     </div>
   </div>
 </ng-template>

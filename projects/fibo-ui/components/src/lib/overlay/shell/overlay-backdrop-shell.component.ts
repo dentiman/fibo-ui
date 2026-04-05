@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, input } from '@angular/core';
-import type { OverlayHandle } from '@fibo-ui/cdk';
+import type { OverlayHandle, OverlayShell } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'fibo-overlay-backdrop-shell',
@@ -9,7 +9,7 @@ import type { OverlayHandle } from '@fibo-ui/cdk';
   host: {
     'class': 'fixed inset-0 pointer-events-auto bg-black/30 dark:bg-black/50',
     'style': 'z-index: 1000',
-    '[attr.data-overlay-backdrop-id]': 'handle().id',
+    '[attr.data-overlay-backdrop-id]': 'overlay().id',
     'animate.enter': 'overlay-backdrop-enter',
     'animate.leave': 'overlay-backdrop-leave',
   },
@@ -33,6 +33,6 @@ import type { OverlayHandle } from '@fibo-ui/cdk';
     }
   `,
 })
-export class OverlayBackdropShellComponent {
-  readonly handle = input.required<OverlayHandle>();
+export class OverlayBackdropShellComponent implements OverlayShell {
+  readonly overlay = input.required<OverlayHandle>();
 }

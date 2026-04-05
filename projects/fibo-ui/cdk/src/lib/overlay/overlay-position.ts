@@ -33,7 +33,7 @@ import type { ConnectedPosition, CoordinatePosition } from './overlay-config';
   },
 })
 export class OverlayPosition {
-  readonly handle = input.required<OverlayHandle>();
+  readonly overlay = input.required<OverlayHandle>();
   private readonly elementRef = inject(ElementRef);
   private readonly positionSignal = signal<ComputePositionReturn | null>(null);
   private readonly arrowElement = signal<HTMLElement | null>(null);
@@ -41,7 +41,7 @@ export class OverlayPosition {
   readonly position = this.positionSignal.asReadonly();
 
   private readonly positionConfig = computed(() => {
-    const pos = this.handle().position();
+    const pos = this.overlay().position();
     return pos.type === 'connected' || pos.type === 'coordinate'
       ? (pos as ConnectedPosition | CoordinatePosition)
       : null;
@@ -107,7 +107,7 @@ export class OverlayPosition {
       const reference = this.referenceElement();
       if (!reference) return;
 
-      const handle = this.handle();
+      const overlay = this.overlay();
       const floatingElement = this.elementRef.nativeElement as HTMLElement;
       const currentPlacement = this.placement();
       const middleware = this.middleware();
@@ -115,7 +115,7 @@ export class OverlayPosition {
       const updatePosition = () => {
         // Close overlay if reference element was removed from DOM.
         if (reference instanceof HTMLElement && !reference.isConnected) {
-          handle.close('state');
+          overlay.close('state');
           return;
         }
 

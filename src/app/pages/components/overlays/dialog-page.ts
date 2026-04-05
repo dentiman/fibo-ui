@@ -13,7 +13,7 @@ import { FormField, form } from '@angular/forms/signals';
       <button class="btn" fiboDialogTrigger [content]="dialogTpl">
         Open Dialog
       </button>
-      <ng-template #dialogTpl let-close>
+      <ng-template #dialogTpl let-overlay>
         <div class="p-6 w-96">
           <h2 class="text-lg font-semibold mb-4">Dialog with Select</h2>
           <fibo-select
@@ -24,7 +24,7 @@ import { FormField, form } from '@angular/forms/signals';
             [items]="countries"
           />
           <div class="mt-4 flex justify-end">
-            <button class="btn" (click)="close()">Close</button>
+            <button class="btn" (click)="overlay.close()">Close</button>
           </div>
         </div>
       </ng-template>
@@ -33,11 +33,11 @@ import { FormField, form } from '@angular/forms/signals';
       <button class="btn" fiboDialogTrigger [content]="formDialogTpl">
         Dialog with Form
       </button>
-      <ng-template #formDialogTpl let-close>
+      <ng-template #formDialogTpl let-overlay>
         <div class="overflow-hidden overflow-y-auto">
-          <form-example />
+          <form-example/>
           <div class="p-4 pt-0 flex justify-end">
-            <button class="btn" (click)="close()">Close</button>
+            <button class="btn" (click)="overlay.close()">Close</button>
           </div>
         </div>
       </ng-template>
@@ -46,7 +46,7 @@ import { FormField, form } from '@angular/forms/signals';
       <button class="btn" fiboDialogTrigger [content]="nestedTpl">
         Nested Dialogs
       </button>
-      <ng-template #nestedTpl let-close>
+      <ng-template #nestedTpl let-overlay>
         <div class="p-6">
           <h2 class="text-lg font-semibold mb-4">First Dialog</h2>
           <p class="mb-4">Click below to open a second dialog on top.</p>
@@ -54,17 +54,17 @@ import { FormField, form } from '@angular/forms/signals';
           <button class="btn" fiboDialogTrigger [content]="nestedTpl2">
             Open Second Dialog
           </button>
-          <ng-template #nestedTpl2 let-close>
+          <ng-template #nestedTpl2 let-overlay>
             <div class="p-6">
               <h2 class="text-lg font-semibold mb-4">Second Dialog</h2>
               <p class="mb-4">This is stacked on top of the first dialog.</p>
               <div class="mt-4 flex justify-end">
-                <button class="btn" (click)="close()">Close</button>
+                <button class="btn" (click)="overlay.close()">Close</button>
               </div>
             </div>
           </ng-template>
           <div class="mt-4 flex justify-end">
-            <button class="btn" (click)="close()">Close</button>
+            <button class="btn" (click)="overlay.close()">Close</button>
           </div>
         </div>
       </ng-template>

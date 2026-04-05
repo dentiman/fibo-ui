@@ -20,31 +20,31 @@ import { OverlayStack } from './overlay-stack';
   providers: [
     {
       provide: OVERLAY_HANDLE,
-      useFactory: () => inject(OverlayContainer).handle(),
+      useFactory: () => inject(OverlayContainer).overlay(),
     },
   ],
   host: {
     'style': 'z-index: 1000',
-    '[attr.data-overlay-container-id]': 'handle().id',
+    '[attr.data-overlay-container-id]': 'overlay().id',
   },
 })
 export class OverlayContainer implements OnInit {
-  readonly handle = input.required<OverlayHandle>();
+  readonly overlay = input.required<OverlayHandle>();
   readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly overlayStack = inject(OverlayStack);
   private readonly destroyRef = inject(DestroyRef);
 
   constructor() {
     this.destroyRef.onDestroy(() =>
-      this.overlayStack.completeAfterClose(this.handle().id),
+      this.overlayStack.completeAfterClose(this.overlay().id),
     );
   }
 
   ngOnInit(): void {
-    const handle = this.handle();
-    const behavior = handle.behavior;
+    const overlay = this.overlay();
+    const behavior = overlay.behavior;
 
-    handle.hostElement.set(this.elementRef.nativeElement);
+    overlay.hostElement.set(this.elementRef.nativeElement);
 
     if (behavior.blockScroll) {
       blockScroll(this.destroyRef);
@@ -64,16 +64,16 @@ export class OverlayContainer implements OnInit {
   }
 
   private attachCloseOnFocusLeave(): void {
-    const handle = this.handle();
+    const overlay = this.overlay();
     const handler = (event: FocusEvent) => {
       const target = event.target as Node | null;
       if (!target) return;
-      const pos = handle.position();
+      const pos = overlay.position();
       if (pos.type === 'connected' && pos.referenceElement?.contains(target)) return;
       if (this.elementRef.nativeElement.contains(target)) return;
       const targetOverlayId = this.overlayStack.findOverlayContainerId(target);
-      if (targetOverlayId && this.overlayStack.isOverlayInBranch(handle.id, targetOverlayId)) return;
-      handle.close('focusout');
+      if (targetOverlayId && this.overlayStack.isOverlayInBranch(overlay.id, targetOverlayId)) return;
+      overlay.close('focusout');
     };
 
     document.addEventListener('focusin', handler, true);
@@ -81,14 +81,14 @@ export class OverlayContainer implements OnInit {
   }
 
   private attachCloseOnEscape(): void {
-    const handle = this.handle();
+    const overlay = this.overlay();
 
     const handler = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
       const list = this.overlayStack.openOverlayList();
       const topmost = [...list].reverse().find(o => o.behavior.closeOnEscape !== false);
-      if (topmost?.id !== handle.id) return;
-      handle.close('escape');
+      if (topmost?.id !== overlay.id) return;
+      overlay.close('escape');
     };
 
     document.addEventListener('keydown', handler, true);
@@ -96,12 +96,12 @@ export class OverlayContainer implements OnInit {
   }
 
   private attachCloseOnScroll(): void {
-    const handle = this.handle();
+    const overlay = this.overlay();
 
     const handler = (event: Event) => {
       const target = event.target;
-      if (target instanceof Element && isElementInsideOverlayContainer(target, handle.id)) return;
-      handle.close('blur');
+      if (target instanceof Element && isElementInsideOverlayContainer(target, overlay.id)) return;
+      overlay.close('blur');
     };
 
     document.addEventListener('scroll', handler, true);

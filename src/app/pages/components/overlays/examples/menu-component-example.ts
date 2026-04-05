@@ -18,8 +18,8 @@ import { Menu, MenuItem } from '@fibo-ui/components';
       </button>
     </div>
 
-    <ng-template #menuTpl>
-      <fibo-menu>
+    <ng-template #menuTpl let-overlay>
+      <fibo-menu [overlay]="overlay">
         <button type="button" fiboMenuItem>My Profile</button>
         <button type="button" fiboMenuItem>Settings</button>
         <button type="button" fiboMenuItem>Log Out</button>

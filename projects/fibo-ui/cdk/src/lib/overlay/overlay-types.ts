@@ -6,7 +6,7 @@ export interface OverlayCloseContext {
 /**
  * Why an overlay was closed.
  *
- * - `programmatic` — `handle.close()` called without a specific reason
+ * - `programmatic` — `overlay.close()` called without a specific reason
  * - `escape` — user pressed Escape
  * - `focusout` — focus moved outside the overlay (closeOnFocusLeave)
  * - `outside-click` — click outside the overlay content

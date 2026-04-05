@@ -10,7 +10,7 @@ import { MenuItemType } from '../menu-item.type';
   hostDirectives: [
     {
       directive: MenuPanel,
-      inputs: ['keyboardSource'],
+      inputs: ['keyboardSource', 'overlay'],
     },
   ],
   host: {

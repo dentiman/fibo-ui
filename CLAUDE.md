@@ -48,7 +48,8 @@ Two separate documentation directories with different purposes:
 | `angular`    | Angular (angular/angular) | Исходники Angular core, CDK, forms, compiler-cli |
 | `components` | Angular Components (angular/components) | Angular Material + CDK |
 | `spartan`    | Spartan (spartan-ng/spartan) | Headless UI для Angular, сигналы, SSR, zoneless |
-| `taiga-ui`   | Taiga UI (taiga-family/taiga-ui) | Полноценная UI-система, ng-polymorpheus |
+| `taiga-ui`   | Taiga UI v4 (taiga-family/taiga-ui) | Полноценная UI-система, ng-polymorpheus (стара версія) |
+| `taiga-ui-5` | Taiga UI v5 (taiga-family/taiga-ui) | Taiga UI 5.0.0 — нова мажорна версія |
 | `zart`       | Zard UI (zard-ui/zardui) | Angular компоненты на базе Shadcn/ui + ng-zorro |
 
-Чтобы поискать паттерн во всех ref-libs: `grep -r "паттерн" /Users/dentiman/dev/projects/fibo-stack/{angular,components,spartan,taiga-ui,zart}`.
+Чтобы поискать паттерн во всех ref-libs: `grep -r "паттерн" /Users/dentiman/dev/projects/fibo-stack/{angular,components,spartan,taiga-ui,taiga-ui-5,zart}`.

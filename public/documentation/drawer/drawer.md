@@ -39,12 +39,12 @@ Use `[fiboDrawerTrigger]` with an `ng-template`:
   Open Drawer
 </button>
 
-<ng-template #drawerContent let-close>
+<ng-template #drawerContent let-overlay>
   <div class="flex h-full flex-col p-6">
     <h2 class="text-lg font-semibold mb-4">Drawer Title</h2>
     <p class="text-sm text-foreground-secondary">Drawer content goes here.</p>
     <div class="mt-6">
-      <button class="btn btn-primary" (click)="close()">Close Drawer</button>
+      <button class="btn btn-primary" (click)="overlay.close()">Close Drawer</button>
     </div>
   </div>
 </ng-template>
@@ -83,12 +83,12 @@ readonly overlayHandle = createOverlay(
 
 ## Closing
 
-Templates receive a `close` function as `$implicit` context — no need to hold a trigger reference:
+Templates receive the `OverlayHandle` as `$implicit` context — call `overlay.close()` directly without holding a trigger reference:
 
 ```html
-<ng-template #drawerContent let-close>
+<ng-template #drawerContent let-overlay>
   <div class="p-6">
-    <button (click)="close()">Close</button>
+    <button (click)="overlay.close()">Close</button>
   </div>
 </ng-template>
 ```

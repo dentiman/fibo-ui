@@ -45,7 +45,7 @@ export * from './lib/date/select-date-range';
 
 // Overlay Components and Services
 export * from './lib/overlay/overlay-triggers';
-export { OVERLAY_HANDLE, type OverlayHandle } from './lib/overlay/overlay-handle';
+export { OVERLAY_HANDLE, type OverlayHandle, type OverlayShell } from './lib/overlay/overlay-handle';
 export * from './lib/overlay/overlay-config';
 export * from './lib/overlay/overlay-shell-tokens';
 export * from './lib/overlay/overlay-session';
@@ -54,6 +54,7 @@ export * from './lib/overlay/overlay-stack';
 export * from './lib/overlay/overlay-singleton';
 export * from './lib/overlay/overlay-behaviors';
 export * from './lib/overlay/overlay-container';
+export * from './lib/overlay/overlay-content';
 export * from './lib/overlay/overlay-position';
 export * from './lib/overlay/overlay-arrow';
 export * from './lib/overlay/overlay-panel';

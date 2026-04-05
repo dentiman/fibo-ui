@@ -18,8 +18,8 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
       </button>
     </div>
 
-    <ng-template #menuTpl>
-      <fibo-menu [items]="menuItems"></fibo-menu>
+    <ng-template #menuTpl let-overlay>
+      <fibo-menu [overlay]="overlay" [items]="menuItems"></fibo-menu>
     </ng-template>
   `,
 })
