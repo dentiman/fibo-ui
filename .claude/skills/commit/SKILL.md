@@ -42,5 +42,4 @@ You are creating a git commit. You have no conversation context — derive every
 - Draft a concise imperative commit message (one line, ≤72 chars) based purely on the diff. Use extra text from arguments to refine it if provided.
 - Follow the style of recent commits shown in the log.
 - Run `git add -A` then commit with the message using a HEREDOC.
-- Append `Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>` as a trailer.
 - After committing, run `git status --short` and report the SHA and message.
