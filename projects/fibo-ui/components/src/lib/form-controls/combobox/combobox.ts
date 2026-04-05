@@ -127,7 +127,7 @@ export class Combobox
       : [];
   });
 
-  readonly overlayHandle = createOverlay(
+  readonly overlay = createOverlay(
     this.expanded,
     connectedBehavior(),
     connectedPosition(() => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true })),

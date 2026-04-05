@@ -137,7 +137,7 @@ private readonly menuTpl = viewChild.required<TemplateRef<unknown>>('menuTpl');
 
 readonly isOpen = signal(false);
 
-readonly overlayHandle = createOverlay(
+readonly overlay = createOverlay(
   this.isOpen,
   menuBehavior(),
   connectedPosition(() => ({ referenceElement: this.triggerEl().nativeElement })),

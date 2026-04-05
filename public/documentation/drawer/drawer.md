@@ -72,7 +72,7 @@ private readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('trigge
 private readonly drawerTpl = viewChild.required<TemplateRef<unknown>>('drawerTpl');
 readonly isOpen = signal(false);
 
-readonly overlayHandle = createOverlay(
+readonly overlay = createOverlay(
   this.isOpen,
   drawerBehavior(),
   signal(globalPosition()),
@@ -113,7 +113,7 @@ export const MY_DRAWER_TOKEN = new InjectionToken<Type<any>>('MyDrawerShell');
 provideOverlays(withShell(MY_DRAWER_TOKEN, MyDrawerShellComponent))
 
 // usage
-readonly overlayHandle = createOverlay(
+readonly overlay = createOverlay(
   this.isOpen,
   { shell: MY_DRAWER_TOKEN, needsBackdrop: true, blockScroll: true, closeOnEscape: true, closeOnOutsideClick: true },
   signal(globalPosition()),

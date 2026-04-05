@@ -34,7 +34,7 @@ export class DialogTrigger {
   };
   private readonly position = signal(globalPosition());
 
-  overlayHandle = createOverlay(this.isOpen, this.behavior, this.position, this.content, session => {
+  overlay = createOverlay(this.isOpen, this.behavior, this.position, this.content, session => {
     trapOverlayFocus(session, { guard: true });
     restoreTriggerFocusOnClose(session, () => this.element);
   });
@@ -72,7 +72,7 @@ export class DrawerTrigger {
   };
   private readonly position = signal(globalPosition());
 
-  overlayHandle = createOverlay(this.isOpen, this.behavior, this.position, this.content, session => {
+  overlay = createOverlay(this.isOpen, this.behavior, this.position, this.content, session => {
     trapOverlayFocus(session, { guard: true });
     restoreTriggerFocusOnClose(session, () => this.element);
   });
@@ -116,7 +116,7 @@ export class PopoverTrigger {
     offset: this.offset(),
   }));
 
-  overlayHandle = createOverlay(this.isOpen, this.behavior, this.position, this.content, session => {
+  overlay = createOverlay(this.isOpen, this.behavior, this.position, this.content, session => {
     restoreTriggerFocusOnClose(session, () => this.element);
   });
 

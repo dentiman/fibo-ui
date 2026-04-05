@@ -165,7 +165,7 @@ export class PlaygroundPageComponent {
   readonly isMenuOpen = signal(false);
   readonly isAltMenuOpen = signal(false);
 
-  readonly menuOverlayHandle = createOverlay(
+  readonly menuOverlay = createOverlay(
     this.isMenuOpen,
     menuBehavior(),
     connectedPosition(() => ({ referenceElement: this.menuTrigger().nativeElement })),
@@ -173,7 +173,7 @@ export class PlaygroundPageComponent {
     session => { restoreTriggerFocusOnClose(session, () => this.menuTrigger().nativeElement); },
   );
 
-  readonly altMenuOverlayHandle = createOverlay(
+  readonly altMenuOverlay = createOverlay(
     this.isAltMenuOpen,
     menuBehavior(),
     connectedPosition(() => ({ referenceElement: this.altMenuTrigger().nativeElement })),

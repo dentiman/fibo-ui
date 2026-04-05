@@ -137,7 +137,7 @@ export class MultiSelect implements FormValueControl<(string | number)[] | null>
     if (!currentValue || !Array.isArray(currentValue)) return [];
     return this.items().filter((item) => item.value !== null && currentValue.includes(item.value));
   });
-  readonly overlayHandle = createOverlay(
+  readonly overlay = createOverlay(
     this.isOpen,
     connectedBehavior(),
     connectedPosition(() => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true })),

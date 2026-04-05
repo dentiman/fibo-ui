@@ -116,8 +116,8 @@ export class MenuPanel {
 
       // Don't reset when mouse moves into an open submenu's overlay
       return !this.submenuTriggers().some(trigger => {
-        const submenuHandle = trigger.overlayHandle();
-        return submenuHandle && this.overlayStack.isOverlayInBranch(submenuHandle.id, targetOverlayId);
+        const submenuOverlay = trigger.overlay();
+        return submenuOverlay && this.overlayStack.isOverlayInBranch(submenuOverlay.id, targetOverlayId);
       });
     });
 

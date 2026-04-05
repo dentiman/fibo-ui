@@ -115,8 +115,8 @@ export function restoreTriggerFocusOnClose(
   overlay: OverlaySession,
   getTarget?: () => HTMLElement | null,
 ): void {
-  overlay.beforeClose((ctx, handle) =>
-    restoreTriggerFocus(ctx, handle, {
+  overlay.beforeClose((ctx, currentOverlay) =>
+    restoreTriggerFocus(ctx, currentOverlay, {
       getTarget,
       isInOverlayBranch: target => overlay.isInOverlayBranch(target),
     }),

@@ -90,7 +90,7 @@ export class DatePickerField implements FormValueControl<string> {
   readonly placeholder = input<string>('');
   readonly iconStart = input<string>('');
   readonly dialogId = computed(() => this.fieldShell().idFor('dialog'));
-  readonly overlayHandle = createOverlay(
+  readonly overlay = createOverlay(
     this.isOpen,
     connectedBehavior(),
     connectedPosition(() => ({ referenceElement: this.fieldShell().overlayReferenceElement() })),

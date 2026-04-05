@@ -29,7 +29,7 @@ export class TooltipService {
 
   private readonly content = computed(() => this.tooltipRef()?.content ?? null);
 
-  readonly overlayHandle = createOverlay(this.isOpen, this.behavior, this.position, this.content, session => {
+  readonly overlay = createOverlay(this.isOpen, this.behavior, this.position, this.content, session => {
     session.afterClose(() => {
       if (!this.isOpen()) {
         this.tooltipRef.set(null);

@@ -1,96 +1,46 @@
 ---
 name: commit
-description: Analyze changed files, generate a commit message, stage relevant changes, and create a git commit.
-argument-hint: "[extra context for the commit message]"
+description: Stage all changes and create a git commit. Delegates to an isolated haiku agent — no session context leaks into the commit message.
+argument-hint: "[extra context | confirm]"
 ---
 
 # Commit
 
-Create a git commit for the current worktree changes.
+Delegate the entire commit to a fresh haiku agent so the commit message is derived from the diff only, not from the conversation.
 
-The user invoking `/commit` is explicit permission to create a commit unless they request `confirm` mode.
+## Step 1 — gather git state in one shot
 
-## Argument Handling
+Run this single command:
 
-Parse `$ARGUMENTS` as optional extra context for the commit message.
+```
+git status --short && echo "==DIFF==" && git diff && echo "==CACHED==" && git diff --cached && echo "==LOG==" && git log --oneline -5
+```
 
-- If `$ARGUMENTS` is empty, infer the message only from git changes.
-- If `$ARGUMENTS` contains `confirm`, switch to preview mode.
-- In preview mode, analyze the changes and propose the commit message first, then ask the user for confirmation before staging or committing.
-- If `$ARGUMENTS` also contains additional text besides `confirm`, use that text as extra context for the message.
+## Step 2 — spawn isolated haiku agent
 
-## Workflow
+Use the **Agent** tool with:
+- `model: haiku`
+- `subagent_type: general-purpose`
+- include in the prompt:
+  - the raw output from Step 1
+  - the value of `$ARGUMENTS`
+  - the full task below
 
-### 1. Inspect the current git state
+---
 
-Run these commands:
+### Task for the haiku agent
 
-- `git status --short`
-- `git diff --cached`
-- `git diff`
-- `git log --oneline -10`
+You are creating a git commit. You have no conversation context — derive everything from the git output provided.
 
-Use them to understand:
+**Arguments:** `$ARGUMENTS`
 
-- which files changed
-- whether there are staged and unstaged changes
-- the repo's commit message style
+**Rules:**
 
-### 2. Decide what to commit
-
-Commit the current user-facing work in the tree.
-
-- Stage modified tracked files that belong to the current change.
-- Stage relevant untracked files.
-- Do not commit files that likely contain secrets, credentials, or local-only configuration such as `.env`, `*.pem`, `credentials.json`, or similar sensitive files.
-- If such files are present, exclude them and warn the user in the final response.
-
-If there are no relevant changes to commit, stop and report that there is nothing to commit.
-
-### 3. Draft the commit message
-
-Write a concise message based on the actual change set.
-
-Rules:
-
-- Follow the existing repo style from recent commits.
-- Prefer short imperative messages like `add tooltip overlay arrow support`.
-- Focus on the purpose of the change, not a file-by-file list.
-- Use `$ARGUMENTS` only to refine the message, never to contradict the actual diff.
-
-### 4. Create the commit
-
-If running in preview mode, stop before `git add` and present:
-
-- the proposed commit message
-- a short summary of what will be committed
-- any files that would be excluded
-
-Then ask the user for confirmation.
-
-Only after the user confirms should you run the needed `git add ...` commands and create the commit.
-
-Run the needed `git add ...` commands for relevant files, then create the commit with the drafted message.
-
-After committing, run `git status --short` to verify the result.
-
-### 5. Handle failures safely
-
-If `git commit` fails because of hooks or formatting changes:
-
-- inspect the resulting changes
-- stage the hook-produced fixes if they are part of the same change
-- create a new normal commit with the intended message
-- do not use `--amend` unless the user explicitly asked for amend
-
-Do not use destructive git commands.
-
-## Final Response
-
-Report:
-
-- the commit message used
-- the resulting commit SHA if created
-- whether any files were intentionally excluded
-
-If preview mode was used and the user has not confirmed yet, do not create a commit and clearly say that the command stopped at the confirmation step.
+- If arguments contain `confirm`: propose the commit message and file list, then STOP and ask the user to confirm. Do not run git commands yet.
+- Stage ALL modified, deleted, and untracked files using `git add -A`, EXCEPT files that likely contain secrets (`.env`, `*.pem`, `credentials.json`, etc.). Warn if any are skipped.
+- If nothing to commit, report and stop.
+- Draft a concise imperative commit message (one line, ≤72 chars) based purely on the diff. Use extra text from arguments to refine it if provided.
+- Follow the style of recent commits shown in the log.
+- Run `git add -A` then commit with the message using a HEREDOC.
+- Append `Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>` as a trailer.
+- After committing, run `git status --short` and report the SHA and message.

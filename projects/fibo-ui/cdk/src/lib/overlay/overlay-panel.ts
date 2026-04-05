@@ -59,10 +59,10 @@ export class OverlayPanel {
   host: { '[id]': 'id' },
 })
 export class OverlayTitle {
-  private handle = inject(OVERLAY_HANDLE, { optional: true });
+  private overlay = inject(OVERLAY_HANDLE, { optional: true });
   private panel = inject(OVERLAY_PANEL, { optional: true });
 
-  id = this.handle ? `${this.handle.id}-title` : createOverlayElementId('title');
+  id = this.overlay ? `${this.overlay.id}-title` : createOverlayElementId('title');
 
   constructor() {
     this.panel?.titleId.set(this.id);
@@ -80,10 +80,10 @@ export class OverlayTitle {
   host: { '[id]': 'id' },
 })
 export class OverlayDescription {
-  private handle = inject(OVERLAY_HANDLE, { optional: true });
+  private overlay = inject(OVERLAY_HANDLE, { optional: true });
   private panel = inject(OVERLAY_PANEL, { optional: true });
 
-  id = this.handle ? `${this.handle.id}-desc` : createOverlayElementId('desc');
+  id = this.overlay ? `${this.overlay.id}-desc` : createOverlayElementId('desc');
 
   constructor() {
     this.panel?.descriptionId.set(this.id);

@@ -46,7 +46,7 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
     closeOnEscape: true,
   };
 
-  overlayHandle = createOverlay(
+  overlay = createOverlay(
     this.isOpen,
     this.behavior,
     connectedPosition(() => ({ placement: 'right-start', offset: 1, referenceElement: this.element })),
@@ -67,9 +67,9 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
   }
 
   onMouseLeave(event: MouseEvent) {
-    const submenuHandle = this.overlayHandle();
+    const submenuOverlay = this.overlay();
     const targetOverlayId = this.overlayStack.findOverlayContainerId(event.relatedTarget);
-    if (submenuHandle && this.overlayStack.isOverlayInBranch(submenuHandle.id, targetOverlayId)) {
+    if (submenuOverlay && this.overlayStack.isOverlayInBranch(submenuOverlay.id, targetOverlayId)) {
       return;
     }
 

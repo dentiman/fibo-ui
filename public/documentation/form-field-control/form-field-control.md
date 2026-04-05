@@ -145,7 +145,7 @@ What happens here:
 ```ts
 readonly isOpen = signal(false);
 
-readonly overlayHandle = createOverlay(
+readonly overlay = createOverlay(
   this.isOpen,
   connectedBehavior(),
   connectedPosition(() => ({ referenceElement: this.fieldShell().overlayReferenceElement() })),

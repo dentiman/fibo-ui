@@ -33,7 +33,7 @@ export class CdkOverlaysBasicExample {
 
   readonly isOpen = signal(false);
 
-  readonly handle = createOverlay(
+readonly overlay = createOverlay(
     this.isOpen,
     { shell: CONNECTED_SHELL_TOKEN, closeOnOutsideClick: true, closeOnFocusLeave: true, closeOnEscape: true },
     connectedPosition(() => ({ referenceElement: this.btn().nativeElement })),
@@ -102,11 +102,11 @@ For centered modals and drawers: `signal(globalPosition())`.
 **OverlayHandle** — runtime object returned by `createOverlay`:
 
 ```ts
-handle.id           // unique string
-handle.behavior     // OverlayBehaviorConfig used to open
-handle.position     // Signal<OverlayPositionConfig>
-handle.content      // Signal<TemplateRef | string | undefined>
-handle.close(reason?)
+overlay.id           // unique string
+overlay.behavior     // OverlayBehaviorConfig used to open
+overlay.position     // Signal<OverlayPositionConfig>
+overlay.content      // Signal<TemplateRef | string | undefined>
+overlay.close(reason?)
 ```
 
 ## Bootstrap

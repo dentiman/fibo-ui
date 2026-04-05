@@ -30,7 +30,7 @@ export class CdkOverlaysBasicExample {
 
   readonly isOpen = signal(false);
 
-  readonly handle = createOverlay(
+  readonly overlay = createOverlay(
     this.isOpen,
     { shell: CONNECTED_SHELL_TOKEN, closeOnOutsideClick: true, closeOnFocusLeave: true, closeOnEscape: true },
     connectedPosition(() => ({ referenceElement: this.btn().nativeElement })),

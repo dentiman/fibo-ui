@@ -41,6 +41,6 @@ export function createSingletonOverlay(
   const templateRef = signal<TemplateRef<any> | null>(null);
   const isOpen = signal(false);
   const content = computed(() => templateRef() ?? null);
-  const handle = createOverlay(isOpen, behavior, position, content, setup);
-  return { templateRef, isOpen, handle };
+  const overlay = createOverlay(isOpen, behavior, position, content, setup);
+  return { templateRef, isOpen, handle: overlay };
 }

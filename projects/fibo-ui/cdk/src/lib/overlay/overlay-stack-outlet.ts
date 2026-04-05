@@ -45,12 +45,12 @@ export class OverlayStackOutlet {
     this.setupOutsideClickDispatcher();
   }
 
-  resolveShell(handle: OverlayHandle): Type<unknown> {
-    return this.injector.get(handle.behavior.shell);
+  resolveShell(overlay: OverlayHandle): Type<unknown> {
+    return this.injector.get(overlay.behavior.shell);
   }
 
-  needsBackdrop(handle: OverlayHandle): boolean {
-    return handle.behavior.needsBackdrop ?? false;
+  needsBackdrop(overlay: OverlayHandle): boolean {
+    return overlay.behavior.needsBackdrop ?? false;
   }
 
   private setupOutsideClickDispatcher(): void {
@@ -96,14 +96,14 @@ export class OverlayStackOutlet {
     });
   }
 
-  private isInsideOverlay(handle: OverlayHandle, target: Node): boolean {
-    const pos = handle.position();
+  private isInsideOverlay(overlay: OverlayHandle, target: Node): boolean {
+    const pos = overlay.position();
     if (pos.type === 'connected' && pos.referenceElement?.contains(target)) return true;
-    return handle.hostElement()?.contains(target) ?? false;
+    return overlay.hostElement()?.contains(target) ?? false;
   }
 
-  private isOnOwnBackdrop(handle: OverlayHandle, target: Node): boolean {
+  private isOnOwnBackdrop(overlay: OverlayHandle, target: Node): boolean {
     const element = target instanceof Element ? target : (target as Node).parentElement;
-    return element?.closest(`[data-overlay-backdrop-id="${handle.id}"]`) != null;
+    return element?.closest(`[data-overlay-backdrop-id="${overlay.id}"]`) != null;
   }
 }

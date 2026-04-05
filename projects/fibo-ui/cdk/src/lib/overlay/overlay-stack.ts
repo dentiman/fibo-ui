@@ -20,14 +20,14 @@ import type { OverlayBehaviorConfig, OverlayPositionConfig } from './overlay-con
 
 // Encapsulates all mutable state for one open/close cycle.
 class OverlayCycle {
-  handle: OverlayHandle | null = null;
+  overlay: OverlayHandle | null = null;
   closed = false;
   afterOpenedRenderRef: AfterRenderRef | null = null;
   readonly cleanups: Array<() => void> = [];
-  readonly afterOpened: Array<(handle: OverlayHandle) => void> = [];
-  readonly afterClose: Array<(handle: OverlayHandle, reason: OverlayCloseReason) => void> = [];
+  readonly afterOpened: Array<(overlay: OverlayHandle) => void> = [];
+  readonly afterClose: Array<(overlay: OverlayHandle, reason: OverlayCloseReason) => void> = [];
   readonly beforeClose: Array<
-    (ctx: OverlayCloseContext, handle: OverlayHandle, reason: OverlayCloseReason) => void
+    (ctx: OverlayCloseContext, overlay: OverlayHandle, reason: OverlayCloseReason) => void
   > = [];
   readonly guards: Array<(reason: OverlayCloseReason, event?: Event) => boolean | void> = [];
 
@@ -39,7 +39,7 @@ class OverlayCycle {
     this.afterClose.length = 0;
     this.beforeClose.length = 0;
     this.guards.length = 0;
-    this.handle = null;
+    this.overlay = null;
     this.closed = false;
   }
 }
@@ -114,68 +114,68 @@ export class OverlayStack {
     content: Signal<TemplateRef<any> | string | null>,
     setup?: (overlay: OverlaySession) => void,
   ): Signal<OverlayHandle | null> {
-    const overlayHandle = signal<OverlayHandle | null>(null);
+    const overlaySignal = signal<OverlayHandle | null>(null);
     const destroyRef = inject(DestroyRef);
     const injector = inject(Injector);
     const cycle = new OverlayCycle();
 
-    const runBeforeClose = (handle: OverlayHandle, reason: OverlayCloseReason) => {
+    const runBeforeClose = (overlay: OverlayHandle, reason: OverlayCloseReason) => {
       const ctx: OverlayCloseContext = {
         activeElement: document.activeElement as HTMLElement | null,
       };
-      for (const handler of cycle.beforeClose) handler(ctx, handle, reason);
+      for (const handler of cycle.beforeClose) handler(ctx, overlay, reason);
     };
 
     const teardown = (reason: OverlayCloseReason) => {
-      const handle = cycle.handle;
-      if (!handle) return;
+      const overlay = cycle.overlay;
+      if (!overlay) return;
 
       if (!cycle.closed) {
-        runBeforeClose(handle, reason);
+        runBeforeClose(overlay, reason);
       }
 
-      this.removeOverlay(handle);
+      this.removeOverlay(overlay);
 
       if (cycle.afterClose.length > 0) {
-        this.pendingAfterClose.set(handle.id, {
-          handle,
+        this.pendingAfterClose.set(overlay.id, {
+          handle: overlay,
           reason,
           handlers: [...cycle.afterClose],
         });
       }
 
       cycle.reset();
-      overlayHandle.set(null);
+      overlaySignal.set(null);
     };
 
     const requestClose = (reason: OverlayCloseReason, event?: Event) => {
-      const handle = cycle.handle;
-      if (!handle || cycle.closed) return;
+      const overlay = cycle.overlay;
+      if (!overlay || cycle.closed) return;
 
       for (const guard of cycle.guards) {
         if (guard(reason, event) === false) return;
       }
 
       cycle.closed = true;
-      runBeforeClose(handle, reason);
+      runBeforeClose(overlay, reason);
       isOpen.set(false);
     };
 
     const openOverlay = () => {
       const contentSignal = computed(() => content() ?? undefined);
-      const handle = createOverlayHandle(behavior, position, contentSignal, requestClose);
+      const overlay = createOverlayHandle(behavior, position, contentSignal, requestClose);
 
-      this.addOverlay(handle);
-      cycle.handle = handle;
-      overlayHandle.set(handle);
+      this.addOverlay(overlay);
+      cycle.overlay = overlay;
+      overlaySignal.set(overlay);
 
       untracked(() => {
         const session: OverlaySession = {
-          handle,
+          handle: overlay,
           requestClose: (reason, event) => requestClose(reason, event),
           findOverlayContainerId: target => this.findOverlayContainerId(target),
           isInOverlayBranch: target =>
-            this.isOverlayInBranch(handle.id, this.findOverlayContainerId(target)),
+            this.isOverlayInBranch(overlay.id, this.findOverlayContainerId(target)),
           afterOpened: handler => cycle.afterOpened.push(handler),
           afterClose: handler => cycle.afterClose.push(handler),
           beforeClose: handler => cycle.beforeClose.push(handler),
@@ -194,8 +194,8 @@ export class OverlayStack {
 
         cycle.afterOpenedRenderRef = afterNextRender(
           () => {
-            if (cycle.handle !== handle || cycle.closed) return;
-            for (const handler of cycle.afterOpened) handler(handle);
+            if (cycle.overlay !== overlay || cycle.closed) return;
+            for (const handler of cycle.afterOpened) handler(overlay);
             cycle.afterOpened.length = 0;
             cycle.afterOpenedRenderRef = null;
           },
@@ -206,11 +206,11 @@ export class OverlayStack {
 
     effect(() => {
       if (!isOpen()) {
-        if (cycle.handle) teardown('state');
+        if (cycle.overlay) teardown('state');
         return;
       }
 
-      if (cycle.handle) return;
+      if (cycle.overlay) return;
 
       if (content() === null) return;
 
@@ -219,21 +219,21 @@ export class OverlayStack {
 
     destroyRef.onDestroy(() => teardown('destroy'));
 
-    return overlayHandle.asReadonly();
+    return overlaySignal.asReadonly();
   }
 
-  private addOverlay(handle: OverlayHandle): void {
-    const pos = untracked(handle.position);
+  private addOverlay(overlay: OverlayHandle): void {
+    const pos = untracked(overlay.position);
     const anchor = pos.type === 'connected' ? pos.referenceElement : document.activeElement;
     const parentOverlayId = this.findOverlayContainerId(anchor);
 
-    this.openOverlays.update(overlays => [...overlays, handle]);
-    this.overlayParentIds.set(handle.id, parentOverlayId);
+    this.openOverlays.update(overlays => [...overlays, overlay]);
+    this.overlayParentIds.set(overlay.id, parentOverlayId);
   }
 
-  private removeOverlay(handle: OverlayHandle): void {
-    this.openOverlays.update(overlays => overlays.filter(o => o.id !== handle.id));
-    this.overlayParentIds.delete(handle.id);
+  private removeOverlay(overlay: OverlayHandle): void {
+    this.openOverlays.update(overlays => overlays.filter(o => o.id !== overlay.id));
+    this.overlayParentIds.delete(overlay.id);
   }
 }
 

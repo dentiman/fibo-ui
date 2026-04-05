@@ -126,7 +126,7 @@ export class Select implements FormValueControl<string | number | null> {
   readonly selectedLabel = computed(() => this.selectedItem()?.label ?? null);
   readonly canClear = computed(() => this.clearValue() !== undefined && this.value() !== this.clearValue());
 
-  readonly overlayHandle = createOverlay(
+  readonly overlay = createOverlay(
     this.isOpen,
     connectedBehavior(),
     connectedPosition(() => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true })),
