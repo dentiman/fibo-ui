@@ -1,5 +1,13 @@
 import { InjectionToken, Provider } from '@angular/core';
-import type { DataList } from './data-list';
+
+/**
+ * Minimal structural contract that navigation strategies need from DataList.
+ * Intentionally avoids importing DataList directly to prevent a circular
+ * module dependency (data-list → strategy → data-list).
+ */
+interface DataListContext {
+  activeDataListItem(): { element: HTMLElement } | null;
+}
 
 export interface DataListNavigationStrategy {
   /**
@@ -10,10 +18,10 @@ export interface DataListNavigationStrategy {
    * - focus strategy: move DOM focus to the active option
    * - active-descendant strategy: keep focus on the trigger/input and only scroll
    */
-  applyKeyboardNavigation(dataList: DataList, event: Event): void;
+  applyKeyboardNavigation(dataList: DataListContext, event: Event): void;
 }
 
-function focusActiveItem(dataList: DataList, preventScroll = true): void {
+function focusActiveItem(dataList: DataListContext, preventScroll = true): void {
   const active = dataList.activeDataListItem();
 
   if (!active) {
@@ -23,7 +31,7 @@ function focusActiveItem(dataList: DataList, preventScroll = true): void {
   active.element.focus({ preventScroll });
 }
 
-function scrollActiveItemIntoView(dataList: DataList): void {
+function scrollActiveItemIntoView(dataList: DataListContext): void {
   dataList.activeDataListItem()?.element.scrollIntoView({
     block: 'nearest',
   });
