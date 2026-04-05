@@ -23,8 +23,8 @@ import { MENU_PANEL } from './menu-panel';
     '[attr.aria-expanded]': 'isOpen() || null',
     '(mouseenter)': 'onMouseEnter()',
     '(mouseleave)': 'onMouseLeave($event)',
-    '(keydown.enter)': 'open()',
-    '(keydown.arrowright)': 'keyboardSource.delegate()?.navigateNext?.($event)',
+    '(keydown.enter)': 'openFromKeyboard($event)',
+    '(keydown.arrowright)': 'openFromKeyboard($event)',
     '(click)': 'open()',
   },
 })
@@ -37,6 +37,7 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
 
   content = input.required<TemplateRef<unknown>>();
   isOpen = model(false, { alias: 'open' });
+  private pendingKeyboardNavigation = false;
 
   private readonly behavior: OverlayBehaviorConfig = {
     shell: CONNECTED_SHELL_TOKEN,
@@ -51,7 +52,19 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
     this.behavior,
     connectedPosition(() => ({ placement: 'right-start', offset: 1, referenceElement: this.element })),
     this.content,
-    overlay => { restoreTriggerFocusOnClose(overlay, () => this.element); },
+    overlay => {
+      restoreTriggerFocusOnClose(overlay, () => this.element);
+      overlay.afterOpened(() => {
+        if (!this.pendingKeyboardNavigation) {
+          return;
+        }
+
+        this.pendingKeyboardNavigation = false;
+        this.keyboardSource.delegate()?.navigateNext?.(
+          new KeyboardEvent('keydown', { key: 'ArrowRight' }),
+        );
+      });
+    },
   );
 
   ngOnInit() {
@@ -78,6 +91,19 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
 
   open() {
     this.isOpen.set(true);
+  }
+
+  openFromKeyboard(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (this.isOpen()) {
+      this.keyboardSource.delegate()?.navigateNext?.(event);
+      return;
+    }
+
+    this.pendingKeyboardNavigation = true;
+    this.open();
   }
 
   close() {

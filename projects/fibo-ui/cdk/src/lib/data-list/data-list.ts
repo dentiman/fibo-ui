@@ -1,6 +1,10 @@
-import { Directive, effect, InjectionToken, input, model, output, signal } from '@angular/core';
+import { Directive, effect, inject, InjectionToken, input, model, output, signal } from '@angular/core';
 import { DataListItem } from './data-list-item.directive';
 import { KeyboardSource, KeydownDelegate } from './keyboard-source';
+import {
+  type DataListNavigationStrategy,
+  DATA_LIST_NAVIGATION_STRATEGY,
+} from './data-list-navigation-strategy';
 
 export const DATA_LIST = new InjectionToken<DataList>('DataList');
 
@@ -23,9 +27,15 @@ let nextDataListId = 0;
   // ],
 })
 export class DataList implements KeydownDelegate {
+  // Inject the default policy once so plain fiboDataList instances work
+  // without any local setup. Feature components can override it via
+  // viewProviders or, rarely, per-instance via [navigationStrategy].
+  private readonly defaultNavigationStrategy = inject(DATA_LIST_NAVIGATION_STRATEGY);
+
   disabled = input(false);
   keyboardSource = input<KeyboardSource | null>(null);
   autoActivateFirst = input(false);
+  navigationStrategy = input<DataListNavigationStrategy>(this.defaultNavigationStrategy);
 
   itemTriggered = output<Event>();
 
@@ -51,8 +61,9 @@ export class DataList implements KeydownDelegate {
         return;
       }
 
-      this._activeDataListItem.set(
+      this.setActiveDataListItem(
         this.autoActivateFirst() ? (options.find(option => !option.disabled()) ?? null) : null,
+        null,
       );
     });
 
@@ -84,8 +95,12 @@ export class DataList implements KeydownDelegate {
     this.options.set(currentDataListItems.filter(opt => opt !== option));
   }
 
-  setActiveDataListItem(option: DataListItem | null) {
+  setActiveDataListItem(
+    option: DataListItem | null,
+    activationSource: 'mouse' | 'keyboard' | null = null,
+  ) {
     this._activeDataListItem.set(option);
+    this.lastActivationSource.set(activationSource);
   }
 
   findNextDataListItem(currentDataListItem: DataListItem | null): DataListItem | null {
@@ -93,29 +108,8 @@ export class DataList implements KeydownDelegate {
     if (optionsArray.length === 0) {
       return null;
     }
-    // @ts-ignore
-    const currentIndex = optionsArray.indexOf(currentDataListItem);
 
-    // Start from the next option after current
-    let nextIndex = currentIndex + 1;
-
-    // If we're at the end, wrap around to the beginning
-    if (nextIndex >= optionsArray.length) {
-      nextIndex = 0;
-    }
-
-    // Find the next non-disabled option
-    const startIndex = nextIndex;
-    do {
-      const option = optionsArray[nextIndex];
-      if (!option.disabled()) {
-        return option;
-      }
-      nextIndex = (nextIndex + 1) % optionsArray.length;
-    } while (nextIndex !== startIndex);
-
-    // If all options are disabled, return the first option (original behavior)
-    return optionsArray[0] || null;
+    return this.findRelativeDataListItem(currentDataListItem, 1);
   }
 
   findPreviousDataListItem(currentDataListItem: DataListItem | null): DataListItem | null {
@@ -123,121 +117,103 @@ export class DataList implements KeydownDelegate {
     if (optionsArray.length === 0) {
       return null;
     }
-    // @ts-ignore
-    const currentIndex = optionsArray.indexOf(currentDataListItem);
 
-    // Start from the previous option before current
-    let prevIndex = currentIndex - 1;
-
-    // If we're at the beginning, wrap around to the end
-    if (prevIndex < 0) {
-      prevIndex = optionsArray.length - 1;
-    }
-
-    // Find the previous non-disabled option
-    const startIndex = prevIndex;
-    do {
-      const option = optionsArray[prevIndex];
-      if (!option.disabled()) {
-        return option;
-      }
-      prevIndex = prevIndex - 1;
-      if (prevIndex < 0) {
-        prevIndex = optionsArray.length - 1;
-      }
-    } while (prevIndex !== startIndex);
-
-    // If all options are disabled, return the last option (original behavior)
-    return optionsArray[optionsArray.length - 1] || null;
+    return this.findRelativeDataListItem(currentDataListItem, -1);
   }
 
   navigateNext(event: Event) {
-    const targetIsInput = event.target instanceof HTMLInputElement;
-    this.setActiveDataListItem(this.findNextDataListItem(this._activeDataListItem()));
-    event.preventDefault();
-    if (!targetIsInput) {
-      this._activeDataListItem()?.element.focus();
-    }
-    this._activeDataListItem()?.element.scrollIntoView({
-      block: 'nearest',
-      behavior: 'smooth',
-    });
+    this.setActiveDataListItem(this.findNextDataListItem(this._activeDataListItem()), 'keyboard');
+    this.navigationStrategy().applyKeyboardNavigation(this, event);
   }
 
   navigatePrev(event: Event) {
-    const targetIsInput = event.target instanceof HTMLInputElement;
-    this.setActiveDataListItem(this.findPreviousDataListItem(this._activeDataListItem()));
+    this.setActiveDataListItem(this.findPreviousDataListItem(this._activeDataListItem()), 'keyboard');
+    this.navigationStrategy().applyKeyboardNavigation(this, event);
+  }
+
+  navigateFirst(event: Event) {
+    this.setActiveDataListItem(this.findBoundaryDataListItem(1), 'keyboard');
+    this.navigationStrategy().applyKeyboardNavigation(this, event);
+  }
+
+  navigateLast(event: Event) {
+    this.setActiveDataListItem(this.findBoundaryDataListItem(-1), 'keyboard');
+    this.navigationStrategy().applyKeyboardNavigation(this, event);
+  }
+
+  activateCurrentItem(event: Event) {
     event.preventDefault();
-    if (!targetIsInput) {
-      this._activeDataListItem()?.element.focus();
-    }
-    this._activeDataListItem()?.element.scrollIntoView({
-      block: 'nearest',
-      behavior: 'smooth',
-    });
+    event.stopPropagation();
+    this._activeDataListItem()?.triggerSelection(event);
   }
 
   onKeydown(event: KeyboardEvent) {
-    const targetIsInput = event.target instanceof HTMLInputElement;
     switch (event.key) {
       case 'ArrowDown':
-        this.lastActivationSource.set('keyboard');
-        this.setActiveDataListItem(this.findNextDataListItem(this._activeDataListItem()));
-        event.preventDefault();
-        if (!targetIsInput) {
-          this._activeDataListItem()?.element.focus();
-        }
-        this._activeDataListItem()?.element.scrollIntoView({
-          block: 'nearest',
-          behavior: 'smooth',
-        });
-        event.stopPropagation();
+        this.navigateNext(event);
         break;
       case 'ArrowUp':
-        this.lastActivationSource.set('keyboard');
-        this.setActiveDataListItem(this.findPreviousDataListItem(this._activeDataListItem()));
-        event.preventDefault();
-        if (!targetIsInput) {
-          this._activeDataListItem()?.element.focus();
-        }
-        this._activeDataListItem()?.element.scrollIntoView({
-          block: 'nearest',
-          behavior: 'smooth',
-        });
-        event.stopPropagation();
+        this.navigatePrev(event);
         break;
       case 'Enter':
-        event.preventDefault();
-        this._activeDataListItem()?.triggerSelection(event);
-        event.stopPropagation();
+        this.activateCurrentItem(event);
         break;
       case 'Home':
-        this.lastActivationSource.set('keyboard');
-        this.setActiveDataListItem(this.options().find(option => !option.disabled()) ?? null);
-        event.preventDefault();
-        event.stopPropagation();
+        this.navigateFirst(event);
         break;
-      case 'End': {
-        this.lastActivationSource.set('keyboard');
-        const options = [...this.options()].reverse();
-        this.setActiveDataListItem(options.find(option => !option.disabled()) ?? null);
-        event.preventDefault();
-        event.stopPropagation();
+      case 'End':
+        this.navigateLast(event);
         break;
-      }
       default:
         break;
     }
   }
 
   resetActiveDataListItem() {
-    this._activeDataListItem.set(null);
+    this.setActiveDataListItem(null, null);
   }
 
   onMouseleave(event: MouseEvent) {
     const guard = this.mouseleaveResetGuard();
     if (guard ? guard(event) : true) {
-      this._activeDataListItem.set(null);
+      this.setActiveDataListItem(null, null);
     }
+  }
+
+  private findRelativeDataListItem(
+    currentDataListItem: DataListItem | null,
+    step: 1 | -1,
+  ): DataListItem | null {
+    const optionsArray = this.options();
+
+    if (!optionsArray.length) {
+      return null;
+    }
+
+    const currentIndex =
+      currentDataListItem ? optionsArray.indexOf(currentDataListItem) : -1;
+
+    let nextIndex = currentIndex;
+
+    for (let i = 0; i < optionsArray.length; i++) {
+      nextIndex =
+        currentIndex === -1 && i === 0 ?
+          (step > 0 ? 0 : optionsArray.length - 1) :
+          (nextIndex + step + optionsArray.length) % optionsArray.length;
+
+      const option = optionsArray[nextIndex];
+      if (!option.disabled()) {
+        return option;
+      }
+    }
+
+    return null;
+  }
+
+  private findBoundaryDataListItem(step: 1 | -1): DataListItem | null {
+    const options =
+      step > 0 ? this.options() : [...this.options()].reverse();
+
+    return options.find(option => !option.disabled()) ?? null;
   }
 }

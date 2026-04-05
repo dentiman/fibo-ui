@@ -81,8 +81,7 @@ export class DataListItem<T = any> implements OnInit, OnDestroy {
   }
 
   setActive() {
-    this.dataList.lastActivationSource.set('mouse');
-    this.dataList.setActiveDataListItem(this);
+    this.dataList.setActiveDataListItem(this, 'mouse');
   }
 
   ngOnInit() {

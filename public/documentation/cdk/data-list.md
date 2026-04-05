@@ -26,7 +26,8 @@ When active, item receives `data-active="true"`. Use this attribute for active s
 - `ArrowDown` -> next item
 - `ArrowUp` -> previous item
 - `Enter` -> trigger selection on active item
-- `Escape` -> close popover and return focus to trigger (when `trigger` is provided)
+- `Home` -> first enabled item
+- `End` -> last enabled item
 
 Disabled items are skipped while navigating with arrows.
 
@@ -78,55 +79,129 @@ export class CdkDataListItemsBasicExample {
 }
 ```
 
-## Integration with PopoverTrigger
+## Navigation Strategy
+
+`DataList` separates two concerns:
+
+- it always owns item registry, active item state, and key mapping
+- a navigation strategy decides what happens in the DOM after the active item changes
+
+This is important because not every consumer wants the same keyboard behavior:
+
+- **focus strategy** moves DOM focus to the active item
+- **active-descendant strategy** keeps focus on the trigger or input and only updates active state + scrolling
+
+### Default behavior
+
+Plain `fiboDataList` instances use the default injected strategy automatically. No setup is needed for the common list-like cases:
+
+- select
+- multi-select
+- menu
+- listbox
+- calendar
+- side menu
+
+The default strategy is focus-based, so arrow navigation moves focus onto the active item.
+
+### Override at component level
+
+When a component needs a different interaction model, override the strategy locally with `viewProviders`.
+
+This is the recommended pattern for input-driven controls such as combobox, where focus must stay in the input and the list is exposed through `aria-activedescendant`.
+
+```ts
+import {
+  ACTIVE_DESCENDANT_DATA_LIST_NAVIGATION_STRATEGY,
+  provideDataListNavigationStrategy,
+} from '@fibo-ui/cdk';
+
+@Component({
+  viewProviders: [
+    provideDataListNavigationStrategy(ACTIVE_DESCENDANT_DATA_LIST_NAVIGATION_STRATEGY),
+  ],
+})
+export class MyComboboxLikeComponent {}
+```
+
+Use `viewProviders` when the override should apply only to the `fiboDataList` instances created inside that component's own template.
+
+### Override per instance
+
+For rare cases, a single list instance can override the injected strategy directly:
+
+```html
+<div
+  fiboDataList
+  [navigationStrategy]="myStrategy"
+>
+  ...
+</div>
+```
+
+Use this only when one component template contains multiple lists that need different policies. In most cases, `viewProviders` is clearer.
+
+## Integration with Trigger Elements
 
 `DataList` is designed to work together with `PopoverTrigger` for dropdown-style components (Select, Menu, etc.).
 
 ### How it works
 
-When a `PopoverTrigger` opens a popover that contains a `DataList`, keyboard events on the **trigger element** are automatically delegated to the `DataList` inside the popover:
+When an overlay contains a `DataList`, keyboard events on the **trigger element** can be delegated to the list through `KeyboardSource`:
 
 ```
 User presses ArrowDown on trigger
-  → PopoverTrigger.onKeydown()
-    → popover.dataList.onKeydown()
-      → DataList navigates to next item
+  → KeyboardSource.onKeydown()
+    → DataList.onKeydown()
+      → DataList updates active item
+      → strategy applies focus or active-descendant behavior
 ```
 
 This means the user can navigate the list **without moving focus** into the popover — focus stays on the trigger while arrows control the list.
 
-### Connecting trigger and DataList
+### Connecting a trigger and DataList
 
-Pass the `trigger` input to `DataList` so that Escape returns focus to the trigger and closes the popover:
+Attach `fiboKeyboardSource` to the trigger, then pass that source into the list:
 
 ```html
-<button fiboPopoverTriggerToggle>
+<button
+  fiboPopoverTrigger
+  fiboKeyboardSource
+  #keyboardSource="KeyboardSource"
+  [content]="listTpl"
+>
   Open list
-  <ng-template fiboPortalContent let-trigger>
-    <div fiboPopover [trigger]="trigger"
-         fiboDataList [trigger]="trigger"
-         fiboSelectOne [(value)]="selected"
-         (itemTriggered)="trigger.close()"
-         class="popover-container">
-      @for (item of items; track item.value) {
-        <button fiboDataListItem [value]="item.value" class="datalist-item">
-          {{ item.label }}
-        </button>
-      }
-    </div>
-  </ng-template>
 </button>
+
+<ng-template #listTpl let-overlay>
+  <div
+    fiboDataList
+    [keyboardSource]="keyboardSource"
+    fiboSelectOne
+    [(value)]="selected"
+    (itemTriggered)="overlay.close()"
+    class="popover-container"
+  >
+    @for (item of items; track item.value) {
+      <button fiboDataListItem [value]="item.value" class="datalist-item">
+        {{ item.label }}
+      </button>
+    }
+  </div>
+</ng-template>
 ```
 
 Key points:
-- `fiboPopover [trigger]="trigger"` — positions the popover relative to the trigger and registers itself in `trigger.popover`, enabling the keydown delegation chain
-- `fiboDataList [trigger]="trigger"` — enables Escape to close and return focus
-- `(itemTriggered)="trigger.close()"` — closes popover on selection
-- `PopoverTrigger` adds `tabindex="0"` to the host element automatically, so even non-focusable elements (like custom components) become keyboard-accessible
+- `fiboKeyboardSource` turns the trigger into a keyboard event source
+- `[keyboardSource]="keyboardSource"` binds the open list to that source while the overlay exists
+- the active strategy determines whether arrows move real DOM focus or keep it on the trigger/input
+- `(itemTriggered)="overlay.close()"` is still the usual way to close a dropdown on selection
 
 ## API Snapshot
 
 - `fiboDataList`
 - `fiboDataListItem`
+- `DATA_LIST_NAVIGATION_STRATEGY`
+- `provideDataListNavigationStrategy(...)`
 - `DataList.itemTriggered`
 - `DataList.activeDataListItem()`
