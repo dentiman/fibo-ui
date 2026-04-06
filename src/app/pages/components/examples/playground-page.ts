@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, ElementRef, signal, TemplateRef, viewChild } from '@angular/core';
-import { createOverlay, connectedPosition, restoreTriggerFocusOnClose, DialogTrigger, KeyboardSource } from '@fibo-ui/cdk';
+import { createOverlay, connectedPosition, restoreTriggerFocusOnClose, DialogTrigger } from '@fibo-ui/cdk';
 import { menuBehavior } from '@fibo-ui/components';
 import { Menu, type MenuItemType } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-playground-page',
-  imports: [Menu, DialogTrigger, KeyboardSource],
+  imports: [Menu, DialogTrigger],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-8 p-8">
@@ -23,8 +23,6 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
         <div class="flex flex-wrap gap-3">
           <button
             #menuTriggerBtn
-            fiboKeyboardSource
-            #menuKbSource="KeyboardSource"
             type="button"
             class="btn btn-primary"
             (click)="toggleMenu()"
@@ -34,8 +32,6 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
 
           <button
             #altMenuTriggerBtn
-            fiboKeyboardSource
-            #altMenuKbSource="KeyboardSource"
             type="button"
             class="btn btn-secondary"
             (click)="toggleAltMenu()"
@@ -44,12 +40,12 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
           </button>
         </div>
 
-        <ng-template #menuTpl>
-          <fibo-menu [keyboardSource]="menuKbSource" [items]="menuItems" (itemTriggered)="closeMenu()" />
+        <ng-template #menuTpl let-overlay>
+          <fibo-menu [overlay]="overlay" [items]="menuItems" (itemTriggered)="closeMenu()" />
         </ng-template>
 
-        <ng-template #altMenuTpl>
-          <fibo-menu [keyboardSource]="altMenuKbSource" [items]="quickMenuItems" (itemTriggered)="closeAltMenu()" />
+        <ng-template #altMenuTpl let-overlay>
+          <fibo-menu [overlay]="overlay" [items]="quickMenuItems" (itemTriggered)="closeAltMenu()" />
         </ng-template>
       </section>
 

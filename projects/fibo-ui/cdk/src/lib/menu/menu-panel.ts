@@ -32,12 +32,7 @@ export const MENU_PANEL = new InjectionToken<MenuPanel>('MenuPanel');
   host: {
     '(keydown.arrowleft)': 'focusToTrigger($event)',
   },
-  hostDirectives: [
-    {
-      directive: DataList,
-      inputs: ['keyboardSource'],
-    },
-  ],
+  hostDirectives: [DataList],
   providers: [{ provide: MENU_PANEL, useExisting: MenuPanel }],
 })
 export class MenuPanel {
@@ -136,23 +131,11 @@ export class MenuPanel {
       });
     });
 
-    effect((onCleanup) => {
-      const keyboardSource = this.dataList.keyboardSource();
-
-      if (keyboardSource) {
-        return;
-      }
-
-      // Fallback: auto-wire keydown from referenceElement when no keyboardSource is provided.
-      // This allows PopoverTrigger (and similar) to drive menu keyboard navigation
-      // without requiring explicit fiboKeyboardSource boilerplate.
+    effect(() => {
+      // Auto-wire keyboard navigation from the connected overlay's reference element.
       const pos = this.overlay()?.position();
       const refEl = pos?.type === 'connected' ? pos.referenceElement : null;
-      if (!refEl) return;
-
-      const handler = (e: KeyboardEvent) => this.dataList.onKeydown(e);
-      refEl.addEventListener('keydown', handler);
-      onCleanup(() => refEl.removeEventListener('keydown', handler));
+      this.dataList.keyboardSourceElement.set(refEl ?? null);
     });
 
     // Open/close submenu with symmetric delay when active option changes

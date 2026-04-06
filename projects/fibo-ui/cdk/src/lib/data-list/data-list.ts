@@ -1,6 +1,5 @@
 import { Directive, effect, inject, InjectionToken, input, model, output, signal } from '@angular/core';
 import { DataListItem } from './data-list-item.directive';
-import { KeyboardSource, KeydownDelegate } from './keyboard-source';
 import {
   type DataListNavigationStrategy,
   DATA_LIST_NAVIGATION_STRATEGY,
@@ -26,14 +25,14 @@ let nextDataListId = 0;
   //   },
   // ],
 })
-export class DataList implements KeydownDelegate {
+export class DataList {
   // Inject the default policy once so plain fiboDataList instances work
   // without any local setup. Feature components can override it via
   // viewProviders or, rarely, per-instance via [navigationStrategy].
   private readonly defaultNavigationStrategy = inject(DATA_LIST_NAVIGATION_STRATEGY);
 
   disabled = input(false);
-  keyboardSource = input<KeyboardSource | null>(null);
+  keyboardSourceElement = model<HTMLElement | null>(null);
   autoActivateFirst = input(false);
   navigationStrategy = input<DataListNavigationStrategy>(this.defaultNavigationStrategy);
 
@@ -68,18 +67,12 @@ export class DataList implements KeydownDelegate {
     });
 
     effect((onCleanup) => {
-      const keyboardSource = this.keyboardSource();
-      if (!keyboardSource) {
-        return;
-      }
+      const el = this.keyboardSourceElement();
+      if (!el) return;
 
-      keyboardSource.delegate.set(this);
-
-      onCleanup(() => {
-        if (keyboardSource.delegate() === this) {
-          keyboardSource.delegate.set(null);
-        }
-      });
+      const handler = (e: KeyboardEvent) => this.onKeydown(e);
+      el.addEventListener('keydown', handler);
+      onCleanup(() => el.removeEventListener('keydown', handler));
     });
   }
 

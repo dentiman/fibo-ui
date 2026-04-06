@@ -143,15 +143,15 @@ Use this only when one component template contains multiple lists that need diff
 
 ## Integration with Trigger Elements
 
-`DataList` is designed to work together with `PopoverTrigger` for dropdown-style components (Select, Menu, etc.).
+`DataList` is designed to work together with overlay triggers for dropdown-style components (Select, Menu, etc.).
 
 ### How it works
 
-When an overlay contains a `DataList`, keyboard events on the **trigger element** can be delegated to the list through `KeyboardSource`:
+When an overlay contains a `DataList`, keyboard events on the **trigger element** can be forwarded to the list through `keyboardSourceElement`:
 
 ```
 User presses ArrowDown on trigger
-  → KeyboardSource.onKeydown()
+  → DataList.keydownSourceElement listener fires
     → DataList.onKeydown()
       → DataList updates active item
       → strategy applies focus or active-descendant behavior
@@ -161,14 +161,13 @@ This means the user can navigate the list **without moving focus** into the popo
 
 ### Connecting a trigger and DataList
 
-Attach `fiboKeyboardSource` to the trigger, then pass that source into the list:
+Pass the trigger's `HTMLElement` directly as `[keyboardSourceElement]`:
 
 ```html
 <button
-  fiboPopoverTrigger
-  fiboKeyboardSource
-  #keyboardSource="KeyboardSource"
-  [content]="listTpl"
+  #triggerBtn
+  type="button"
+  (click)="toggle()"
 >
   Open list
 </button>
@@ -176,7 +175,7 @@ Attach `fiboKeyboardSource` to the trigger, then pass that source into the list:
 <ng-template #listTpl let-overlay>
   <div
     fiboDataList
-    [keyboardSource]="keyboardSource"
+    [keyboardSourceElement]="triggerBtn"
     fiboSelectOne
     [(value)]="selected"
     (itemTriggered)="overlay.close()"
@@ -192,8 +191,8 @@ Attach `fiboKeyboardSource` to the trigger, then pass that source into the list:
 ```
 
 Key points:
-- `fiboKeyboardSource` turns the trigger into a keyboard event source
-- `[keyboardSource]="keyboardSource"` binds the open list to that source while the overlay exists
+- `[keyboardSourceElement]` accepts any `HTMLElement` — DataList attaches a `keydown` listener to it directly
+- the binding is reactive: changing the element (or setting it to `null`) removes the old listener and registers a new one
 - the active strategy determines whether arrows move real DOM focus or keep it on the trigger/input
 - `(itemTriggered)="overlay.close()"` is still the usual way to close a dropdown on selection
 
@@ -201,6 +200,7 @@ Key points:
 
 - `fiboDataList`
 - `fiboDataListItem`
+- `DataList.keyboardSourceElement` — model input accepting `HTMLElement | null`; DataList attaches a `keydown` listener while the element is set
 - `DATA_LIST_NAVIGATION_STRATEGY`
 - `provideDataListNavigationStrategy(...)`
 - `DataList.itemTriggered`

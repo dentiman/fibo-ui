@@ -21,7 +21,6 @@ export * from './lib/utils/property.utils';
 export * from './lib/data-list/data-list';
 export * from './lib/data-list/data-list-navigation-strategy';
 export * from './lib/data-list/data-list-item.directive';
-export * from './lib/data-list/keyboard-source';
 export * from './lib/data-list/selection-models';
 export * from './lib/data-list/router-selection-models';
 export * from './lib/table/column';

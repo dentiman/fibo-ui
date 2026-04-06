@@ -2,7 +2,6 @@
   @if (item.children || item.content) {
     <button
       fiboSubmenuTrigger
-      #keyboardSource="KeyboardSource"
       role="menuitem"
       [content]="subTpl"
       [disabled]="!!item.disabled"
@@ -24,8 +23,8 @@
       ></lucide-icon>
     </button>
 
-    <ng-template #subTpl>
-      <fibo-menu [keyboardSource]="keyboardSource" [menuContent]="item.content" [items]="item.children" />
+    <ng-template #subTpl let-overlay>
+      <fibo-menu [overlay]="overlay" [menuContent]="item.content" [items]="item.children" />
     </ng-template>
 
   } @else {

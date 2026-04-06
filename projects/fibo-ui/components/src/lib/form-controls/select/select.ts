@@ -6,7 +6,6 @@ import {
   restoreTriggerFocusOnClose,
   DataList,
   DataListItem,
-  KeyboardSource,
   SelectOne,
   provideFormValueControl,
 } from '@fibo-ui/cdk';
@@ -33,7 +32,6 @@ export interface SelectItem {
     FieldShell,
     FieldTargetDirective,
     DataList,
-    KeyboardSource,
     SelectOne,
     DataListItem,
   ],
@@ -54,8 +52,6 @@ export interface SelectItem {
       <button
         fiboFieldTarget
         fieldTargetMode="click"
-        fiboKeyboardSource
-        #keyboardSource="KeyboardSource"
         #triggerButton
         type="button"
         class="w-full text-left"
@@ -79,7 +75,7 @@ export interface SelectItem {
       <div
         role="listbox"
         [attr.id]="fieldShell.idFor('listbox')"
-        [keyboardSource]="keyboardSource"
+        [keyboardSourceElement]="triggerButton"
         fiboDataList
         (itemTriggered)="close()"
         fiboSelectOne

@@ -1,6 +1,5 @@
 import { Directive, ElementRef, inject, input, model, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { DataListItem } from '../data-list/data-list-item.directive';
-import { KeyboardSource } from '../data-list/keyboard-source';
 import { restoreTriggerFocusOnClose } from '../overlay/overlay-behaviors';
 import { createOverlay, OverlayStack } from '../overlay/overlay-stack';
 import { connectedPosition } from '../overlay/overlay-config';
@@ -16,7 +15,6 @@ import { MENU_PANEL } from './menu-panel';
       directive: DataListItem,
       inputs: ['disabled'],
     },
-    KeyboardSource,
   ],
   host: {
     'aria-haspopup': 'menu',
@@ -30,7 +28,6 @@ import { MENU_PANEL } from './menu-panel';
 })
 export class SubmenuTrigger implements OnInit, OnDestroy {
   readonly option = inject(DataListItem);
-  readonly keyboardSource = inject(KeyboardSource);
   private readonly element = inject(ElementRef<HTMLElement>).nativeElement;
   private readonly panel = inject(MENU_PANEL);
   private readonly overlayStack = inject(OverlayStack);
@@ -60,9 +57,9 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
         }
 
         this.pendingKeyboardNavigation = false;
-        this.keyboardSource.delegate()?.navigateNext?.(
-          new KeyboardEvent('keydown', { key: 'ArrowRight' }),
-        );
+        // The child MenuPanel's DataList is now listening to keydown on this element.
+        // Dispatching ArrowDown navigates to the first item in the submenu.
+        this.element.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: false }));
       });
     },
   );
@@ -98,7 +95,9 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
     event.stopPropagation();
 
     if (this.isOpen()) {
-      this.keyboardSource.delegate()?.navigateNext?.(event);
+      // Submenu is already open — dispatch ArrowDown so the child DataList
+      // receives it and navigates to the first item.
+      this.element.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: false }));
       return;
     }
 

@@ -13,7 +13,6 @@ import {
   ACTIVE_DESCENDANT_DATA_LIST_NAVIGATION_STRATEGY,
   DataList,
   DataListItem,
-  KeyboardSource,
   SelectOne,
   createOverlay,
   connectedPosition,
@@ -42,7 +41,6 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
     FieldTargetDirective,
     DataList,
     DataListItem,
-    KeyboardSource,
     SelectOne,
     ComboboxInput,
     ComboboxList,
@@ -72,8 +70,6 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
     >
       <input
         fiboFieldTarget
-        fiboKeyboardSource
-        #keyboardSource="KeyboardSource"
         #inputElement
         [placeholder]="placeholder()"
         (blur)="uiState.touched.set(true)"
@@ -85,7 +81,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
     <ng-template #comboboxTpl>
       <div
         fiboComboboxList
-        [keyboardSource]="keyboardSource"
+        [keyboardSourceElement]="inputElement"
         fiboDataList
         [autoActivateFirst]="true"
         (itemTriggered)="expanded.set(false)"

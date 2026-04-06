@@ -6,7 +6,6 @@ import {
   restoreTriggerFocusOnClose,
   DataList,
   DataListItem,
-  KeyboardSource,
   SelectMulti,
   provideFormValueControl,
 } from '@fibo-ui/cdk';
@@ -29,7 +28,6 @@ import { SelectItem } from './select';
   ],
   imports: [
     DataList,
-    KeyboardSource,
     SelectMulti,
     LucideAngularModule,
     DataListItem,
@@ -52,8 +50,6 @@ import { SelectItem } from './select';
       <div
         fiboFieldTarget
         fieldTargetMode="click"
-        fiboKeyboardSource
-        #keyboardSource="KeyboardSource"
         #triggerSurface
         data-field-interactive
         role="combobox"
@@ -96,7 +92,7 @@ import { SelectItem } from './select';
         role="listbox"
         [attr.id]="listboxId()"
         aria-multiselectable="true"
-        [keyboardSource]="keyboardSource"
+        [keyboardSourceElement]="triggerSurface"
         fiboDataList
         fiboSelectMulti
         [(value)]="value"
