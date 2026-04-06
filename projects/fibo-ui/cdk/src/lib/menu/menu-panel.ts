@@ -2,7 +2,6 @@ import { DestroyRef, Directive, effect, inject, InjectionToken, input, signal } 
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { DataList } from '../data-list/data-list';
 import { DataListItem } from '../data-list/data-list-item.directive';
-import { KeyboardSource } from '../data-list/keyboard-source';
 import { SubmenuTrigger } from './submenu-trigger';
 import { type OverlayHandle } from '../overlay/overlay-handle';
 import { OverlayStack } from '../overlay/overlay-stack';
@@ -23,7 +22,7 @@ export const MENU_PANEL = new InjectionToken<MenuPanel>('MenuPanel');
  *
  * Usage:
  * ```html
- * <div fiboMenuPanel [trigger]="menuTrigger" [openDelay]="300">
+ * <div fiboMenuPanel [keyboardSource]="keyboardSource" [openDelay]="300">
  *   <button fiboSubmenuTrigger>Item with submenu</button>
  * </div>
  * ```
@@ -33,7 +32,12 @@ export const MENU_PANEL = new InjectionToken<MenuPanel>('MenuPanel');
   host: {
     '(keydown.arrowleft)': 'focusToTrigger($event)',
   },
-  hostDirectives: [DataList],
+  hostDirectives: [
+    {
+      directive: DataList,
+      inputs: ['keyboardSource'],
+    },
+  ],
   providers: [{ provide: MENU_PANEL, useExisting: MenuPanel }],
 })
 export class MenuPanel {
@@ -48,7 +52,18 @@ export class MenuPanel {
 
   /** Delay in milliseconds before opening submenu on hover (default 300ms) */
   openDelay = input(300);
-  keyboardSource = input<KeyboardSource | null>(null);
+  /**
+   * Current overlay session for this menu panel when it is rendered inside an overlay.
+   *
+   * Used by overlay-backed menus for several related cases:
+   * - ArrowLeft focus return from a submenu back to its trigger element
+   * - fallback keyboard wiring from the connected reference element when no explicit
+   *   `keyboardSource` is provided
+   * - branch-aware pointer handling, so parent menu state is preserved while the pointer
+   *   moves between this panel and its child submenu overlays
+   *
+   * Plain in-place menus can omit it. Popover and nested submenu panels usually provide it.
+   */
   overlay = input<OverlayHandle | null>(null);
 
   registerSubmenuTrigger(trigger: SubmenuTrigger) {
@@ -122,15 +137,9 @@ export class MenuPanel {
     });
 
     effect((onCleanup) => {
-      const keyboardSource = this.keyboardSource();
+      const keyboardSource = this.dataList.keyboardSource();
 
       if (keyboardSource) {
-        keyboardSource.delegate.set(this.dataList);
-        onCleanup(() => {
-          if (keyboardSource.delegate() === this.dataList) {
-            keyboardSource.delegate.set(null);
-          }
-        });
         return;
       }
 
