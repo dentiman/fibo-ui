@@ -55,11 +55,21 @@ export class OverlayStack {
 
   readonly openOverlayList: Signal<OverlayHandle[]> = this.openOverlays.asReadonly();
 
-  closeAllByTag(tag: string): void {
-    const overlays = this.openOverlayList().filter(o => o.behavior.tag === tag);
-    for (const overlay of [...overlays].reverse()) {
-      overlay.close();
+  /**
+   * Walk up the overlay parent chain from the given overlay to the topmost
+   * open ancestor, then close it.  Angular's destroy lifecycle cascade-closes
+   * all descendant overlays automatically.
+   */
+  closeBranchRoot(overlayId: string): void {
+    let rootId = overlayId;
+    while (true) {
+      const parentId = this.overlayParentIds.get(rootId);
+      if (!parentId) break;
+      if (!this.openOverlays().some(o => o.id === parentId)) break;
+      rootId = parentId;
     }
+    const root = this.openOverlays().find(o => o.id === rootId);
+    root?.close();
   }
 
   completeAfterClose(id: string): void {

@@ -90,7 +90,10 @@ export class MenuPanel {
   }
 
   closeAll() {
-    this.overlayStack.closeAllByTag('menu');
+    const id = this.overlay()?.id;
+    if (id) {
+      this.overlayStack.closeBranchRoot(id);
+    }
   }
 
   closeAllSoon() {

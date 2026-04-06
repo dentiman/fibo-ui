@@ -39,7 +39,6 @@ export function connectedBehavior(): OverlayBehaviorConfig {
 export function menuBehavior(): OverlayBehaviorConfig {
   return {
     shell: CONNECTED_SHELL_TOKEN,
-    tag: 'menu',
     closeOnOutsideClick: true,
     closeOnFocusLeave: true,
     closeOnEscape: true,

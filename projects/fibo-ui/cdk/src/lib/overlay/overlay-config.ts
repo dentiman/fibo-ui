@@ -4,7 +4,6 @@ import type { Placement } from '@floating-ui/dom';
 
 export interface OverlayBehaviorConfig {
   readonly shell: InjectionToken<Type<any>>;
-  readonly tag?: string;
   readonly needsBackdrop?: boolean;
   readonly closeOnEscape?: boolean;
   readonly closeOnOutsideClick?: boolean;

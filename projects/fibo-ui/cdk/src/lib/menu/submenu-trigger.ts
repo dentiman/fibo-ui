@@ -38,7 +38,6 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
 
   private readonly behavior: OverlayBehaviorConfig = {
     shell: CONNECTED_SHELL_TOKEN,
-    tag: 'menu',
     closeOnOutsideClick: true,
     closeOnFocusLeave: true,
     closeOnEscape: true,
