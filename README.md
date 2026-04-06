@@ -139,16 +139,6 @@ userForm = form(this.userModel, (path) => {
 </ng-template>
 ```
 
-### Popover Menu
-
-```html
-<button fiboPopoverTriggerToggle>Menu
-  <ng-template fiboPortalContent let-trigger>
-    <fibo-menu [items]="menuItems" [trigger]="trigger" placement="bottom-start" />
-  </ng-template>
-</button>
-```
-
 ### Table with Sort and Selection
 
 ```html

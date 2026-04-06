@@ -1,5 +1,3 @@
-import { InjectionToken, Provider } from '@angular/core';
-
 /**
  * Minimal structural contract that navigation strategies need from DataList.
  * Intentionally avoids importing DataList directly to prevent a circular
@@ -53,21 +51,3 @@ export const ACTIVE_DESCENDANT_DATA_LIST_NAVIGATION_STRATEGY: DataListNavigation
     scrollActiveItemIntoView(dataList);
   },
 };
-
-export const DATA_LIST_NAVIGATION_STRATEGY = new InjectionToken<DataListNavigationStrategy>(
-  'DATA_LIST_NAVIGATION_STRATEGY',
-  {
-    // Most list-based UIs in the library are focus-driven by default:
-    // select, menu, listbox, calendar, side menu.
-    factory: () => FOCUS_ACTIVE_DATA_LIST_NAVIGATION_STRATEGY,
-  },
-);
-
-export function provideDataListNavigationStrategy(
-  strategy: DataListNavigationStrategy,
-): Provider {
-  return {
-    provide: DATA_LIST_NAVIGATION_STRATEGY,
-    useValue: strategy,
-  };
-}

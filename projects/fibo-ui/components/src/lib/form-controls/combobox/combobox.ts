@@ -10,13 +10,11 @@ import {
 } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
 import {
-  ACTIVE_DESCENDANT_DATA_LIST_NAVIGATION_STRATEGY,
   DataList,
   DataListItem,
   SelectOne,
   createOverlay,
   connectedPosition,
-  provideDataListNavigationStrategy,
   restoreTriggerFocusOnClose,
   provideFormValueControl,
 } from '@fibo-ui/cdk';
@@ -52,12 +50,6 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
     provideFormValueControl(() => Combobox),
     provideComboboxControl(() => Combobox),
   ],
-  viewProviders: [
-    // Keep focus in the input and drive the list through aria-activedescendant.
-    // viewProviders scopes the override to the internal fiboDataList instances
-    // rendered by this component template.
-    provideDataListNavigationStrategy(ACTIVE_DESCENDANT_DATA_LIST_NAVIGATION_STRATEGY),
-  ],
   template: `
     <fibo-field-shell
       #fieldShell
@@ -83,6 +75,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         fiboComboboxList
         [keyboardSourceElement]="inputElement"
         fiboDataList
+        [useActiveDescendant]="true"
         [autoActivateFirst]="true"
         (itemTriggered)="expanded.set(false)"
         fiboSelectOne

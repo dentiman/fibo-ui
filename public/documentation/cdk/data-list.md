@@ -88,12 +88,12 @@ export class CdkDataListItemsBasicExample {
 
 This is important because not every consumer wants the same keyboard behavior:
 
-- **focus strategy** moves DOM focus to the active item
+- **focus strategy** (default) moves DOM focus to the active item
 - **active-descendant strategy** keeps focus on the trigger or input and only updates active state + scrolling
 
 ### Default behavior
 
-Plain `fiboDataList` instances use the default injected strategy automatically. No setup is needed for the common list-like cases:
+Plain `fiboDataList` instances use the focus strategy automatically. No setup is needed for the common list-like cases:
 
 - select
 - multi-select
@@ -102,44 +102,21 @@ Plain `fiboDataList` instances use the default injected strategy automatically. 
 - calendar
 - side menu
 
-The default strategy is focus-based, so arrow navigation moves focus onto the active item.
+### Active-descendant mode
 
-### Override at component level
-
-When a component needs a different interaction model, override the strategy locally with `viewProviders`.
-
-This is the recommended pattern for input-driven controls such as combobox, where focus must stay in the input and the list is exposed through `aria-activedescendant`.
-
-```ts
-import {
-  ACTIVE_DESCENDANT_DATA_LIST_NAVIGATION_STRATEGY,
-  provideDataListNavigationStrategy,
-} from '@fibo-ui/cdk';
-
-@Component({
-  viewProviders: [
-    provideDataListNavigationStrategy(ACTIVE_DESCENDANT_DATA_LIST_NAVIGATION_STRATEGY),
-  ],
-})
-export class MyComboboxLikeComponent {}
-```
-
-Use `viewProviders` when the override should apply only to the `fiboDataList` instances created inside that component's own template.
-
-### Override per instance
-
-For rare cases, a single list instance can override the injected strategy directly:
+For input-driven controls such as combobox, where focus must stay in the input and the list is exposed through `aria-activedescendant`, set `[useActiveDescendant]="true"`:
 
 ```html
 <div
   fiboDataList
-  [navigationStrategy]="myStrategy"
+  [useActiveDescendant]="true"
+  [keyboardSourceElement]="inputElement"
 >
   ...
 </div>
 ```
 
-Use this only when one component template contains multiple lists that need different policies. In most cases, `viewProviders` is clearer.
+When active-descendant mode is enabled, arrow key navigation scrolls the active item into view but does not move DOM focus away from the trigger or input element.
 
 ## Integration with Trigger Elements
 
@@ -201,7 +178,6 @@ Key points:
 - `fiboDataList`
 - `fiboDataListItem`
 - `DataList.keyboardSourceElement` — model input accepting `HTMLElement | null`; DataList attaches a `keydown` listener while the element is set
-- `DATA_LIST_NAVIGATION_STRATEGY`
-- `provideDataListNavigationStrategy(...)`
+- `DataList.useActiveDescendant` — enables active-descendant navigation mode (default: `false`)
 - `DataList.itemTriggered`
 - `DataList.activeDataListItem()`

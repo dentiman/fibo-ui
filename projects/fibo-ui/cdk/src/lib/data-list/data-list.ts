@@ -1,8 +1,8 @@
-import { Directive, effect, inject, InjectionToken, input, model, output, signal } from '@angular/core';
+import { Directive, computed, effect, InjectionToken, input, model, output, signal } from '@angular/core';
 import { DataListItem } from './data-list-item.directive';
 import {
-  type DataListNavigationStrategy,
-  DATA_LIST_NAVIGATION_STRATEGY,
+  ACTIVE_DESCENDANT_DATA_LIST_NAVIGATION_STRATEGY,
+  FOCUS_ACTIVE_DATA_LIST_NAVIGATION_STRATEGY,
 } from './data-list-navigation-strategy';
 
 export const DATA_LIST = new InjectionToken<DataList>('DataList');
@@ -26,15 +26,16 @@ let nextDataListId = 0;
   // ],
 })
 export class DataList {
-  // Inject the default policy once so plain fiboDataList instances work
-  // without any local setup. Feature components can override it via
-  // viewProviders or, rarely, per-instance via [navigationStrategy].
-  private readonly defaultNavigationStrategy = inject(DATA_LIST_NAVIGATION_STRATEGY);
-
   disabled = input(false);
   keyboardSourceElement = model<HTMLElement | null>(null);
   autoActivateFirst = input(false);
-  navigationStrategy = input<DataListNavigationStrategy>(this.defaultNavigationStrategy);
+  useActiveDescendant = input(false);
+
+  private readonly navigationStrategy = computed(() =>
+    this.useActiveDescendant()
+      ? ACTIVE_DESCENDANT_DATA_LIST_NAVIGATION_STRATEGY
+      : FOCUS_ACTIVE_DATA_LIST_NAVIGATION_STRATEGY,
+  );
 
   itemTriggered = output<Event>();
 
