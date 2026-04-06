@@ -150,7 +150,7 @@ toggle() {
 }
 ```
 
-`menuBehavior()` sets `tag: 'menu'` on the overlay, which lets nested menus close the entire chain at once via `MenuPanel.closeAll()`.
+`MenuPanel.closeAll()` uses the overlay hierarchy to walk up to the root overlay and close it. Angular's destroy lifecycle cascade-closes all descendant submenu overlays automatically.
 
 ## API
 
