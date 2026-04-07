@@ -28,7 +28,6 @@ export * from './lib/overlay/shell/overlay-modal-shell.component';
 export * from './lib/overlay/shell/overlay-drawer-shell.component';
 export * from './lib/overlay/shell/overlay-connected-shell.component';
 export * from './lib/overlay/shell/overlay-plain-shell.component';
-export * from './lib/overlay/overlay-presets';
 export * from './lib/overlay/provide-overlays';
 
 export * from './lib/form-controls/calendar/calendar';
