@@ -1,10 +1,8 @@
 import { Directive, ElementRef, inject, input, model, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { DataListItem } from '../data-list/data-list-item.directive';
-import { restoreTriggerFocusOnClose } from '../overlay/overlay-behaviors';
-import { createOverlay, OverlayStack } from '../overlay/overlay-stack';
+import { OverlayStack } from '../overlay/overlay-stack';
 import { connectedPosition } from '../overlay/overlay-config';
-import type { OverlayBehaviorConfig } from '../overlay/overlay-config';
-import { CONNECTED_SHELL_TOKEN } from '../overlay/overlay-shell-tokens';
+import { createConnectedOverlay } from '../overlay/overlay-recipes';
 import { MENU_PANEL } from './menu-panel';
 
 @Directive({
@@ -36,30 +34,19 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
   isOpen = model(false, { alias: 'open' });
   private pendingKeyboardNavigation = false;
 
-  private readonly behavior: OverlayBehaviorConfig = {
-    shell: CONNECTED_SHELL_TOKEN,
-    closeOnOutsideClick: true,
-    closeOnFocusLeave: true,
-    closeOnEscape: true,
-  };
-
-  overlay = createOverlay(
+  overlay = createConnectedOverlay(
     this.isOpen,
-    this.behavior,
     connectedPosition(() => ({ placement: 'right-start', offset: 1, referenceElement: this.element })),
     this.content,
-    overlay => {
-      restoreTriggerFocusOnClose(overlay, () => this.element);
-      overlay.afterOpened(() => {
-        if (!this.pendingKeyboardNavigation) {
-          return;
-        }
-
-        this.pendingKeyboardNavigation = false;
-        // The child MenuPanel's DataList is now listening to keydown on this element.
-        // Dispatching ArrowDown navigates to the first item in the submenu.
-        this.element.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: false }));
-      });
+    {
+      restoreFocusTo: () => this.element,
+      setup: session => {
+        session.afterOpened(() => {
+          if (!this.pendingKeyboardNavigation) return;
+          this.pendingKeyboardNavigation = false;
+          this.element.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: false }));
+        });
+      },
     },
   );
 
