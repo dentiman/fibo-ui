@@ -1,14 +1,8 @@
-import { Directive, ElementRef, inject, input, model, signal, TemplateRef } from '@angular/core';
+import { Directive, ElementRef, inject, input, model, TemplateRef } from '@angular/core';
 import type { Placement } from '@floating-ui/dom';
-import { createOverlay } from './overlay-stack';
-import { connectedPosition, globalPosition } from './overlay-config';
-import type { OverlayBehaviorConfig } from './overlay-config';
-import {
-  CONNECTED_SHELL_TOKEN,
-  DRAWER_SHELL_TOKEN,
-  MODAL_SHELL_TOKEN,
-} from './overlay-shell-tokens';
-import { trapOverlayFocus, restoreTriggerFocusOnClose } from './overlay-behaviors';
+import { connectedPosition } from './overlay-config';
+import { DRAWER_SHELL_TOKEN } from './overlay-shell-tokens';
+import { createConnectedOverlay, createGlobalOverlay } from './overlay-recipes';
 
 @Directive({
   selector: '[fiboDialogTrigger]',
@@ -25,18 +19,8 @@ export class DialogTrigger {
   isOpen = model(false, { alias: 'open' });
   content = input.required<TemplateRef<unknown>>();
 
-  private readonly behavior: OverlayBehaviorConfig = {
-    shell: MODAL_SHELL_TOKEN,
-    needsBackdrop: true,
-    blockScroll: true,
-    closeOnOutsideClick: true,
-    closeOnEscape: true,
-  };
-  private readonly position = signal(globalPosition());
-
-  overlay = createOverlay(this.isOpen, this.behavior, this.position, this.content, session => {
-    trapOverlayFocus(session, { guard: true });
-    restoreTriggerFocusOnClose(session, () => this.element);
+  overlay = createGlobalOverlay(this.isOpen, this.content, {
+    restoreFocusTo: () => this.element,
   });
 
   open() {
@@ -63,18 +47,9 @@ export class DrawerTrigger {
   isOpen = model(false, { alias: 'open' });
   content = input.required<TemplateRef<unknown>>();
 
-  private readonly behavior: OverlayBehaviorConfig = {
+  overlay = createGlobalOverlay(this.isOpen, this.content, {
     shell: DRAWER_SHELL_TOKEN,
-    needsBackdrop: true,
-    blockScroll: true,
-    closeOnOutsideClick: true,
-    closeOnEscape: true,
-  };
-  private readonly position = signal(globalPosition());
-
-  overlay = createOverlay(this.isOpen, this.behavior, this.position, this.content, session => {
-    trapOverlayFocus(session, { guard: true });
-    restoreTriggerFocusOnClose(session, () => this.element);
+    restoreFocusTo: () => this.element,
   });
 
   open() {
@@ -103,22 +78,16 @@ export class PopoverTrigger {
   placement = input<Placement>();
   offset = input<number>();
 
-  private readonly behavior: OverlayBehaviorConfig = {
-    shell: CONNECTED_SHELL_TOKEN,
-    closeOnOutsideClick: true,
-    closeOnEscape: true,
-    closeOnFocusLeave: true,
-  };
-
-  private readonly position = connectedPosition(() => ({
-    referenceElement: this.element,
-    placement: this.placement(),
-    offset: this.offset(),
-  }));
-
-  overlay = createOverlay(this.isOpen, this.behavior, this.position, this.content, session => {
-    restoreTriggerFocusOnClose(session, () => this.element);
-  });
+  overlay = createConnectedOverlay(
+    this.isOpen,
+    connectedPosition(() => ({
+      referenceElement: this.element,
+      placement: this.placement(),
+      offset: this.offset(),
+    })),
+    this.content,
+    { restoreFocusTo: () => this.element },
+  );
 
   open() {
     if (!this.isOpen()) this.isOpen.set(true);
