@@ -13,12 +13,10 @@ import {
   DataList,
   DataListItem,
   SelectOne,
-  createOverlay,
+  createConnectedOverlay,
   connectedPosition,
-  restoreTriggerFocusOnClose,
   provideFormValueControl,
 } from '@fibo-ui/cdk';
-import { connectedBehavior } from '../../overlay/overlay-presets';
 import { type ComboboxControl, provideComboboxControl } from './combobox-control-token';
 import { ComboboxInput } from './combobox-input';
 import { ComboboxList } from './combobox-list';
@@ -124,16 +122,17 @@ export class Combobox
       : [];
   });
 
-  readonly overlay = createOverlay(
+  readonly overlay = createConnectedOverlay(
     this.expanded,
-    connectedBehavior(),
     connectedPosition(() => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true })),
     this.comboboxTemplateRef,
-    overlay => {
-      restoreTriggerFocusOnClose(overlay, () => this.fieldShell().overlayFocusReturnTarget());
-      overlay.beforeClose((_, __, reason) => {
-        if (reason !== 'state') this.resetQueryToValue();
-      });
+    {
+      restoreFocusTo: () => this.fieldShell().overlayFocusReturnTarget(),
+      setup: session => {
+        session.beforeClose((_, __, reason) => {
+          if (reason !== 'state') this.resetQueryToValue();
+        });
+      },
     },
   );
 

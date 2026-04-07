@@ -1,15 +1,12 @@
 import { Component, ElementRef, TemplateRef, computed, inject, input, model, signal, viewChild } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
 import {
-  createOverlay,
+  createConnectedOverlay,
   connectedPosition,
-  trapOverlayFocus,
-  restoreTriggerFocusOnClose,
   OverlayPanel,
   SelectDate,
   provideFormValueControl,
 } from '@fibo-ui/cdk';
-import { connectedBehavior } from '../../overlay/overlay-presets';
 import { Calendar } from '../calendar/calendar';
 import { FieldShell } from '../form/field-shell';
 import { FieldTargetDirective } from '../form/field-target';
@@ -90,14 +87,13 @@ export class DatePickerField implements FormValueControl<string> {
   readonly placeholder = input<string>('');
   readonly iconStart = input<string>('');
   readonly dialogId = computed(() => this.fieldShell().idFor('dialog'));
-  readonly overlay = createOverlay(
+  readonly overlay = createConnectedOverlay(
     this.isOpen,
-    connectedBehavior(),
     connectedPosition(() => ({ referenceElement: this.fieldShell().overlayReferenceElement() })),
     this.calendarTemplate,
-    session => {
-      trapOverlayFocus(session, { guard: true });
-      restoreTriggerFocusOnClose(session, () => this.fieldShell().overlayFocusReturnTarget());
+    {
+      trapFocus: { guard: true },
+      restoreFocusTo: () => this.fieldShell().overlayFocusReturnTarget(),
     },
   );
 
