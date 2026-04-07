@@ -1,15 +1,13 @@
 import { Component, ElementRef, TemplateRef, computed, inject, input, model, signal, viewChild } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
 import {
-  createOverlay,
+  createConnectedOverlay,
   connectedPosition,
-  restoreTriggerFocusOnClose,
   DataList,
   DataListItem,
   SelectOne,
   provideFormValueControl,
 } from '@fibo-ui/cdk';
-import { connectedBehavior } from '../../overlay/overlay-presets';
 import { FieldShell } from '../form/field-shell';
 import { FieldTargetDirective } from '../form/field-target';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
@@ -122,12 +120,11 @@ export class Select implements FormValueControl<string | number | null> {
   readonly selectedLabel = computed(() => this.selectedItem()?.label ?? null);
   readonly canClear = computed(() => this.clearValue() !== undefined && this.value() !== this.clearValue());
 
-  readonly overlay = createOverlay(
+  readonly overlay = createConnectedOverlay(
     this.isOpen,
-    connectedBehavior(),
     connectedPosition(() => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true })),
     this.selectTemplate,
-    session => { restoreTriggerFocusOnClose(session, () => this.fieldShell().overlayFocusReturnTarget()); },
+    { restoreFocusTo: () => this.fieldShell().overlayFocusReturnTarget() },
   );
 
   focus(options?: FocusOptions) {
