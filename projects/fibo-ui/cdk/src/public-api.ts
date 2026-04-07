@@ -49,6 +49,7 @@ export * from './lib/overlay/overlay-session';
 export * from './lib/overlay/overlay-types';
 export * from './lib/overlay/overlay-stack';
 export * from './lib/overlay/overlay-singleton';
+export * from './lib/overlay/overlay-recipes';
 export * from './lib/overlay/overlay-behaviors';
 export * from './lib/overlay/overlay-container';
 export * from './lib/overlay/overlay-content';
