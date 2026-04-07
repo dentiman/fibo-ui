@@ -1,8 +1,7 @@
 import { computed, Injectable, signal, TemplateRef } from '@angular/core';
 import { Subject, takeUntil, timer } from 'rxjs';
 import { Placement } from '@floating-ui/dom';
-import { createOverlay, connectedPosition, type OverlayBehaviorConfig } from '@fibo-ui/cdk';
-import { tooltipBehavior } from '../overlay-presets';
+import { createConnectedOverlay, connectedPosition, TOOLTIP_SHELL_TOKEN } from '@fibo-ui/cdk';
 
 @Injectable({
   providedIn: 'root',
@@ -20,8 +19,6 @@ export class TooltipService {
   private _interactionRequest = new Subject<'open' | 'close'>();
   private readonly isOpen = signal(false);
 
-  private readonly behavior: OverlayBehaviorConfig = tooltipBehavior();
-
   private readonly position = connectedPosition(() => ({
     referenceElement: this.tooltipRef()?.referenceElement ?? null,
     placement: this.tooltipRef()?.placement ?? 'top',
@@ -29,12 +26,19 @@ export class TooltipService {
 
   private readonly content = computed(() => this.tooltipRef()?.content ?? null);
 
-  readonly overlay = createOverlay(this.isOpen, this.behavior, this.position, this.content, session => {
-    session.afterClose(() => {
-      if (!this.isOpen()) {
-        this.tooltipRef.set(null);
-      }
-    });
+  readonly overlay = createConnectedOverlay(this.isOpen, this.position, this.content, {
+    shell: TOOLTIP_SHELL_TOKEN,
+    closeOnScroll: true,
+    closeOnEscape: false,
+    closeOnOutsideClick: false,
+    closeOnFocusLeave: false,
+    setup: session => {
+      session.afterClose(() => {
+        if (!this.isOpen()) {
+          this.tooltipRef.set(null);
+        }
+      });
+    },
   });
 
   open(content: string | TemplateRef<unknown>, referenceElement: HTMLElement, placement: Placement) {

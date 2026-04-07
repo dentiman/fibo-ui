@@ -1,6 +1,5 @@
 import { Injectable, signal, TemplateRef } from '@angular/core';
-import { createSingletonOverlay, globalPosition } from '@fibo-ui/cdk';
-import { notificationBehavior } from '../overlay-presets';
+import { createSingletonGlobalOverlay, NOTIFICATION_SHELL_TOKEN } from '@fibo-ui/cdk';
 
 export type NotificationType = 'info' | 'success' | 'warning' | 'danger';
 export interface NotificationConfig {
@@ -8,22 +7,26 @@ export interface NotificationConfig {
   message?: string;
   title?: string;
   template?: TemplateRef<unknown>;
-  duration?: number; // Duration in seconds
-  id?: symbol; // Internal ID for tracking timers
+  duration?: number;
+  id?: symbol;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class Notifier {
-  private readonly DEFAULT_DURATION = 5; // 5 seconds
+  private readonly DEFAULT_DURATION = 5;
   notifications = signal<NotificationConfig[]>([]);
   private readonly timers = new Map<symbol, ReturnType<typeof setTimeout>>();
 
-  private readonly behavior = notificationBehavior();
-  private readonly position = signal(globalPosition());
-
-  readonly overlay = createSingletonOverlay(this.behavior, this.position);
+  readonly overlay = createSingletonGlobalOverlay({
+    shell: NOTIFICATION_SHELL_TOKEN,
+    backdrop: false,
+    blockScroll: false,
+    closeOnOutsideClick: false,
+    closeOnEscape: false,
+    trapFocus: false,
+  });
 
   push(config: NotificationConfig) {
     const id = Symbol('notification-id');
