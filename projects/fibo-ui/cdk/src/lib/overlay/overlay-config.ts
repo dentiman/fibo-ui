@@ -50,9 +50,21 @@ export function connectedPosition(
 }
 
 export function coordinatePosition(
+  factory: () => Omit<CoordinatePosition, 'type'>,
+): Signal<CoordinatePosition>;
+export function coordinatePosition(
   x: number,
   y: number,
   options?: Pick<CoordinatePosition, 'placement'>,
-): CoordinatePosition {
-  return { type: 'coordinate', x, y, ...options };
+): CoordinatePosition;
+export function coordinatePosition(
+  factoryOrX: (() => Omit<CoordinatePosition, 'type'>) | number,
+  y?: number,
+  options?: Pick<CoordinatePosition, 'placement'>,
+): Signal<CoordinatePosition> | CoordinatePosition {
+  if (typeof factoryOrX === 'function') {
+    const factory = factoryOrX;
+    return computed(() => ({ type: 'coordinate', ...factory() }));
+  }
+  return { type: 'coordinate', x: factoryOrX, y: y!, ...options };
 }
