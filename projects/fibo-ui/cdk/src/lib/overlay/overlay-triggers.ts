@@ -1,6 +1,5 @@
 import { Directive, ElementRef, inject, input, model, TemplateRef } from '@angular/core';
 import type { Placement } from '@floating-ui/dom';
-import { connectedPosition } from './overlay-config';
 import { DRAWER_SHELL_TOKEN } from './overlay-shell-tokens';
 import { createConnectedOverlay, createGlobalOverlay } from './overlay-recipes';
 
@@ -80,11 +79,11 @@ export class PopoverTrigger {
 
   overlay = createConnectedOverlay(
     this.isOpen,
-    connectedPosition(() => ({
+    () => ({
       referenceElement: this.element,
       placement: this.placement(),
       offset: this.offset(),
-    })),
+    }),
     this.content,
     { restoreFocusTo: () => this.element },
   );

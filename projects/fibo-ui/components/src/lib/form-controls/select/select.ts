@@ -2,7 +2,6 @@ import { Component, ElementRef, TemplateRef, computed, inject, input, model, sig
 import { FormValueControl } from '@angular/forms/signals';
 import {
   createConnectedOverlay,
-  connectedPosition,
   DataList,
   DataListItem,
   SelectOne,
@@ -122,7 +121,7 @@ export class Select implements FormValueControl<string | number | null> {
 
   readonly overlay = createConnectedOverlay(
     this.isOpen,
-    connectedPosition(() => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true })),
+    () => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true }),
     this.selectTemplate,
     { restoreFocusTo: () => this.fieldShell().overlayFocusReturnTarget() },
   );

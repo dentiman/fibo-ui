@@ -14,7 +14,6 @@ import {
   DataListItem,
   SelectOne,
   createConnectedOverlay,
-  connectedPosition,
   provideFormValueControl,
 } from '@fibo-ui/cdk';
 import { type ComboboxControl, provideComboboxControl } from './combobox-control-token';
@@ -124,7 +123,7 @@ export class Combobox
 
   readonly overlay = createConnectedOverlay(
     this.expanded,
-    connectedPosition(() => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true })),
+    () => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true }),
     this.comboboxTemplateRef,
     {
       restoreFocusTo: () => this.fieldShell().overlayFocusReturnTarget(),

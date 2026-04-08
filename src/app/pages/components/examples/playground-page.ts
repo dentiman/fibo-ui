@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, signal, TemplateRef, viewChild } from '@angular/core';
-import { createConnectedOverlay, connectedPosition, DialogTrigger } from '@fibo-ui/cdk';
+import { createConnectedOverlay, DialogTrigger } from '@fibo-ui/cdk';
 import { Menu, type MenuItemType } from '@fibo-ui/components';
 
 @Component({
@@ -162,14 +162,14 @@ export class PlaygroundPageComponent {
 
   readonly menuOverlay = createConnectedOverlay(
     this.isMenuOpen,
-    connectedPosition(() => ({ referenceElement: this.menuTrigger().nativeElement })),
+    () => ({ referenceElement: this.menuTrigger().nativeElement }),
     this.menuTemplate,
     { restoreFocusTo: () => this.menuTrigger().nativeElement },
   );
 
   readonly altMenuOverlay = createConnectedOverlay(
     this.isAltMenuOpen,
-    connectedPosition(() => ({ referenceElement: this.altMenuTrigger().nativeElement })),
+    () => ({ referenceElement: this.altMenuTrigger().nativeElement }),
     this.altMenuTemplate,
     { restoreFocusTo: () => this.altMenuTrigger().nativeElement },
   );

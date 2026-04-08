@@ -1,7 +1,7 @@
 import { computed, Injectable, signal, TemplateRef } from '@angular/core';
 import { Subject, takeUntil, timer } from 'rxjs';
 import { Placement } from '@floating-ui/dom';
-import { createConnectedOverlay, connectedPosition, TOOLTIP_SHELL_TOKEN } from '@fibo-ui/cdk';
+import { createConnectedOverlay, TOOLTIP_SHELL_TOKEN } from '@fibo-ui/cdk';
 
 @Injectable({
   providedIn: 'root',
@@ -19,14 +19,16 @@ export class TooltipService {
   private _interactionRequest = new Subject<'open' | 'close'>();
   private readonly isOpen = signal(false);
 
-  private readonly position = connectedPosition(() => ({
-    referenceElement: this.tooltipRef()?.referenceElement ?? null,
-    placement: this.tooltipRef()?.placement ?? 'top',
-  }));
-
   private readonly content = computed(() => this.tooltipRef()?.content ?? null);
 
-  readonly overlay = createConnectedOverlay(this.isOpen, this.position, this.content, {
+  readonly overlay = createConnectedOverlay(
+    this.isOpen,
+    () => ({
+      referenceElement: this.tooltipRef()?.referenceElement ?? null,
+      placement: this.tooltipRef()?.placement ?? 'top',
+    }),
+    this.content,
+    {
     shell: TOOLTIP_SHELL_TOKEN,
     closeOnScroll: true,
     closeOnEscape: false,

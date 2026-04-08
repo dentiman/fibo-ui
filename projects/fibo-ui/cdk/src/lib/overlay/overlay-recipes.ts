@@ -4,7 +4,7 @@ import type { OverlayHandle } from './overlay-handle';
 import type { OverlaySession } from './overlay-session';
 import type { ConnectedPosition, CoordinatePosition, OverlayBehaviorConfig } from './overlay-config';
 import type { TrapOverlayFocusOptions } from './overlay-behaviors';
-import { globalPosition } from './overlay-config';
+import { globalPosition, connectedPosition, coordinatePosition } from './overlay-config';
 import { CONNECTED_SHELL_TOKEN, MODAL_SHELL_TOKEN } from './overlay-shell-tokens';
 import { trapOverlayFocus, restoreTriggerFocusOnClose } from './overlay-behaviors';
 import { createOverlay } from './overlay-stack';
@@ -127,14 +127,14 @@ function buildSetup(
 /** Creates an overlay anchored to a trigger element (select, popover, menu, tooltip). */
 export function createConnectedOverlay(
   isOpen: WritableSignal<boolean>,
-  position: Signal<ConnectedPosition>,
+  position: () => Omit<ConnectedPosition, 'type'>,
   content: Signal<TemplateRef<any> | string | null>,
   options?: ConnectedOverlayOptions,
 ): Signal<OverlayHandle | null> {
   return createOverlay(
     isOpen,
     buildConnectedBehavior(options),
-    position,
+    connectedPosition(position),
     content,
     buildSetup(options, false),
   );
@@ -158,14 +158,14 @@ export function createGlobalOverlay(
 /** Creates an overlay positioned at x/y coordinates (context menu). */
 export function createCoordinateOverlay(
   isOpen: WritableSignal<boolean>,
-  position: Signal<CoordinatePosition>,
+  position: () => Omit<CoordinatePosition, 'type'>,
   content: Signal<TemplateRef<any> | string | null>,
   options?: CoordinateOverlayOptions,
 ): Signal<OverlayHandle | null> {
   return createOverlay(
     isOpen,
     buildCoordinateBehavior(options),
-    position,
+    coordinatePosition(position),
     content,
     buildSetup(options, { guard: true }),
   );
@@ -175,12 +175,12 @@ export function createCoordinateOverlay(
 
 /** Singleton connected overlay for service-driven patterns (e.g. TooltipService). */
 export function createSingletonConnectedOverlay(
-  position: Signal<ConnectedPosition>,
+  position: () => Omit<ConnectedPosition, 'type'>,
   options?: ConnectedOverlayOptions,
 ): SingletonOverlay {
   return createSingletonOverlayPrimitive(
     buildConnectedBehavior(options),
-    position,
+    connectedPosition(position),
     buildSetup(options, false),
   );
 }

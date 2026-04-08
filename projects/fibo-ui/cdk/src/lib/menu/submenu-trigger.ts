@@ -1,7 +1,6 @@
 import { Directive, ElementRef, inject, input, model, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { DataListItem } from '../data-list/data-list-item.directive';
 import { OverlayStack } from '../overlay/overlay-stack';
-import { connectedPosition } from '../overlay/overlay-config';
 import { createConnectedOverlay } from '../overlay/overlay-recipes';
 import { MENU_PANEL } from './menu-panel';
 
@@ -36,7 +35,7 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
 
   overlay = createConnectedOverlay(
     this.isOpen,
-    connectedPosition(() => ({ placement: 'right-start', offset: 1, referenceElement: this.element })),
+    () => ({ placement: 'right-start', offset: 1, referenceElement: this.element }),
     this.content,
     {
       restoreFocusTo: () => this.element,

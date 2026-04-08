@@ -2,7 +2,6 @@ import { Component, ElementRef, TemplateRef, computed, inject, input, model, sig
 import { FormValueControl } from '@angular/forms/signals';
 import {
   createConnectedOverlay,
-  connectedPosition,
   OverlayPanel,
   SelectDate,
   provideFormValueControl,
@@ -89,7 +88,7 @@ export class DatePickerField implements FormValueControl<string> {
   readonly dialogId = computed(() => this.fieldShell().idFor('dialog'));
   readonly overlay = createConnectedOverlay(
     this.isOpen,
-    connectedPosition(() => ({ referenceElement: this.fieldShell().overlayReferenceElement() })),
+    () => ({ referenceElement: this.fieldShell().overlayReferenceElement() }),
     this.calendarTemplate,
     {
       trapFocus: { guard: true },
