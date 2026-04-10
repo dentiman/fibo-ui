@@ -1,7 +1,6 @@
-import { Component, ElementRef, TemplateRef, computed, inject, input, model, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, computed, inject, input, model, viewChild } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
 import {
-  createConnectedOverlay,
   DataList,
   DataListItem,
   SelectMulti,
@@ -11,6 +10,7 @@ import { LucideAngularModule } from 'lucide-angular';
 import { FieldAuxiliaryDirective } from '../form/field-auxiliary';
 import { FieldShell } from '../form/field-shell';
 import { FieldInteractiveDirective } from '../form/field-interactive';
+import { FieldOverlayDirective } from '../form/field-overlay';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 import { Checkbox } from '../checkbox/checkbox';
 import { SelectItem } from './select';
@@ -30,6 +30,7 @@ import { SelectItem } from './select';
     DataListItem,
     FieldShell,
     FieldInteractiveDirective,
+    FieldOverlayDirective,
     FieldAuxiliaryDirective,
     Checkbox,
   ],
@@ -47,16 +48,17 @@ import { SelectItem } from './select';
       <div
         fiboFieldInteractive
         fieldInteractiveMode="click"
+        [fiboFieldOverlay]="multiSelectTpl"
+        [matchWidth]="true"
         #triggerSurface
+        #overlayRef="fiboFieldOverlay"
         role="combobox"
         aria-haspopup="listbox"
         [attr.tabindex]="uiState.disabled() ? -1 : 0"
-        [attr.aria-expanded]="isOpen()"
-        [attr.aria-controls]="isOpen() ? listboxId() : null"
+        [attr.aria-controls]="overlayRef.isOpen() ? listboxId() : null"
         [attr.aria-invalid]="uiState.invalid() || null"
         [attr.aria-disabled]="uiState.disabled() || null"
         class="w-full flex flex-wrap gap-x-1 gap-y-1 -mx-1 outline-none"
-        (click)="toggle()"
         (focus)="onFocus()"
         (blur)="onBlur()"
         (keydown.enter)="openFromKeyboard($event)"
@@ -114,7 +116,7 @@ import { SelectItem } from './select';
 export class MultiSelect implements FormValueControl<(string | number)[] | null> {
   readonly uiState = inject(FormUiState);
   readonly fieldShell = viewChild.required(FieldShell);
-  private readonly multiSelectTemplate = viewChild.required<TemplateRef<unknown>>('multiSelectTpl');
+  readonly fieldOverlay = viewChild.required(FieldOverlayDirective);
   private readonly triggerSurface = viewChild.required<ElementRef<HTMLElement>>('triggerSurface');
 
   readonly value = model<(string | number)[] | null>(null);
@@ -122,7 +124,6 @@ export class MultiSelect implements FormValueControl<(string | number)[] | null>
   readonly label = input<string>('');
   readonly hint = input<string>('');
   readonly placeholder = input<string>('Select');
-  readonly isOpen = signal(false);
   readonly listboxId = computed(() => this.fieldShell().idFor('listbox'));
 
   readonly selectedItems = computed(() => {
@@ -130,32 +131,14 @@ export class MultiSelect implements FormValueControl<(string | number)[] | null>
     if (!currentValue || !Array.isArray(currentValue)) return [];
     return this.items().filter((item) => item.value !== null && currentValue.includes(item.value));
   });
-  readonly overlay = createConnectedOverlay(
-    this.isOpen,
-    () => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true }),
-    this.multiSelectTemplate,
-    { restoreFocusTo: () => this.fieldShell().overlayFocusReturnTarget() },
-  );
 
   focus(options?: FocusOptions) {
     this.triggerSurface().nativeElement.focus(options);
   }
 
-  open() {
-    if (!this.uiState.disabled()) {
-      this.isOpen.set(true);
-    }
-  }
-
-  toggle() {
-    if (!this.uiState.disabled()) {
-      this.isOpen.update(isOpen => !isOpen);
-    }
-  }
-
   openFromKeyboard(event: Event) {
     event.preventDefault();
-    this.open();
+    this.fieldOverlay().open();
   }
 
   onFocus() {

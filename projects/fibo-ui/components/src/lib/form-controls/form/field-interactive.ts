@@ -1,5 +1,5 @@
 import { computed, Directive, ElementRef, inject, input } from '@angular/core';
-import { FIELD_INTERACTIVE, FieldContainerDirective, FieldInteractiveRef } from './field-container';
+import { type FieldInteractiveRef, FieldShellHostDirective } from './field-shell-host';
 import { FormUiState } from './form-ui-state';
 
 let nextFieldInteractiveId = 0;
@@ -7,7 +7,6 @@ let nextFieldInteractiveId = 0;
 @Directive({
   selector: '[fiboFieldInteractive]',
   standalone: true,
-  providers: [{ provide: FIELD_INTERACTIVE, useExisting: FieldInteractiveDirective }],
   host: {
     'data-field-interactive': 'true',
     '[id]': 'controlId()',
@@ -17,23 +16,27 @@ let nextFieldInteractiveId = 0;
 })
 export class FieldInteractiveDirective implements FieldInteractiveRef {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
-  private readonly container = inject(FieldContainerDirective, { optional: true });
+  private readonly host = inject(FieldShellHostDirective, { optional: true });
   private readonly formUiState = inject(FormUiState, { optional: true });
   private readonly fallbackId = `field-interactive-${nextFieldInteractiveId++}`;
 
   readonly fieldInteractiveMode = input<'focus' | 'click'>('focus');
 
-  readonly controlId = computed(() => this.container?.idFor('control') ?? this.fallbackId);
+  readonly controlId = computed(() => this.host?.idFor('control') ?? this.fallbackId);
 
   readonly ariaLabelledBy = computed(() =>
-    this.container?.hasLabel() ? this.container.idFor('label') : null,
+    this.host?.hasLabel() ? this.host.idFor('label') : null,
   );
 
   readonly ariaDescribedBy = computed(() => {
-    if (!this.container) return null;
-    if (this.formUiState?.errorMessage()) return this.container.idFor('error');
+    if (!this.host) return null;
+    if (this.formUiState?.errorMessage()) return this.host.idFor('error');
     return null;
   });
+
+  constructor() {
+    this.host?.registerInteractive(this);
+  }
 
   element(): HTMLElement {
     return this.elementRef.nativeElement;

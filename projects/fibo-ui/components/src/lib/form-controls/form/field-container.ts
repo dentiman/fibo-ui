@@ -1,16 +1,6 @@
-import { computed, contentChild, Directive, ElementRef, inject, InjectionToken, output } from '@angular/core';
+import { computed, Directive, ElementRef, inject } from '@angular/core';
+import { FieldShellHostDirective } from './field-shell-host';
 import { FormUiState } from './form-ui-state';
-
-export interface FieldInteractiveRef {
-  focus(options?: FocusOptions): void;
-  focusReturnTarget(): HTMLElement | null;
-  activateFromShell(): void;
-}
-
-export const FIELD_INTERACTIVE = new InjectionToken<FieldInteractiveRef>('FIELD_INTERACTIVE');
-export const FIELD_LABEL = new InjectionToken<unknown>('FIELD_LABEL');
-
-let nextFieldContainerId = 0;
 
 @Directive({
   selector: '[fiboFieldContainer]',
@@ -29,16 +19,11 @@ let nextFieldContainerId = 0;
 export class FieldContainerDirective {
   readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly formUiState = inject(FormUiState, { optional: true });
-  private readonly fieldInteractive = contentChild(FIELD_INTERACTIVE, { descendants: true });
-  private readonly fieldLabel = contentChild(FIELD_LABEL, { descendants: true });
+  private readonly host = inject(FieldShellHostDirective, { optional: true });
 
-  private readonly baseId = `field-${nextFieldContainerId++}`;
-
-  idFor(suffix: string): string {
-    return `${this.baseId}-${suffix}`;
+  constructor() {
+    this.host?.registerContainerElement(this.elementRef.nativeElement);
   }
-
-  readonly hasLabel = computed(() => !!this.fieldLabel());
 
   readonly disabled = computed(() => this.formUiState?.disabled() ?? false);
   readonly required = computed(() => this.formUiState?.required() ?? false);
@@ -47,24 +32,6 @@ export class FieldContainerDirective {
   readonly hasError = computed(
     () => (this.formUiState?.invalid() ?? false) && (this.formUiState?.touched() ?? false),
   );
-
-  readonly focusRequested = output<void>();
-
-  focusPrimary(options?: FocusOptions): void {
-    this.fieldInteractive()?.focus(options);
-  }
-
-  activatePrimaryFromShell(): void {
-    this.fieldInteractive()?.activateFromShell();
-  }
-
-  overlayFocusReturnTarget(): HTMLElement | null {
-    return this.fieldInteractive()?.focusReturnTarget() ?? null;
-  }
-
-  overlayInteractionRoot(): HTMLElement {
-    return this.elementRef.nativeElement;
-  }
 
   onContainerClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
@@ -76,11 +43,6 @@ export class FieldContainerDirective {
       return;
     }
 
-    if (this.fieldInteractive()) {
-      this.activatePrimaryFromShell();
-      return;
-    }
-
-    this.focusRequested.emit();
+    this.host?.activatePrimary();
   }
 }

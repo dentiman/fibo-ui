@@ -1,7 +1,6 @@
-import { Component, ElementRef, TemplateRef, computed, inject, input, model, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, computed, inject, input, model, viewChild } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
 import {
-  createConnectedOverlay,
   OverlayPanel,
   SelectDate,
   provideFormValueControl,
@@ -9,6 +8,7 @@ import {
 import { Calendar } from '../calendar/calendar';
 import { FieldShell } from '../form/field-shell';
 import { FieldInteractiveDirective } from '../form/field-interactive';
+import { FieldOverlayDirective } from '../form/field-overlay';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
 @Component({
@@ -19,7 +19,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       inputs: [...FORM_UI_STATE_INPUTS],
     },
   ],
-  imports: [FieldShell, FieldInteractiveDirective, Calendar, SelectDate, OverlayPanel],
+  imports: [FieldShell, FieldInteractiveDirective, FieldOverlayDirective, Calendar, SelectDate, OverlayPanel],
   host: {
     class: 'block',
   },
@@ -37,7 +37,9 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       <input
         fiboFieldInteractive
         fieldInteractiveMode="click"
+        [fiboFieldOverlay]="calendarTpl"
         #inputElement
+        #overlayRef="fiboFieldOverlay"
         aria-haspopup="dialog"
         [value]="value()"
         [placeholder]="placeholder()"
@@ -46,13 +48,11 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         [required]="uiState.required()"
         [attr.name]="uiState.name() || null"
         [attr.aria-required]="uiState.required() || null"
-        [attr.aria-expanded]="isOpen()"
-        [attr.aria-controls]="isOpen() ? dialogId() : null"
+        [attr.aria-controls]="overlayRef.isOpen() ? dialogId() : null"
         [attr.aria-invalid]="uiState.invalid() || null"
         [attr.aria-readonly]="uiState.readonly() || null"
         [attr.data-error]="(uiState.invalid() && uiState.touched()) || null"
         (input)="onInput($event)"
-        (click)="openCalendar()"
         (keydown.enter)="openCalendar()"
         (keydown.arrowdown)="openCalendar($event)"
         (blur)="onBlur()"
@@ -67,18 +67,16 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         fiboOverlayPanel
         [modal]="false"
         [(value)]="value"
-        (itemTriggered)="close()"
+        (itemTriggered)="fieldOverlay().close()"
       />
     </ng-template>
   `,
 })
 export class DatePickerField implements FormValueControl<string> {
   readonly uiState = inject(FormUiState);
-  private readonly calendarTemplate = viewChild.required<TemplateRef<unknown>>('calendarTpl');
   readonly fieldShell = viewChild.required(FieldShell);
+  readonly fieldOverlay = viewChild.required(FieldOverlayDirective);
   private readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('inputElement');
-
-  readonly isOpen = signal(false);
 
   readonly value = model<string>('');
   readonly label = input<string>('');
@@ -86,15 +84,6 @@ export class DatePickerField implements FormValueControl<string> {
   readonly placeholder = input<string>('');
   readonly iconStart = input<string>('');
   readonly dialogId = computed(() => this.fieldShell().idFor('dialog'));
-  readonly overlay = createConnectedOverlay(
-    this.isOpen,
-    () => ({ referenceElement: this.fieldShell().overlayReferenceElement() }),
-    this.calendarTemplate,
-    {
-      trapFocus: { guard: true },
-      restoreFocusTo: () => this.fieldShell().overlayFocusReturnTarget(),
-    },
-  );
 
   onInput(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -112,13 +101,7 @@ export class DatePickerField implements FormValueControl<string> {
   openCalendar(event?: Event) {
     event?.preventDefault();
     this.focus();
-    if (!this.uiState.disabled() && !this.uiState.readonly()) {
-      this.isOpen.set(true);
-    }
-  }
-
-  close() {
-    this.isOpen.set(false);
+    this.fieldOverlay().open();
   }
 
   clear() {
@@ -128,6 +111,6 @@ export class DatePickerField implements FormValueControl<string> {
 
     this.value.set('');
     this.uiState.touched.set(true);
-    this.close();
+    this.fieldOverlay().close();
   }
 }

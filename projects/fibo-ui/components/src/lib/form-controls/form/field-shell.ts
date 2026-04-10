@@ -1,25 +1,21 @@
-import { Component, computed, contentChild, inject, input, output, viewChild } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { FieldAuxiliaryDirective } from './field-auxiliary';
 import { FieldContainerDirective } from './field-container';
 import { FieldLabelDirective } from './field-label';
-import { FieldOverlayAnchorDirective } from './field-overlay-anchor';
+import { FieldShellHostDirective } from './field-shell-host';
 import { FormUiState } from './form-ui-state';
 
 @Component({
   selector: 'fibo-field-shell',
   standalone: true,
-  imports: [LucideAngularModule, FieldContainerDirective, FieldAuxiliaryDirective, FieldLabelDirective],
+  hostDirectives: [FieldShellHostDirective],
+  imports: [LucideAngularModule, FieldAuxiliaryDirective, FieldLabelDirective, FieldContainerDirective],
   host: {
     class: 'block',
   },
   template: `
-    <div
-      fiboFieldContainer
-      class="form-field-control"
-      [attr.data-can-clear]="canClear() || null"
-      (focusRequested)="onContainerFocusRequested()"
-    >
+    <div fiboFieldContainer class="form-field-control" [attr.data-can-clear]="canClear() || null">
       @if (iconStart()) {
         <lucide-icon [name]="iconStart()" size="16" class="form-field-icon shrink-0"></lucide-icon>
       }
@@ -64,9 +60,8 @@ import { FormUiState } from './form-ui-state';
   `,
 })
 export class FieldShell {
+  private readonly host = inject(FieldShellHostDirective);
   private readonly formUiState = inject(FormUiState, { optional: true });
-  private readonly container = viewChild.required(FieldContainerDirective);
-  private readonly overlayAnchor = contentChild(FieldOverlayAnchorDirective, { descendants: true });
 
   readonly label = input('');
   readonly hint = input('');
@@ -75,36 +70,19 @@ export class FieldShell {
   readonly canClear = input(false);
 
   readonly clearRequested = output<void>();
-  readonly focusRequested = output<void>();
 
   readonly errorMessage = computed(() => this.formUiState?.errorMessage() ?? null);
 
   idFor(suffix: string): string {
-    return this.container().idFor(suffix);
+    return this.host.idFor(suffix);
   }
 
   overlayReferenceElement(): HTMLElement {
-    return this.overlayAnchor()?.element() ?? this.container().elementRef.nativeElement;
-  }
-
-  overlayInteractionRoot(): HTMLElement {
-    return this.container().overlayInteractionRoot();
+    return this.host.referenceElement();
   }
 
   overlayFocusReturnTarget(): HTMLElement | null {
-    return this.container().overlayFocusReturnTarget();
-  }
-
-  focusPrimary(options?: FocusOptions): void {
-    this.container().focusPrimary(options);
-  }
-
-  activatePrimaryFromShell(): void {
-    this.container().activatePrimaryFromShell();
-  }
-
-  onContainerFocusRequested(): void {
-    this.focusRequested.emit();
+    return this.host.focusReturnTarget();
   }
 
   onClear(event: MouseEvent): void {

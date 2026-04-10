@@ -1,7 +1,6 @@
-import { Component, ElementRef, TemplateRef, computed, inject, input, model, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, computed, inject, input, model, viewChild } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
 import {
-  createConnectedOverlay,
   DataList,
   DataListItem,
   SelectOne,
@@ -9,6 +8,7 @@ import {
 } from '@fibo-ui/cdk';
 import { FieldShell } from '../form/field-shell';
 import { FieldInteractiveDirective } from '../form/field-interactive';
+import { FieldOverlayDirective } from '../form/field-overlay';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
 export interface SelectItem {
@@ -28,6 +28,7 @@ export interface SelectItem {
   imports: [
     FieldShell,
     FieldInteractiveDirective,
+    FieldOverlayDirective,
     DataList,
     SelectOne,
     DataListItem,
@@ -49,17 +50,18 @@ export interface SelectItem {
       <button
         fiboFieldInteractive
         fieldInteractiveMode="click"
+        [fiboFieldOverlay]="selectTpl"
+        [matchWidth]="true"
         #triggerButton
+        #overlayRef="fiboFieldOverlay"
         type="button"
         class="w-full text-left"
         role="combobox"
         [disabled]="uiState.disabled()"
         aria-haspopup="listbox"
-        [attr.aria-expanded]="isOpen()"
-        [attr.aria-controls]="isOpen() ? fieldShell.idFor('listbox') : null"
+        [attr.aria-controls]="overlayRef.isOpen() ? fieldShell.idFor('listbox') : null"
         [attr.aria-invalid]="uiState.invalid() || null"
         [attr.aria-readonly]="uiState.readonly() || null"
-        (click)="toggle()"
         (blur)="uiState.touched.set(true)"
       >
         <div class="text-sm" [class.from-field-placeholder]="!selectedLabel()">
@@ -74,7 +76,7 @@ export interface SelectItem {
         [attr.id]="fieldShell.idFor('listbox')"
         [keyboardSourceElement]="triggerButton"
         fiboDataList
-        (itemTriggered)="close()"
+        (itemTriggered)="fieldOverlay().close()"
         fiboSelectOne
         [(value)]="value"
       >
@@ -96,8 +98,8 @@ export interface SelectItem {
 })
 export class Select implements FormValueControl<string | number | null> {
   readonly uiState = inject(FormUiState);
-  private readonly selectTemplate = viewChild.required<TemplateRef<unknown>>('selectTpl');
   readonly fieldShell = viewChild.required(FieldShell);
+  readonly fieldOverlay = viewChild.required(FieldOverlayDirective);
   private readonly triggerButton = viewChild.required<ElementRef<HTMLButtonElement>>('triggerButton');
 
   readonly value = model<string | number | null>(null);
@@ -109,41 +111,16 @@ export class Select implements FormValueControl<string | number | null> {
   readonly iconStart = input('');
   readonly clearValue = input<string | number | null | undefined>(undefined);
 
-  readonly isOpen = signal(false);
-
   readonly selectedItem = computed(() => {
     const currentValue = this.value();
     return this.items().find(item => item.value === currentValue) ?? null;
-  })
+  });
 
   readonly selectedLabel = computed(() => this.selectedItem()?.label ?? null);
   readonly canClear = computed(() => this.clearValue() !== undefined && this.value() !== this.clearValue());
 
-  readonly overlay = createConnectedOverlay(
-    this.isOpen,
-    () => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true }),
-    this.selectTemplate,
-    { restoreFocusTo: () => this.fieldShell().overlayFocusReturnTarget() },
-  );
-
   focus(options?: FocusOptions) {
     this.triggerButton().nativeElement.focus(options);
-  }
-
-  open() {
-    if (!this.uiState.disabled() && !this.uiState.readonly()) {
-      this.isOpen.set(true);
-    }
-  }
-
-  toggle() {
-    if (!this.uiState.disabled() && !this.uiState.readonly()) {
-      this.isOpen.update(isOpen => !isOpen);
-    }
-  }
-
-  close() {
-    this.isOpen.set(false);
   }
 
   clear() {
