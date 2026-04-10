@@ -40,7 +40,6 @@ import { SelectItem } from './select';
   providers: [provideFormValueControl(() => MultiSelect)],
   template: `
     <fibo-field-shell
-      #fieldShell
       [label]="label()"
       [hint]="hint()"
       iconEnd="chevron-down"
@@ -115,7 +114,6 @@ import { SelectItem } from './select';
 })
 export class MultiSelect implements FormValueControl<(string | number)[] | null> {
   readonly uiState = inject(FormUiState);
-  readonly fieldShell = viewChild.required(FieldShell);
   readonly fieldOverlay = viewChild.required(FieldOverlayDirective);
   private readonly triggerSurface = viewChild.required<ElementRef<HTMLElement>>('triggerSurface');
 

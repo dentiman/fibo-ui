@@ -26,7 +26,6 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
   providers: [provideFormValueControl(() => DatePickerField)],
   template: `
     <fibo-field-shell
-      #fieldShell
       [label]="label()"
       [hint]="hint()"
       [iconStart]="iconStart()"
@@ -74,7 +73,6 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 })
 export class DatePickerField implements FormValueControl<string> {
   readonly uiState = inject(FormUiState);
-  readonly fieldShell = viewChild.required(FieldShell);
   readonly fieldOverlay = viewChild.required(FieldOverlayDirective);
   private readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('inputElement');
 
@@ -83,7 +81,7 @@ export class DatePickerField implements FormValueControl<string> {
   readonly hint = input<string>('');
   readonly placeholder = input<string>('');
   readonly iconStart = input<string>('');
-  readonly dialogId = computed(() => this.fieldShell().idFor('dialog'));
+  readonly dialogId = computed(() => this.fieldOverlay().idFor('dialog'));
 
   onInput(event: Event) {
     const target = event.target as HTMLInputElement;

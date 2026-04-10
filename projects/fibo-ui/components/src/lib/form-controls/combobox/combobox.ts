@@ -20,6 +20,7 @@ import { type ComboboxControl, provideComboboxControl } from './combobox-control
 import { ComboboxInput } from './combobox-input';
 import { ComboboxList } from './combobox-list';
 import { FieldShell } from '../form/field-shell';
+import { FieldShellHostDirective } from '../form/field-shell-host';
 import { FieldInteractiveDirective } from '../form/field-interactive';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
@@ -99,7 +100,7 @@ export class Combobox
     FormValueControl<string | number | null>
 {
   readonly uiState = inject(FormUiState);
-  readonly fieldShell = viewChild.required(FieldShell);
+  private readonly fieldShellHost = viewChild.required(FieldShellHostDirective);
   private readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('inputElement');
   private readonly comboboxTemplateRef = viewChild.required<TemplateRef<any>>('comboboxTpl');
 
@@ -123,10 +124,10 @@ export class Combobox
 
   readonly overlay = createConnectedOverlay(
     this.expanded,
-    () => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true }),
+    () => ({ referenceElement: this.fieldShellHost().referenceElement(), matchWidth: true }),
     this.comboboxTemplateRef,
     {
-      restoreFocusTo: () => this.fieldShell().overlayFocusReturnTarget(),
+      restoreFocusTo: () => this.fieldShellHost().focusReturnTarget(),
       setup: session => {
         session.beforeClose((_, __, reason) => {
           if (reason !== 'state') this.resetQueryToValue();

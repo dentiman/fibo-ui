@@ -48,10 +48,6 @@ export class FieldShellHostDirective {
     return this._interactive()?.focusReturnTarget() ?? null;
   }
 
-  focusPrimary(options?: FocusOptions): void {
-    this._interactive()?.focus(options);
-  }
-
   activatePrimary(): void {
     this._interactive()?.activateFromShell();
   }

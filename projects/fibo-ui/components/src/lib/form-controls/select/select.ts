@@ -39,7 +39,6 @@ export interface SelectItem {
   providers: [provideFormValueControl(() => Select)],
   template: `
     <fibo-field-shell
-      #fieldShell
       [label]="label()"
       [hint]="hint()"
       [iconStart]="iconStart()"
@@ -59,7 +58,7 @@ export interface SelectItem {
         role="combobox"
         [disabled]="uiState.disabled()"
         aria-haspopup="listbox"
-        [attr.aria-controls]="overlayRef.isOpen() ? fieldShell.idFor('listbox') : null"
+        [attr.aria-controls]="overlayRef.isOpen() ? listboxId() : null"
         [attr.aria-invalid]="uiState.invalid() || null"
         [attr.aria-readonly]="uiState.readonly() || null"
         (blur)="uiState.touched.set(true)"
@@ -73,7 +72,7 @@ export interface SelectItem {
     <ng-template #selectTpl>
       <div
         role="listbox"
-        [attr.id]="fieldShell.idFor('listbox')"
+        [attr.id]="listboxId()"
         [keyboardSourceElement]="triggerButton"
         fiboDataList
         (itemTriggered)="fieldOverlay().close()"
@@ -98,7 +97,6 @@ export interface SelectItem {
 })
 export class Select implements FormValueControl<string | number | null> {
   readonly uiState = inject(FormUiState);
-  readonly fieldShell = viewChild.required(FieldShell);
   readonly fieldOverlay = viewChild.required(FieldOverlayDirective);
   private readonly triggerButton = viewChild.required<ElementRef<HTMLButtonElement>>('triggerButton');
 
@@ -110,6 +108,8 @@ export class Select implements FormValueControl<string | number | null> {
   readonly placeholder = input('Select');
   readonly iconStart = input('');
   readonly clearValue = input<string | number | null | undefined>(undefined);
+
+  readonly listboxId = computed(() => this.fieldOverlay().idFor('listbox'));
 
   readonly selectedItem = computed(() => {
     const currentValue = this.value();

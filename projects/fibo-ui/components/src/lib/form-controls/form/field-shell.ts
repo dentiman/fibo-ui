@@ -77,14 +77,6 @@ export class FieldShell {
     return this.host.idFor(suffix);
   }
 
-  overlayReferenceElement(): HTMLElement {
-    return this.host.referenceElement();
-  }
-
-  overlayFocusReturnTarget(): HTMLElement | null {
-    return this.host.focusReturnTarget();
-  }
-
   onClear(event: MouseEvent): void {
     event.stopPropagation();
     this.clearRequested.emit();

@@ -49,6 +49,10 @@ export class FieldOverlayDirective {
     this.isOpen.update(v => !v);
   }
 
+  idFor(suffix: string): string | null {
+    return this.host?.idFor(suffix) ?? null;
+  }
+
   onHostClick(event: MouseEvent): void {
     if (this.interactive.fieldInteractiveMode() !== 'click') return;
     if ((event.target as HTMLElement).closest('[data-field-auxiliary]')) return;
