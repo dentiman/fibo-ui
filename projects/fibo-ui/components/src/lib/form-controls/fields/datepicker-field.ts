@@ -8,7 +8,7 @@ import {
 } from '@fibo-ui/cdk';
 import { Calendar } from '../calendar/calendar';
 import { FieldShell } from '../form/field-shell';
-import { FieldTargetDirective } from '../form/field-target';
+import { FieldInteractiveDirective } from '../form/field-interactive';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
 @Component({
@@ -19,7 +19,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       inputs: [...FORM_UI_STATE_INPUTS],
     },
   ],
-  imports: [FieldShell, FieldTargetDirective, Calendar, SelectDate, OverlayPanel],
+  imports: [FieldShell, FieldInteractiveDirective, Calendar, SelectDate, OverlayPanel],
   host: {
     class: 'block',
   },
@@ -35,8 +35,8 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       (clearRequested)="clear()"
     >
       <input
-        fiboFieldTarget
-        fieldTargetMode="click"
+        fiboFieldInteractive
+        fieldInteractiveMode="click"
         #inputElement
         aria-haspopup="dialog"
         [value]="value()"

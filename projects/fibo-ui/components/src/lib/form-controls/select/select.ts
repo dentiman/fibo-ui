@@ -8,7 +8,7 @@ import {
   provideFormValueControl,
 } from '@fibo-ui/cdk';
 import { FieldShell } from '../form/field-shell';
-import { FieldTargetDirective } from '../form/field-target';
+import { FieldInteractiveDirective } from '../form/field-interactive';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
 export interface SelectItem {
@@ -27,7 +27,7 @@ export interface SelectItem {
   ],
   imports: [
     FieldShell,
-    FieldTargetDirective,
+    FieldInteractiveDirective,
     DataList,
     SelectOne,
     DataListItem,
@@ -47,8 +47,8 @@ export interface SelectItem {
       (clearRequested)="clear()"
     >
       <button
-        fiboFieldTarget
-        fieldTargetMode="click"
+        fiboFieldInteractive
+        fieldInteractiveMode="click"
         #triggerButton
         type="button"
         class="w-full text-left"
@@ -114,7 +114,7 @@ export class Select implements FormValueControl<string | number | null> {
   readonly selectedItem = computed(() => {
     const currentValue = this.value();
     return this.items().find(item => item.value === currentValue) ?? null;
-  });
+  })
 
   readonly selectedLabel = computed(() => this.selectedItem()?.label ?? null);
   readonly canClear = computed(() => this.clearValue() !== undefined && this.value() !== this.clearValue());

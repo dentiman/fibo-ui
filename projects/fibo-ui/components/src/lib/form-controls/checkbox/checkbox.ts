@@ -7,7 +7,6 @@ import {FormCheckboxControl} from '@angular/forms/signals';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[attr.aria-selected]': 'checked()',
     'class': 'group flex items-center'
   }
 })

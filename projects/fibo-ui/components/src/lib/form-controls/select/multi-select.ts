@@ -8,9 +8,9 @@ import {
   provideFormValueControl,
 } from '@fibo-ui/cdk';
 import { LucideAngularModule } from 'lucide-angular';
-import { FieldActionDirective } from '../form/field-action';
+import { FieldAuxiliaryDirective } from '../form/field-auxiliary';
 import { FieldShell } from '../form/field-shell';
-import { FieldTargetDirective } from '../form/field-target';
+import { FieldInteractiveDirective } from '../form/field-interactive';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 import { Checkbox } from '../checkbox/checkbox';
 import { SelectItem } from './select';
@@ -29,8 +29,8 @@ import { SelectItem } from './select';
     LucideAngularModule,
     DataListItem,
     FieldShell,
-    FieldTargetDirective,
-    FieldActionDirective,
+    FieldInteractiveDirective,
+    FieldAuxiliaryDirective,
     Checkbox,
   ],
   host: {
@@ -45,10 +45,9 @@ import { SelectItem } from './select';
       iconEnd="chevron-down"
     >
       <div
-        fiboFieldTarget
-        fieldTargetMode="click"
+        fiboFieldInteractive
+        fieldInteractiveMode="click"
         #triggerSurface
-        data-field-interactive
         role="combobox"
         aria-haspopup="listbox"
         [attr.tabindex]="uiState.disabled() ? -1 : 0"
@@ -69,7 +68,7 @@ import { SelectItem } from './select';
             <span class="truncate flex-1 text-xs font-medium">{{ item.label }}</span>
             <button
               type="button"
-              fiboFieldAction
+              fiboFieldAuxiliary
               class="rounded-full cursor-pointer flex-shrink-0 btn-text p-0.5 hover:bg-black/5 dark:hover:bg-white/5"
               (click)="removeItem(item.value); $event.stopPropagation()"
               (keydown)="$event.stopPropagation()"
@@ -95,7 +94,8 @@ import { SelectItem } from './select';
         [(value)]="value"
       >
         @for (item of items(); track item.value) {
-          <a
+          <button
+            type="button"
             fiboDataListItem
             role="option"
             [value]="item.value"
@@ -105,7 +105,7 @@ import { SelectItem } from './select';
             <fibo-checkbox [readonly]="true" [checked]="option.isSelected()">
               {{ item.label }}
             </fibo-checkbox>
-          </a>
+          </button>
         }
       </div>
     </ng-template>

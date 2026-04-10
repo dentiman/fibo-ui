@@ -20,7 +20,7 @@ import { type ComboboxControl, provideComboboxControl } from './combobox-control
 import { ComboboxInput } from './combobox-input';
 import { ComboboxList } from './combobox-list';
 import { FieldShell } from '../form/field-shell';
-import { FieldTargetDirective } from '../form/field-target';
+import { FieldInteractiveDirective } from '../form/field-interactive';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
 @Component({
@@ -33,7 +33,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
   ],
   imports: [
     FieldShell,
-    FieldTargetDirective,
+    FieldInteractiveDirective,
     DataList,
     DataListItem,
     SelectOne,
@@ -58,7 +58,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       (clearRequested)="clear()"
     >
       <input
-        fiboFieldTarget
+        fiboFieldInteractive
         #inputElement
         [placeholder]="placeholder()"
         (blur)="uiState.touched.set(true)"

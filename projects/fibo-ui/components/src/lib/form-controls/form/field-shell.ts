@@ -1,40 +1,24 @@
-import {
-  Component,
-  ElementRef,
-  computed,
-  contentChild,
-  inject,
-  input,
-  output,
-  viewChild,
-} from '@angular/core';
+import { Component, computed, contentChild, inject, input, output, viewChild } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
-import { FieldActionDirective } from './field-action';
+import { FieldAuxiliaryDirective } from './field-auxiliary';
+import { FieldContainerDirective } from './field-container';
+import { FieldLabelDirective } from './field-label';
 import { FieldOverlayAnchorDirective } from './field-overlay-anchor';
-import { FieldTargetDirective } from './field-target';
 import { FormUiState } from './form-ui-state';
-
-let nextFieldShellId = 0;
 
 @Component({
   selector: 'fibo-field-shell',
   standalone: true,
-  imports: [LucideAngularModule, FieldActionDirective],
+  imports: [LucideAngularModule, FieldContainerDirective, FieldAuxiliaryDirective, FieldLabelDirective],
   host: {
     class: 'block',
   },
   template: `
     <div
-      #controlContainer
+      fiboFieldContainer
       class="form-field-control"
-      (click)="onContainerClick($event)"
-      [attr.aria-disabled]="disabled() || null"
-      [attr.aria-required]="required() || null"
-      [attr.data-error]="hasError() || null"
       [attr.data-can-clear]="canClear() || null"
-      [attr.data-readonly]="readonly() || null"
-      [attr.data-pending]="pending() || null"
-      [class.disabled]="disabled()"
+      (focusRequested)="onContainerFocusRequested()"
     >
       @if (iconStart()) {
         <lucide-icon [name]="iconStart()" size="16" class="form-field-icon shrink-0"></lucide-icon>
@@ -42,9 +26,7 @@ let nextFieldShellId = 0;
 
       <div class="form-field-body">
         @if (label()) {
-          <label [id]="idFor('label')" [for]="idFor('control')" class="form-field-label">
-            {{ label() }}
-          </label>
+          <label fiboFieldLabel class="form-field-label">{{ label() }}</label>
         }
 
         <div class="form-field-content">
@@ -55,7 +37,7 @@ let nextFieldShellId = 0;
       @if (canClear()) {
         <button
           type="button"
-          fiboFieldAction
+          fiboFieldAuxiliary
           aria-label="Clear value"
           class="form-field-clear-icon"
           (pointerdown)="$event.preventDefault()"
@@ -82,14 +64,10 @@ let nextFieldShellId = 0;
   `,
 })
 export class FieldShell {
-  readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly formUiState = inject(FormUiState, { optional: true });
-  private readonly fieldTarget = contentChild(FieldTargetDirective, { descendants: true });
-  private readonly controlContainer = viewChild.required<ElementRef<HTMLElement>>('controlContainer');
+  private readonly container = viewChild.required(FieldContainerDirective);
   private readonly overlayAnchor = contentChild(FieldOverlayAnchorDirective, { descendants: true });
-  private readonly generatedBaseId = `field-${nextFieldShellId++}`;
 
-  readonly id = input('');
   readonly label = input('');
   readonly hint = input('');
   readonly iconStart = input('');
@@ -99,55 +77,37 @@ export class FieldShell {
   readonly clearRequested = output<void>();
   readonly focusRequested = output<void>();
 
-  readonly disabled = computed(() => this.formUiState?.disabled() ?? false);
-  readonly required = computed(() => this.formUiState?.required() ?? false);
-  readonly readonly = computed(() => this.formUiState?.readonly() ?? false);
-  readonly pending = computed(() => this.formUiState?.pending() ?? false);
-  readonly hasError = computed(
-    () => (this.formUiState?.invalid() ?? false) && (this.formUiState?.touched() ?? false),
-  );
   readonly errorMessage = computed(() => this.formUiState?.errorMessage() ?? null);
-  readonly baseId = computed(() => this.id() || this.generatedBaseId);
 
-  focusPrimary(options?: FocusOptions): void {
-    this.fieldTarget()?.focus(options);
-  }
-
-  activatePrimaryFromShell(): void {
-    this.fieldTarget()?.activateFromShell();
+  idFor(suffix: string): string {
+    return this.container().idFor(suffix);
   }
 
   overlayReferenceElement(): HTMLElement {
-    return this.overlayAnchor()?.element() ?? this.controlContainer().nativeElement;
+    return this.overlayAnchor()?.element() ?? this.container().elementRef.nativeElement;
   }
 
   overlayInteractionRoot(): HTMLElement {
-    return this.elementRef.nativeElement;
+    return this.container().overlayInteractionRoot();
   }
 
   overlayFocusReturnTarget(): HTMLElement | null {
-    return this.fieldTarget()?.focusReturnTarget() ?? null;
+    return this.container().overlayFocusReturnTarget();
   }
 
-  idFor(suffix: string): string {
-    return `${this.baseId()}-${suffix}`;
+  focusPrimary(options?: FocusOptions): void {
+    this.container().focusPrimary(options);
   }
 
-  onContainerClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    if (target.closest('button,input,textarea,select,a,label,[data-field-interactive],[data-field-action]')) {
-      return;
-    }
+  activatePrimaryFromShell(): void {
+    this.container().activatePrimaryFromShell();
+  }
 
-    if (this.fieldTarget()) {
-      this.activatePrimaryFromShell();
-      return;
-    }
-
+  onContainerFocusRequested(): void {
     this.focusRequested.emit();
   }
 
-  onClear(event: MouseEvent) {
+  onClear(event: MouseEvent): void {
     event.stopPropagation();
     this.clearRequested.emit();
   }

@@ -2,7 +2,7 @@ import { Component, ElementRef, inject, input, model, viewChild } from '@angular
 import { FormValueControl } from '@angular/forms/signals';
 import { provideFormValueControl } from '@fibo-ui/cdk';
 import { FieldShell } from '../form/field-shell';
-import { FieldTargetDirective } from '../form/field-target';
+import { FieldInteractiveDirective } from '../form/field-interactive';
 import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
 
 @Component({
@@ -14,7 +14,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       inputs: [...FORM_UI_STATE_INPUTS],
     },
   ],
-  imports: [FieldShell, FieldTargetDirective],
+  imports: [FieldShell, FieldInteractiveDirective],
   host: {
     class: 'block',
   },
@@ -29,7 +29,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       (clearRequested)="clear()"
     >
       <input
-        fiboFieldTarget
+        fiboFieldInteractive
         #inputElement
         [type]="type()"
         [value]="value()"

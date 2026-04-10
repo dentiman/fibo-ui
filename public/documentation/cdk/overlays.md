@@ -19,7 +19,7 @@ Every overlay in fibo-ui is built from the same parts:
 The open flow is:
 
 1. A component, directive, or service flips `isOpen` to `true`.
-2. `createOverlay()` asks `OverlayStack` to create a new open cycle.
+2. A recipe or `createOverlay()` asks `OverlayStack` to create a new open cycle.
 3. The stack creates an `OverlayHandle`, registers it, and tracks parent-child branch relations.
 4. The root outlet resolves the shell component from `behavior.shell` through DI.
 5. The shell renders `OverlayContent` and attaches the right host directives such as `OverlayContainer`, `OverlayPosition`, or `OverlayPanel`.
@@ -67,7 +67,7 @@ If you are using CDK overlays only, the essential piece is still `<fibo-overlay-
 
 ## Basic Usage
 
-Use `createOverlay()` when the overlay belongs to a component and its open state is local to that component.
+Use `createConnectedOverlay()` when you need a popover anchored to a trigger element and the open state is local to the component.
 
 :::example cdk-overlays-basic
 
@@ -89,12 +89,11 @@ export class CdkOverlaysBasicExample {
 
   readonly isOpen = signal(false);
 
-  readonly overlay = createOverlay(
+  readonly overlay = createConnectedOverlay(
     this.isOpen,
-    { shell: CONNECTED_SHELL_TOKEN, closeOnOutsideClick: true, closeOnFocusLeave: true, closeOnEscape: true },
-    connectedPosition(() => ({ referenceElement: this.btn().nativeElement })),
+    () => ({ referenceElement: this.btn().nativeElement }),
     this.tpl,
-    session => { restoreTriggerFocusOnClose(session, () => this.btn().nativeElement); },
+    { restoreFocusTo: () => this.btn().nativeElement },
   );
 
   toggle() {
@@ -103,13 +102,12 @@ export class CdkOverlaysBasicExample {
 }
 ```
 
-The important part is the composition, not the exact syntax:
+The important part is the composition:
 
 - `isOpen` owns the state
-- `behavior` chooses the shell and close policies
-- `connectedPosition()` anchors the overlay to the trigger
+- the factory `() => ({ referenceElement })` anchors the overlay to the trigger
 - the template receives the current `OverlayHandle` as `let-overlay`
-- the `setup(session)` callback adds lifecycle logic for this one open cycle
+- `restoreFocusTo` returns focus to the button when the overlay closes
 
 ## Shell Components
 
@@ -189,28 +187,24 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-Then use that token in the overlay behavior:
+Then pass that token to the `shell` option of a recipe:
 
 ```ts
-readonly overlay = createOverlay(
+readonly overlay = createGlobalOverlay(
   this.isOpen,
+  this.sheetTpl,
   {
     shell: APP_SHEET_SHELL_TOKEN,
-    needsBackdrop: true,
-    blockScroll: true,
-    closeOnOutsideClick: true,
-    closeOnEscape: true,
+    restoreFocusTo: () => this.trigger().nativeElement,
   },
-  signal(globalPosition()),
-  this.sheetTpl,
 );
 ```
 
-This is the main extension point of the system. If you want a new visual host, new animation, or a different layout surface, you usually add or override a shell. If you want different lifecycle or close logic, you change the behavior or the `setup(session)` callback instead.
+This is the main extension point of the system. If you want a new visual host, new animation, or a different layout surface, you usually add or override a shell. If you want different lifecycle or close logic, you change the recipe options or the `setup(session)` callback instead.
 
 ## Lifecycle, Close Rules, and Focus
 
-`createOverlay()` accepts an optional `setup(session)` callback. This is where per-open-cycle logic lives.
+Recipes accept an optional `setup(session)` callback for per-open-cycle logic that goes beyond what the standard options cover.
 
 Use it for:
 
@@ -221,18 +215,26 @@ Use it for:
 - `effect()` and `onCleanup()` for open-cycle scoped reactive work
 
 ```ts
-readonly overlay = createOverlay(
+readonly overlay = createGlobalOverlay(
   this.isOpen,
-  dialogBehavior(),
-  signal(globalPosition()),
   this.dialogTpl,
-  session => {
-    trapOverlayFocus(session, { guard: true });
-    restoreTriggerFocusOnClose(session, () => this.trigger().nativeElement);
-    session.canClose(reason => reason !== 'outside-click' || !this.isDirty());
-    session.afterClose(() => this.resetDraft());
+  {
+    restoreFocusTo: () => this.trigger().nativeElement,
+    setup: session => {
+      session.canClose(reason => reason !== 'outside-click' || !this.isDirty());
+      session.afterClose(() => this.resetDraft());
+    },
   },
 );
+```
+
+For focus trapping and restoration without custom setup logic, use the declarative options directly:
+
+```ts
+readonly overlay = createGlobalOverlay(this.isOpen, this.dialogTpl, {
+  trapFocus: { guard: true },
+  restoreFocusTo: () => this.trigger().nativeElement,
+});
 ```
 
 How close rules are applied:
@@ -241,7 +243,7 @@ How close rules are applied:
 - `OverlayStackOutlet` handles outside-click dispatch centrally for the whole stack
 - `OverlaySession` guards can still block a close request before `isOpen` flips back to `false`
 
-This makes the control flow predictable: behavior provides the default policy, and `setup(session)` adds the extra rules for a particular overlay.
+This makes the control flow predictable: the recipe provides the default policy, and `setup(session)` adds the extra rules for a particular overlay.
 
 ## Nested Overlays
 
@@ -259,7 +261,7 @@ Conceptually, the system treats overlays as an ordered stack with parent-child b
 
 ## Service-Driven Overlays
 
-Use `createSingletonOverlay()` when the overlay is owned by a service rather than by a single feature component.
+Use `createSingletonGlobalOverlay()` or `createSingletonConnectedOverlay()` when the overlay is owned by a service rather than by a single feature component.
 
 This is the pattern for app-level or shared overlays:
 
@@ -269,50 +271,48 @@ This is the pattern for app-level or shared overlays:
 - a root-level host component provides the actual template once via `templateRef`
 
 ```ts
-readonly overlay = createSingletonOverlay(
-  dialogBehavior(),
-  signal(globalPosition()),
-  session => {
-    trapOverlayFocus(session, { guard: true });
+readonly overlay = createSingletonGlobalOverlay({
+  restoreFocusTo: () => this.config()?.referenceElement ?? null,
+  setup: session => {
+    session.afterClose(() => {
+      if (!this.overlay.isOpen()) this.config.set(null);
+    });
   },
-);
+});
 ```
 
-This pattern removes the repeated `templateRef + isOpen + createOverlay()` boilerplate and keeps app-wide overlays centralized.
+The singleton variants remove the repeated `templateRef + isOpen + createOverlay()` boilerplate and keep app-wide overlays centralized.
 
-## Triggers and Presets
+## Entry Points
 
-Not every overlay needs to start from the low-level primitive.
+Not every overlay needs to start from the low-level primitive. Choose the highest layer that still fits the use case.
 
-Use ready-made triggers when you want the standard interaction model:
+**Trigger directives** — declarative, zero configuration:
 
 - `fiboPopoverTrigger` for anchored popovers
 - `fiboDialogTrigger` for modal dialogs
 - `fiboDrawerTrigger` for drawers
 
-Use behavior presets from `@fibo-ui/components` when you want the standard close policy and shell token, but still manage state yourself:
+**Overlay recipes** — for programmatic overlays where state or content is managed by the component:
 
-- `connectedBehavior()`
-- `dialogBehavior()`
-- `drawerBehavior()`
-- `menuBehavior()`
-- `tooltipBehavior()`
+- `createConnectedOverlay()` — anchored to an element (select, combobox, popover, tooltip)
+- `createGlobalOverlay()` — centered or fixed (dialog, drawer, notification)
+- `createCoordinateOverlay()` — anchored to x/y coordinates (context menu)
+- `createSingletonGlobalOverlay()` / `createSingletonConnectedOverlay()` — service-owned variants
 
-This is the rough split:
+Each recipe takes the open signal, a position factory or content signal, and an options object for shell overrides, close policies, and focus management. Focus trapping and restoration are declarative options, not manual setup calls.
 
-- triggers are for fast declarative usage
-- presets are for programmatic overlays with standard defaults
-- `createOverlay()` is the core primitive when you need full control
+**`createOverlay()` primitive** — when you need full control: a custom shell token, a position type not covered by recipes, or a setup callback with complex lifecycle logic.
 
 ## Choosing the Right Entry Point
 
 Choose the highest-level entry point that still matches your use case:
 
-- use `createOverlay()` for component-owned overlays such as select, combobox, datepicker, or a custom popover
-- use `createSingletonOverlay()` for app-level or service-owned overlays
 - use trigger directives when the default interaction pattern already matches the feature
+- use recipes for component-owned overlays such as select, combobox, datepicker, or a custom popover
+- use singleton recipe variants for app-level or service-owned overlays
+- use `createOverlay()` directly when registering a custom shell or composing unusual behaviors
 - register a custom shell when the visual host must change
-- customize behavior or `setup(session)` when the shell stays the same but lifecycle or close rules differ
 
 If you keep that layering in mind, the system stays easy to reason about:
 

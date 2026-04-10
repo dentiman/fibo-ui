@@ -33,11 +33,11 @@ In this model:
 The default composition for a field-based control is:
 
 ```text
-FormUiState          - form-derived UI state
-FieldShell           - visual container
-FieldTarget          - primary interactive element inside the shell
-FieldAction x N      - clear/remove buttons that should not retrigger shell focus
-createOverlay()      - optional overlay lifecycle for Select / Combobox / DatePicker / MultiSelect
+FormUiState              - form-derived UI state
+FieldShell               - visual container
+FieldTarget              - primary interactive element inside the shell
+FieldAction x N          - clear/remove buttons that should not retrigger shell focus
+createConnectedOverlay() - optional overlay lifecycle for Select / Combobox / DatePicker / MultiSelect
 ```
 
 For simple controls such as `TextField`:
@@ -54,12 +54,11 @@ For overlay controls such as `Select`:
 FormUiState
 └─ FieldShell
    └─ button[fiboFieldTarget fieldTargetMode="click"]
-      └─ createOverlay(
+      └─ createConnectedOverlay(
            isOpen,
-           connectedBehavior(),
-           connectedPosition(() => shell),   // referenceElement
+           () => ({ referenceElement: shell.overlayReferenceElement(), matchWidth: true }),
            template,
-           session => restoreTriggerFocusOnClose(session, () => button),
+           { restoreFocusTo: () => shell.overlayFocusReturnTarget() },
          )
 ```
 
@@ -145,12 +144,11 @@ What happens here:
 ```ts
 readonly isOpen = signal(false);
 
-readonly overlay = createOverlay(
+readonly overlay = createConnectedOverlay(
   this.isOpen,
-  connectedBehavior(),
-  connectedPosition(() => ({ referenceElement: this.fieldShell().overlayReferenceElement() })),
+  () => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true }),
   this.selectTemplate,
-  session => { restoreTriggerFocusOnClose(session, () => this.fieldShell().overlayFocusReturnTarget()); },
+  { restoreFocusTo: () => this.fieldShell().overlayFocusReturnTarget() },
 );
 ```
 
@@ -171,14 +169,15 @@ This means:
 
 ## Overlay Strategy
 
-For overlay fields, `FieldShell` works together with `createOverlay()`.
+For overlay fields, `FieldShell` works together with `createConnectedOverlay()`.
 
 Recommended mapping:
 
-| `createOverlay` argument | Recommended value |
+| `createConnectedOverlay` option | Recommended value |
 | --- | --- |
-| `connectedPosition` referenceElement | shell or explicit `FieldOverlayAnchor` |
-| `restoreTriggerFocusOnClose` target | primary `FieldTarget` |
+| `referenceElement` | `shell.overlayReferenceElement()` or explicit `FieldOverlayAnchor` |
+| `matchWidth` | `true` for Select, Combobox, MultiSelect |
+| `restoreFocusTo` | `shell.overlayFocusReturnTarget()` |
 
 This gives the right behaviour:
 - overlay width can match the full field shell
@@ -318,17 +317,6 @@ Use these defaults unless a control clearly needs something else.
 | Combobox | `focus` | shell | input |
 | Date picker | `click` | shell | input or trigger button |
 | Multi-select | `click` | shell | composite trigger surface |
-
-## Legacy Note
-
-`FormFieldControl` still exists in the codebase for backward compatibility and old examples, but it is no longer the recommended primitive for new field components.
-
-For new work, use:
-- `FormUiState`
-- `FieldShell`
-- `FieldTarget`
-- `FieldAction`
-- `FieldOverlayAnchor`
 
 ## Reference Implementations
 

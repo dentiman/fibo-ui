@@ -43,11 +43,12 @@ export * from './lib/form-controls/fields/text-field';
 export * from './lib/form-controls/fields/datepicker-field';
 export * from './lib/form-controls/form/form-error';
 export * from './lib/form-controls/form/form-ui-state';
+export * from './lib/form-controls/form/field-container';
+export * from './lib/form-controls/form/field-interactive';
+export * from './lib/form-controls/form/field-auxiliary';
+export * from './lib/form-controls/form/field-label';
 export * from './lib/form-controls/form/field-shell';
-export * from './lib/form-controls/form/field-target';
-export * from './lib/form-controls/form/field-action';
 export * from './lib/form-controls/form/field-overlay-anchor';
-export * from './lib/form-controls/form/form-field-control';
 
 export * from './lib/menu/menu-item.type';
 export * from './lib/form-controls/switch/switch';
