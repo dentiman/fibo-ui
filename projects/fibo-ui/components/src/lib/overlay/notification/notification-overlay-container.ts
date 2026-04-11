@@ -59,7 +59,7 @@ export class NotificationOverlayContainer {
 
   constructor() {
     afterNextRender(() => {
-      this.notifier.overlay.templateRef.set(this.root());
+      this.notifier.templateRef.set(this.root());
     });
   }
 }

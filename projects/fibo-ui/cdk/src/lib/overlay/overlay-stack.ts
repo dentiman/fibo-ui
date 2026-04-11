@@ -247,7 +247,7 @@ export class OverlayStack {
   }
 }
 
-export function createOverlay(
+export function createOverlayInternal(
   isOpen: WritableSignal<boolean>,
   behavior: OverlayBehaviorConfig,
   position: Signal<OverlayPositionConfig>,

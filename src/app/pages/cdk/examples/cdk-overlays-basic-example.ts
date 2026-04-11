@@ -6,7 +6,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { createConnectedOverlay } from '@fibo-ui/cdk';
+import { createOverlay } from '@fibo-ui/cdk';
 
 @Component({
   selector: 'cdk-overlays-basic-example',
@@ -30,12 +30,12 @@ export class CdkOverlaysBasicExample {
 
   readonly isOpen = signal(false);
 
-  readonly overlay = createConnectedOverlay(
-    this.isOpen,
-    () => ({ referenceElement: this.btn().nativeElement }),
-    this.tpl,
-    { restoreFocusTo: () => this.btn().nativeElement },
-  );
+  readonly overlay = createOverlay(() => ({
+    state: this.isOpen,
+    content: this.tpl(),
+    position: { connectedTo: this.btn().nativeElement },
+    focus: { restoreTo: () => this.btn().nativeElement },
+  }));
 
   toggle() { this.isOpen.update(v => !v); }
 }

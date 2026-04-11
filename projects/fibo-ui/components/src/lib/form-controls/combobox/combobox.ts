@@ -13,7 +13,7 @@ import {
   DataList,
   DataListItem,
   SelectOne,
-  createConnectedOverlay,
+  createOverlay,
   provideFormValueControl,
 } from '@fibo-ui/cdk';
 import { type ComboboxControl, provideComboboxControl } from './combobox-control-token';
@@ -122,19 +122,24 @@ export class Combobox
       : [];
   });
 
-  readonly overlay = createConnectedOverlay(
-    this.expanded,
-    () => ({ referenceElement: this.fieldShellHost().referenceElement(), matchWidth: true }),
-    this.comboboxTemplateRef,
-    {
-      restoreFocusTo: () => this.fieldShellHost().focusReturnTarget(),
-      setup: session => {
-        session.beforeClose((_, __, reason) => {
-          if (reason !== 'state') this.resetQueryToValue();
-        });
-      },
+  readonly overlay = createOverlay(() => ({
+    state: this.expanded,
+    content: this.comboboxTemplateRef(),
+    position: {
+      connectedTo: this.fieldShellHost().referenceElement(),
+      matchWidth: true,
     },
-  );
+    focus: {
+      restoreTo: () => this.fieldShellHost().focusReturnTarget(),
+    },
+    lifecycle: {
+      beforeClose: [
+        (_, __, reason) => {
+          if (reason !== 'state') this.resetQueryToValue();
+        },
+      ],
+    },
+  }));
 
   private resetQueryToValue() {
     const value = this.value();

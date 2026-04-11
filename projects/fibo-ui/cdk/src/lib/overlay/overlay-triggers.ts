@@ -1,7 +1,7 @@
 import { Directive, ElementRef, inject, input, model, TemplateRef } from '@angular/core';
 import type { Placement } from '@floating-ui/dom';
 import { DRAWER_SHELL_TOKEN } from './overlay-shell-tokens';
-import { createConnectedOverlay, createGlobalOverlay } from './overlay-recipes';
+import { createOverlay } from './public-overlay';
 
 @Directive({
   selector: '[fiboDialogTrigger]',
@@ -18,9 +18,11 @@ export class DialogTrigger {
   isOpen = model(false, { alias: 'open' });
   content = input.required<TemplateRef<unknown>>();
 
-  overlay = createGlobalOverlay(this.isOpen, this.content, {
-    restoreFocusTo: () => this.element,
-  });
+  overlay = createOverlay(() => ({
+    state: this.isOpen,
+    content: this.content(),
+    focus: { restoreTo: () => this.element },
+  }));
 
   open() {
     if (!this.isOpen()) this.isOpen.set(true);
@@ -46,10 +48,12 @@ export class DrawerTrigger {
   isOpen = model(false, { alias: 'open' });
   content = input.required<TemplateRef<unknown>>();
 
-  overlay = createGlobalOverlay(this.isOpen, this.content, {
+  overlay = createOverlay(() => ({
+    state: this.isOpen,
+    content: this.content(),
     shell: DRAWER_SHELL_TOKEN,
-    restoreFocusTo: () => this.element,
-  });
+    focus: { restoreTo: () => this.element },
+  }));
 
   open() {
     if (!this.isOpen()) this.isOpen.set(true);
@@ -77,16 +81,16 @@ export class PopoverTrigger {
   placement = input<Placement>();
   offset = input<number>();
 
-  overlay = createConnectedOverlay(
-    this.isOpen,
-    () => ({
-      referenceElement: this.element,
+  overlay = createOverlay(() => ({
+    state: this.isOpen,
+    content: this.content(),
+    position: {
+      connectedTo: this.element,
       placement: this.placement(),
       offset: this.offset(),
-    }),
-    this.content,
-    { restoreFocusTo: () => this.element },
-  );
+    },
+    focus: { restoreTo: () => this.element },
+  }));
 
   open() {
     if (!this.isOpen()) this.isOpen.set(true);

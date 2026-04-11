@@ -1,5 +1,5 @@
 import { computed, Directive, inject, input, signal, TemplateRef } from '@angular/core';
-import { createConnectedOverlay } from '@fibo-ui/cdk';
+import { createOverlay } from '@fibo-ui/cdk';
 import { FieldInteractiveDirective } from './field-interactive';
 import { FieldShellHostDirective } from './field-shell-host';
 import { FormUiState } from './form-ui-state';
@@ -26,15 +26,17 @@ export class FieldOverlayDirective {
 
   readonly isOpen = signal(false);
 
-  private readonly overlayHandle = createConnectedOverlay(
-    this.isOpen,
-    () => ({
-      referenceElement: this.host?.referenceElement() ?? this.interactive.element(),
+  private readonly overlayHandle = createOverlay(() => ({
+    state: this.isOpen,
+    content: this.overlayContent(),
+    position: {
+      connectedTo: this.host?.referenceElement() ?? this.interactive.element(),
       matchWidth: this.matchWidth(),
-    }),
-    this.overlayContent,
-    { restoreFocusTo: () => this.host?.focusReturnTarget() ?? this.interactive.focusReturnTarget() },
-  );
+    },
+    focus: {
+      restoreTo: () => this.host?.focusReturnTarget() ?? this.interactive.focusReturnTarget(),
+    },
+  }));
 
   /** ID of the rendered overlay panel. Null when the overlay is closed. */
   readonly panelId = computed(() => this.overlayHandle()?.id ?? null);

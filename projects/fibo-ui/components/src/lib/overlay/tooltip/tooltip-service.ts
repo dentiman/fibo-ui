@@ -1,7 +1,7 @@
-import { computed, Injectable, signal, TemplateRef } from '@angular/core';
+import { Injectable, signal, TemplateRef } from '@angular/core';
 import { Subject, takeUntil, timer } from 'rxjs';
 import { Placement } from '@floating-ui/dom';
-import { createConnectedOverlay, TOOLTIP_SHELL_TOKEN } from '@fibo-ui/cdk';
+import { createOverlay, TOOLTIP_SHELL_TOKEN } from '@fibo-ui/cdk';
 
 @Injectable({
   providedIn: 'root',
@@ -19,29 +19,29 @@ export class TooltipService {
   private _interactionRequest = new Subject<'open' | 'close'>();
   private readonly isOpen = signal(false);
 
-  private readonly content = computed(() => this.tooltipRef()?.content ?? null);
-
-  readonly overlay = createConnectedOverlay(
-    this.isOpen,
-    () => ({
-      referenceElement: this.tooltipRef()?.referenceElement ?? null,
+  readonly overlay = createOverlay(() => ({
+    state: this.isOpen,
+    content: this.tooltipRef()?.content ?? null,
+    position: {
+      connectedTo: this.tooltipRef()?.referenceElement ?? null,
       placement: this.tooltipRef()?.placement ?? 'top',
-    }),
-    this.content,
-    {
-    shell: TOOLTIP_SHELL_TOKEN,
-    closeOnScroll: true,
-    closeOnEscape: false,
-    closeOnOutsideClick: false,
-    closeOnFocusLeave: false,
-    setup: session => {
-      session.afterClose(() => {
-        if (!this.isOpen()) {
-          this.tooltipRef.set(null);
-        }
-      });
     },
-  });
+    shell: TOOLTIP_SHELL_TOKEN,
+    focus: { trap: false },
+    close: {
+      outsideClick: false,
+      escape: false,
+      focusLeave: false,
+      scroll: true,
+    },
+    lifecycle: {
+      afterClose: [
+        () => {
+          if (!this.isOpen()) this.tooltipRef.set(null);
+        },
+      ],
+    },
+  }));
 
   open(content: string | TemplateRef<unknown>, referenceElement: HTMLElement, placement: Placement) {
     this._interactionRequest.next('open');

@@ -1,7 +1,7 @@
 import { Directive, ElementRef, inject, input, model, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { DataListItem } from '../data-list/data-list-item.directive';
 import { OverlayStack } from '../overlay/overlay-stack';
-import { createConnectedOverlay } from '../overlay/overlay-recipes';
+import { createOverlay } from '../overlay/public-overlay';
 import { MENU_PANEL } from './menu-panel';
 
 @Directive({
@@ -33,21 +33,25 @@ export class SubmenuTrigger implements OnInit, OnDestroy {
   isOpen = model(false, { alias: 'open' });
   private pendingKeyboardNavigation = false;
 
-  overlay = createConnectedOverlay(
-    this.isOpen,
-    () => ({ placement: 'right-start', offset: 1, referenceElement: this.element }),
-    this.content,
-    {
-      restoreFocusTo: () => this.element,
-      setup: session => {
-        session.afterOpened(() => {
+  overlay = createOverlay(() => ({
+    state: this.isOpen,
+    content: this.content(),
+    position: {
+      connectedTo: this.element,
+      placement: 'right-start',
+      offset: 1,
+    },
+    focus: { restoreTo: () => this.element },
+    lifecycle: {
+      afterOpened: [
+        () => {
           if (!this.pendingKeyboardNavigation) return;
           this.pendingKeyboardNavigation = false;
           this.element.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: false }));
-        });
-      },
+        },
+      ],
     },
-  );
+  }));
 
   ngOnInit() {
     this.panel.registerSubmenuTrigger(this);

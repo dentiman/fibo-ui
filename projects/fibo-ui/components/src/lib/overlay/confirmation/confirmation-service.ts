@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { createSingletonGlobalOverlay } from '@fibo-ui/cdk';
+import { createOverlay } from '@fibo-ui/cdk';
 import type { TemplateRef } from '@angular/core';
 
 export type ConfirmationContent =
@@ -23,20 +23,27 @@ export interface ConfirmationConfig {
 export class ConfirmationService {
   config = signal<ConfirmationConfig | null>(null);
 
-  readonly overlay = createSingletonGlobalOverlay({
-    restoreFocusTo: () => this.config()?.referenceElement ?? null,
-    setup: session => {
-      session.afterClose(() => {
-        if (!this.overlay.isOpen()) {
-          this.config.set(null);
-        }
-      });
+  private readonly _state = signal(false);
+  readonly templateRef = signal<TemplateRef<unknown> | null>(null);
+
+  readonly overlay = createOverlay(() => ({
+    state: this._state,
+    content: this.templateRef(),
+    focus: {
+      restoreTo: () => this.config()?.referenceElement ?? null,
     },
-  });
+    lifecycle: {
+      afterClose: [
+        () => {
+          if (!this._state()) this.config.set(null);
+        },
+      ],
+    },
+  }));
 
   open(config: ConfirmationConfig) {
     this.config.set(config);
-    this.overlay.isOpen.set(true);
+    this._state.set(true);
   }
 
   confirm() {
@@ -49,6 +56,6 @@ export class ConfirmationService {
   }
 
   close() {
-    this.overlay.isOpen.set(false);
+    this._state.set(false);
   }
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, signal, TemplateRef, viewChild } from '@angular/core';
-import { createConnectedOverlay, DialogTrigger } from '@fibo-ui/cdk';
+import { createOverlay, DialogTrigger } from '@fibo-ui/cdk';
 import { Menu, type MenuItemType } from '@fibo-ui/components';
 
 @Component({
@@ -160,19 +160,19 @@ export class PlaygroundPageComponent {
   readonly isMenuOpen = signal(false);
   readonly isAltMenuOpen = signal(false);
 
-  readonly menuOverlay = createConnectedOverlay(
-    this.isMenuOpen,
-    () => ({ referenceElement: this.menuTrigger().nativeElement }),
-    this.menuTemplate,
-    { restoreFocusTo: () => this.menuTrigger().nativeElement },
-  );
+  readonly menuOverlay = createOverlay(() => ({
+    state: this.isMenuOpen,
+    content: this.menuTemplate(),
+    position: { connectedTo: this.menuTrigger().nativeElement },
+    focus: { restoreTo: () => this.menuTrigger().nativeElement },
+  }));
 
-  readonly altMenuOverlay = createConnectedOverlay(
-    this.isAltMenuOpen,
-    () => ({ referenceElement: this.altMenuTrigger().nativeElement }),
-    this.altMenuTemplate,
-    { restoreFocusTo: () => this.altMenuTrigger().nativeElement },
-  );
+  readonly altMenuOverlay = createOverlay(() => ({
+    state: this.isAltMenuOpen,
+    content: this.altMenuTemplate(),
+    position: { connectedTo: this.altMenuTrigger().nativeElement },
+    focus: { restoreTo: () => this.altMenuTrigger().nativeElement },
+  }));
 
   readonly menuItems: MenuItemType[] = [
     { label: 'My Profile', icon: 'user', url: '/' },
