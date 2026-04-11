@@ -1,12 +1,16 @@
 import {
   type InjectionToken,
+  Injector,
   type Signal,
   type TemplateRef,
   type Type,
   type WritableSignal,
   computed,
   effect,
+  inject,
   isDevMode,
+  runInInjectionContext,
+  signal,
   untracked,
 } from '@angular/core';
 import type { Placement } from '@floating-ui/dom';
@@ -188,14 +192,10 @@ function buildComposedSetup(
 export function createOverlay(
   factory: () => PublicOverlayConfig,
 ): Signal<OverlayHandle | null> {
-  // 1. Snapshot-секції читаємо в untracked, без підписок.
-  const initial = untracked(() => factory());
-  const state = initial.state;
-  const initialFamily = detectFamily(initial.position);
-  const behavior = buildBehavior(initial, initialFamily);
-  const composedSetup = buildComposedSetup(initial, initialFamily);
+  const injector = inject(Injector);
 
-  // 2. Reactive content / position — через computed.
+  // 1. Reactive content / position — через computed; factory() не викликається
+  //    під час конструктора, тому input.required() / viewChild.required() безпечні.
   const contentSignal = computed<TemplateRef<any> | string | null>(
     () => factory().content,
   );
@@ -203,19 +203,51 @@ export function createOverlay(
     () => normalizePosition(factory().position),
   );
 
-  // 3. Dev-mode: position family guard.
-  if (isDevMode()) {
-    effect(() => {
-      const current = positionSignal();
-      if (current.type !== initialFamily) {
-        throw new Error(
-          `[fibo-ui overlay] position family cannot change within a session: ` +
-          `${initialFamily} → ${current.type}. Close the overlay and open a new one.`,
-        );
-      }
-    });
-  }
+  // 2. Холдер внутрішнього handle — null до першого запуску ефекту.
+  const innerRef = signal<Signal<OverlayHandle | null> | null>(null);
 
-  // 4. Делегуємо існуючому runtime.
-  return createOverlayInternal(state, behavior, positionSignal, contentSignal, composedSetup);
+  // 3. Плаский результат: прозоро делегує внутрішньому handle після ініціалізації.
+  const result = computed<OverlayHandle | null>(() => innerRef()?.() ?? null);
+
+  // 4. Відкладена ініціалізація: ефект запускається ОДИН РАЗ після першого CD-циклу,
+  //    коли required inputs і viewChild.required() вже доступні.
+  //    Усі читання factory() обгорнуті в untracked → ефект не має реактивних залежностей
+  //    і більше ніколи не перезапускається.
+  effect(() => {
+    const initial = untracked(() => factory());
+    const state = initial.state;
+    const initialFamily = detectFamily(initial.position);
+    const behavior = buildBehavior(initial, initialFamily);
+    const composedSetup = buildComposedSetup(initial, initialFamily);
+
+    // 5. Виходимо з реактивного контексту (untracked обнуляє activeConsumer),
+    //    щоб effect() / createOverlayInternal() не отримали NG0602
+    //    ("effect() cannot be called from within a reactive context").
+    untracked(() => {
+      // 6. Dev-mode: position family guard.
+      if (isDevMode()) {
+        runInInjectionContext(injector, () => {
+          effect(() => {
+            const current = positionSignal();
+            if (current.type !== initialFamily) {
+              throw new Error(
+                `[fibo-ui overlay] position family cannot change within a session: ` +
+                `${initialFamily} → ${current.type}. Close the overlay and open a new one.`,
+              );
+            }
+          });
+        });
+      }
+
+      // 7. Делегуємо існуючому runtime через runInInjectionContext,
+      //    щоб inject(DestroyRef) / inject(Injector) всередині отримали правильний контекст.
+      const handle = runInInjectionContext(injector, () =>
+        createOverlayInternal(state, behavior, positionSignal, contentSignal, composedSetup),
+      );
+
+      innerRef.set(handle);
+    });
+  });
+
+  return result;
 }
