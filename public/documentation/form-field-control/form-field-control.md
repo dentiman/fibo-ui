@@ -1,330 +1,224 @@
 # Form Field Control
 
-Recommended architecture for styled form controls in `@fibo-ui/components`.
+Architecture for building styled form controls in `@fibo-ui/components`.
 
-This page replaces the old mental model where `FormFieldControl` was both:
-- the visual shell
-- the form control
-- the popover trigger
+The system separates five concerns that are often collapsed into one primitive: layout, form state, focus management, label association, and overlay lifecycle.
 
-That model was fine for small demos, but it mixed layout, form state, focus management, and overlay lifecycle into one primitive.
+## Building Blocks
 
-The current architecture separates those concerns.
+| Primitive | Selector | Responsibility |
+| --- | --- | --- |
+| `FormUiState` | `hostDirective` | Receives signal-form UI state: `disabled`, `invalid`, `required`, `touched`, `errorMessage` |
+| `FieldShell` | `fibo-field-shell` | Visual shell: label, icons, clear button, hint/error text |
+| `FieldShellHostDirective` | `[fiboFieldShellHost]` | Registration hub — auto-applied as `hostDirective` on `FieldShell` |
+| `FieldContainerDirective` | `[fiboFieldContainer]` | Binds ARIA state and click delegation to the inner visual wrapper |
+| `FieldInteractiveDirective` | `[fiboFieldInteractive]` | Marks the primary interactive element; owns `id`, `aria-labelledby`, `aria-describedby`, `aria-invalid`, `aria-readonly` |
+| `FieldAuxiliaryDirective` | `[fiboFieldAuxiliary]` | Marks secondary actions (clear, chip remove) that should not retrigger shell activation |
+| `FieldLabelDirective` | `[fiboFieldLabel]` | Marks the label; auto-wires `for` and notifies the hub that a label is present |
+| `FieldOverlayDirective` | `[fiboFieldOverlay]` | Encapsulates `createConnectedOverlay()` for overlay fields; owns `aria-expanded`, `aria-controls` |
 
-## Recommended Building Blocks
+## Composition
 
-Use these primitives together:
-
-| Primitive | Responsibility |
-| --- | --- |
-| `FormUiState` | Receives signal-form UI state from `[formField]`: `disabled`, `invalid`, `errors`, `required`, `touched`, and derived `errorMessage` |
-| `FieldShell` | Visual shell: label, icons, clear button, hint/error text, focus-within styling |
-| `FieldTarget` | Marks the primary interactive element inside the shell |
-| `FieldAction` | Marks secondary actions such as clear or chip remove buttons |
-| `FieldOverlayAnchor` | Optional override for the element used as overlay anchor |
-
-In this model:
-- the real control is always the inner `input`, `button`, or composite surface
-- `FieldShell` is not the control and is not focusable
-- overlays are owned by the component, not by the shell
-
-## Composition Model
-
-The default composition for a field-based control is:
+For a simple text field:
 
 ```text
-FormUiState              - form-derived UI state
-FieldShell               - visual container
-FieldTarget              - primary interactive element inside the shell
-FieldAction x N          - clear/remove buttons that should not retrigger shell focus
-createConnectedOverlay() - optional overlay lifecycle for Select / Combobox / DatePicker / MultiSelect
+FormUiState (hostDirective)
+fibo-field-shell  [fiboFieldShellHost ← auto via hostDirective]
+  div[fiboFieldContainer]          ← visual wrapper, state attributes
+    label[fiboFieldLabel]          ← wires for/id
+    input[fiboFieldInteractive]    ← primary control, ARIA
 ```
 
-For simple controls such as `TextField`:
+For an overlay field (Select, DatePicker):
 
 ```text
-FormUiState
-└─ FieldShell
-   └─ input[fiboFieldTarget]
+FormUiState (hostDirective)
+fibo-field-shell  [fiboFieldShellHost ← auto via hostDirective]
+  div[fiboFieldContainer]
+    label[fiboFieldLabel]
+    button[fiboFieldInteractive][fiboFieldOverlay]   ← primary control + overlay
 ```
-
-For overlay controls such as `Select`:
-
-```text
-FormUiState
-└─ FieldShell
-   └─ button[fiboFieldTarget fieldTargetMode="click"]
-      └─ createConnectedOverlay(
-           isOpen,
-           () => ({ referenceElement: shell.overlayReferenceElement(), matchWidth: true }),
-           template,
-           { restoreFocusTo: () => shell.overlayFocusReturnTarget() },
-         )
-```
-
-## Why This Split Exists
-
-The shell is visually wider than the real focusable control:
-- icons live on the sides
-- label lives above or beside the content
-- the primary control sits in the middle
-
-Users still expect:
-- clicking the shell to focus or open the field
-- clicking a clear button to only clear, not reopen
-- overlays to match the shell width
-- focus to return to the correct inner control after the overlay closes
-
-These requirements are hard to model if one element tries to be:
-- the shell
-- the overlay trigger
-- the focus target
-
-The new field primitives make those roles explicit.
 
 ## Basic Usage
 
 ### Text Input
 
 ```html
-<fibo-field-shell
-  [label]="label()"
-  [hint]="hint()"
-  [iconStart]="iconStart()"
-  [iconEnd]="iconEnd()"
-  [canClear]="value() !== ''"
-  (clearRequested)="clear()"
->
+<fibo-field-shell [label]="label()" [hint]="hint()" [canClear]="value() !== ''" (clearRequested)="clear()">
   <input
-    fiboFieldTarget
+    fiboFieldInteractive
     [value]="value()"
     [disabled]="uiState.disabled()"
+    [readOnly]="uiState.readonly()"
     [required]="uiState.required()"
-    [attr.aria-invalid]="uiState.invalid() || null"
-    (input)="value.set(($event.target as HTMLInputElement).value)"
+    [attr.name]="uiState.name() || null"
+    [attr.aria-required]="uiState.required() || null"
+    [attr.data-error]="(uiState.invalid() && uiState.touched()) || null"
+    (input)="value.set($event.target.value)"
     (blur)="uiState.touched.set(true)"
     class="text-field-input"
   />
 </fibo-field-shell>
 ```
 
-What happens here:
-- `FieldShell` handles shell click
-- `FieldTarget` tells the shell which element to focus
-- `FormUiState` supplies validation and disabled state
-- `FieldShell` renders hint or error text under the field
+`aria-invalid`, `aria-readonly`, `aria-labelledby`, `aria-describedby` and `id` are set automatically by `FieldInteractiveDirective`.
 
-### Select Trigger
+### Overlay Trigger (Select)
 
 ```html
-<fibo-field-shell
-  #shell
-  [label]="label()"
-  [hint]="hint()"
-  iconEnd="chevron-down"
-  [canClear]="clearValue() !== undefined && value() !== clearValue()"
-  (clearRequested)="clear()"
->
+<fibo-field-shell [label]="label()" iconEnd="chevron-down" [canClear]="canClear()" (clearRequested)="clear()">
   <button
-    fiboFieldTarget
-    fieldTargetMode="click"
+    fiboFieldInteractive
+    fieldInteractiveMode="click"
+    [fiboFieldOverlay]="selectTpl"
+    [matchWidth]="true"
+    #triggerButton
     type="button"
     role="combobox"
-    [attr.aria-expanded]="isOpen()"
-    [attr.aria-controls]="isOpen() ? listboxId : null"
-    [attr.aria-invalid]="uiState.invalid() || null"
-    (click)="toggle()"
+    aria-haspopup="listbox"
+    [disabled]="uiState.disabled()"
     (blur)="uiState.touched.set(true)"
   >
     {{ selectedLabel() || placeholder() }}
   </button>
 </fibo-field-shell>
+
+<ng-template #selectTpl let-overlay>
+  <div role="listbox" [attr.id]="overlay.id" fiboDataList (itemTriggered)="overlay.close()">
+    @for (item of items(); track item.value) {
+      <button type="button" fiboDataListItem role="option" [value]="item.value">
+        {{ item.label }}
+      </button>
+    }
+  </div>
+</ng-template>
 ```
 
-```ts
-readonly isOpen = signal(false);
+`FieldOverlayDirective` automatically sets `aria-expanded` and `aria-controls`. The `[fiboFieldOverlay]="tpl"` binding is the only hook needed.
 
-readonly overlay = createConnectedOverlay(
-  this.isOpen,
-  () => ({ referenceElement: this.fieldShell().overlayReferenceElement(), matchWidth: true }),
-  this.selectTemplate,
-  { restoreFocusTo: () => this.fieldShell().overlayFocusReturnTarget() },
-);
+The template receives an `OverlayHandle` as `$implicit` context via `let-overlay`:
+- `overlay.id` — ID to set on the panel element (for `aria-controls` wiring)
+- `overlay.close()` — request close from inside the panel
+
+## `FieldShellHostDirective` — DI Hub
+
+`FieldShellHostDirective` is applied as a `hostDirective` on `fibo-field-shell`. It sits on the host element — the same DI scope that projected content (`fiboFieldInteractive`, `fiboFieldOverlay`) uses when they call `inject()`.
+
+All field primitives register themselves through it:
+- `FieldContainerDirective` → `registerContainerElement(el)` — provides overlay reference element
+- `FieldInteractiveDirective` → `registerInteractive(ref)` — provides focus target
+- `FieldLabelDirective` → `setHasLabel(true/false)` via `DestroyRef` — drives `aria-labelledby`
+
+This registration pattern avoids `contentChild` queries, which cannot cross the Angular projection DI boundary.
+
+## `FieldOverlayDirective`
+
+Applied to the same element as `fiboFieldInteractive`. Controls the overlay lifecycle.
+
+```html
+<button
+  fiboFieldInteractive
+  fieldInteractiveMode="click"
+  [fiboFieldOverlay]="myTemplate"
+  [matchWidth]="true"
+>
 ```
 
-Here the shell click opens the button because `FieldTarget` is configured with `fieldTargetMode="click"`.
+Host bindings set automatically:
+- `aria-expanded` — reflects `isOpen()`
+- `aria-controls` — set to `panelId()` when open, null when closed
 
-## Shell Interaction Rules
+Public API (via `exportAs: 'fiboFieldOverlay'` or `viewChild`):
 
-`FieldShell` follows these rules:
-
-1. If the click lands on a `FieldAction`, do nothing except that action.
-2. If the click lands on the primary target itself, let the browser handle it.
-3. If the click lands on non-interactive shell chrome, activate the primary target.
-
-This means:
-- text inputs focus on shell click
-- select-like buttons open on shell click
-- multi-select chip remove buttons do not reopen the popover
-
-## Overlay Strategy
-
-For overlay fields, `FieldShell` works together with `createConnectedOverlay()`.
-
-Recommended mapping:
-
-| `createConnectedOverlay` option | Recommended value |
+| Member | Description |
 | --- | --- |
-| `referenceElement` | `shell.overlayReferenceElement()` or explicit `FieldOverlayAnchor` |
-| `matchWidth` | `true` for Select, Combobox, MultiSelect |
-| `restoreFocusTo` | `shell.overlayFocusReturnTarget()` |
+| `isOpen` | `Signal<boolean>` |
+| `panelId` | `Signal<string \| null>` — overlay panel ID, null when closed |
+| `open()` | Opens if not disabled/readonly |
+| `close()` | Closes |
+| `toggle()` | Toggles |
 
-This gives the right behaviour:
-- overlay width can match the full field shell
-- click-outside and focus-leave are measured against the whole field
-- focus returns to the real control, not to a non-focusable wrapper
+Reference element and focus restoration are wired automatically through `FieldShellHostDirective`.
 
-## Accessibility Notes
+## `FieldInteractiveDirective`
 
-Keep semantics on the real control, not on `FieldShell`.
+Applied to the primary focusable element. Sets automatically:
 
-Do:
-- put `role="combobox"`, `aria-expanded`, `aria-controls`, `aria-invalid` on the real `button` or `input`
-- put `required`, `disabled`, `name`, and other form semantics on the real focus target
-- keep decorative icons non-interactive
-
-Do not:
-- make `FieldShell` focusable
-- put the main `role="combobox"` on the shell
-- use clickable SVG icons as standalone actions
-
-For secondary actions:
-- use real buttons
-- mark them with `fiboFieldAction`
-- stop propagation when the action should not reopen or refocus the field
-
-## Using `FormUiState`
-
-`FormUiState` is the thin signal-forms bridge for UI state.
-
-Add it through `hostDirectives`:
-
-```ts
-@Component({
-  hostDirectives: [
-    {
-      directive: FormUiState,
-      inputs: [...FORM_UI_STATE_INPUTS],
-    },
-  ],
-})
-export class Select {}
-```
-
-Then read from `uiState` where needed:
-
-```ts
-readonly uiState = inject(FormUiState);
-```
-
-Typical usage:
-- `uiState.disabled()`
-- `uiState.required()`
-- `uiState.invalid()`
-- `uiState.touched.set(true)`
-- `uiState.errorMessage()`
-
-## Field Primitives API
-
-### `FieldShell`
-
-Selector: `fibo-field-shell`
-
-Inputs:
-
-| Input | Type | Description |
-| --- | --- | --- |
-| `id` | `string` | Used for the projected label `for=""` |
-| `label` | `string` | Field label |
-| `hint` | `string` | Helper text shown when there is no validation error |
-| `iconStart` | `string` | Leading Lucide icon |
-| `iconEnd` | `string` | Trailing Lucide icon |
-| `canClear` | `boolean` | Controls clear-button visibility |
-
-Outputs:
-
-| Output | Description |
+| Attribute | Source |
 | --- | --- |
-| `clearRequested` | Fired when the clear button is pressed |
-| `focusRequested` | Fallback event when no `FieldTarget` is present |
-
-Public methods used by controls:
-
-| Method | Description |
-| --- | --- |
-| `focusPrimary()` | Focuses the primary target |
-| `activatePrimaryFromShell()` | Focuses or clicks the primary target based on its mode |
-| `overlayReferenceElement()` | Returns explicit overlay anchor or shell element |
-| `overlayInteractionRoot()` | Returns the shell root used for close policies |
-| `overlayFocusReturnTarget()` | Returns the target used after overlay close |
-
-### `FieldTarget`
-
-Selector: `[fiboFieldTarget]`
-
-Purpose:
-- marks the primary interactive element
-- tells the shell how to react on shell click
+| `id` | `host.idFor('control')` |
+| `aria-labelledby` | `host.idFor('label')` when label is present |
+| `aria-describedby` | `host.idFor('error')` when error is active |
+| `aria-invalid` | `formUiState.invalid()` |
+| `aria-readonly` | `formUiState.readonly()` |
 
 Input:
 
 | Input | Type | Default | Description |
 | --- | --- | --- | --- |
-| `fieldTargetMode` | `'focus' | 'click'` | `'focus'` | `focus` for text-like fields, `click` for button-like triggers |
+| `fieldInteractiveMode` | `'focus' \| 'click'` | `'focus'` | `focus` for text-like fields; `click` for button-like triggers that open on shell click |
 
-Use:
-- `input` for `TextField`
-- `button` for `Select`
-- composite `div[tabindex="0"]` for `MultiSelect`
+## `FieldAuxiliaryDirective`
 
-### `FieldAction`
+Marks secondary actions inside the shell. Shell click detection skips elements with `[data-field-auxiliary]`, so clicking them does not retrigger focus or open the overlay.
 
-Selector: `[fiboFieldAction]`
+Typical uses: clear button, chip remove button.
 
-Marks an inner action that should not retrigger shell activation.
+```html
+<button type="button" fiboFieldAuxiliary (click)="removeItem(item)">
+  <lucide-icon name="x" size="12"></lucide-icon>
+</button>
+```
 
-Typical use cases:
-- clear button
-- remove-chip button
-- secondary trailing action
+## Shell Click Behaviour
 
-### `FieldOverlayAnchor`
+`FieldContainerDirective` handles container clicks:
 
-Selector: `[fiboFieldOverlayAnchor]`
+1. Click on `button`, `input`, `a`, `label`, `[data-field-interactive]`, `[data-field-auxiliary]` → no action (browser handles it)
+2. Click on shell chrome → `host.activatePrimary()` → focuses or clicks the interactive element based on its mode
 
-Optional override for cases where the overlay should anchor to something other than the shell root.
+## Accessibility
 
-If absent, the shell itself is used as the anchor.
+Keep semantics on the real control, not on `FieldShell`.
+
+Automatic (no manual binding needed):
+- `id`, `aria-labelledby`, `aria-describedby` on the interactive element
+- `aria-invalid`, `aria-readonly` on the interactive element
+- `aria-expanded`, `aria-controls` on the overlay trigger
+- `aria-disabled`, `aria-required`, `data-error`, `data-readonly` on the container
+
+Manual (consumer responsibility):
+- `role="combobox"`, `aria-haspopup` on the interactive element
+- `aria-required` for native form inputs
+- `disabled`, `readOnly`, `required` native properties on inputs/buttons
+- `[attr.id]="overlay.id"` on the panel rendered inside `ng-template`
+
+## `FieldShell` Inputs
+
+| Input | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `''` | Field label text |
+| `hint` | `string` | `''` | Helper text shown when no error |
+| `iconStart` | `string` | `''` | Leading Lucide icon name |
+| `iconEnd` | `string` | `''` | Trailing Lucide icon name |
+| `canClear` | `boolean` | `false` | Shows the clear button |
+
+Output: `clearRequested` — fired when the clear button is pressed.
 
 ## Recommended Patterns
 
-Use these defaults unless a control clearly needs something else.
-
-| Control type | Target mode | Overlay anchor | Focus return |
-| --- | --- | --- | --- |
-| Text input | `focus` | none | input |
-| Select | `click` | shell | trigger button |
-| Combobox | `focus` | shell | input |
-| Date picker | `click` | shell | input or trigger button |
-| Multi-select | `click` | shell | composite trigger surface |
+| Control type | `fieldInteractiveMode` | Element |
+| --- | --- | --- |
+| Text input | `focus` (default) | `input` |
+| Select | `click` | `button[role=combobox]` |
+| Date picker | `click` | `input[aria-haspopup=dialog]` |
+| Multi-select | `click` | `div[role=combobox][tabindex=0]` |
+| Combobox | `focus` (default) | `input[role=combobox]` |
 
 ## Reference Implementations
 
-See the current runtime components for the recommended pattern:
-- `TextField`
-- `Select`
-- `Combobox`
-- `DatePickerField`
-- `MultiSelect`
-
-These components now use the same field architecture and should be treated as the canonical examples.
+- `TextField` — text input pattern
+- `Select` — click-trigger overlay with listbox
+- `DatePickerField` — click-trigger overlay with dialog
+- `MultiSelect` — click-trigger overlay with multi-selection
+- `Combobox` — focus-driven autocomplete with direct `createConnectedOverlay`
