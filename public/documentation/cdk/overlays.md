@@ -1,46 +1,292 @@
 # Overlays
 
-Overlays are the signal-driven runtime layer for temporary UI: dialogs, drawers, popovers, menus, tooltips, and other temporary surfaces.
+`createOverlay()` is the primary entry point into the fibo-ui overlay system.
 
-This page is a guide to the system itself: how overlays are composed, how they render, how shells are registered, and which entry point to choose. Detailed API reference belongs elsewhere.
+It is the single public API for dialogs, drawers, popovers, menus, tooltips, context menus, and service-driven floating UI. The public function stays small on purpose: you describe one overlay config, and the runtime decides how to open it, render it, position it, wire close policies, and manage one open cycle.
 
-## Mental Model
+## CreateOverlay
 
-Every overlay in fibo-ui is built from the same parts:
+Start here. This is the shape to read first when you work with overlays:
 
-- `isOpen` — the source of truth for whether the overlay should exist
-- `behavior` — close rules, backdrop, scroll locking, and the shell token to render
-- `position` — `global`, `connected`, or `coordinate`
-- `content` — a `TemplateRef`, string, or `null` while content is not ready yet
-- `OverlayStack` — the runtime registry that opens, closes, orders, and tracks nesting
-- `OverlayStackOutlet` — the app-level renderer that instantiates shell components
-- `OverlayHandle` — the runtime object for one open cycle
+```ts
+import type {
+  InjectionToken,
+  Signal,
+  TemplateRef,
+  Type,
+  WritableSignal,
+} from '@angular/core';
+import type { TrapOverlayFocusOptions } from '@fibo-ui/cdk';
 
-The open flow is:
+export function createOverlay(
+  factory: () => {
+    // ─── Core: live reactive ─────────────────────────────
+    state: WritableSignal<boolean>;
+    content: TemplateRef<unknown> | string | null;
 
-1. A component, directive, or service flips `isOpen` to `true`.
-2. A recipe or `createOverlay()` asks `OverlayStack` to create a new open cycle.
-3. The stack creates an `OverlayHandle`, registers it, and tracks parent-child branch relations.
-4. The root outlet resolves the shell component from `behavior.shell` through DI.
-5. The shell renders `OverlayContent` and attaches the right host directives such as `OverlayContainer`, `OverlayPosition`, or `OverlayPanel`.
-6. Close policies, focus rules, guards, and lifecycle hooks run for that open cycle until the overlay is destroyed.
+    position?:
+      | {
+          connectedTo: HTMLElement | null;
+          placement?: Placement;
+          matchWidth?: boolean;
+          offset?: number;
+        }
+      | {
+          x: number;
+          y: number;
+          placement?: Placement;
+        };
 
-This separation is intentional:
+    // ─── Shell / render policy (SNAPSHOT) ────────────────
+    shell?: InjectionToken<Type<any>>;
+    /** Render backdrop shell. This is render policy, not a close trigger. */
+    backdrop?: boolean;
+    /** Lock document scroll while the overlay is open. Also render policy. */
+    blockScroll?: boolean;
 
-- content decides what to show
-- behavior decides how it closes
-- position decides where it appears
-- shell decides how it is hosted and styled
+    // ─── Focus (SNAPSHOT; restoreTo is lazy on close) ────
+    focus?: {
+      trap?: boolean | TrapOverlayFocusOptions;
+      restoreTo?: () => HTMLElement | null;
+    };
+
+    // ─── Close triggers (SNAPSHOT) ───────────────────────
+    close?: {
+      outsideClick?: boolean;
+      escape?: boolean;
+      focusLeave?: boolean;
+      scroll?: boolean;
+    };
+
+    // ─── Lifecycle hooks (SNAPSHOT) ──────────────────────
+    lifecycle?: {
+      afterOpened?: Array<(overlay: OverlayHandle) => void>;
+      beforeClose?: Array<
+        (ctx: OverlayCloseContext, overlay: OverlayHandle, reason: OverlayCloseReason) => void
+      >;
+      afterClose?: Array<(overlay: OverlayHandle, reason: OverlayCloseReason) => void>;
+      canClose?: Array<(reason: OverlayCloseReason, event?: Event) => boolean | void>;
+    };
+
+    // ─── Escape hatch (SNAPSHOT) ─────────────────────────
+    setup?: (session: OverlaySession) => void;
+  },
+): Signal<OverlayHandle | null>;
+```
+
+Important rules:
+
+- `factory()` is intentionally read lazily, not synchronously in the constructor path
+- this is what makes `input.required()` and `viewChild.required()` safe inside overlay configs
+- `state` is always the source of truth for whether the overlay should exist
+- `content` and `position` values stay live-reactive while the overlay is open
+- everything else is treated as open-cycle snapshot configuration
+
+## Example
+
+This is the standard connected overlay shape used by field overlays, popovers, select panels, and similar UI:
+
+```ts
+readonly overlay = createOverlay(() => ({
+  state: this.isOpen,
+  content: this.overlayContent(),
+
+  position: {
+    connectedTo: this.host?.referenceElement() ?? this.interactive.element(),
+    matchWidth: this.matchWidth(),
+  },
+
+  focus: {
+    restoreTo: () =>
+      this.host?.focusReturnTarget() ?? this.interactive.focusReturnTarget(),
+  },
+}));
+```
+
+Why this matters:
+
+- `overlayContent()` may come from `input.required()`
+- `connectedTo` may change reactively while the overlay is open
+- `restoreTo` must stay lazy so focus can be restored to the latest valid target on close
+
+## Reactive vs Snapshot
+
+This is the most important runtime contract in the system.
+
+### Live reactive during an open session
+
+These values are meant to update while the current overlay instance stays alive:
+
+- `content`
+- `position.connectedTo`
+- `position.placement`
+- `position.matchWidth`
+- `position.offset`
+- `position.x`
+- `position.y`
+
+That means you can:
+
+- swap the anchor element for a tooltip or popover without closing it
+- update placement reactively
+- update coordinates for a context menu
+- keep the same `OverlayHandle` while content changes from one template or string to another
+
+### Snapshot per open cycle
+
+These values are read once for the current open cycle and are not supposed to change mid-session:
+
+- `shell`
+- `backdrop`
+- `blockScroll`
+- `focus.trap`
+- `close.outsideClick`
+- `close.escape`
+- `close.focusLeave`
+- `close.scroll`
+- all `lifecycle` arrays
+- `setup`
+
+This is intentional. The shell host layer installs listeners and host behavior once when the shell is created. Reconfiguring those pieces reactively in the middle of an already-open overlay would produce stale listeners and unclear lifecycle ordering.
+
+### Lazy on close
+
+`focus.restoreTo` is special:
+
+- the function reference is captured for the current open cycle
+- the function itself is only called when closing
+- this lets the runtime restore focus to the latest valid element instead of an early snapshot
+
+## Position Families
+
+Overlay family is derived from `position`.
+
+- no `position` -> `global`
+- `position.connectedTo` -> `connected`
+- `position.x` and `position.y` -> `coordinate`
+
+Defaults come from that family:
+
+- `global` defaults to modal shell, backdrop, scroll lock, and focus trap with guard
+- `connected` defaults to connected shell, no backdrop, no scroll lock, no trap, and `focusLeave: true`
+- `coordinate` shares the connected shell defaults, but is positioned from a point instead of an element
+
+Inside one open session, the position family must not change. A connected overlay can update its anchor element or placement, but it must not become a global overlay without closing first and reopening with a new config.
+
+## Lifecycle Model
+
+Each open cycle creates exactly one `OverlayHandle`.
+
+The close pipeline is:
+
+1. A close request happens.
+2. `canClose` guards run first.
+3. `beforeClose` runs synchronously while the DOM is still alive.
+4. `state` flips back to `false`.
+5. The overlay is removed from the stack.
+6. The shell is destroyed.
+7. `afterClose` runs after shell destruction is complete.
+
+Lifecycle hooks are for policy, not for rendering. Use them when the standard config is not enough:
+
+- `afterOpened` for DOM-dependent logic after the overlay is rendered
+- `beforeClose` for focus-sensitive or DOM-sensitive cleanup
+- `afterClose` for cleanup that must wait until the shell is gone
+- `canClose` to veto some close reasons
+- `setup(session)` as the lowest-level escape hatch
+
+## Focus and Close Policies
+
+The overlay runtime deliberately separates focus policy from close policy.
+
+### Focus
+
+Use `focus.trap` for modal or guarded focus behavior:
+
+```ts
+focus: {
+  trap: { guard: true },
+  restoreTo: () => this.trigger().nativeElement,
+}
+```
+
+Typical guidance:
+
+- dialogs and drawers usually trap focus
+- popovers, menus, select panels, and tooltips usually do not
+- use `restoreTo` whenever the overlay was opened from a meaningful trigger
+
+### Close triggers
+
+Use `close` for interaction-driven close rules:
+
+```ts
+close: {
+  outsideClick: true,
+  escape: true,
+  focusLeave: true,
+  scroll: false,
+}
+```
+
+Typical guidance:
+
+- modal overlays usually close on outside click and Escape
+- connected overlays often use `focusLeave: true`
+- tooltips often disable outside click, Escape, and focus leave, but enable scroll close
+- notification overlays usually disable all interactive close triggers
+
+## Shell and Render Policy
+
+The shell is the visual host component resolved through DI.
+
+Use `shell` when you want a specific shell token such as drawer, tooltip, or notification. If you omit it, the runtime chooses the default shell from the overlay family.
+
+`backdrop` and `blockScroll` live at the top level because they are render policy, not close policy:
+
+- `backdrop` decides whether a backdrop shell should be rendered
+- `blockScroll` decides whether document scroll should be locked while the overlay is open
+
+This distinction is important because these settings affect hosting and document behavior, not just close conditions.
+
+## Runtime Architecture
+
+The public API is small, but the runtime is layered.
+
+- `createOverlay()` accepts one config factory
+- `OverlayStack` owns open cycles, lifecycle state, nesting, guards, and teardown
+- `OverlayStackOutlet` renders every currently open overlay
+- `OverlayContainer` attaches DOM metadata, host element wiring, and shell-scoped listeners
+- `OverlayPosition` handles connected and coordinate floating positioning
+- `OverlayContent` renders the actual string or template content
+
+Think in terms of responsibilities:
+
+- content decides what to render
+- position decides where it should appear
+- shell decides how it is hosted
+- close and focus decide how the user can leave it
+- the stack owns the lifecycle of the whole session
 
 ## App Setup
 
-The overlay system needs one root renderer at the application root.
+The system needs one root overlay outlet in the application tree:
+
+```html
+<router-outlet />
+<fibo-overlay-stack-outlet />
+```
+
+If you use shell mappings from `@fibo-ui/components`, register them in app providers:
 
 ```ts
-// app.config.ts
 import { ApplicationConfig } from '@angular/core';
 import { DRAWER_SHELL_TOKEN } from '@fibo-ui/cdk';
-import { OverlayDrawerShellComponent, provideOverlays, withShell } from '@fibo-ui/components';
+import {
+  OverlayDrawerShellComponent,
+  provideOverlays,
+  withShell,
+} from '@fibo-ui/components';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -51,94 +297,32 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-```html
-<!-- app.html -->
-<router-outlet />
-<fibo-overlay-stack-outlet />
-```
+## Custom Shells
 
-What this setup does:
-
-- `provideOverlays()` registers the default shell mapping for the built-in shell tokens
-- `withShell()` adds or overrides a shell mapping for a token such as `DRAWER_SHELL_TOKEN`
-- `<fibo-overlay-stack-outlet>` renders every currently open overlay from the stack
-
-If you are using CDK overlays only, the essential piece is still `<fibo-overlay-stack-outlet>`.
-
-## Basic Usage
-
-Use `createConnectedOverlay()` when you need a popover anchored to a trigger element and the open state is local to the component.
-
-:::example cdk-overlays-basic
-
-```html {example="cdk-overlays-basic"}
-<button #btn type="button" class="btn btn-primary" (click)="toggle()">Open</button>
-
-<ng-template #tpl let-overlay>
-  <div class="flex items-center justify-between gap-6 p-3">
-    <span class="text-sm">Popover content</span>
-    <button type="button" class="btn btn-sm" (click)="overlay.close()">Close</button>
-  </div>
-</ng-template>
-```
-
-```ts {example="cdk-overlays-basic"}
-export class CdkOverlaysBasicExample {
-  private readonly btn = viewChild.required<ElementRef<HTMLElement>>('btn');
-  private readonly tpl = viewChild.required<TemplateRef<unknown>>('tpl');
-
-  readonly isOpen = signal(false);
-
-  readonly overlay = createConnectedOverlay(
-    this.isOpen,
-    () => ({ referenceElement: this.btn().nativeElement }),
-    this.tpl,
-    { restoreFocusTo: () => this.btn().nativeElement },
-  );
-
-  toggle() {
-    this.isOpen.update(v => !v);
-  }
-}
-```
-
-The important part is the composition:
-
-- `isOpen` owns the state
-- the factory `() => ({ referenceElement })` anchors the overlay to the trigger
-- the template receives the current `OverlayHandle` as `let-overlay`
-- `restoreFocusTo` returns focus to the button when the overlay closes
-
-## Shell Components
-
-A shell component is the visual host for an overlay.
-
-It is not the business content and it is not the trigger. The shell is the layer that the outlet creates dynamically when an overlay opens. Its job is to host the content, attach host directives, and provide the right layout semantics for that overlay kind.
-
-Every shell follows the same contract:
+A shell is the visual host for an overlay. Every shell accepts the same runtime handle:
 
 ```ts
 readonly overlay = input.required<OverlayHandle>();
 ```
 
-That `overlay` input is the current runtime handle. The same handle is also:
+Most custom shells stay thin and compose from CDK primitives:
 
-- available inside content templates as `let-overlay`
-- injectable through the `OVERLAY_HANDLE` token
-- used by the shell host directives to attach close policies and DOM metadata
+- `OverlayContainer` for lifecycle wiring and host metadata
+- `OverlayPosition` for floating positioning
+- `OverlayPanel` for dialog-style panel semantics
+- `OverlayContent` for rendering the content itself
 
-In practice, shell components usually compose from these primitives:
-
-- `OverlayContainer` — required host directive for lifecycle wiring, close policies, `OVERLAY_HANDLE`, and `data-overlay-container-id`
-- `OverlayPosition` — used by connected or coordinate overlays that need floating positioning
-- `OverlayPanel` — panel semantics for modal and drawer-style shells
-- `OverlayContent` — renders the overlay content from the handle
-
-Minimal custom shell example:
+Minimal shell example:
 
 ```ts
 import { Component, ViewEncapsulation, input } from '@angular/core';
-import { OverlayContainer, OverlayContent, OverlayHandle, OverlayPanel, OverlayShell } from '@fibo-ui/cdk';
+import {
+  OverlayContainer,
+  OverlayContent,
+  OverlayHandle,
+  OverlayPanel,
+  OverlayShell,
+} from '@fibo-ui/cdk';
 
 @Component({
   selector: 'app-sheet-shell',
@@ -158,166 +342,14 @@ export class AppSheetShellComponent implements OverlayShell {
 }
 ```
 
-Rules of thumb:
-
-- every shell should accept the `overlay` input
-- every shell should attach `OverlayContainer`
-- connected popovers need `OverlayPosition`
-- dialog and drawer shells usually add `OverlayPanel`
-- shell components should stay thin; content and state still belong to the overlay caller
-
-## Registering Shells
-
-Shell resolution is DI-driven. The outlet does not know about drawers, modals, or tooltips directly. It only receives an `OverlayHandle`, reads `overlay.behavior.shell`, and asks the injector which component is registered for that token.
-
-That means shell registration is just provider configuration:
-
-```ts
-import { InjectionToken, Type } from '@angular/core';
-import { provideOverlays, withShell } from '@fibo-ui/components';
-
-export const APP_SHEET_SHELL_TOKEN = new InjectionToken<Type<any>>('APP_SHEET_SHELL_TOKEN');
-
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideOverlays(
-      withShell(APP_SHEET_SHELL_TOKEN, AppSheetShellComponent),
-    ),
-  ],
-};
-```
-
-Then pass that token to the `shell` option of a recipe:
-
-```ts
-readonly overlay = createGlobalOverlay(
-  this.isOpen,
-  this.sheetTpl,
-  {
-    shell: APP_SHEET_SHELL_TOKEN,
-    restoreFocusTo: () => this.trigger().nativeElement,
-  },
-);
-```
-
-This is the main extension point of the system. If you want a new visual host, new animation, or a different layout surface, you usually add or override a shell. If you want different lifecycle or close logic, you change the recipe options or the `setup(session)` callback instead.
-
-## Lifecycle, Close Rules, and Focus
-
-Recipes accept an optional `setup(session)` callback for per-open-cycle logic that goes beyond what the standard options cover.
-
-Use it for:
-
-- `afterOpened()` when the DOM must already exist
-- `beforeClose()` when the DOM is still alive and the current `activeElement` matters
-- `afterClose()` for teardown after the shell is gone
-- `canClose()` to block closing for some reasons
-- `effect()` and `onCleanup()` for open-cycle scoped reactive work
-
-```ts
-readonly overlay = createGlobalOverlay(
-  this.isOpen,
-  this.dialogTpl,
-  {
-    restoreFocusTo: () => this.trigger().nativeElement,
-    setup: session => {
-      session.canClose(reason => reason !== 'outside-click' || !this.isDirty());
-      session.afterClose(() => this.resetDraft());
-    },
-  },
-);
-```
-
-For focus trapping and restoration without custom setup logic, use the declarative options directly:
-
-```ts
-readonly overlay = createGlobalOverlay(this.isOpen, this.dialogTpl, {
-  trapFocus: { guard: true },
-  restoreFocusTo: () => this.trigger().nativeElement,
-});
-```
-
-How close rules are applied:
-
-- `OverlayContainer` installs focus-leave, scroll, Escape, and scroll-lock behavior based on `behavior`
-- `OverlayStackOutlet` handles outside-click dispatch centrally for the whole stack
-- `OverlaySession` guards can still block a close request before `isOpen` flips back to `false`
-
-This makes the control flow predictable: the recipe provides the default policy, and `setup(session)` adds the extra rules for a particular overlay.
-
 ## Nested Overlays
 
 The stack is branch-aware.
 
-If overlay B is opened from inside overlay A, B belongs to A's branch. That affects close behavior in the way users expect:
+If one overlay opens another, the child belongs to the parent branch. This ensures that:
 
 - clicking inside a child overlay is not an outside click for the parent
-- moving focus into a child overlay is not a focus-leave for the parent
-- Escape and outside-click are still resolved from the top of the stack downward
+- moving focus into a child overlay is not a focus leave for the parent
+- topmost close behavior still resolves correctly for Escape and outside click
 
-This is especially important for menu chains, submenu patterns, and popovers that can open nested child overlays.
-
-Conceptually, the system treats overlays as an ordered stack with parent-child branches, not as isolated popups.
-
-## Service-Driven Overlays
-
-Use `createSingletonGlobalOverlay()` or `createSingletonConnectedOverlay()` when the overlay is owned by a service rather than by a single feature component.
-
-This is the pattern for app-level or shared overlays:
-
-- the service owns `isOpen`
-- the service owns additional config state
-- the service exposes a singleton overlay handle signal
-- a root-level host component provides the actual template once via `templateRef`
-
-```ts
-readonly overlay = createSingletonGlobalOverlay({
-  restoreFocusTo: () => this.config()?.referenceElement ?? null,
-  setup: session => {
-    session.afterClose(() => {
-      if (!this.overlay.isOpen()) this.config.set(null);
-    });
-  },
-});
-```
-
-The singleton variants remove the repeated `templateRef + isOpen + createOverlay()` boilerplate and keep app-wide overlays centralized.
-
-## Entry Points
-
-Not every overlay needs to start from the low-level primitive. Choose the highest layer that still fits the use case.
-
-**Trigger directives** — declarative, zero configuration:
-
-- `fiboPopoverTrigger` for anchored popovers
-- `fiboDialogTrigger` for modal dialogs
-- `fiboDrawerTrigger` for drawers
-
-**Overlay recipes** — for programmatic overlays where state or content is managed by the component:
-
-- `createConnectedOverlay()` — anchored to an element (select, combobox, popover, tooltip)
-- `createGlobalOverlay()` — centered or fixed (dialog, drawer, notification)
-- `createCoordinateOverlay()` — anchored to x/y coordinates (context menu)
-- `createSingletonGlobalOverlay()` / `createSingletonConnectedOverlay()` — service-owned variants
-
-Each recipe takes the open signal, a position factory or content signal, and an options object for shell overrides, close policies, and focus management. Focus trapping and restoration are declarative options, not manual setup calls.
-
-**`createOverlay()` primitive** — when you need full control: a custom shell token, a position type not covered by recipes, or a setup callback with complex lifecycle logic.
-
-## Choosing the Right Entry Point
-
-Choose the highest-level entry point that still matches your use case:
-
-- use trigger directives when the default interaction pattern already matches the feature
-- use recipes for component-owned overlays such as select, combobox, datepicker, or a custom popover
-- use singleton recipe variants for app-level or service-owned overlays
-- use `createOverlay()` directly when registering a custom shell or composing unusual behaviors
-- register a custom shell when the visual host must change
-
-If you keep that layering in mind, the system stays easy to reason about:
-
-- state opens the overlay
-- the stack manages the cycle
-- the outlet renders the shell
-- the shell hosts the content
-- the session owns lifecycle work
+This matters for submenu chains, nested popovers, combobox panels with child overlays, and other multi-surface interactions.
