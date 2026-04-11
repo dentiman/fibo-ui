@@ -12,6 +12,8 @@ let nextFieldInteractiveId = 0;
     '[id]': 'controlId()',
     '[attr.aria-labelledby]': 'ariaLabelledBy()',
     '[attr.aria-describedby]': 'ariaDescribedBy()',
+    '[attr.aria-invalid]': 'ariaInvalid()',
+    '[attr.aria-readonly]': 'ariaReadonly()',
   },
 })
 export class FieldInteractiveDirective implements FieldInteractiveRef {
@@ -33,6 +35,9 @@ export class FieldInteractiveDirective implements FieldInteractiveRef {
     if (this.formUiState?.errorMessage()) return this.host.idFor('error');
     return null;
   });
+
+  readonly ariaInvalid = computed(() => this.formUiState?.invalid() || null);
+  readonly ariaReadonly = computed(() => this.formUiState?.readonly() || null);
 
   constructor() {
     this.host?.registerInteractive(this);

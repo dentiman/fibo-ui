@@ -38,7 +38,6 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         fieldInteractiveMode="click"
         [fiboFieldOverlay]="calendarTpl"
         #inputElement
-        #overlayRef="fiboFieldOverlay"
         aria-haspopup="dialog"
         [value]="value()"
         [placeholder]="placeholder()"
@@ -47,9 +46,6 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         [required]="uiState.required()"
         [attr.name]="uiState.name() || null"
         [attr.aria-required]="uiState.required() || null"
-        [attr.aria-controls]="overlayRef.isOpen() ? dialogId() : null"
-        [attr.aria-invalid]="uiState.invalid() || null"
-        [attr.aria-readonly]="uiState.readonly() || null"
         [attr.data-error]="(uiState.invalid() && uiState.touched()) || null"
         (input)="onInput($event)"
         (keydown.enter)="openCalendar()"
@@ -59,14 +55,14 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       />
     </fibo-field-shell>
 
-    <ng-template #calendarTpl>
+    <ng-template #calendarTpl let-overlay>
       <fibo-calendar
-        [attr.id]="dialogId()"
+        [attr.id]="overlay.id"
         fiboSelectDate
         fiboOverlayPanel
         [modal]="false"
         [(value)]="value"
-        (itemTriggered)="fieldOverlay().close()"
+        (itemTriggered)="overlay.close()"
       />
     </ng-template>
   `,
@@ -81,7 +77,6 @@ export class DatePickerField implements FormValueControl<string> {
   readonly hint = input<string>('');
   readonly placeholder = input<string>('');
   readonly iconStart = input<string>('');
-  readonly dialogId = computed(() => this.fieldOverlay().idFor('dialog'));
 
   onInput(event: Event) {
     const target = event.target as HTMLInputElement;

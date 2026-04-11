@@ -1,4 +1,4 @@
-import { Directive, inject, input, signal, TemplateRef } from '@angular/core';
+import { computed, Directive, inject, input, signal, TemplateRef } from '@angular/core';
 import { createConnectedOverlay } from '@fibo-ui/cdk';
 import { FieldInteractiveDirective } from './field-interactive';
 import { FieldShellHostDirective } from './field-shell-host';
@@ -10,6 +10,7 @@ import { FormUiState } from './form-ui-state';
   exportAs: 'fiboFieldOverlay',
   host: {
     '[attr.aria-expanded]': 'isOpen()',
+    '[attr.aria-controls]': 'panelId()',
     '(click)': 'onHostClick($event)',
   },
 })
@@ -25,7 +26,7 @@ export class FieldOverlayDirective {
 
   readonly isOpen = signal(false);
 
-  private readonly overlay = createConnectedOverlay(
+  private readonly overlayHandle = createConnectedOverlay(
     this.isOpen,
     () => ({
       referenceElement: this.host?.referenceElement() ?? this.interactive.element(),
@@ -34,6 +35,9 @@ export class FieldOverlayDirective {
     this.overlayContent,
     { restoreFocusTo: () => this.host?.focusReturnTarget() ?? this.interactive.focusReturnTarget() },
   );
+
+  /** ID of the rendered overlay panel. Null when the overlay is closed. */
+  readonly panelId = computed(() => this.overlayHandle()?.id ?? null);
 
   open(): void {
     if (this.formUiState?.disabled() || this.formUiState?.readonly()) return;
@@ -47,10 +51,6 @@ export class FieldOverlayDirective {
   toggle(): void {
     if (this.formUiState?.disabled() || this.formUiState?.readonly()) return;
     this.isOpen.update(v => !v);
-  }
-
-  idFor(suffix: string): string | null {
-    return this.host?.idFor(suffix) ?? null;
   }
 
   onHostClick(event: MouseEvent): void {

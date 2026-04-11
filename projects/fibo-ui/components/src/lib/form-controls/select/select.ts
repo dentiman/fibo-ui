@@ -52,15 +52,11 @@ export interface SelectItem {
         [fiboFieldOverlay]="selectTpl"
         [matchWidth]="true"
         #triggerButton
-        #overlayRef="fiboFieldOverlay"
         type="button"
         class="w-full text-left"
         role="combobox"
         [disabled]="uiState.disabled()"
         aria-haspopup="listbox"
-        [attr.aria-controls]="overlayRef.isOpen() ? listboxId() : null"
-        [attr.aria-invalid]="uiState.invalid() || null"
-        [attr.aria-readonly]="uiState.readonly() || null"
         (blur)="uiState.touched.set(true)"
       >
         <div class="text-sm" [class.from-field-placeholder]="!selectedLabel()">
@@ -69,13 +65,13 @@ export interface SelectItem {
       </button>
     </fibo-field-shell>
 
-    <ng-template #selectTpl>
+    <ng-template #selectTpl let-overlay>
       <div
         role="listbox"
-        [attr.id]="listboxId()"
+        [attr.id]="overlay.id"
         [keyboardSourceElement]="triggerButton"
         fiboDataList
-        (itemTriggered)="fieldOverlay().close()"
+        (itemTriggered)="overlay.close()"
         fiboSelectOne
         [(value)]="value"
       >
@@ -97,7 +93,6 @@ export interface SelectItem {
 })
 export class Select implements FormValueControl<string | number | null> {
   readonly uiState = inject(FormUiState);
-  readonly fieldOverlay = viewChild.required(FieldOverlayDirective);
   private readonly triggerButton = viewChild.required<ElementRef<HTMLButtonElement>>('triggerButton');
 
   readonly value = model<string | number | null>(null);
@@ -108,8 +103,6 @@ export class Select implements FormValueControl<string | number | null> {
   readonly placeholder = input('Select');
   readonly iconStart = input('');
   readonly clearValue = input<string | number | null | undefined>(undefined);
-
-  readonly listboxId = computed(() => this.fieldOverlay().idFor('listbox'));
 
   readonly selectedItem = computed(() => {
     const currentValue = this.value();

@@ -39,7 +39,6 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         [required]="uiState.required()"
         [attr.name]="uiState.name() || null"
         [attr.aria-required]="uiState.required() || null"
-        [attr.aria-invalid]="uiState.invalid() || null"
         [attr.min]="uiState.min() ?? null"
         [attr.max]="uiState.max() ?? null"
         [attr.minlength]="uiState.minLength() ?? null"

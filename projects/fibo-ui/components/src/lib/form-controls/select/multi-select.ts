@@ -50,12 +50,9 @@ import { SelectItem } from './select';
         [fiboFieldOverlay]="multiSelectTpl"
         [matchWidth]="true"
         #triggerSurface
-        #overlayRef="fiboFieldOverlay"
         role="combobox"
         aria-haspopup="listbox"
         [attr.tabindex]="uiState.disabled() ? -1 : 0"
-        [attr.aria-controls]="overlayRef.isOpen() ? listboxId() : null"
-        [attr.aria-invalid]="uiState.invalid() || null"
         [attr.aria-disabled]="uiState.disabled() || null"
         class="w-full flex flex-wrap gap-x-1 gap-y-1 -mx-1 outline-none"
         (focus)="onFocus()"
@@ -84,10 +81,10 @@ import { SelectItem } from './select';
       </div>
     </fibo-field-shell>
 
-    <ng-template #multiSelectTpl>
+    <ng-template #multiSelectTpl let-overlay>
       <div
         role="listbox"
-        [attr.id]="listboxId()"
+        [attr.id]="overlay.id"
         aria-multiselectable="true"
         [keyboardSourceElement]="triggerSurface"
         fiboDataList
@@ -101,7 +98,7 @@ import { SelectItem } from './select';
             role="option"
             [value]="item.value"
             #option="DataListItem"
-            class="datalist-item items-center"
+            class="datalist-item w-full items-center"
           >
             <fibo-checkbox [readonly]="true" [checked]="option.isSelected()">
               {{ item.label }}
@@ -122,7 +119,6 @@ export class MultiSelect implements FormValueControl<(string | number)[] | null>
   readonly label = input<string>('');
   readonly hint = input<string>('');
   readonly placeholder = input<string>('Select');
-  readonly listboxId = computed(() => this.fieldShell().idFor('listbox'));
 
   readonly selectedItems = computed(() => {
     const currentValue = this.value();
