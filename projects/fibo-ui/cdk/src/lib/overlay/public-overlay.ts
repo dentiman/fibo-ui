@@ -5,7 +5,6 @@ import { OverlayStack } from './overlay-stack';
 
 export * from './overlay-public-config';
 
-// ─── Публічний API ─────────────────────────────────────────
 
 export function createOverlay(
   factory: () => PublicOverlayConfig,

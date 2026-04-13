@@ -6,6 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 fibo-ui is an Angular 21 component library monorepo containing two publishable libraries (`@fibo-ui/cdk` and `@fibo-ui/components`) and a demo application that showcases them. The app uses zoneless change detection, signal-based state management, and Tailwind CSS 4.
 
+## Library Philosophy
+
+> **"CDK робить важке. Компонент — простий blueprint. Розробник або використовує as-is, або збирає своє."**
+
+Signal-native, composition-first бібліотека. CDK дає headless behavior primitives (навігація, selection, overlay, a11y). Components — повноцінний набір готових компонентів (Select, Table, DatePicker, Menu, Dialog...) і водночас читабельні blueprints до 100 рядків. Три рівні: використовуй напряму, композиціюй, або будуй бізнес-компоненти з тих самих CDK-блоків.
+
+Детальний розбір: **[docs/philosophy.md](docs/philosophy.md)**
+
 ## Architecture
 
 
