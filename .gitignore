@@ -2,6 +2,7 @@
 
 # Claude Code
 .claude/worktrees/
+.superpowers/
 
 # Compiled output
 /dist

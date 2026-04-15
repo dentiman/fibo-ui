@@ -7,19 +7,24 @@ import {
 } from '@fibo-ui/cdk';
 import { Calendar } from '../calendar/calendar';
 import { FieldShell } from '../form/field-shell';
-import { FieldInteractiveDirective } from '../form/field-interactive';
-import { FieldOverlayDirective } from '../form/field-overlay';
-import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
+import { FieldTarget } from '../form/field-target';
+import { FieldOverlay } from '../form/field-overlay';
+import { FieldContext, FIELD_CONTEXT_INPUTS } from '../form/field-context';
+import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
 
 @Component({
   selector: 'fibo-datepicker, fibo-datepicker-field',
   hostDirectives: [
     {
-      directive: FormUiState,
-      inputs: [...FORM_UI_STATE_INPUTS],
+      directive: FieldUiState,
+      inputs: [...FIELD_UI_STATE_INPUTS],
+    },
+    {
+      directive: FieldContext,
+      inputs: [...FIELD_CONTEXT_INPUTS],
     },
   ],
-  imports: [FieldShell, FieldInteractiveDirective, FieldOverlayDirective, Calendar, SelectDate, OverlayPanel],
+  imports: [FieldShell, FieldTarget, FieldOverlay, Calendar, SelectDate, OverlayPanel],
   host: {
     class: 'block',
   },
@@ -34,8 +39,8 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       (clearRequested)="clear()"
     >
       <input
-        fiboFieldInteractive
-        fieldInteractiveMode="click"
+        fiboFieldTarget
+        fieldTargetMode="click"
         [fiboFieldOverlay]="calendarTpl"
         #inputElement
         aria-haspopup="dialog"
@@ -46,12 +51,12 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         [required]="uiState.required()"
         [attr.name]="uiState.name() || null"
         [attr.aria-required]="uiState.required() || null"
-        [attr.data-error]="(uiState.invalid() && uiState.touched()) || null"
+        [attr.data-invalid]="(uiState.invalid() && uiState.touched()) || null"
         (input)="onInput($event)"
         (keydown.enter)="openCalendar()"
         (keydown.arrowdown)="openCalendar($event)"
         (blur)="onBlur()"
-        class="text-field-input"
+        class="form-field-input"
       />
     </fibo-field-shell>
 
@@ -68,8 +73,8 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
   `,
 })
 export class DatePickerField implements FormValueControl<string> {
-  readonly uiState = inject(FormUiState);
-  readonly fieldOverlay = viewChild.required(FieldOverlayDirective);
+  readonly uiState = inject(FieldUiState);
+  readonly fieldOverlay = viewChild.required(FieldOverlay);
   private readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('inputElement');
 
   readonly value = model<string>('');

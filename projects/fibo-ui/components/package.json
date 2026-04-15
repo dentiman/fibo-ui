@@ -34,9 +34,6 @@
     },
     "./buttons": {
       "default": "./src/buttons.css"
-    },
-    "./components": {
-      "default": "./src/components.css"
     }
   },
   "peerDependencies": {

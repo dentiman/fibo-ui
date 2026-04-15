@@ -7,9 +7,10 @@ import {
   provideFormValueControl,
 } from '@fibo-ui/cdk';
 import { FieldShell } from '../form/field-shell';
-import { FieldInteractiveDirective } from '../form/field-interactive';
-import { FieldOverlayDirective } from '../form/field-overlay';
-import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
+import { FieldTarget } from '../form/field-target';
+import { FieldOverlay } from '../form/field-overlay';
+import { FieldContext, FIELD_CONTEXT_INPUTS } from '../form/field-context';
+import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
 
 export interface SelectItem {
   label: string;
@@ -21,14 +22,18 @@ export interface SelectItem {
   selector: 'fibo-select',
   hostDirectives: [
     {
-      directive: FormUiState,
-      inputs: [...FORM_UI_STATE_INPUTS],
+      directive: FieldUiState,
+      inputs: [...FIELD_UI_STATE_INPUTS],
+    },
+    {
+      directive: FieldContext,
+      inputs: [...FIELD_CONTEXT_INPUTS],
     },
   ],
   imports: [
     FieldShell,
-    FieldInteractiveDirective,
-    FieldOverlayDirective,
+    FieldTarget,
+    FieldOverlay,
     DataList,
     SelectOne,
     DataListItem,
@@ -47,8 +52,8 @@ export interface SelectItem {
       (clearRequested)="clear()"
     >
       <button
-        fiboFieldInteractive
-        fieldInteractiveMode="click"
+        fiboFieldTarget
+        fieldTargetMode="click"
         [fiboFieldOverlay]="selectTpl"
         [matchWidth]="true"
         #triggerButton
@@ -59,7 +64,7 @@ export interface SelectItem {
         aria-haspopup="listbox"
         (blur)="uiState.touched.set(true)"
       >
-        <div class="text-sm" [class.from-field-placeholder]="!selectedLabel()">
+        <div class="text-sm" [class.form-field-placeholder]="!selectedLabel()">
           {{ selectedLabel() || placeholder() }}
         </div>
       </button>
@@ -92,7 +97,7 @@ export interface SelectItem {
   `,
 })
 export class Select implements FormValueControl<string | number | null> {
-  readonly uiState = inject(FormUiState);
+  readonly uiState = inject(FieldUiState);
   private readonly triggerButton = viewChild.required<ElementRef<HTMLButtonElement>>('triggerButton');
 
   readonly value = model<string | number | null>(null);

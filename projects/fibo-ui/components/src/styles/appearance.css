@@ -1,0 +1,12 @@
+/* ============================================================
+   Shared appearance primitives — reusable across components
+   ============================================================ */
+@layer appearance {
+
+  /* Pending pulse animation — used by form fields, skeletons */
+  @keyframes ff-pending-pulse {
+    0%, 100% { outline-color: rgb(59 130 246 / 0.15); }
+    50%       { outline-color: rgb(59 130 246 / 0.45); }
+  }
+
+}

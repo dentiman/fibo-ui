@@ -7,4 +7,4 @@ import { Directive } from '@angular/core';
     'data-field-auxiliary': 'true',
   },
 })
-export class FieldAuxiliaryDirective {}
+export class FieldAuxiliary {}

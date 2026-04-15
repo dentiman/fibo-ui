@@ -20,21 +20,26 @@ import { type ComboboxControl, provideComboboxControl } from './combobox-control
 import { ComboboxInput } from './combobox-input';
 import { ComboboxList } from './combobox-list';
 import { FieldShell } from '../form/field-shell';
-import { FieldShellHostDirective } from '../form/field-shell-host';
-import { FieldInteractiveDirective } from '../form/field-interactive';
-import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
+import { FieldShellHost } from '../form/field-shell-host';
+import { FieldTarget } from '../form/field-target';
+import { FieldContext, FIELD_CONTEXT_INPUTS } from '../form/field-context';
+import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
 
 @Component({
   selector: 'fibo-combobox',
   hostDirectives: [
     {
-      directive: FormUiState,
-      inputs: [...FORM_UI_STATE_INPUTS],
+      directive: FieldUiState,
+      inputs: [...FIELD_UI_STATE_INPUTS],
+    },
+    {
+      directive: FieldContext,
+      inputs: [...FIELD_CONTEXT_INPUTS],
     },
   ],
   imports: [
     FieldShell,
-    FieldInteractiveDirective,
+    FieldTarget,
     DataList,
     DataListItem,
     SelectOne,
@@ -59,11 +64,11 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       (clearRequested)="clear()"
     >
       <input
-        fiboFieldInteractive
+        fiboFieldTarget
         #inputElement
         [placeholder]="placeholder()"
         (blur)="uiState.touched.set(true)"
-        class="text-field-input"
+        class="form-field-input"
         fiboComboboxInput
       />
     </fibo-field-shell>
@@ -99,8 +104,8 @@ export class Combobox
     ComboboxControl<string | number | null, string | number>,
     FormValueControl<string | number | null>
 {
-  readonly uiState = inject(FormUiState);
-  private readonly fieldShellHost = viewChild.required(FieldShellHostDirective);
+  readonly uiState = inject(FieldUiState);
+  private readonly fieldShellHost = viewChild.required(FieldShellHost);
   private readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('inputElement');
   private readonly comboboxTemplateRef = viewChild.required<TemplateRef<any>>('comboboxTpl');
 

@@ -2,19 +2,24 @@ import { Component, ElementRef, inject, input, model, viewChild } from '@angular
 import { FormValueControl } from '@angular/forms/signals';
 import { provideFormValueControl } from '@fibo-ui/cdk';
 import { FieldShell } from '../form/field-shell';
-import { FieldInteractiveDirective } from '../form/field-interactive';
-import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
+import { FieldTarget } from '../form/field-target';
+import { FieldContext, FIELD_CONTEXT_INPUTS } from '../form/field-context';
+import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
 
 @Component({
   selector: 'fibo-text-field',
   standalone: true,
   hostDirectives: [
     {
-      directive: FormUiState,
-      inputs: [...FORM_UI_STATE_INPUTS],
+      directive: FieldUiState,
+      inputs: [...FIELD_UI_STATE_INPUTS],
+    },
+    {
+      directive: FieldContext,
+      inputs: [...FIELD_CONTEXT_INPUTS],
     },
   ],
-  imports: [FieldShell, FieldInteractiveDirective],
+  imports: [FieldShell, FieldTarget],
   host: {
     class: 'block',
   },
@@ -29,7 +34,7 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
       (clearRequested)="clear()"
     >
       <input
-        fiboFieldInteractive
+        fiboFieldTarget
         #inputElement
         [type]="type()"
         [value]="value()"
@@ -43,16 +48,16 @@ import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
         [attr.max]="uiState.max() ?? null"
         [attr.minlength]="uiState.minLength() ?? null"
         [attr.maxlength]="uiState.maxLength() ?? null"
-        [attr.data-error]="(uiState.invalid() && uiState.touched()) || null"
+        [attr.data-invalid]="(uiState.invalid() && uiState.touched()) || null"
         (input)="onInput($event)"
         (blur)="onBlur()"
-        class="text-field-input"
+        class="form-field-input"
       />
     </fibo-field-shell>
   `,
 })
 export class TextField implements FormValueControl<string> {
-  readonly uiState = inject(FormUiState);
+  readonly uiState = inject(FieldUiState);
   private readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('inputElement');
 
   readonly value = model<string>('');

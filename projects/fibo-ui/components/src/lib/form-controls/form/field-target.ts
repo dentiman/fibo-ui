@@ -1,14 +1,14 @@
 import { computed, Directive, ElementRef, inject, input } from '@angular/core';
-import { type FieldInteractiveRef, FieldShellHostDirective } from './field-shell-host';
-import { FormUiState } from './form-ui-state';
+import { type FieldTargetRef, FieldShellHost } from './field-shell-host';
+import { FieldUiState } from './field-ui-state';
 
-let nextFieldInteractiveId = 0;
+let nextFieldTargetId = 0;
 
 @Directive({
-  selector: '[fiboFieldInteractive]',
+  selector: '[fiboFieldTarget]',
   standalone: true,
   host: {
-    'data-field-interactive': 'true',
+    'data-field-target': 'true',
     '[id]': 'controlId()',
     '[attr.aria-labelledby]': 'ariaLabelledBy()',
     '[attr.aria-describedby]': 'ariaDescribedBy()',
@@ -16,13 +16,13 @@ let nextFieldInteractiveId = 0;
     '[attr.aria-readonly]': 'ariaReadonly()',
   },
 })
-export class FieldInteractiveDirective implements FieldInteractiveRef {
+export class FieldTarget implements FieldTargetRef {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
-  private readonly host = inject(FieldShellHostDirective, { optional: true });
-  private readonly formUiState = inject(FormUiState, { optional: true });
-  private readonly fallbackId = `field-interactive-${nextFieldInteractiveId++}`;
+  private readonly host = inject(FieldShellHost, { optional: true });
+  private readonly fieldUiState = inject(FieldUiState, { optional: true });
+  private readonly fallbackId = `field-target-${nextFieldTargetId++}`;
 
-  readonly fieldInteractiveMode = input<'focus' | 'click'>('focus');
+  readonly fieldTargetMode = input<'focus' | 'click'>('focus');
 
   readonly controlId = computed(() => this.host?.idFor('control') ?? this.fallbackId);
 
@@ -32,12 +32,12 @@ export class FieldInteractiveDirective implements FieldInteractiveRef {
 
   readonly ariaDescribedBy = computed(() => {
     if (!this.host) return null;
-    if (this.formUiState?.errorMessage()) return this.host.idFor('error');
+    if (this.fieldUiState?.errorMessage()) return this.host.idFor('error');
     return null;
   });
 
-  readonly ariaInvalid = computed(() => this.formUiState?.invalid() || null);
-  readonly ariaReadonly = computed(() => this.formUiState?.readonly() || null);
+  readonly ariaInvalid = computed(() => this.fieldUiState?.invalid() || null);
+  readonly ariaReadonly = computed(() => this.fieldUiState?.readonly() || null);
 
   constructor() {
     this.host?.registerInteractive(this);
@@ -58,7 +58,7 @@ export class FieldInteractiveDirective implements FieldInteractiveRef {
   activateFromShell(): void {
     const element = this.element();
     this.focus();
-    if (this.fieldInteractiveMode() === 'click' && !this.isDisabled(element)) {
+    if (this.fieldTargetMode() === 'click' && !this.isDisabled(element)) {
       element.click();
     }
   }

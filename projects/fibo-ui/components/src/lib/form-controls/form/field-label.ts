@@ -1,5 +1,5 @@
 import { computed, DestroyRef, Directive, inject } from '@angular/core';
-import { FieldShellHostDirective } from './field-shell-host';
+import { FieldShellHost } from './field-shell-host';
 
 let nextFieldLabelId = 0;
 
@@ -11,8 +11,8 @@ let nextFieldLabelId = 0;
     '[attr.for]': 'controlId()',
   },
 })
-export class FieldLabelDirective {
-  private readonly host = inject(FieldShellHostDirective, { optional: true });
+export class FieldLabel {
+  private readonly host = inject(FieldShellHost, { optional: true });
   private readonly fallbackId = `field-label-${nextFieldLabelId++}`;
 
   readonly labelId = computed(() => this.host?.idFor('label') ?? this.fallbackId);

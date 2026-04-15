@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormField, form } from '@angular/forms/signals';
-import { DatePickerField, Select, type SelectItem, TextField } from '@fibo-ui/components';
+import { DatePickerField, FieldContext, Select, type SelectItem, TextField } from '@fibo-ui/components';
 import { citiesChoices, usersChoices } from '../../../common/form-data-example';
 import { FormExample } from './examples/form-example';
 
@@ -14,15 +14,14 @@ interface FilterToolbarModel {
 
 @Component({
   selector: 'app-form-examples-page',
-  imports: [FormField, FormExample, TextField, Select, DatePickerField],
+  imports: [FormField, FormExample, TextField, Select, DatePickerField, FieldContext],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="max-w-7xl mx-auto p-6 space-y-10">
       <div class="space-y-1">
         <h1 class="text-2xl font-bold text-foreground">Form Examples</h1>
         <p class="text-sm text-foreground-secondary">
-          Registration forms and filter toolbars rendered with different global class combinations
-          from <code>form-fields.css</code>.
+          Registration forms and filter toolbars rendered with different density and layout contexts.
         </p>
       </div>
 
@@ -47,10 +46,10 @@ interface FilterToolbarModel {
           <section class="fibo-card min-w-0 overflow-hidden p-4 space-y-4">
             <div class="space-y-1">
               <h3 class="text-lg font-semibold text-foreground">Stacked Compact</h3>
-              <div class="text-xs font-mono text-foreground-secondary">ff-density-compact</div>
+              <div class="text-xs font-mono text-foreground-secondary">density="compact"</div>
             </div>
 
-            <div class="min-w-0 ff-density-compact">
+            <div class="min-w-0" fiboFieldContext density="compact">
               <form-example [showHeader]="false" />
             </div>
           </section>
@@ -58,10 +57,10 @@ interface FilterToolbarModel {
           <section class="fibo-card min-w-0 overflow-hidden p-4 space-y-4">
             <div class="space-y-1">
               <h3 class="text-lg font-semibold text-foreground">Inline Comfy</h3>
-              <div class="text-xs font-mono text-foreground-secondary">ff-label-inline</div>
+              <div class="text-xs font-mono text-foreground-secondary">labelLayout="inline"</div>
             </div>
 
-            <div class="min-w-0 ff-label-inline">
+            <div class="min-w-0" fiboFieldContext labelLayout="inline">
               <form-example [showHeader]="false" />
             </div>
           </section>
@@ -70,11 +69,11 @@ interface FilterToolbarModel {
             <div class="space-y-1">
               <h3 class="text-lg font-semibold text-foreground">Inline Compact</h3>
               <div class="text-xs font-mono text-foreground-secondary">
-                ff-label-inline ff-density-compact
+                labelLayout="inline" density="compact"
               </div>
             </div>
 
-            <div class="min-w-0 ff-label-inline ff-density-compact">
+            <div class="min-w-0" fiboFieldContext labelLayout="inline" density="compact">
               <form-example [showHeader]="false" />
             </div>
           </section>
@@ -86,17 +85,17 @@ interface FilterToolbarModel {
           <h2 class="text-xl font-semibold text-foreground">Filter Toolbar Variants</h2>
           <p class="text-sm text-foreground-secondary">
             The same filter fields rendered as toolbar controls with different combinations of
-            toolbar, label and density classes.
+            layout and density contexts.
           </p>
         </div>
 
         <section class="fibo-card p-4 space-y-4">
           <div class="space-y-1">
             <h3 class="text-lg font-semibold text-foreground">Stacked Comfy</h3>
-            <div class="text-xs font-mono text-foreground-secondary">ff-filter-bar</div>
+            <div class="text-xs font-mono text-foreground-secondary">form-field-filter-bar</div>
           </div>
 
-          <div class="ff-filter-bar">
+          <div class="form-field-filter-bar">
             <fibo-text-field
               [formField]="stackedFilterForm.query"
               label="Search"
@@ -136,11 +135,11 @@ interface FilterToolbarModel {
           <div class="space-y-1">
             <h3 class="text-lg font-semibold text-foreground">Inline Comfy</h3>
             <div class="text-xs font-mono text-foreground-secondary">
-              ff-filter-bar ff-label-inline
+              form-field-filter-bar + labelLayout="inline"
             </div>
           </div>
 
-          <div class="ff-filter-bar ff-label-inline">
+          <div class="form-field-filter-bar" fiboFieldContext labelLayout="inline">
             <fibo-text-field
               [formField]="inlineFilterForm.query"
               label="Search"
@@ -180,11 +179,11 @@ interface FilterToolbarModel {
           <div class="space-y-1">
             <h3 class="text-lg font-semibold text-foreground">Inline Compact</h3>
             <div class="text-xs font-mono text-foreground-secondary">
-              ff-filter-bar ff-label-inline ff-density-compact
+              form-field-filter-bar + labelLayout="inline" + density="compact"
             </div>
           </div>
 
-          <div class="ff-filter-bar ff-label-inline ff-density-compact">
+          <div class="form-field-filter-bar" fiboFieldContext labelLayout="inline" density="compact">
             <fibo-text-field
               [formField]="inlineCompactFilterForm.query"
               label="Search"

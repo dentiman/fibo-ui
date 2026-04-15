@@ -1,17 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
-@layer theme, base, components, utilities;
+@layer theme, base, appearance, field-rules, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities);
 
 @plugin "@tailwindcss/typography";
 
-/* Option 2: Import only specific parts (for more control) */
 @import "../projects/fibo-ui/components/src/theme.css" layer(theme);
+@import "../projects/fibo-ui/components/src/styles/appearance.css";
+@import "../projects/fibo-ui/components/src/styles/form-field.css";
+@import "../projects/fibo-ui/components/src/styles/datalist.css";
+@import "../projects/fibo-ui/components/src/styles/overlay.css";
+@import "../projects/fibo-ui/components/src/styles/checkbox.css";
+@import "../projects/fibo-ui/components/src/styles/switch.css";
 @import "../projects/fibo-ui/components/src/buttons.css";
-@import "../projects/fibo-ui/components/src/form-fields.css";
-@import "../projects/fibo-ui/components/src/components.css" layer(components);
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 

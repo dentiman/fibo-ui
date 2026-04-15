@@ -1,0 +1,350 @@
+/* ============================================================
+   Form Field — layout, state, density, and label rules
+   ============================================================ */
+@layer field-rules {
+
+  .form-field-control {
+    --ff-control-min-height: 2.25rem;
+    --ff-control-padding-x: 0.75rem;
+    --ff-control-padding-y: 0.25rem;
+    --ff-control-width: 100%;
+    --ff-control-max-width: none;
+
+    --ff-body-direction: column;
+    --ff-body-align: stretch;
+    --ff-body-gap: 0rem;
+
+    --ff-label-margin-top: 0.25rem;
+    --ff-label-font-size: 0.75rem;
+    --ff-label-line-height: 0.7rem;
+    --ff-label-white-space: normal;
+
+    --ff-content-justify: flex-start;
+    --ff-content-flex: 1 1 0%;
+    --ff-content-min-width: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: left;
+    min-height: var(--ff-control-min-height);
+    cursor: default;
+    border-radius: 0.375rem;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    padding: var(--ff-control-padding-y) var(--ff-control-padding-x);
+    width: var(--ff-control-width);
+    max-width: var(--ff-control-max-width);
+
+    outline-width: 1px;
+    outline-style: solid;
+    outline-offset: -1px;
+
+    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+
+    background-color: oklch(1 0 0);
+    color: oklch(0.145 0 0);
+    outline-color: rgb(0 0 0 / 0.13);
+
+    &:focus-within {
+      outline-color: rgb(0 0 0 / 0.22);
+      box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06), 0 1px 2px 0 rgb(0 0 0 / 0.06);
+    }
+
+    [data-theme="dark"] & {
+      background-color: oklch(30% 2% 253deg);
+      color: #fafafa;
+      outline-color: rgb(255 255 255 / 0.04);
+    }
+
+    [data-theme="dark"] &:focus-within {
+      outline-color: rgb(255 255 255 / 0.09);
+      box-shadow: 0 0 0 1px rgb(255 255 255 / 0.05), 0 1px 2px 0 rgb(0 0 0 / 0.18);
+    }
+
+    /* Invalid state */
+    &[data-invalid] {
+      outline-color: rgb(185 28 28 / 0.15);
+    }
+
+    [data-theme="dark"] &[data-invalid] {
+      outline-color: rgb(252 165 165 / 0.10);
+    }
+
+    /* Disabled state */
+    &[aria-disabled="true"],
+    &:disabled {
+      box-shadow: none;
+      background-color: transparent;
+      color: rgb(75 85 99);
+      cursor: not-allowed;
+      outline-color: rgb(0 0 0 / 0.08);
+      background-image: repeating-linear-gradient(45deg, rgb(0 0 0 / 0.01), rgb(0 0 0 / 0.01) 10px, rgb(0 0 0 / 0.03) 10px, rgb(0 0 0 / 0.03) 20px);
+    }
+
+    [data-theme="dark"] &[aria-disabled="true"],
+    [data-theme="dark"] &:disabled {
+      color: rgb(82 82 82);
+      outline-color: rgb(255 255 255 / 0.04);
+      background-image: repeating-linear-gradient(45deg, rgb(255 255 255 / 0.01), rgb(255 255 255 / 0.01) 10px, rgb(255 255 255 / 0.03) 10px, rgb(255 255 255 / 0.03) 20px);
+    }
+
+    /* Readonly state */
+    &[data-readonly] {
+      cursor: default;
+    }
+
+    /* Pending state */
+    &[data-pending] {
+      outline-color: rgb(59 130 246 / 0.4);
+      animation: ff-pending-pulse 1.4s ease-in-out infinite;
+    }
+
+    [data-theme="dark"] &[data-pending] {
+      outline-color: rgb(96 165 250 / 0.3);
+    }
+  }
+
+  /* ── Rounded variant ────────────────────────────────────── */
+
+  .form-field-rounded .form-field-control {
+    border-radius: 9999px;
+    padding-inline: 1rem;
+  }
+
+  /* ── Internal slots ─────────────────────────────────────── */
+
+  .form-field-body {
+    position: relative;
+    display: flex;
+    flex: 1 1 0%;
+    min-width: 0;
+    flex-direction: var(--ff-body-direction);
+    align-items: var(--ff-body-align);
+    justify-content: center;
+    gap: var(--ff-body-gap);
+  }
+
+  .form-field-content {
+    display: flex;
+    align-items: center;
+    justify-content: var(--ff-content-justify);
+    flex: var(--ff-content-flex);
+    min-width: var(--ff-content-min-width);
+  }
+
+  /* ── Layout modifiers ───────────────────────────────────── */
+
+  [data-label-layout="inline"] .form-field-control {
+    --ff-body-direction: row;
+    --ff-body-align: center;
+    --ff-body-gap: 0.75rem;
+
+    --ff-label-margin-top: 0;
+    --ff-label-font-size: 0.875rem;
+    --ff-label-line-height: 1.25rem;
+    --ff-label-white-space: nowrap;
+  }
+
+  [data-density="compact"] .form-field-control {
+    --ff-control-min-height: 2rem;
+    --ff-control-padding-x: 0.625rem;
+    --ff-control-padding-y: 0.125rem;
+  }
+
+  /* ── Filter bar layout ──────────────────────────────────── */
+
+  .form-field-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .form-field-filter-bar > * {
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+
+  .form-field-filter-bar .form-field-control {
+    --ff-control-width: auto;
+    --ff-content-flex: 0 0 auto;
+  }
+
+  .form-field-filter-bar .form-field-body {
+    flex: 0 1 auto;
+  }
+
+  .form-field-filter-bar .form-field-content {
+    flex: 0 1 auto;
+  }
+
+  .form-field-filter-bar .form-field-input {
+    width: auto;
+    min-width: 6ch;
+    field-sizing: content;
+  }
+
+  /* ── Input ──────────────────────────────────────────────── */
+
+  .form-field-input {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    padding: 0;
+    width: 100%;
+
+    transition-property: color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+
+    &::placeholder {
+      transition-property: color;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 200ms;
+      color: rgb(156 163 175);
+    }
+
+    [data-theme="dark"] &::placeholder {
+      color: rgb(115 115 115);
+    }
+
+    &[data-invalid]::placeholder {
+      color: oklch(0.62 0.192 20);
+    }
+
+    [data-theme="dark"] &[data-invalid]::placeholder {
+      color: rgb(248 113 113);
+    }
+
+    &:disabled {
+      color: rgb(156 163 175);
+    }
+
+    [data-theme="dark"] &:disabled {
+      color: rgb(115 115 115);
+    }
+
+    &:disabled::placeholder {
+      color: rgb(156 163 175);
+    }
+
+    [data-theme="dark"] &:disabled::placeholder {
+      color: rgb(115 115 115);
+    }
+  }
+
+  /* ── Label ──────────────────────────────────────────────── */
+
+  .form-field-label {
+    font-size: var(--ff-label-font-size);
+    line-height: var(--ff-label-line-height);
+    display: block;
+    margin-top: var(--ff-label-margin-top);
+    white-space: var(--ff-label-white-space);
+
+    transition-property: color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+
+    color: rgb(75 85 99);
+
+    [data-theme="dark"] & {
+      color: rgb(156 163 175);
+    }
+  }
+
+  .form-field-control:focus-within .form-field-label {
+    color: rgb(59 130 246);
+  }
+
+  [data-theme="dark"] .form-field-control:focus-within .form-field-label {
+    color: oklch(0.71 0.11 240);
+  }
+
+  .form-field-control[aria-disabled="true"] .form-field-label {
+    color: rgb(156 163 175);
+  }
+
+  [data-theme="dark"] .form-field-control[aria-disabled="true"] .form-field-label {
+    color: rgb(115 115 115);
+  }
+
+  .form-field-control[data-invalid] .form-field-label {
+    color: oklch(0.62 0.192 20);
+  }
+
+  [data-theme="dark"] .form-field-control[data-invalid] .form-field-label {
+    color: rgb(248 113 113);
+  }
+
+  /* ── Supporting text ────────────────────────────────────── */
+
+  .form-field-error {
+    margin-left: 0.75rem;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: oklch(0.62 0.192 20);
+
+    [data-theme="dark"] & {
+      color: rgb(248 113 113);
+    }
+  }
+
+  .form-field-hint {
+    margin-left: 0.75rem;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: var(--foreground-tertiary);
+  }
+
+  /* ── Icons ──────────────────────────────────────────────── */
+
+  .form-field-icon {
+    color: var(--foreground-tertiary);
+  }
+
+  .form-field-icon-end {
+    display: block;
+  }
+
+  /* ── Clear button ───────────────────────────────────────── */
+
+  .form-field-clear {
+    display: none;
+    cursor: pointer;
+    border-radius: 9999px;
+    flex-shrink: 0;
+    color: var(--foreground-tertiary);
+    transition-property: color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+
+    &:hover {
+      color: var(--foreground);
+    }
+  }
+
+  .form-field-control:not([aria-disabled="true"]):hover .form-field-clear,
+  .form-field-control:not([aria-disabled="true"]):focus-within .form-field-clear {
+    display: block;
+  }
+
+  .form-field-control[data-has-clear]:not([aria-disabled="true"]):hover .form-field-icon-end,
+  .form-field-control[data-has-clear]:not([aria-disabled="true"]):focus-within .form-field-icon-end {
+    display: none;
+  }
+
+  /* ── Placeholder text (Select, MultiSelect) ─────────────── */
+
+  .form-field-placeholder {
+    color: var(--form-field-placeholder);
+    transition: color 200ms;
+  }
+
+}

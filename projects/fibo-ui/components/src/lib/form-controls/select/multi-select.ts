@@ -7,11 +7,12 @@ import {
   provideFormValueControl,
 } from '@fibo-ui/cdk';
 import { LucideAngularModule } from 'lucide-angular';
-import { FieldAuxiliaryDirective } from '../form/field-auxiliary';
+import { FieldAuxiliary } from '../form/field-auxiliary';
 import { FieldShell } from '../form/field-shell';
-import { FieldInteractiveDirective } from '../form/field-interactive';
-import { FieldOverlayDirective } from '../form/field-overlay';
-import { FORM_UI_STATE_INPUTS, FormUiState } from '../form/form-ui-state';
+import { FieldTarget } from '../form/field-target';
+import { FieldOverlay } from '../form/field-overlay';
+import { FieldContext, FIELD_CONTEXT_INPUTS } from '../form/field-context';
+import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
 import { Checkbox } from '../checkbox/checkbox';
 import { SelectItem } from './select';
 
@@ -19,8 +20,12 @@ import { SelectItem } from './select';
   selector: 'fibo-multi-select',
   hostDirectives: [
     {
-      directive: FormUiState,
-      inputs: [...FORM_UI_STATE_INPUTS],
+      directive: FieldUiState,
+      inputs: [...FIELD_UI_STATE_INPUTS],
+    },
+    {
+      directive: FieldContext,
+      inputs: [...FIELD_CONTEXT_INPUTS],
     },
   ],
   imports: [
@@ -29,9 +34,9 @@ import { SelectItem } from './select';
     LucideAngularModule,
     DataListItem,
     FieldShell,
-    FieldInteractiveDirective,
-    FieldOverlayDirective,
-    FieldAuxiliaryDirective,
+    FieldTarget,
+    FieldOverlay,
+    FieldAuxiliary,
     Checkbox,
   ],
   host: {
@@ -45,8 +50,8 @@ import { SelectItem } from './select';
       iconEnd="chevron-down"
     >
       <div
-        fiboFieldInteractive
-        fieldInteractiveMode="click"
+        fiboFieldTarget
+        fieldTargetMode="click"
         [fiboFieldOverlay]="multiSelectTpl"
         [matchWidth]="true"
         #triggerSurface
@@ -76,7 +81,7 @@ import { SelectItem } from './select';
           </div>
         }
         @if (selectedItems().length === 0) {
-          <div class="from-field-placeholder text-sm ml-1">{{ placeholder() }}</div>
+          <div class="form-field-placeholder text-sm ml-1">{{ placeholder() }}</div>
         }
       </div>
     </fibo-field-shell>
@@ -110,8 +115,8 @@ import { SelectItem } from './select';
   `,
 })
 export class MultiSelect implements FormValueControl<(string | number)[] | null> {
-  readonly uiState = inject(FormUiState);
-  readonly fieldOverlay = viewChild.required(FieldOverlayDirective);
+  readonly uiState = inject(FieldUiState);
+  readonly fieldOverlay = viewChild.required(FieldOverlay);
   private readonly triggerSurface = viewChild.required<ElementRef<HTMLElement>>('triggerSurface');
 
   readonly value = model<(string | number)[] | null>(null);

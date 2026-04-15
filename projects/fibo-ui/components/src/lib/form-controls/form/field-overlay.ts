@@ -1,8 +1,8 @@
 import { computed, Directive, inject, input, signal, TemplateRef } from '@angular/core';
 import { createOverlay } from '@fibo-ui/cdk';
-import { FieldInteractiveDirective } from './field-interactive';
-import { FieldShellHostDirective } from './field-shell-host';
-import { FormUiState } from './form-ui-state';
+import { FieldTarget } from './field-target';
+import { FieldShellHost } from './field-shell-host';
+import { FieldUiState } from './field-ui-state';
 
 @Directive({
   selector: '[fiboFieldOverlay]',
@@ -14,10 +14,10 @@ import { FormUiState } from './form-ui-state';
     '(click)': 'onHostClick($event)',
   },
 })
-export class FieldOverlayDirective {
-  private readonly interactive = inject(FieldInteractiveDirective);
-  private readonly host = inject(FieldShellHostDirective, { optional: true });
-  private readonly formUiState = inject(FormUiState, { optional: true });
+export class FieldOverlay {
+  private readonly interactive = inject(FieldTarget);
+  private readonly host = inject(FieldShellHost, { optional: true });
+  private readonly fieldUiState = inject(FieldUiState, { optional: true });
 
   /** Template to render inside the overlay. Bound via `[fiboFieldOverlay]="tpl"`. */
   readonly overlayContent = input.required<TemplateRef<unknown>>({ alias: 'fiboFieldOverlay' });
@@ -42,7 +42,7 @@ export class FieldOverlayDirective {
   readonly panelId = computed(() => this.overlayHandle()?.id ?? null);
 
   open(): void {
-    if (this.formUiState?.disabled() || this.formUiState?.readonly()) return;
+    if (this.fieldUiState?.disabled() || this.fieldUiState?.readonly()) return;
     this.isOpen.set(true);
   }
 
@@ -51,12 +51,12 @@ export class FieldOverlayDirective {
   }
 
   toggle(): void {
-    if (this.formUiState?.disabled() || this.formUiState?.readonly()) return;
+    if (this.fieldUiState?.disabled() || this.fieldUiState?.readonly()) return;
     this.isOpen.update(v => !v);
   }
 
   onHostClick(event: MouseEvent): void {
-    if (this.interactive.fieldInteractiveMode() !== 'click') return;
+    if (this.interactive.fieldTargetMode() !== 'click') return;
     if ((event.target as HTMLElement).closest('[data-field-auxiliary]')) return;
     this.toggle();
   }

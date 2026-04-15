@@ -5,7 +5,7 @@ import {
   type WithOptionalField,
 } from '@angular/forms/signals';
 
-export const FORM_UI_STATE_INPUTS = [
+export const FIELD_UI_STATE_INPUTS = [
   'disabled',
   'disabledReasons',
   'readonly',
@@ -26,9 +26,9 @@ export const FORM_UI_STATE_INPUTS = [
 
 @Directive({
   standalone: true,
-  selector: '[fiboFormUiState]',
+  selector: '[fiboFieldUiState]',
 })
-export class FormUiState  {
+export class FieldUiState {
   readonly disabled = input(false);
   readonly disabledReasons = input<readonly WithOptionalField<DisabledReason>[]>([]);
   readonly readonly = input(false);

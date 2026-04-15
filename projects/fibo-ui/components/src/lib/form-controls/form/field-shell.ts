@@ -1,21 +1,21 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
-import { FieldAuxiliaryDirective } from './field-auxiliary';
-import { FieldContainerDirective } from './field-container';
-import { FieldLabelDirective } from './field-label';
-import { FieldShellHostDirective } from './field-shell-host';
-import { FormUiState } from './form-ui-state';
+import { FieldAuxiliary } from './field-auxiliary';
+import { FieldContainer } from './field-container';
+import { FieldLabel } from './field-label';
+import { FieldShellHost } from './field-shell-host';
+import { FieldUiState } from './field-ui-state';
 
 @Component({
   selector: 'fibo-field-shell',
   standalone: true,
-  hostDirectives: [FieldShellHostDirective],
-  imports: [LucideAngularModule, FieldAuxiliaryDirective, FieldLabelDirective, FieldContainerDirective],
+  hostDirectives: [FieldShellHost],
+  imports: [LucideAngularModule, FieldAuxiliary, FieldLabel, FieldContainer],
   host: {
     class: 'block',
   },
   template: `
-    <div fiboFieldContainer class="form-field-control" [attr.data-can-clear]="canClear() || null">
+    <div fiboFieldContainer class="form-field-control" [attr.data-has-clear]="canClear() || null">
       @if (iconStart()) {
         <lucide-icon [name]="iconStart()" size="16" class="form-field-icon shrink-0"></lucide-icon>
       }
@@ -35,7 +35,7 @@ import { FormUiState } from './form-ui-state';
           type="button"
           fiboFieldAuxiliary
           aria-label="Clear value"
-          class="form-field-clear-icon"
+          class="form-field-clear"
           (pointerdown)="$event.preventDefault()"
           (click)="onClear($event)"
         >
@@ -60,8 +60,8 @@ import { FormUiState } from './form-ui-state';
   `,
 })
 export class FieldShell {
-  private readonly host = inject(FieldShellHostDirective);
-  private readonly formUiState = inject(FormUiState, { optional: true });
+  private readonly host = inject(FieldShellHost);
+  private readonly formUiState = inject(FieldUiState, { optional: true });
 
   readonly label = input('');
   readonly hint = input('');
