@@ -6,6 +6,7 @@ import {
   SelectItem,
   MultiSelect,
   DatePickerField,
+  Button,
 } from '@fibo-ui/components';
 
 interface RegistrationData {
@@ -17,7 +18,7 @@ interface RegistrationData {
 
 @Component({
   selector: 'form-example',
-  imports: [FormField, TextField, Select, MultiSelect, DatePickerField],
+  imports: [FormField, TextField, Select, MultiSelect, DatePickerField, Button],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto w-full max-w-[26rem] min-w-0 p-2 space-y-4">
@@ -57,7 +58,7 @@ interface RegistrationData {
 
       <button
         type="button"
-        class="btn btn-primary w-full"
+        fiboButton fiboAppearance="primary" class="w-full"
         [disabled]="!registrationForm().valid()"
         (click)="onSubmit()"
       >

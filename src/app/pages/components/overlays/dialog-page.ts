@@ -1,16 +1,16 @@
 import { Component, signal } from '@angular/core';
-import { Select, SelectItem, Tooltip } from '@fibo-ui/components';
+import { Select, SelectItem, Tooltip, Button } from '@fibo-ui/components';
 import { DialogTrigger } from '@fibo-ui/cdk';
 import { FormExample } from '../form-controls/examples/form-example';
 import { FormField, form } from '@angular/forms/signals';
 
 @Component({
-  imports: [FormExample, Select, FormField, Tooltip, DialogTrigger],
+  imports: [FormExample, Select, FormField, Tooltip, DialogTrigger, Button],
   template: `
     <div class="flex gap-4 p-8">
 
       <!-- Basic dialog with select -->
-      <button class="btn" fiboDialogTrigger [content]="dialogTpl">
+      <button fiboButton fiboDialogTrigger [content]="dialogTpl">
         Open Dialog
       </button>
       <ng-template #dialogTpl let-overlay>
@@ -24,26 +24,26 @@ import { FormField, form } from '@angular/forms/signals';
             [items]="countries"
           />
           <div class="mt-4 flex justify-end">
-            <button class="btn" (click)="overlay.close()">Close</button>
+            <button fiboButton (click)="overlay.close()">Close</button>
           </div>
         </div>
       </ng-template>
 
       <!-- Dialog with form -->
-      <button class="btn" fiboDialogTrigger [content]="formDialogTpl">
+      <button fiboButton fiboDialogTrigger [content]="formDialogTpl">
         Dialog with Form
       </button>
       <ng-template #formDialogTpl let-overlay>
         <div class="overflow-hidden overflow-y-auto">
           <form-example/>
           <div class="p-4 pt-0 flex justify-end">
-            <button class="btn" (click)="overlay.close()">Close</button>
+            <button fiboButton (click)="overlay.close()">Close</button>
           </div>
         </div>
       </ng-template>
 
       <!-- Nested dialogs -->
-      <button class="btn" fiboDialogTrigger [content]="nestedTpl">
+      <button fiboButton fiboDialogTrigger [content]="nestedTpl">
         Nested Dialogs
       </button>
       <ng-template #nestedTpl let-overlay>
@@ -51,7 +51,7 @@ import { FormField, form } from '@angular/forms/signals';
           <h2 class="text-lg font-semibold mb-4">First Dialog</h2>
           <p class="mb-4">Click below to open a second dialog on top.</p>
 
-          <button class="btn" fiboDialogTrigger [content]="nestedTpl2">
+          <button fiboButton fiboDialogTrigger [content]="nestedTpl2">
             Open Second Dialog
           </button>
           <ng-template #nestedTpl2 let-overlay>
@@ -59,12 +59,12 @@ import { FormField, form } from '@angular/forms/signals';
               <h2 class="text-lg font-semibold mb-4">Second Dialog</h2>
               <p class="mb-4">This is stacked on top of the first dialog.</p>
               <div class="mt-4 flex justify-end">
-                <button class="btn" (click)="overlay.close()">Close</button>
+                <button fiboButton (click)="overlay.close()">Close</button>
               </div>
             </div>
           </ng-template>
           <div class="mt-4 flex justify-end">
-            <button class="btn" (click)="overlay.close()">Close</button>
+            <button fiboButton (click)="overlay.close()">Close</button>
           </div>
         </div>
       </ng-template>

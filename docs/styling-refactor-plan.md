@@ -83,6 +83,11 @@
 
 9. `ng build` проходить чисто після всіх змін.
 
+10. ✅ **Primitive styling directives** (2026-04-15):
+    - `lib/primitives/appearance.ts` — `Appearance` директива, `[fiboAppearance]` → `[attr.data-appearance]`; константа `APPEARANCE_INPUTS`
+    - `lib/primitives/size.ts` — `Size` директива, `[fiboSize]` → `[attr.data-size]`; константа `SIZE_INPUTS`; тип `'sm' | 'md' | 'lg' | null`
+    - Обидві доступні через `public-api.ts`
+
 ---
 
 ## State attribute contract (фінальний)
@@ -125,7 +130,7 @@
 
 ## Поточна черга
 
-- [ ] **`Appearance` + `Size` директиви** — cross-component styling axes, розташування: `lib/primitives/`. Мінімальний API: `[fiboAppearance]` → `data-appearance` на host; `[fiboSize]` → `data-size` на host. Перші споживачі: `Button`, `Listbox item`, `Popover surface`.
+- ✅ **`Appearance` + `Size` директиви** (2026-04-15) — `lib/primitives/appearance.ts` + `lib/primitives/size.ts`. `[fiboAppearance]` → `data-appearance`; `[fiboSize]` → `data-size`. Константи `APPEARANCE_INPUTS`, `SIZE_INPUTS` для `hostDirectives` re-export. Перші споживачі: `Button`, `Listbox item`, `Popover surface`.
 - [ ] **Button** — переписати `buttons.css` з `@apply` на native CSS, ввести `Appearance` + `Size` осі *(окрема задача, після директив)*
 - [ ] **Публічний theming contract** — зафіксувати які `--ff-*` і `--form-field-*` CSS variables є публічним API бібліотеки
 

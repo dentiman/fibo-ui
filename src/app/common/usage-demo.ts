@@ -1,10 +1,11 @@
 import {ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import { ShikiHighlighterService } from './shiki-highlighter.service';
+import { Button } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-usage-demo',
-  imports: [CommonModule],
+  imports: [CommonModule, Button],
   providers: [ShikiHighlighterService],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -15,7 +16,7 @@ import { ShikiHighlighterService } from './shiki-highlighter.service';
       </div>
       <div class="px-3 py-1 flex space-x-1">
          @for (block of codeBlocks(); track block.path) {
-           <button class="btn btn-sm rounded-full" [class.btn-inverse]="block.path === activeCodeBlockPath()" (click)="activeCodeBlockPath.set(block.path)">{{ block.name }}</button>
+           <button fiboButton fiboSize="sm" class="rounded-full" [fiboAppearance]="block.path === activeCodeBlockPath() ? 'inverse' : null" (click)="activeCodeBlockPath.set(block.path)">{{ block.name }}</button>
          }
       </div>
 

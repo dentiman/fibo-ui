@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { PopoverTrigger } from '@fibo-ui/cdk';
-import { Menu, type MenuItemType } from '@fibo-ui/components';
+import { Menu, type MenuItemType, Button } from '@fibo-ui/components';
 
 @Component({
   selector: 'menu-multilevel-example',
-  imports: [Menu, PopoverTrigger],
+  imports: [Menu, PopoverTrigger, Button],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="p-8">
       <button
         type="button"
-        class="btn btn-primary"
+        fiboButton fiboAppearance="primary"
         fiboPopoverTrigger
         [content]="menuTpl"
       >

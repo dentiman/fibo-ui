@@ -92,10 +92,10 @@ interface FilterToolbarModel {
         <section class="fibo-card p-4 space-y-4">
           <div class="space-y-1">
             <h3 class="text-lg font-semibold text-foreground">Stacked Comfy</h3>
-            <div class="text-xs font-mono text-foreground-secondary">form-field-filter-bar</div>
+            <div class="text-xs font-mono text-foreground-secondary">fibo-field-filter-bar</div>
           </div>
 
-          <div class="form-field-filter-bar">
+          <div class="fibo-field-filter-bar">
             <fibo-text-field
               [formField]="stackedFilterForm.query"
               label="Search"
@@ -135,11 +135,11 @@ interface FilterToolbarModel {
           <div class="space-y-1">
             <h3 class="text-lg font-semibold text-foreground">Inline Comfy</h3>
             <div class="text-xs font-mono text-foreground-secondary">
-              form-field-filter-bar + labelLayout="inline"
+              fibo-field-filter-bar + labelLayout="inline"
             </div>
           </div>
 
-          <div class="form-field-filter-bar" fiboFieldContext labelLayout="inline">
+          <div class="fibo-field-filter-bar" fiboFieldContext labelLayout="inline">
             <fibo-text-field
               [formField]="inlineFilterForm.query"
               label="Search"
@@ -179,11 +179,11 @@ interface FilterToolbarModel {
           <div class="space-y-1">
             <h3 class="text-lg font-semibold text-foreground">Inline Compact</h3>
             <div class="text-xs font-mono text-foreground-secondary">
-              form-field-filter-bar + labelLayout="inline" + density="compact"
+              fibo-field-filter-bar + labelLayout="inline" + density="compact"
             </div>
           </div>
 
-          <div class="form-field-filter-bar" fiboFieldContext labelLayout="inline" density="compact">
+          <div class="fibo-field-filter-bar" fiboFieldContext labelLayout="inline" density="compact">
             <fibo-text-field
               [formField]="inlineCompactFilterForm.query"
               label="Search"

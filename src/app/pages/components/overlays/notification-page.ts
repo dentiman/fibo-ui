@@ -1,16 +1,17 @@
 import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
-import { Notifier } from '@fibo-ui/components';
+import { Notifier, Button } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-notification-page',
+  imports: [Button],
   template: `
     <div class="flex flex-row gap-2 p-4">
-      <button class="btn-primary" (click)="showSuccessNotification()">Success Notification</button>
-      <button class="btn-primary" (click)="showInfoNotification()">Info Notification</button>
-      <button class="btn-primary" (click)="showWarningNotification()">Warning Notification</button>
-      <button class="btn-primary" (click)="showDangerNotification()">Danger Notification</button>
-      <button class="btn-primary" (click)="showInfoNotification()">Info Notification</button>
-      <button class="btn-primary" (click)="showCustomNotification()">Custom Notification </button>
+      <button fiboButton fiboAppearance="primary" (click)="showSuccessNotification()">Success Notification</button>
+      <button fiboButton fiboAppearance="primary" (click)="showInfoNotification()">Info Notification</button>
+      <button fiboButton fiboAppearance="primary" (click)="showWarningNotification()">Warning Notification</button>
+      <button fiboButton fiboAppearance="primary" (click)="showDangerNotification()">Danger Notification</button>
+      <button fiboButton fiboAppearance="primary" (click)="showInfoNotification()">Info Notification</button>
+      <button fiboButton fiboAppearance="primary" (click)="showCustomNotification()">Custom Notification </button>
     </div>
 
     <ng-template #defaultTemplate>

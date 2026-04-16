@@ -3,7 +3,7 @@
    ============================================================ */
 @layer field-rules {
 
-  .form-field-control {
+  .fibo-field-container {
     --ff-control-min-height: 2.25rem;
     --ff-control-padding-x: 0.75rem;
     --ff-control-padding-y: 0.25rem;
@@ -108,14 +108,14 @@
 
   /* ── Rounded variant ────────────────────────────────────── */
 
-  .form-field-rounded .form-field-control {
+  .fibo-field-rounded .fibo-field-container {
     border-radius: 9999px;
     padding-inline: 1rem;
   }
 
   /* ── Internal slots ─────────────────────────────────────── */
 
-  .form-field-body {
+  .fibo-field-body {
     position: relative;
     display: flex;
     flex: 1 1 0%;
@@ -126,7 +126,7 @@
     gap: var(--ff-body-gap);
   }
 
-  .form-field-content {
+  .fibo-field-content {
     display: flex;
     align-items: center;
     justify-content: var(--ff-content-justify);
@@ -136,7 +136,7 @@
 
   /* ── Layout modifiers ───────────────────────────────────── */
 
-  [data-label-layout="inline"] .form-field-control {
+  [data-label-layout="inline"] .fibo-field-container {
     --ff-body-direction: row;
     --ff-body-align: center;
     --ff-body-gap: 0.75rem;
@@ -147,7 +147,7 @@
     --ff-label-white-space: nowrap;
   }
 
-  [data-density="compact"] .form-field-control {
+  [data-density="compact"] .fibo-field-container {
     --ff-control-min-height: 2rem;
     --ff-control-padding-x: 0.625rem;
     --ff-control-padding-y: 0.125rem;
@@ -155,32 +155,32 @@
 
   /* ── Filter bar layout ──────────────────────────────────── */
 
-  .form-field-filter-bar {
+  .fibo-field-filter-bar {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.5rem;
   }
 
-  .form-field-filter-bar > * {
+  .fibo-field-filter-bar > * {
     flex: 0 0 auto;
     min-width: 0;
   }
 
-  .form-field-filter-bar .form-field-control {
+  .fibo-field-filter-bar .fibo-field-container {
     --ff-control-width: auto;
     --ff-content-flex: 0 0 auto;
   }
 
-  .form-field-filter-bar .form-field-body {
+  .fibo-field-filter-bar .fibo-field-body {
     flex: 0 1 auto;
   }
 
-  .form-field-filter-bar .form-field-content {
+  .fibo-field-filter-bar .fibo-field-content {
     flex: 0 1 auto;
   }
 
-  .form-field-filter-bar .form-field-input {
+  .fibo-field-filter-bar .fibo-field-input {
     width: auto;
     min-width: 6ch;
     field-sizing: content;
@@ -188,7 +188,7 @@
 
   /* ── Input ──────────────────────────────────────────────── */
 
-  .form-field-input {
+  .fibo-field-input {
     font-size: 0.875rem;
     line-height: 1.25rem;
     background-color: transparent;
@@ -239,7 +239,7 @@
 
   /* ── Label ──────────────────────────────────────────────── */
 
-  .form-field-label {
+  .fibo-field-label {
     font-size: var(--ff-label-font-size);
     line-height: var(--ff-label-line-height);
     display: block;
@@ -257,33 +257,33 @@
     }
   }
 
-  .form-field-control:focus-within .form-field-label {
+  .fibo-field-container:focus-within .fibo-field-label {
     color: rgb(59 130 246);
   }
 
-  [data-theme="dark"] .form-field-control:focus-within .form-field-label {
+  [data-theme="dark"] .fibo-field-container:focus-within .fibo-field-label {
     color: oklch(0.71 0.11 240);
   }
 
-  .form-field-control[aria-disabled="true"] .form-field-label {
+  .fibo-field-container[aria-disabled="true"] .fibo-field-label {
     color: rgb(156 163 175);
   }
 
-  [data-theme="dark"] .form-field-control[aria-disabled="true"] .form-field-label {
+  [data-theme="dark"] .fibo-field-container[aria-disabled="true"] .fibo-field-label {
     color: rgb(115 115 115);
   }
 
-  .form-field-control[data-invalid] .form-field-label {
+  .fibo-field-container[data-invalid] .fibo-field-label {
     color: oklch(0.62 0.192 20);
   }
 
-  [data-theme="dark"] .form-field-control[data-invalid] .form-field-label {
+  [data-theme="dark"] .fibo-field-container[data-invalid] .fibo-field-label {
     color: rgb(248 113 113);
   }
 
   /* ── Supporting text ────────────────────────────────────── */
 
-  .form-field-error {
+  .fibo-field-error {
     margin-left: 0.75rem;
     margin-top: 0.25rem;
     font-size: 0.75rem;
@@ -295,7 +295,7 @@
     }
   }
 
-  .form-field-hint {
+  .fibo-field-hint {
     margin-left: 0.75rem;
     margin-top: 0.25rem;
     font-size: 0.75rem;
@@ -305,17 +305,17 @@
 
   /* ── Icons ──────────────────────────────────────────────── */
 
-  .form-field-icon {
+  .fibo-field-icon {
     color: var(--foreground-tertiary);
   }
 
-  .form-field-icon-end {
+  .fibo-field-icon-end {
     display: block;
   }
 
   /* ── Clear button ───────────────────────────────────────── */
 
-  .form-field-clear {
+  .fibo-field-clear {
     display: none;
     cursor: pointer;
     border-radius: 9999px;
@@ -330,20 +330,20 @@
     }
   }
 
-  .form-field-control:not([aria-disabled="true"]):hover .form-field-clear,
-  .form-field-control:not([aria-disabled="true"]):focus-within .form-field-clear {
+  .fibo-field-container:not([aria-disabled="true"]):hover .fibo-field-clear,
+  .fibo-field-container:not([aria-disabled="true"]):focus-within .fibo-field-clear {
     display: block;
   }
 
-  .form-field-control[data-has-clear]:not([aria-disabled="true"]):hover .form-field-icon-end,
-  .form-field-control[data-has-clear]:not([aria-disabled="true"]):focus-within .form-field-icon-end {
+  .fibo-field-container[data-has-clear]:not([aria-disabled="true"]):hover .fibo-field-icon-end,
+  .fibo-field-container[data-has-clear]:not([aria-disabled="true"]):focus-within .fibo-field-icon-end {
     display: none;
   }
 
   /* ── Placeholder text (Select, MultiSelect) ─────────────── */
 
-  .form-field-placeholder {
-    color: var(--form-field-placeholder);
+  .fibo-field-placeholder {
+    color: var(--fibo-field-placeholder);
     transition: color 200ms;
   }
 

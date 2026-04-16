@@ -14,7 +14,7 @@
 @import "../projects/fibo-ui/components/src/styles/overlay.css";
 @import "../projects/fibo-ui/components/src/styles/checkbox.css";
 @import "../projects/fibo-ui/components/src/styles/switch.css";
-@import "../projects/fibo-ui/components/src/buttons.css";
+@import "../projects/fibo-ui/components/src/styles/button.css";
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 

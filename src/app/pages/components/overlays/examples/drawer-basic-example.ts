@@ -3,14 +3,15 @@ import {
   Component,
 } from '@angular/core';
 import { DrawerTrigger } from '@fibo-ui/cdk';
+import { Button } from '@fibo-ui/components';
 
 @Component({
   selector: 'drawer-basic-example',
-  imports: [DrawerTrigger],
+  imports: [DrawerTrigger, Button],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="p-8">
-      <button class="btn btn-primary" fiboDrawerTrigger [content]="drawerTpl">
+      <button fiboButton fiboAppearance="primary" fiboDrawerTrigger [content]="drawerTpl">
         Open Drawer
       </button>
 
@@ -19,7 +20,7 @@ import { DrawerTrigger } from '@fibo-ui/cdk';
           <h2 class="mb-4 text-lg font-semibold">Drawer Title</h2>
           <p class="text-sm text-muted">Drawer content goes here.</p>
           <div class="mt-6">
-            <button class="btn btn-primary" (click)="overlay.close()">Close Drawer</button>
+            <button fiboButton fiboAppearance="primary" (click)="overlay.close()">Close Drawer</button>
           </div>
         </div>
       </ng-template>

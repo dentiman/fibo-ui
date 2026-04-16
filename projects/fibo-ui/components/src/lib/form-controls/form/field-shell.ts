@@ -15,17 +15,17 @@ import { FieldUiState } from './field-ui-state';
     class: 'block',
   },
   template: `
-    <div fiboFieldContainer class="form-field-control" [attr.data-has-clear]="canClear() || null">
+    <div fiboFieldContainer [attr.data-has-clear]="canClear() || null">
       @if (iconStart()) {
-        <lucide-icon [name]="iconStart()" size="16" class="form-field-icon shrink-0"></lucide-icon>
+        <lucide-icon [name]="iconStart()" size="16" class="fibo-field-icon shrink-0"></lucide-icon>
       }
 
-      <div class="form-field-body">
+      <div class="fibo-field-body">
         @if (label()) {
-          <label fiboFieldLabel class="form-field-label">{{ label() }}</label>
+          <label fiboFieldLabel>{{ label() }}</label>
         }
 
-        <div class="form-field-content">
+        <div class="fibo-field-content">
           <ng-content></ng-content>
         </div>
       </div>
@@ -35,7 +35,7 @@ import { FieldUiState } from './field-ui-state';
           type="button"
           fiboFieldAuxiliary
           aria-label="Clear value"
-          class="form-field-clear"
+          class="fibo-field-clear"
           (pointerdown)="$event.preventDefault()"
           (click)="onClear($event)"
         >
@@ -47,15 +47,15 @@ import { FieldUiState } from './field-ui-state';
         <lucide-icon
           [name]="iconEnd()"
           size="16"
-          class="form-field-icon form-field-icon-end shrink-0"
+          class="fibo-field-icon fibo-field-icon-end shrink-0"
         ></lucide-icon>
       }
     </div>
 
     @if (errorMessage(); as error) {
-      <div [id]="idFor('error')" class="form-field-error">{{ error }}</div>
+      <div [id]="idFor('error')" class="fibo-field-error">{{ error }}</div>
     } @else if (hint()) {
-      <div [id]="idFor('hint')" class="form-field-hint">{{ hint() }}</div>
+      <div [id]="idFor('hint')" class="fibo-field-hint">{{ hint() }}</div>
     }
   `,
 })

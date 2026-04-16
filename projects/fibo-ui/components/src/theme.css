@@ -83,22 +83,22 @@
   --color-border-primary: var(--border-primary);
 
   /* Form Field Variables - Light Theme */
-  --form-field-bg: oklch(1 0 0);
-  --form-field-text: oklch(0.145 0 0);
-  --form-field-outline: var(--border-primary);
-  --form-field-outline-focus: --alpha(var(--color-blue-500) / 30%);
-  --form-field-bg-error: oklch(0.98 0.008 0);
-  --form-field-outline-error: oklch(0.62 0.192 19.855 / 0.3);
-  --form-field-bg-disabled: oklch(0.95 0 0);
-  --form-field-text-disabled: var(--foreground-secondary);
-  --form-field-outline-disabled: oklch(0.80 0 0);
+  --fibo-field-bg: oklch(1 0 0);
+  --fibo-field-text: oklch(0.145 0 0);
+  --fibo-field-outline: var(--border-primary);
+  --fibo-field-outline-focus: --alpha(var(--color-blue-500) / 30%);
+  --fibo-field-bg-error: oklch(0.98 0.008 0);
+  --fibo-field-outline-error: oklch(0.62 0.192 19.855 / 0.3);
+  --fibo-field-bg-disabled: oklch(0.95 0 0);
+  --fibo-field-text-disabled: var(--foreground-secondary);
+  --fibo-field-outline-disabled: oklch(0.80 0 0);
 
   /* Form Field Label Variables - Light Theme */
-  --form-field-label-text-focus: var(--color-blue-500);
-  --form-field-label-text-error: oklch(0.62 0.192 20);
-  --form-field-label-text: var(--foreground-secondary);
-  --form-field-label-text-disabled: var(--foreground-tertiary);
-  --form-field-placeholder: var(--foreground-tertiary);
+  --fibo-field-label-text-focus: var(--color-blue-500);
+  --fibo-field-label-text-error: oklch(0.62 0.192 20);
+  --fibo-field-label-text: var(--foreground-secondary);
+  --fibo-field-label-text-disabled: var(--foreground-tertiary);
+  --fibo-field-placeholder: var(--foreground-tertiary);
 
   /* Input Variables - Light Theme */
   --input-text: black;
@@ -125,6 +125,13 @@
   --checkbox-bg-disabled: oklch(0.95 0 0);
   --checkbox-border-disabled: oklch(0.80 0 0);
   --checkbox-icon: oklch(0.98 0 0);
+
+  /* Button Variables - Light Theme */
+  --btn-bg:         white;
+  --btn-bg-hover:   var(--color-gray-50);
+  --btn-text:       var(--color-gray-700);
+  --btn-text-hover: var(--color-gray-900);
+  --btn-ring:       rgb(0 0 0 / 0.15);
 
   /* DataList Item Variables - Light Theme */
   --datalist-item-bg: transparent;
@@ -167,24 +174,24 @@
   --shadow-2xl: var(--shadow-dark-2xl);
 
   /* Form Field Variables - Dark Theme */
-  --form-field-bg: oklch(30% 2% 253deg);
-  --form-field-text: var(--foreground);
-  --form-field-outline: var(--border-primary);
-  --form-field-outline-focus: --alpha(var(--color-primary-500) / 20%);
-  --form-field-bg-error: oklch(0.267 0.019 7.232);
-  --form-field-outline-error: --alpha(var(--color-red-300) / 20%);
-  --form-field-bg-disabled: --alpha(var(--color-foreground) / 5%);
-  --form-field-text-disabled: var(--color-neutral-600);
-  --form-field-outline-disabled: oklch(0.20 0 0);
+  --fibo-field-bg: oklch(30% 2% 253deg);
+  --fibo-field-text: var(--foreground);
+  --fibo-field-outline: var(--border-primary);
+  --fibo-field-outline-focus: --alpha(var(--color-primary-500) / 20%);
+  --fibo-field-bg-error: oklch(0.267 0.019 7.232);
+  --fibo-field-outline-error: --alpha(var(--color-red-300) / 20%);
+  --fibo-field-bg-disabled: --alpha(var(--color-foreground) / 5%);
+  --fibo-field-text-disabled: var(--color-neutral-600);
+  --fibo-field-outline-disabled: oklch(0.20 0 0);
 
   /* Form Field Label Variables - Dark Theme */
-  --form-field-label-text: var(--foreground-secondary);
-  --form-field-label-text-focus: oklch(0.71 0.11 240);
-  --form-field-label-text-error: var(--color-red-400);
-  --form-field-label-text-disabled: var(--foreground-tertiary);
+  --fibo-field-label-text: var(--foreground-secondary);
+  --fibo-field-label-text-focus: oklch(0.71 0.11 240);
+  --fibo-field-label-text-error: var(--color-red-400);
+  --fibo-field-label-text-disabled: var(--foreground-tertiary);
 
   /* Form Field Placeholder Variables - Dark Theme */
-  --form-field-placeholder: var(--foreground-tertiary);
+  --fibo-field-placeholder: var(--foreground-tertiary);
 
   /* Input Variables - Dark Theme */
   --input-text: var(--foreground);
@@ -211,6 +218,13 @@
   --checkbox-bg-disabled: oklch(0.28 0.02 268deg);
   --checkbox-border-disabled: oklch(0.20 0 0);
   --checkbox-icon: oklch(0.98 0 0);
+
+  /* Button Variables - Dark Theme */
+  --btn-bg:         rgb(255 255 255 / 0.05);
+  --btn-bg-hover:   rgb(255 255 255 / 0.08);
+  --btn-text:       var(--color-neutral-300);
+  --btn-text-hover: white;
+  --btn-ring:       rgb(255 255 255 / 0.08);
 
   /* DataList Item Variables - Dark Theme */
   --datalist-item-bg: transparent;

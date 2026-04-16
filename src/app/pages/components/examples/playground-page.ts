@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, ElementRef, signal, TemplateRef, viewChild } from '@angular/core';
 import { createOverlay, DialogTrigger } from '@fibo-ui/cdk';
-import { Menu, type MenuItemType } from '@fibo-ui/components';
+import { Menu, type MenuItemType, Button } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-playground-page',
-  imports: [Menu, DialogTrigger],
+  imports: [Menu, DialogTrigger, Button],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-8 p-8">
@@ -23,7 +23,7 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
           <button
             #menuTriggerBtn
             type="button"
-            class="btn btn-primary"
+            fiboButton fiboAppearance="primary"
             (click)="toggleMenu()"
           >
             Open Menu
@@ -32,7 +32,7 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
           <button
             #altMenuTriggerBtn
             type="button"
-            class="btn btn-secondary"
+            fiboButton fiboAppearance="secondary"
             (click)="toggleAltMenu()"
           >
             Open Quick Menu
@@ -71,7 +71,7 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
         <div class="flex flex-wrap gap-3">
           <button
             #dialogTrigger="DialogTrigger"
-            class="btn btn-primary"
+            fiboButton fiboAppearance="primary"
             fiboDialogTrigger
             [content]="dialogTpl"
           >
@@ -80,7 +80,7 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
 
           <button
             #nestedDialogTrigger="DialogTrigger"
-            class="btn btn-secondary"
+            fiboButton fiboAppearance="secondary"
             fiboDialogTrigger
             [content]="nestedDialogTpl"
           >
@@ -95,7 +95,7 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
               Body scroll should be locked while this dialog is open.
             </p>
             <div class="flex justify-end">
-              <button class="btn" (click)="dialogTrigger.close()">Close</button>
+              <button fiboButton (click)="dialogTrigger.close()">Close</button>
             </div>
           </div>
         </ng-template>
@@ -109,7 +109,7 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
 
             <button
               #innerDialogTrigger="DialogTrigger"
-              class="btn btn-secondary mb-4"
+              fiboButton fiboAppearance="secondary" class="mb-4"
               fiboDialogTrigger
               [content]="innerDialogTpl"
             >
@@ -120,13 +120,13 @@ import { Menu, type MenuItemType } from '@fibo-ui/components';
                 <h2 class="text-lg font-semibold mb-2">Second Dialog</h2>
                 <p class="text-sm text-foreground-secondary mb-4">Stacked on top. Scroll still locked.</p>
                 <div class="flex justify-end">
-                  <button class="btn" (click)="innerDialogTrigger.close()">Close</button>
+                  <button fiboButton (click)="innerDialogTrigger.close()">Close</button>
                 </div>
               </div>
             </ng-template>
 
             <div class="flex justify-end">
-              <button class="btn" (click)="nestedDialogTrigger.close()">Close</button>
+              <button fiboButton (click)="nestedDialogTrigger.close()">Close</button>
             </div>
           </div>
         </ng-template>

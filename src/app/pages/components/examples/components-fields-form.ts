@@ -1,7 +1,7 @@
 import { Component, signal, ChangeDetectionStrategy, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormField, form, required, disabled } from '@angular/forms/signals';
-import {TextField, Select, MultiSelect, DatePickerField} from '@fibo-ui/components';
+import { TextField, Select, MultiSelect, DatePickerField, Button } from '@fibo-ui/components';
 import { citiesChoices } from '../../../common/form-data-example';
 
 interface UserProfile {
@@ -24,6 +24,7 @@ interface UserProfile {
     MultiSelect,
     FormField,
     DatePickerField,
+    Button,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -79,7 +80,7 @@ interface UserProfile {
                 [formField]="userProfileForm.birthday">
         </fibo-datepicker>
 
-        <button type="submit" class="btn btn-primary" [disabled]="!userProfileForm().valid()">Submit</button>
+        <button type="submit" fiboButton fiboAppearance="primary" [disabled]="!userProfileForm().valid()">Submit</button>
       </form>
 
 

@@ -7,18 +7,20 @@ import {
   viewChild,
 } from '@angular/core';
 import { createOverlay } from '@fibo-ui/cdk';
+import { Button } from '@fibo-ui/components';
 
 @Component({
   selector: 'cdk-overlays-basic-example',
+  imports: [Button],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="p-6">
-      <button #btn type="button" class="btn btn-primary" (click)="toggle()">Open</button>
+      <button #btn type="button" fiboButton fiboAppearance="primary" (click)="toggle()">Open</button>
 
       <ng-template #tpl let-overlay>
         <div class="flex items-center justify-between gap-6 p-3">
           <span class="text-sm">Popover content</span>
-          <button type="button" class="btn btn-sm" (click)="overlay.close()">Close</button>
+          <button type="button" fiboButton fiboSize="sm" (click)="overlay.close()">Close</button>
         </div>
       </ng-template>
     </div>

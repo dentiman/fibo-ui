@@ -64,7 +64,7 @@ export interface SelectItem {
         aria-haspopup="listbox"
         (blur)="uiState.touched.set(true)"
       >
-        <div class="text-sm" [class.form-field-placeholder]="!selectedLabel()">
+        <div class="text-sm" [class.fibo-field-placeholder]="!selectedLabel()">
           {{ selectedLabel() || placeholder() }}
         </div>
       </button>

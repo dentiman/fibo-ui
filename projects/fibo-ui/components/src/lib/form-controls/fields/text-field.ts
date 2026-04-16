@@ -51,7 +51,7 @@ import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
         [attr.data-invalid]="(uiState.invalid() && uiState.touched()) || null"
         (input)="onInput($event)"
         (blur)="onBlur()"
-        class="form-field-input"
+        class="fibo-field-input"
       />
     </fibo-field-shell>
   `,

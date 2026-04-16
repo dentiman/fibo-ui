@@ -1,18 +1,18 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemeService, Theme } from '../theme.service';
+import { Button } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-theme-toggle',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Button],
   template: `
     <div class="flex items-center gap-2 ">
       <button
         type="button"
-        class="btn rounded-full h-7 p-1.5"
-        [class.btn-text]="theme() !== 'light'"
-        [class.btn-chip]="theme() === 'light'"
+        fiboButton class="rounded-full p-1.5"
+        [fiboAppearance]="theme() === 'light' ? 'chip' : 'text'"
         (click)="setTheme('light')"
         title="Light theme"
       >
@@ -23,9 +23,8 @@ import { ThemeService, Theme } from '../theme.service';
 
       <button
         type="button"
-        class="btn rounded-full h-7 p-1.5"
-        [class.btn-text]="theme() !== 'dark'"
-        [class.btn-chip]="theme() === 'dark'"
+        fiboButton class="rounded-full p-1.5"
+        [fiboAppearance]="theme() === 'dark' ? 'chip' : 'text'"
         (click)="setTheme('dark')"
         title="Dark theme"
       >
@@ -36,9 +35,8 @@ import { ThemeService, Theme } from '../theme.service';
 
       <button
         type="button"
-        class="btn rounded-full h-7 p-1.5"
-        [class.btn-text]="theme() !== 'system'"
-        [class.btn-chip]="theme() === 'system'"
+        fiboButton class="rounded-full p-1.5"
+        [fiboAppearance]="theme() === 'system' ? 'chip' : 'text'"
         (click)="setTheme('system')"
         title="System theme"
       >

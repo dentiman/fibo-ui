@@ -1,0 +1,145 @@
+/* ============================================================
+   Button — fibo-btn base + appearance + size variants
+   ============================================================ */
+@layer components {
+
+  .fibo-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: var(--btn-height, 2.25rem);
+    padding-inline: var(--btn-px, 0.75rem);
+    border-radius: var(--btn-radius, var(--radius-md));
+    font-size: var(--btn-font-size, 0.875rem);
+    line-height: 1.25rem;
+    color: var(--btn-text);
+    background-color: var(--btn-bg);
+    box-shadow: var(--shadow-xs), inset 0 0 0 1px var(--btn-ring);
+    cursor: pointer;
+    transition: background-color 150ms, color 150ms;
+    white-space: nowrap;
+  }
+
+  .fibo-btn:hover {
+    background-color: var(--btn-bg-hover);
+    color: var(--btn-text-hover);
+  }
+
+  .fibo-btn:focus-visible {
+    outline: 2px solid var(--color-blue-500);
+    outline-offset: 2px;
+  }
+
+  .fibo-btn:disabled,
+  .fibo-btn[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .fibo-btn:disabled:hover,
+  .fibo-btn[aria-disabled="true"]:hover {
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+  }
+
+  /* ── Size variants ─────────────────────────────── */
+
+  .fibo-btn[data-size="sm"] {
+    --btn-radius: var(--radius-sm);
+    height: 1.5rem;
+    padding-inline: 0.625rem;
+    font-size: 0.75rem;
+  }
+
+  .fibo-btn[data-size="md"] {
+    --btn-radius: var(--radius-md);
+    height: 2.25rem;
+    padding-inline: 0.75rem;
+  }
+
+  .fibo-btn[data-size="lg"] {
+    --btn-radius: var(--radius-lg);
+    height: 2.75rem;
+    padding-inline: 1.5rem;
+    font-size: 1rem;
+  }
+
+  /* ── Appearance variants ───────────────────────── */
+
+  .fibo-btn[data-appearance="primary"] {
+    --btn-bg:         rgb(59 130 246);
+    --btn-bg-hover:   rgb(96 165 250);
+    --btn-text:       white;
+    --btn-text-hover: white;
+    --btn-ring:       rgb(255 255 255 / 0.05);
+  }
+
+  [data-theme="dark"] .fibo-btn[data-appearance="primary"] {
+    --btn-bg-hover: rgb(37 99 235);
+  }
+
+  .fibo-btn[data-appearance="secondary"] {
+    --btn-bg:       rgb(243 244 246);
+    --btn-bg-hover: rgb(249 250 251);
+    --btn-ring:     rgb(0 0 0 / 0.15);
+  }
+
+  [data-theme="dark"] .fibo-btn[data-appearance="secondary"] {
+    --btn-bg:       rgb(0 0 0 / 0.06);
+    --btn-bg-hover: rgb(0 0 0 / 0.03);
+    --btn-ring:     rgb(255 255 255 / 0.13);
+  }
+
+  .fibo-btn[data-appearance="danger"] {
+    --btn-bg:         rgb(239 68 68);
+    --btn-bg-hover:   rgb(248 113 113);
+    --btn-text:       white;
+    --btn-text-hover: white;
+    --btn-ring:       rgb(255 255 255 / 0.05);
+  }
+
+  [data-theme="dark"] .fibo-btn[data-appearance="danger"] {
+    --btn-bg-hover: rgb(220 38 38);
+  }
+
+  .fibo-btn[data-appearance="inverse"] {
+    --btn-bg:         rgb(3 7 18 / 0.80);
+    --btn-bg-hover:   rgb(0 0 0 / 0.90);
+    --btn-text:       white;
+    --btn-text-hover: white;
+    --btn-ring:       rgb(255 255 255 / 0.05);
+  }
+
+  [data-theme="dark"] .fibo-btn[data-appearance="inverse"] {
+    --btn-bg:         white;
+    --btn-bg-hover:   rgb(249 250 251);
+    --btn-text:       black;
+    --btn-text-hover: black;
+    box-shadow: none;
+  }
+
+  .fibo-btn[data-appearance="chip"] {
+    --btn-bg:       rgb(3 7 18 / 0.10);
+    --btn-bg-hover: rgb(3 7 18 / 0.08);
+    --btn-ring:     transparent;
+    box-shadow: none;
+  }
+
+  [data-theme="dark"] .fibo-btn[data-appearance="chip"] {
+    --btn-bg:       rgb(255 255 255 / 0.10);
+    --btn-bg-hover: rgb(255 255 255 / 0.15);
+  }
+
+  .fibo-btn[data-appearance="text"] {
+    --btn-bg:       transparent;
+    --btn-bg-hover: rgb(3 7 18 / 0.08);
+    --btn-ring:     transparent;
+    box-shadow: none;
+  }
+
+  [data-theme="dark"] .fibo-btn[data-appearance="text"] {
+    --btn-bg-hover: rgb(255 255 255 / 0.10);
+  }
+
+}

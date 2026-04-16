@@ -1,21 +1,22 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { PopoverTrigger } from '@fibo-ui/cdk';
+import { Button } from '@fibo-ui/components';
 
 @Component({
   selector: 'cdk-popover-trigger-example',
-  imports: [PopoverTrigger],
+  imports: [PopoverTrigger, Button],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="mx-auto w-full max-w-xl p-6">
       <div class="flex flex-wrap items-center gap-3">
-        <button type="button" class="btn btn-primary" fiboPopoverTrigger [content]="popoverTpl">
+        <button type="button" fiboButton fiboAppearance="primary" fiboPopoverTrigger [content]="popoverTpl">
           Open Popover
         </button>
 
         <button
           #ref="PopoverTrigger"
           type="button"
-          class="btn btn-secondary"
+          fiboButton fiboAppearance="secondary"
           fiboPopoverTrigger
           placement="bottom-start"
           [content]="actionsTpl"

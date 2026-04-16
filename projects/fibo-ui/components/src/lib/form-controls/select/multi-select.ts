@@ -81,7 +81,7 @@ import { SelectItem } from './select';
           </div>
         }
         @if (selectedItems().length === 0) {
-          <div class="form-field-placeholder text-sm ml-1">{{ placeholder() }}</div>
+          <div class="fibo-field-placeholder text-sm ml-1">{{ placeholder() }}</div>
         }
       </div>
     </fibo-field-shell>

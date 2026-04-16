@@ -2,6 +2,13 @@
  * Public API Surface of components
  */
 
+// Primitive styling directives
+export * from './lib/primitives/appearance';
+export * from './lib/primitives/size';
+
+// Button
+export * from './lib/buttons/button';
+
 // Loading Spin component
 export * from './lib/loading-spin/loading-spin';
 

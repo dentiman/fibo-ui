@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {Tooltip} from '@fibo-ui/components';
+import { Tooltip, Button } from '@fibo-ui/components';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, Tooltip],
+  imports: [CommonModule, Tooltip, Button],
   template: `
 <div class="p-8">
   <h2 class="text-xl font-semibold mb-6 text-center">Tooltip Placement Demo</h2>
@@ -13,10 +13,10 @@ import {Tooltip} from '@fibo-ui/components';
   <div class="mb-12">
     <h3 class="text-lg font-semibold mb-4 text-center">Basic Placements</h3>
     <div class="flex justify-center gap-8">
-      <button class="btn btn-primary" [fiboTooltip]="'top'" [placement]="'top'">top</button>
-      <button class="btn btn-primary" [fiboTooltip]="'left'" [placement]="'left'">left</button>
-      <button class="btn btn-primary" [fiboTooltip]="'right'" [placement]="'right'">right</button>
-      <button class="btn btn-primary" [fiboTooltip]="'bottom'" [placement]="'bottom'">bottom</button>
+      <button fiboButton fiboAppearance="primary" [fiboTooltip]="'top'" [placement]="'top'">top</button>
+      <button fiboButton fiboAppearance="primary" [fiboTooltip]="'left'" [placement]="'left'">left</button>
+      <button fiboButton fiboAppearance="primary" [fiboTooltip]="'right'" [placement]="'right'">right</button>
+      <button fiboButton fiboAppearance="primary" [fiboTooltip]="'bottom'" [placement]="'bottom'">bottom</button>
     </div>
   </div>
 

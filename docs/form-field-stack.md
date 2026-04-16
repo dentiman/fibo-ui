@@ -1,6 +1,6 @@
-# Form Field Stack — Внутрішня архітектура
+# Form Field Stack — Директиви, стилізація та уніфікація
 
-Цей документ описує архітектуру field-примітивів у `@fibo-ui/components`, зв'язок між директивами, та пропозиції рефакторингу термінології.
+Цей документ описує повну архітектуру field-примітивів у `@fibo-ui/components`: перелік директив, їх Angular-селектори, host-bindings, CSS-хуки, де і як застосовуються стилі — а також пропозицію уніфікації naming-конвенції.
 
 ---
 
@@ -24,9 +24,175 @@ icon (chrome)  primary control         clear (chrome)
 - visual wrapper з іконками
 - aria-label provider
 
-Це призводить до `FormFieldControl` — god component, який робить все і нічого добре.
-
 Поточна архітектура розбиває цей моноліт на окремі директиви з єдиною відповідальністю кожна.
+
+---
+
+## Директиви: повна таблиця
+
+| Клас | Angular selector | CSS клас | Де ставиться клас | Host data-attrs | Host aria-attrs |
+|---|---|---|---|---|---|
+| `FieldUiState` | `[fiboFieldUiState]` | — | — | — | — |
+| `FieldShellHost` | `[fiboFieldShellHost]` | — | — | — | — |
+| `FieldContext` | `[fiboFieldContext]` | — | — | `data-density`, `data-label-layout` | — |
+| `FieldContainer` | `[fiboFieldContainer]` | `fibo-field-container` | **host** (директива) | `data-invalid`, `data-readonly`, `data-pending` | `aria-disabled` |
+| `FieldLabel` | `[fiboFieldLabel]` | `fibo-field-label` | **host** (директива) | — | — |
+| `FieldAuxiliary` | `[fiboFieldAuxiliary]` | `form-field-clear` | **шаблон** `FieldShell` | `data-field-auxiliary` | — |
+| `FieldTarget` | `[fiboFieldTarget]` | — | — | `data-field-target` | `aria-labelledby`, `aria-describedby`, `aria-invalid`, `aria-readonly` |
+| `FieldOverlay` | `[fiboFieldOverlay]` | — | — | — | `aria-expanded`, `aria-controls` |
+| `Button` | `[fiboButton]` | `fibo-btn` | **host** (директива) | — | — |
+
+`FieldAuxiliary` — виняток: директива (`data-field-auxiliary`) і CSS-клас (`form-field-clear`) залишені окремо навмисно, бо вони різнорідні — директива є behavioral marker для click delegation, клас — візуальний стиль конкретної кнопки очищення.
+
+---
+
+## DOM структура
+
+```
+fibo-field-shell                           ← FieldShell component
+  [fiboFieldShellHost]                     ← hostDirective (ID hub, DI bridge)
+  class="block"                            ← Tailwind layout
+
+  └── <div [fiboFieldContainer]            ← FieldContainer directive
+            class="fibo-field-container"   ← CSS: автоматично від host directive
+            aria-disabled data-invalid …>
+
+        <lucide-icon class="form-field-icon shrink-0">  ← icon start
+
+        <div class="form-field-body">
+          <label [fiboFieldLabel]           ← FieldLabel directive
+                 class="fibo-field-label">  ← CSS: автоматично від host directive
+          </label>
+
+          <div class="form-field-content">
+            <ng-content>                   ← Primary control:
+              input[fiboFieldTarget]        ←   FieldTarget: id, aria-*, data-field-target
+              button[fiboFieldTarget        ←   (Select, DatePicker)
+                     fiboFieldOverlay]      ←   FieldOverlay: open/close, aria-expanded
+            </ng-content>
+          </div>
+        </div>
+
+        <button [fiboFieldAuxiliary]        ← FieldAuxiliary directive
+                class="form-field-clear">  ← CSS: clear button styles
+        </button>
+
+        <lucide-icon class="form-field-icon form-field-icon-end">  ← icon end
+
+  └── <div class="form-field-error">       ← помилка під полем
+  └── <div class="form-field-hint">        ← hint під полем
+```
+
+`FieldContext` (`[fiboFieldContext]`) ставиться **на зовнішньому обгортці** споживача (наприклад, `<form [fiboFieldContext] density="compact">`), і його `data-density` / `data-label-layout` атрибути каскадуються через CSS descendant selectors всередину `.form-field-control`.
+
+---
+
+## Як стилізація застосовується зараз
+
+### CSS-хуки по елементах
+
+| Елемент у DOM | CSS селектор | Джерело атрибуту/класу |
+|---|---|---|
+| `.form-field-control` | `.form-field-control` | клас у шаблоні FieldShell |
+| `.form-field-control` — disabled | `[aria-disabled="true"]` | host binding у FieldContainer |
+| `.form-field-control` — invalid | `[data-invalid]` | host binding у FieldContainer |
+| `.form-field-control` — readonly | `[data-readonly]` | host binding у FieldContainer |
+| `.form-field-control` — pending | `[data-pending]` | host binding у FieldContainer |
+| `.form-field-label` | `.form-field-label` | клас у шаблоні FieldShell |
+| `.form-field-clear` | `.form-field-clear` | клас у шаблоні FieldShell |
+| `[data-field-target]` | `[data-field-target]` | host binding у FieldTarget |
+| `[data-label-layout]` | `[data-label-layout] .form-field-control` | host binding у FieldContext |
+| `[data-density]` | `[data-density] .form-field-control` | host binding у FieldContext |
+
+### Два патерни разом в одному шаблоні
+
+```html
+<!-- Шаблон field-shell.ts -->
+<div fiboFieldContainer class="form-field-control" ...>    ← директива + клас поряд
+  <label fiboFieldLabel class="form-field-label">          ← директива + клас поряд
+  <button fiboFieldAuxiliary class="form-field-clear">     ← директива + клас поряд
+```
+
+CSS таргетує клас:
+```css
+.form-field-control { ... }
+.form-field-control[data-invalid] { ... }   /* data-* від директиви, клас від шаблону */
+```
+
+---
+
+## Конвенція: директива = CSS-ідентифікатор
+
+Єдиний патерн для всіх директив з власною стилізацією:
+
+```ts
+// Button
+host: { class: 'fibo-btn' }
+// CSS: .fibo-btn[data-appearance="primary"] { ... }
+
+// FieldContainer
+host: { class: 'fibo-field-container' }
+// CSS: .fibo-field-container[data-invalid] { ... }
+
+// FieldLabel
+host: { class: 'fibo-field-label' }
+// CSS: .fibo-field-container:focus-within .fibo-field-label { ... }
+```
+
+Директива завжди несе свій CSS-ідентифікатор. Шаблон `FieldShell` не дублює жодних CSS-угод.
+
+---
+
+## Уніфікація: `fibo` prefix + host class
+
+`FieldContainer` і `FieldLabel` уніфіковані: CSS-клас перенесений з шаблону в `host` директиви. `FieldAuxiliary` + `form-field-clear` — **навмисний виняток**: директива є behavioral marker для click delegation, клас — візуальний стиль конкретної кнопки очищення; об'єднання не доцільне.
+
+### Що було зроблено
+
+```ts
+// field-container.ts
+host: {
+  class: 'fibo-field-container',   // ← додано
+  '[attr.aria-disabled]': '...',
+  ...
+}
+
+// field-label.ts
+host: {
+  class: 'fibo-field-label',       // ← додано
+  '[id]': '...',
+  ...
+}
+```
+
+```html
+<!-- field-shell.ts — до -->
+<div fiboFieldContainer class="form-field-control" ...>
+<label fiboFieldLabel class="form-field-label">
+
+<!-- field-shell.ts — після -->
+<div fiboFieldContainer ...>   ← клас більше не потрібен
+<label fiboFieldLabel>
+```
+
+```css
+/* form-field.css — до */
+.form-field-control { ... }
+.form-field-control[data-invalid] { ... }
+.form-field-label { ... }
+
+/* form-field.css — після */
+.fibo-field-container { ... }
+.fibo-field-container[data-invalid] { ... }
+.fibo-field-label { ... }
+```
+
+### Що НЕ змінювалось
+
+- `form-field-clear`, `form-field-icon`, `form-field-input` — залишаються як є
+- Data-attributes: `data-field-target`, `data-field-auxiliary`, `data-invalid` — без змін
+- Angular selectors — без змін
+- DOM structure і CSS логіка — без змін
 
 ---
 
@@ -38,335 +204,159 @@ Angular Signal Forms FieldTree
   │  ([formField] directive від @angular/forms/signals)
   │  автоматично прив'язує FieldState → inputs директиви
   ▼
-FieldUiState / FormUiState  (hostDirective на компоненті)
+FieldUiState  (hostDirective на компоненті)
   │
-  │  inject(FormUiState, { optional: true })
+  │  inject(FieldUiState, { optional: true })
   ▼
-FieldShell  (fibo-field-shell)
-  │
-  │  contentChild(FieldTargetDirective)
-  │  contentChild(FieldOverlayAnchorDirective)
+FieldContainer [fiboFieldContainer]
+  │  читає: disabled, readonly, pending, invalid, touched
+  │  ставить: aria-disabled, data-invalid, data-readonly, data-pending
   ▼
-FieldTargetDirective [fiboFieldTarget]
-  │
-  │  inject(FieldShell, { optional: true })
-  │  inject(FormUiState, { optional: true })
+FieldTarget [fiboFieldTarget]
+  │  inject(FieldShellHost) → id системи
+  │  inject(FieldUiState) → describedBy логіка
   ▼
-  auto-wires: id, aria-labelledby, aria-describedby
-
-FieldActionDirective [fiboFieldAction]  (незалежно, паралельно до FieldTarget)
-  → просто маркує елемент data-field-action="true"
-  → FieldShell перевіряє цей атрибут у onContainerClick()
+  auto-wires: id, aria-labelledby, aria-describedby, aria-invalid, aria-readonly
 ```
 
 ---
 
 ## Примітиви: детальний опис
 
-### `FormUiState` (`[fiboFormUiState]`)
+### `FieldUiState` (`[fiboFieldUiState]`)
 
-**Де**: `form/form-ui-state.ts`  
-**Роль**: bridge між Angular Signal Forms і візуальним шаром  
-**Використовується як**: `hostDirectives` на кожному field-компоненті
+Bridge між Angular Signal Forms і візуальним шаром. Використовується як `hostDirectives` на кожному field-компоненті.
 
-```ts
-@Component({
-  hostDirectives: [{ directive: FormUiState, inputs: [...FORM_UI_STATE_INPUTS] }]
-})
-export class TextField { }
-```
+**Inputs** (16 штук): `disabled`, `disabledReasons`, `readonly`, `hidden`, `invalid`, `pending`, `touched` (model — бо UI може мутувати), `dirty`, `name`, `required`, `min`, `minLength`, `max`, `maxLength`, `pattern`, `errors`.
 
-Коли на компоненті є `[formField]="myField"`, Angular автоматично прив'язує
-`FieldState` з дерева форм до цих inputs. Компоненти читають стан через `inject(FormUiState)`.
+**Derived**: `errorMessage` — computed: перший `errors[0].message` якщо `invalid && touched`.
 
-**Inputs** (16 штук):
+---
 
-| Input | Тип | Джерело у Signal Forms |
-|---|---|---|
-| `disabled` | `boolean` | `disabledReasons.length > 0` |
-| `readonly` | `boolean` | `FieldState.readonly` |
-| `hidden` | `boolean` | `FieldState.hidden` |
-| `invalid` | `boolean` | `FieldState.invalid` |
-| `pending` | `boolean` | `FieldState.pending` |
-| `touched` | `model(boolean)` | `FieldState.touched` — **єдиний model, бо UI може мутувати** |
-| `dirty` | `boolean` | `FieldState.dirty` |
-| `required` | `boolean` | metadata `REQUIRED` |
-| `name` | `string` | для `name` атрибуту input |
-| `errors` | `ValidationError[]` | `FieldState.errors` |
-| `disabledReasons` | `DisabledReason[]` | для custom disabled tooltips |
-| `min` / `max` | `number` | validation constraints |
-| `minLength` / `maxLength` | `number` | validation constraints |
-| `pattern` | `RegExp[]` | validation constraints |
+### `FieldShellHost` (`[fiboFieldShellHost]`)
 
-**Derived**:
-- `errorMessage` — computed: перший `errors[0].message` якщо `invalid && touched`
+DI-хаб, провайдер ID системи. Використовується як `hostDirectives` на `FieldShell`.
 
-**Чому `touched` — model, а решта — input?**  
-Тільки `touched` мутується з боку UI (event `blur` → `uiState.touched.set(true)`).
-Всі інші стани — читаються тільки з форм-дерева.
+- Зберігає `_containerEl` (реєструє `FieldContainer`)
+- Зберігає `_interactive` (реєструє `FieldTarget`)
+- Генерує `idFor(suffix)` → `field-N-label`, `field-N-control`, `field-N-error`, `field-N-hint`
+- Методи: `activatePrimary()`, `focusReturnTarget()`, `referenceElement()`
 
 ---
 
 ### `FieldShell` (`fibo-field-shell`)
 
-**Де**: `form/field-shell.ts`  
-**Роль**: візуальний контейнер поля — "chrome" навколо реального контролу  
-**Він НЕ є**: form control, focusable element, overlay trigger
+Візуальний контейнер поля — "chrome" навколо реального контролу.
 
-**Що рендерить**:
-- `form-field-control` wrapper div з aria/data атрибутами
-- іконку start (`iconStart`)
-- label (`label`) з auto-generated `id` для `for` зв'язку
-- `<ng-content>` — слот для primary control
-- clear button (`canClear`) — маркований `fiboFieldAction`
-- іконку end (`iconEnd`)
-- hint або error text під полем
+**Що рендерить**: icon start, label slot, `<ng-content>`, clear button, icon end, error/hint text.
 
-**Зчитує з `FormUiState`** (inject, optional):
-- `disabled`, `required`, `readonly`, `pending` → data/aria атрибути на wrapper
-- `hasError` = `invalid && touched` → `data-error`
-- `errorMessage` → рендер під полем
+**Inputs**: `label`, `hint`, `iconStart`, `iconEnd`, `canClear`.
 
-**Управління ID**:
-```ts
-readonly baseId = computed(() => this.id() || this.generatedBaseId);
-idFor(suffix: string) { return `${this.baseId()}-${suffix}`; }
+**Output**: `clearRequested`.
 
-// Генерує: field-0-label, field-0-control, field-0-error, field-0-hint
+---
+
+### `FieldContainer` (`[fiboFieldContainer]`)
+
+Ставить aria/data стани на wrapper div. Делегує кліки до `FieldTarget` через `FieldShellHost.activatePrimary()`.
+
+**Click delegation логіка**:
 ```
-
-**Методи для overlay-контролів**:
-
-| Метод | Що повертає |
-|---|---|
-| `overlayReferenceElement()` | `FieldOverlayAnchorDirective.element()` або весь wrapper div |
-| `overlayInteractionRoot()` | корінь host element (для close-on-outside-click) |
-| `overlayFocusReturnTarget()` | `FieldTargetDirective.focusReturnTarget()` |
-
-**Click delegation** (`onContainerClick`):
-```
-клік на shell?
-  └─ потрапив на button/input/a/label/[data-field-interactive]/[data-field-action]?
-       ├─ ТАК → нічого не робити (браузер сам обробить)
-       └─ НІ → activatePrimaryFromShell()
-                  └─ FieldTarget існує?
-                       ├─ ТАК → focus() або focus()+click() залежно від fieldTargetMode
-                       └─ НІ → emit focusRequested
+клік на контейнер?
+  └─ target.closest('button,input,textarea,select,a,label,[data-field-target],[data-field-auxiliary]')?
+       ├─ ТАК → браузер обробить сам
+       └─ НІ → host.activatePrimary()
 ```
 
 ---
 
-### `FieldTargetDirective` (`[fiboFieldTarget]`)
+### `FieldLabel` (`[fiboFieldLabel]`)
 
-**Де**: `form/field-target.ts`  
-**Роль**: маркує PRIMARY interactive element всередині shell  
-**Data attribute**: `data-field-interactive="true"` (увага: невідповідність назви — see нижче)
+Маркує `<label>`. Автоматично прив'язує `id` і `for` через `FieldShellHost` ID систему. Сповіщає `FieldShellHost.setHasLabel(true)` — `FieldTarget` використовує це для `aria-labelledby`.
 
-**Що надає автоматично через host bindings**:
-```ts
-host: {
-  '[id]': 'controlId()',               // field-0-control
-  '[attr.aria-labelledby]': 'labelledBy()',   // field-0-label (якщо є label)
-  '[attr.aria-describedby]': 'describedBy()', // field-0-error або field-0-hint
-}
-```
+---
+
+### `FieldAuxiliary` (`[fiboFieldAuxiliary]`)
+
+Маркер secondary action (`data-field-auxiliary="true"`). `FieldContainer.onContainerClick()` і `FieldOverlay.onHostClick()` перевіряють цей атрибут і пропускають кліки без перехоплення.
+
+---
+
+### `FieldTarget` (`[fiboFieldTarget]`)
+
+Маркує PRIMARY interactive element. Реєструє себе в `FieldShellHost`.
 
 **Input `fieldTargetMode`**:
-| Значення | Використовується для | Поведінка shell-click |
-|---|---|---|
-| `'focus'` (default) | `<input>`, `<textarea>` | shell click → `element.focus()` |
-| `'click'` | `<button>`, `<div tabindex>` | shell click → `element.focus()` + `element.click()` |
+- `'focus'` (default) — для `<input>`, `<textarea>`: shell click → `focus()`
+- `'click'` — для `<button>`, `<div tabindex>`: shell click → `focus()` + `click()`
 
-**Inject**:
-- `inject(FieldShell, { optional: true })` — для отримання ID системи
-- `inject(FormUiState, { optional: true })` — для `describedBy()` логіки
+**Host bindings**: `data-field-target`, `[id]`, `[aria-labelledby]`, `[aria-describedby]`, `[aria-invalid]`, `[aria-readonly]`.
 
-**`describedBy()` логіка**:
-```ts
-// Пріоритет: error > hint > null
-if (formUiState?.errorMessage()) return fieldShell.idFor('error');
-if (fieldShell.hint()) return fieldShell.idFor('hint');
-return null;
+---
+
+### `FieldContext` (`[fiboFieldContext]`)
+
+Ставиться на зовнішньому контейнері (форма, фільтр-бар). Контролює density і label-layout через descendant CSS selectors.
+
+```html
+<form [fiboFieldContext] density="compact" labelLayout="inline">
+  <fibo-text-field ... />
+  <fibo-select ... />
+</form>
+```
+
+CSS реагує:
+```css
+[data-density="compact"] .fibo-field-control { --ff-control-min-height: 2rem; }
+[data-label-layout="inline"] .fibo-field-control { --ff-body-direction: row; }
 ```
 
 ---
 
-### `FieldActionDirective` (`[fiboFieldAction]`)
+### `FieldOverlay` (`[fiboFieldOverlay]`)
 
-**Де**: `form/field-action.ts`  
-**Роль**: маркер, що означає "цей елемент є вторинною дією — shell не перехоплює кліки по ньому"  
-**Data attribute**: `data-field-action="true"`
+Управляє lifecycle overlay для полів типу Select, DatePicker. Потребує `FieldTarget` в тому ж елементі.
 
-Директива робить рівно одну річ: ставить атрибут. Вся логіка — у `FieldShell.onContainerClick()`.
+```html
+<button fiboFieldTarget fieldTargetMode="click"
+        [fiboFieldOverlay]="dropdownTpl">
+```
 
-**Без цього маркера**: click на "clear" кнопку в Select → shell перехопить → активує primary button → відкриє dropdown → помилка UX.
-
-**З маркером**: `closest('[data-field-action]')` знаходить елемент → shell виходить без дій.
-
-**Типові сценарії використання**:
-- clear button у `FieldShell` (вбудований)
-- chip-remove button у `MultiSelect`
-- будь-яка secondary action button всередині shell
-
----
-
-### `FieldOverlayAnchorDirective` (`[fiboFieldOverlayAnchor]`)
-
-**Де**: `form/field-overlay-anchor.ts`  
-**Роль**: opt-in перевизначення reference element для overlay позиціонування  
-**Використовується**: рідко, тільки коли overlay має якоритись до inner-елементу, а не до кореня shell
-
-**Без нього**: `overlayReferenceElement()` повертає `controlContainer` — весь `form-field-control` div.  
-**З ним**: повертає вказаний елемент.
-
-Приклад: якщо потрібно щоб overlay відкривався від input'у, а не від всього поля з іконками.
+**Методи**: `open()`, `close()`, `toggle()`. `open()`/`toggle()` перевіряють `disabled`/`readonly` перед відкриттям.
 
 ---
 
 ## Споживачі: як компоненти використовують примітиви
 
-| Компонент | FormUiState | FieldShell | FieldTarget | FieldAction | Overlay |
+| Компонент | FieldUiState | FieldShell | FieldTarget | FieldOverlay | FieldAuxiliary |
 |---|---|---|---|---|---|
 | `TextField` | hostDirective | ✅ | input (focus mode) | — | — |
-| `DatePickerField` | hostDirective | ✅ | input (click mode) | — | `createConnectedOverlay` |
-| `Select` | hostDirective | ✅ | button (click mode) | — | `createConnectedOverlay` |
-| `MultiSelect` | hostDirective | ✅ | div[tabindex] (click) | chip-remove btn | `createConnectedOverlay` |
-| `Combobox` | hostDirective | ✅ | input (focus mode) | — | `createConnectedOverlay` |
-| `Checkbox` | ❌ власні inputs | — | — | — | — |
-| `Switch` | ❌ власні inputs | — | — | — | — |
-
-**Паттерн для простого поля** (`TextField`):
-```
-FormUiState (hostDirective)
-└─ FieldShell
-   └─ input[fiboFieldTarget]
-```
-
-**Паттерн для overlay поля** (`Select`, `DatePickerField`):
-```
-FormUiState (hostDirective)
-└─ FieldShell
-   └─ button[fiboFieldTarget fieldTargetMode="click"]
-      overlay = createConnectedOverlay(
-        isOpen,
-        () => ({ referenceElement: fieldShell.overlayReferenceElement(), matchWidth: true }),
-        template,
-        { restoreFocusTo: () => fieldShell.overlayFocusReturnTarget() }
-      )
-```
+| `DatePickerField` | hostDirective | ✅ | button (click mode) | ✅ | — |
+| `Select` | hostDirective | ✅ | button (click mode) | ✅ | — |
+| `MultiSelect` | hostDirective | ✅ | div[tabindex] (click) | ✅ | chip-remove btn |
+| `Combobox` | hostDirective | ✅ | input (focus mode) | ✅ | — |
+| `Checkbox` | власні inputs | — | — | — | — |
+| `Switch` | власні inputs | — | — | — | — |
 
 ---
 
-## Аналіз naming: порівняння з ref-libs
+## Порівняння naming з ref-libs
 
 ### Angular Material
 
-| Material | fibo-ui аналог | Різниця |
+| Material | fibo-ui | Різниця |
 |---|---|---|
 | `MatFormField` | `FieldShell` | Material: component-as-shell; fibo: shell окремо від control |
-| `MatFormFieldControl` (interface) | `FieldTargetDirective` | Material: control реєструє себе через DI; fibo: директива маркує елемент |
+| `MatFormFieldControl` (interface) | `FieldTarget` | Material: control реєструє себе через DI; fibo: директива маркує елемент — менший coupling |
 | `MatPrefix` / `MatSuffix` | `iconStart` / `iconEnd` inputs | Material: content projection; fibo: input string → Lucide icon |
-| немає | `FieldActionDirective` | Material не потребує — shell не перехоплює кліки |
-| немає | `FieldOverlayAnchorDirective` | Material: overlay вбудований в кожен control |
-
-**Ключова різниця архітектур**: у Material батько (`MatFormField`) шукає дитину через `ContentChild(MatFormFieldControl)`. У fibo-ui — навпаки: дитина (`FieldTarget`) inject-ить батька. Це менший coupling.
+| немає | `FieldAuxiliary` | Material shell не перехоплює кліки |
+| немає | `FieldContext` | Material: density через `appearance` input |
 
 ### Taiga UI v5
 
-| Taiga | fibo-ui аналог | Різниця |
+| Taiga | fibo-ui | Різниця |
 |---|---|---|
-| `tui-textfield` (TuiTextfieldComponent) | `FieldShell` | Аналог. Taiga: hostDirectives TuiAppearance, TuiDropdown; fibo: окремі системи |
-| `input[tuiInput]` (TuiInputDirective) | `[fiboFieldTarget]` | Taiga: "input" — конкретний тип; fibo: "target" — абстрактна роль |
-| `TUI_TEXTFIELD_ACCESSOR` token | `FieldTargetDirective` | Taiga: DI token-based реєстрація; fibo: директива-маркер |
-| `TUI_AUXILIARY` + `tuiAsAuxiliary()` | `FieldActionDirective` | **Taiga назва точніша**: "auxiliary" vs "action" |
+| `tui-textfield` | `FieldShell` | Аналог |
+| `input[tuiInput]` | `[fiboFieldTarget]` | Taiga: "input" — конкретний тип; fibo: "target" — абстрактна роль |
+| `TUI_AUXILIARY` + `tuiAsAuxiliary()` | `FieldAuxiliary` | Taiga назва точніша — обидва використовують "auxiliary" |
 | `[tuiButtonX]` | clear button в FieldShell | Taiga: специфічна X-кнопка; fibo: вбудована в shell |
-
----
-
-## Пропозиції перейменування
-
-### Резюме аналізу
-
-Поточний namespace має одну ключову проблему: **`FormUiState` порушує `Field*` консистентність**.
-Друга проблема: **невідповідність між назвою класу і data-атрибутом** у `FieldTargetDirective`.
-Третя проблема: **`FieldAction` — надто широке поняття**, підтверджено порівнянням з Taiga.
-
-### Таблиця варіантів
-
-| Поточна назва | Варіант A | Варіант B | Рекомендація |
-|---|---|---|---|
-| `FormUiState` | `FieldUiState` | `FieldState` | **`FieldUiState`** — зберігає "UI", вирівнює namespace |
-| `FieldShell` | без змін | `FieldWrapper` | **залишити** — точна і унікальна назва |
-| `FieldTargetDirective` + `data-field-interactive` | `FieldTarget` + `data-field-target` | `FieldInteractive` + `data-field-interactive` | **узгодити**: або клас, або атрибут |
-| `FieldActionDirective` | `FieldAuxiliaryDirective` | `FieldPassthroughDirective` | **`FieldAuxiliary`** — підтверджено Taiga |
-| `FieldOverlayAnchorDirective` | `FieldAnchorDirective` | `FieldOverlayOriginDirective` | **`FieldAnchor`** — коротше, в namespace ясно |
-
-### Деталі по кожному
-
-**`FormUiState` → `FieldUiState`**
-
-Причина: `FormUiState` створює когнітивне навантаження — "це частина Form системи чи Field системи?". Весь решта namespace `Field*`. Зміна мінімальна — тільки ім'я класу і selector, логіка не змінюється.
-
-Пов'язано: Angular `FormUiControl` — наш клас реалізує цей інтерфейс, назва "успадкована". Але це не обов'язково означає, що наш клас повинен мати ту саму назву.
-
----
-
-**`FieldTargetDirective` + атрибут `data-field-interactive`**
-
-Зараз є прихована невідповідність:
-
-```ts
-// field-target.ts
-@Directive({ host: { 'data-field-interactive': 'true' } })  // атрибут: "interactive"
-export class FieldTargetDirective { }                        // клас: "Target"
-
-// field-shell.ts
-target.closest('..., [data-field-interactive], [data-field-action]')
-```
-
-Два шляхи виправлення:
-
-**Варіант A**: Уніфікувати під "target"
-- клас: `FieldTarget` (без змін)
-- атрибут: `data-field-target` (змінити)
-- `closest('[data-field-target]')` у shell
-
-**Варіант B**: Уніфікувати під "interactive"
-- клас: `FieldInteractive` (перейменувати)
-- атрибут: `data-field-interactive` (без змін)
-- selector: `[fiboFieldInteractive]`
-
-Рекомендація: **Варіант A** — "target" точніше описує роль у системі (shell делегує до цього елемента), а "interactive" — занадто широке поняття в ARIA (interactive content включає майже всі елементи форми).
-
----
-
-**`FieldActionDirective` → `FieldAuxiliaryDirective`**
-
-Проблема "action": будь-яка кнопка є "action". Це не відрізняє clear button від primary button.
-
-"Auxiliary" (допоміжний):
-- точно описує роль: другорядний елемент, що допомагає primary control
-- Taiga UI використовує `TUI_AUXILIARY` для того самого концепту
-- HTML glossary: "auxiliary" = element that assists the primary interaction
-- відмінно від "action" передає: "я другорядний, не основний"
-
-Зміна: `FieldActionDirective` → `FieldAuxiliaryDirective`, selector `[fiboFieldAction]` → `[fiboFieldAuxiliary]`, атрибут `data-field-action` → `data-field-auxiliary`.
-
----
-
-**`FieldOverlayAnchorDirective` → `FieldAnchorDirective`**
-
-Назва `FieldOverlayAnchor` надмірно довга при тому, що в контексті field primitives "anchor" однозначно означає overlay anchor. Альтернатива: `FieldOverlayOrigin` — відсилає до Angular CDK `OverlayOrigin` token, знайомий Angular розробникам.
-
----
-
-## Вплив перейменування на public API
-
-| Примітив | Поточний selector | Новий selector | Breaking? |
-|---|---|---|---|
-| `FormUiState` | `[fiboFormUiState]` | `[fiboFieldUiState]` | ✅ breaking — якщо хтось використовує selector напряму (рідко, тільки через hostDirectives) |
-| `FieldTarget` | `[fiboFieldTarget]` | `[fiboFieldTarget]` | ✅ **без змін** (тільки data-атрибут) |
-| `FieldAction` | `[fiboFieldAction]` | `[fiboFieldAuxiliary]` | ✅ breaking — зміна selector |
-| `FieldOverlayAnchor` | `[fiboFieldOverlayAnchor]` | `[fiboFieldAnchor]` | ✅ breaking — зміна selector |
-
-`FormUiState` використовується тільки через `hostDirectives inputs` — selector не використовується в шаблонах. Реальний breaking тільки для `FieldAction` і `FieldOverlayAnchor` selectors у шаблонах споживачів.

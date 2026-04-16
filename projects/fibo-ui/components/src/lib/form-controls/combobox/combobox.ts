@@ -68,7 +68,7 @@ import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
         #inputElement
         [placeholder]="placeholder()"
         (blur)="uiState.touched.set(true)"
-        class="form-field-input"
+        class="fibo-field-input"
         fiboComboboxInput
       />
     </fibo-field-shell>

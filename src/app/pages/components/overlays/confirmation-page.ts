@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import {ConfirmationTrigger} from '@fibo-ui/components';
+import { ConfirmationTrigger, Button } from '@fibo-ui/components';
 
 @Component({
   selector: 'app-confirmation-page',
-  imports: [ConfirmationTrigger],
+  imports: [ConfirmationTrigger, Button],
   template: `
-<button class="btn-primary"
+<button fiboButton fiboAppearance="primary"
         fiboConfirm
         (confirm)="onConfirm()"
         >Confirm button</button>
