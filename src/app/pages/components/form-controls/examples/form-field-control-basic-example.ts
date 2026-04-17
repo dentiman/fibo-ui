@@ -1,22 +1,22 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FieldShell, FieldTarget, FieldContext } from '@fibo-ui/components';
+import { FieldShell, FieldInput, FieldContext } from '@fibo-ui/components';
 
 @Component({
   selector: 'form-field-control-basic-example',
-  imports: [FieldShell, FieldTarget, FieldContext],
+  imports: [FieldShell, FieldInput, FieldContext],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto w-90 p-8 space-y-4">
       <fibo-field-shell label="Username">
-        <input fiboFieldTarget type="text" placeholder="Enter username" class="fibo-field-input" />
+        <input fiboFieldInput type="text" placeholder="Enter username" />
       </fibo-field-shell>
 
       <fibo-field-shell label="Email" iconStart="mail">
-        <input fiboFieldTarget type="email" placeholder="Enter email" class="fibo-field-input" />
+        <input fiboFieldInput type="email" placeholder="Enter email" />
       </fibo-field-shell>
 
       <fibo-field-shell label="Search" iconStart="search" iconEnd="arrow-right">
-        <input fiboFieldTarget type="text" placeholder="Search..." class="fibo-field-input" />
+        <input fiboFieldInput type="text" placeholder="Search..." />
       </fibo-field-shell>
 
       <div fiboFieldContext labelLayout="inline" density="compact">
