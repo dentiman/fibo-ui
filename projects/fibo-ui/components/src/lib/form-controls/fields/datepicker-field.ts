@@ -7,7 +7,7 @@ import {
 } from '@fibo-ui/cdk';
 import { Calendar } from '../calendar/calendar';
 import { FieldShell } from '../form/field-shell';
-import { FieldTarget } from '../form/field-target';
+import { FieldInput } from '../form/field-input';
 import { FieldOverlay } from '../form/field-overlay';
 import { FieldContext, FIELD_CONTEXT_INPUTS } from '../form/field-context';
 import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
@@ -24,7 +24,7 @@ import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
       inputs: [...FIELD_CONTEXT_INPUTS],
     },
   ],
-  imports: [FieldShell, FieldTarget, FieldOverlay, Calendar, SelectDate, OverlayPanel],
+  imports: [FieldShell, FieldInput, FieldOverlay, Calendar, SelectDate, OverlayPanel],
   host: {
     class: 'block',
   },
@@ -39,8 +39,7 @@ import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
       (clearRequested)="clear()"
     >
       <input
-        fiboFieldTarget
-        fieldTargetMode="click"
+        fiboFieldInput
         [fiboFieldOverlay]="calendarTpl"
         #inputElement
         aria-haspopup="dialog"
@@ -53,10 +52,9 @@ import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
         [attr.aria-required]="uiState.required() || null"
         [attr.data-invalid]="(uiState.invalid() && uiState.touched()) || null"
         (input)="onInput($event)"
-        (keydown.enter)="openCalendar()"
-        (keydown.arrowdown)="openCalendar($event)"
+        (keydown.enter)="$event.preventDefault(); fieldOverlay().open()"
+        (keydown.arrowdown)="openOnArrowDown($event)"
         (blur)="onBlur()"
-        class="fibo-field-input"
       />
     </fibo-field-shell>
 
@@ -96,9 +94,8 @@ export class DatePickerField implements FormValueControl<string> {
     this.inputElement().nativeElement.focus(options);
   }
 
-  openCalendar(event?: Event) {
-    event?.preventDefault();
-    this.focus();
+  openOnArrowDown(event: Event) {
+    event.preventDefault();
     this.fieldOverlay().open();
   }
 
