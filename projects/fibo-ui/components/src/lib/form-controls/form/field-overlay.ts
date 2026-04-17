@@ -1,6 +1,6 @@
-import { computed, Directive, inject, input, signal, TemplateRef } from '@angular/core';
+import { computed, Directive, ElementRef, inject, input, signal, TemplateRef } from '@angular/core';
 import { createOverlay } from '@fibo-ui/cdk';
-import { FieldTarget } from './field-target';
+import { FieldButton } from './field-button';
 import { FieldShellHost } from './field-shell-host';
 import { FieldUiState } from './field-ui-state';
 
@@ -15,13 +15,12 @@ import { FieldUiState } from './field-ui-state';
   },
 })
 export class FieldOverlay {
-  private readonly interactive = inject(FieldTarget);
+  private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly host = inject(FieldShellHost, { optional: true });
+  private readonly button = inject(FieldButton, { optional: true });
   private readonly fieldUiState = inject(FieldUiState, { optional: true });
 
-  /** Template to render inside the overlay. Bound via `[fiboFieldOverlay]="tpl"`. */
   readonly overlayContent = input.required<TemplateRef<unknown>>({ alias: 'fiboFieldOverlay' });
-  /** Match the width of the reference element. Default: false. */
   readonly matchWidth = input(false);
 
   readonly isOpen = signal(false);
@@ -30,15 +29,14 @@ export class FieldOverlay {
     state: this.isOpen,
     content: this.overlayContent(),
     position: {
-      connectedTo: this.host?.referenceElement() ?? this.interactive.element(),
+      connectedTo: this.host?.referenceElement() ?? this.elementRef.nativeElement,
       matchWidth: this.matchWidth(),
     },
     focus: {
-      restoreTo: () => this.host?.focusReturnTarget() ?? this.interactive.focusReturnTarget(),
+      restoreTo: () => this.host?.focusReturnTarget() ?? this.elementRef.nativeElement,
     },
   }));
 
-  /** ID of the rendered overlay panel. Null when the overlay is closed. */
   readonly panelId = computed(() => this.overlayHandle()?.id ?? null);
 
   open(): void {
@@ -56,7 +54,7 @@ export class FieldOverlay {
   }
 
   onHostClick(event: MouseEvent): void {
-    if (this.interactive.fieldTargetMode() !== 'click') return;
+    if (!this.button) return;
     if ((event.target as HTMLElement).closest('[data-field-auxiliary]')) return;
     this.toggle();
   }

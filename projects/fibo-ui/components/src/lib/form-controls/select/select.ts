@@ -7,7 +7,7 @@ import {
   provideFormValueControl,
 } from '@fibo-ui/cdk';
 import { FieldShell } from '../form/field-shell';
-import { FieldTarget } from '../form/field-target';
+import { FieldButton } from '../form/field-button';
 import { FieldOverlay } from '../form/field-overlay';
 import { FieldContext, FIELD_CONTEXT_INPUTS } from '../form/field-context';
 import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
@@ -32,7 +32,7 @@ export interface SelectItem {
   ],
   imports: [
     FieldShell,
-    FieldTarget,
+    FieldButton,
     FieldOverlay,
     DataList,
     SelectOne,
@@ -52,13 +52,11 @@ export interface SelectItem {
       (clearRequested)="clear()"
     >
       <button
-        fiboFieldTarget
-        fieldTargetMode="click"
+        fiboFieldButton
         [fiboFieldOverlay]="selectTpl"
         [matchWidth]="true"
         #triggerButton
         type="button"
-        class="w-full text-left"
         role="combobox"
         [disabled]="uiState.disabled()"
         aria-haspopup="listbox"

@@ -9,7 +9,7 @@ import {
 import { LucideAngularModule } from 'lucide-angular';
 import { FieldAuxiliary } from '../form/field-auxiliary';
 import { FieldShell } from '../form/field-shell';
-import { FieldTarget } from '../form/field-target';
+import { FieldButton } from '../form/field-button';
 import { FieldOverlay } from '../form/field-overlay';
 import { FieldContext, FIELD_CONTEXT_INPUTS } from '../form/field-context';
 import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
@@ -34,7 +34,7 @@ import { SelectItem } from './select';
     LucideAngularModule,
     DataListItem,
     FieldShell,
-    FieldTarget,
+    FieldButton,
     FieldOverlay,
     FieldAuxiliary,
     Checkbox,
@@ -50,20 +50,16 @@ import { SelectItem } from './select';
       iconEnd="chevron-down"
     >
       <div
-        fiboFieldTarget
-        fieldTargetMode="click"
+        fiboFieldButton
         [fiboFieldOverlay]="multiSelectTpl"
         [matchWidth]="true"
         #triggerSurface
         role="combobox"
         aria-haspopup="listbox"
-        [attr.tabindex]="uiState.disabled() ? -1 : 0"
         [attr.aria-disabled]="uiState.disabled() || null"
-        class="w-full flex flex-wrap gap-x-1 gap-y-1 -mx-1 outline-none"
+        class="flex flex-wrap gap-x-1 gap-y-1 -mx-1"
         (focus)="onFocus()"
         (blur)="onBlur()"
-        (keydown.enter)="openFromKeyboard($event)"
-        (keydown.space)="openFromKeyboard($event)"
         (keydown.arrowdown)="openFromKeyboard($event)"
       >
         @for (item of selectedItems(); track item.value) {
