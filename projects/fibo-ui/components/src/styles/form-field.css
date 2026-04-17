@@ -204,6 +204,31 @@
     }
   }
 
+  /* ── Button ─────────────────────────────────────────────── */
+
+  .fibo-field-button {
+    appearance: none;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    text-align: inherit;
+    cursor: inherit;
+    width: 100%;
+  }
+
+  .fibo-field-button:focus,
+  .fibo-field-button:focus-visible {
+    outline: none;
+  }
+
+  .fibo-field-button:disabled {
+    cursor: not-allowed;
+  }
+
   /* ── Label ──────────────────────────────────────────────── */
 
   .fibo-field-label {

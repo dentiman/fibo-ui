@@ -54,6 +54,8 @@ export * from './lib/form-controls/form/field-context';
 export * from './lib/form-controls/form/field-shell-host';
 export * from './lib/form-controls/form/field-container';
 export * from './lib/form-controls/form/field-target';
+export * from './lib/form-controls/form/field-input';
+export * from './lib/form-controls/form/field-button';
 export * from './lib/form-controls/form/field-auxiliary';
 export * from './lib/form-controls/form/field-label';
 export * from './lib/form-controls/form/field-overlay';
