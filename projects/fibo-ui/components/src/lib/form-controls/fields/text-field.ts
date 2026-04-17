@@ -2,7 +2,7 @@ import { Component, ElementRef, inject, input, model, viewChild } from '@angular
 import { FormValueControl } from '@angular/forms/signals';
 import { provideFormValueControl } from '@fibo-ui/cdk';
 import { FieldShell } from '../form/field-shell';
-import { FieldTarget } from '../form/field-target';
+import { FieldInput } from '../form/field-input';
 import { FieldContext, FIELD_CONTEXT_INPUTS } from '../form/field-context';
 import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
 
@@ -19,7 +19,7 @@ import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
       inputs: [...FIELD_CONTEXT_INPUTS],
     },
   ],
-  imports: [FieldShell, FieldTarget],
+  imports: [FieldShell, FieldInput],
   host: {
     class: 'block',
   },
@@ -34,7 +34,7 @@ import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
       (clearRequested)="clear()"
     >
       <input
-        fiboFieldTarget
+        fiboFieldInput
         #inputElement
         [type]="type()"
         [value]="value()"
@@ -51,7 +51,6 @@ import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
         [attr.data-invalid]="(uiState.invalid() && uiState.touched()) || null"
         (input)="onInput($event)"
         (blur)="onBlur()"
-        class="fibo-field-input"
       />
     </fibo-field-shell>
   `,

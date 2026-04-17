@@ -21,7 +21,7 @@ import { ComboboxInput } from './combobox-input';
 import { ComboboxList } from './combobox-list';
 import { FieldShell } from '../form/field-shell';
 import { FieldShellHost } from '../form/field-shell-host';
-import { FieldTarget } from '../form/field-target';
+import { FieldInput } from '../form/field-input';
 import { FieldContext, FIELD_CONTEXT_INPUTS } from '../form/field-context';
 import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
 
@@ -39,7 +39,7 @@ import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
   ],
   imports: [
     FieldShell,
-    FieldTarget,
+    FieldInput,
     DataList,
     DataListItem,
     SelectOne,
@@ -64,11 +64,10 @@ import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
       (clearRequested)="clear()"
     >
       <input
-        fiboFieldTarget
+        fiboFieldInput
         #inputElement
         [placeholder]="placeholder()"
         (blur)="uiState.touched.set(true)"
-        class="fibo-field-input"
         fiboComboboxInput
       />
     </fibo-field-shell>
