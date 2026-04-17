@@ -92,10 +92,9 @@ interface FilterToolbarModel {
         <section class="fibo-card p-4 space-y-4">
           <div class="space-y-1">
             <h3 class="text-lg font-semibold text-foreground">Stacked Comfy</h3>
-            <div class="text-xs font-mono text-foreground-secondary">fibo-field-filter-bar</div>
           </div>
 
-          <div class="fibo-field-filter-bar">
+          <div class="flex flex-wrap items-center gap-2">
             <fibo-text-field
               [formField]="stackedFilterForm.query"
               label="Search"
@@ -134,12 +133,9 @@ interface FilterToolbarModel {
         <section class="fibo-card p-4 space-y-4">
           <div class="space-y-1">
             <h3 class="text-lg font-semibold text-foreground">Inline Comfy</h3>
-            <div class="text-xs font-mono text-foreground-secondary">
-              fibo-field-filter-bar + labelLayout="inline"
-            </div>
           </div>
 
-          <div class="fibo-field-filter-bar" fiboFieldContext labelLayout="inline">
+          <div class="flex flex-wrap items-center gap-2" fiboFieldContext labelLayout="inline">
             <fibo-text-field
               [formField]="inlineFilterForm.query"
               label="Search"
@@ -178,12 +174,9 @@ interface FilterToolbarModel {
         <section class="fibo-card p-4 space-y-4">
           <div class="space-y-1">
             <h3 class="text-lg font-semibold text-foreground">Inline Compact</h3>
-            <div class="text-xs font-mono text-foreground-secondary">
-              fibo-field-filter-bar + labelLayout="inline" + density="compact"
-            </div>
           </div>
 
-          <div class="fibo-field-filter-bar" fiboFieldContext labelLayout="inline" density="compact">
+          <div class="flex flex-wrap items-center gap-2" fiboFieldContext labelLayout="inline" density="compact">
             <fibo-text-field
               [formField]="inlineCompactFilterForm.query"
               label="Search"

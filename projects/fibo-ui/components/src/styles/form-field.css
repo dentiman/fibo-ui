@@ -153,39 +153,6 @@
     --ff-control-padding-y: 0.125rem;
   }
 
-  /* ── Filter bar layout ──────────────────────────────────── */
-
-  .fibo-field-filter-bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .fibo-field-filter-bar > * {
-    flex: 0 0 auto;
-    min-width: 0;
-  }
-
-  .fibo-field-filter-bar .fibo-field-container {
-    --ff-control-width: auto;
-    --ff-content-flex: 0 0 auto;
-  }
-
-  .fibo-field-filter-bar .fibo-field-body {
-    flex: 0 1 auto;
-  }
-
-  .fibo-field-filter-bar .fibo-field-content {
-    flex: 0 1 auto;
-  }
-
-  .fibo-field-filter-bar .fibo-field-input {
-    width: auto;
-    min-width: 6ch;
-    field-sizing: content;
-  }
-
   /* ── Input ──────────────────────────────────────────────── */
 
   .fibo-field-input {
