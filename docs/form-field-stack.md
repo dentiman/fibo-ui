@@ -32,7 +32,9 @@ icon (chrome)  primary control         clear (chrome)
 | `FieldContainer` | `[fiboFieldContainer]` | `fibo-field-container` | `data-invalid`, `data-readonly`, `data-pending` | `aria-disabled` |
 | `FieldLabel` | `[fiboFieldLabel]` | `fibo-field-label` | — | — |
 | `FieldAuxiliary` | `[fiboFieldAuxiliary]` | — | `data-field-auxiliary` | — |
-| `FieldTarget` | `[fiboFieldTarget]` | — | `data-field-target` | `aria-labelledby`, `aria-describedby`, `aria-invalid`, `aria-readonly` |
+| `FieldTarget` | `[fiboFieldTargetBase]` *(internal, hostDirective-only)* | — | `data-field-target` | `aria-labelledby`, `aria-describedby`, `aria-invalid`, `aria-readonly` |
+| `FieldInput` | `[fiboFieldInput]` | `fibo-field-input` | — | (наслідує від FieldTarget base) |
+| `FieldButton` | `[fiboFieldButton]` | `fibo-field-button` | — | (наслідує від FieldTarget base) |
 | `FieldOverlay` | `[fiboFieldOverlay]` | — | — | `aria-expanded`, `aria-controls` |
 
 Конвенція: директива з власною стилізацією сама додає CSS-клас через `host: { class: '...' }`. Шаблони не ставлять CSS-класи для директив вручну.
@@ -59,9 +61,11 @@ fibo-field-shell                              ← FieldShell component
 
           <div class="fibo-field-content">
             <ng-content>                      ← Primary control:
-              input[fiboFieldTarget]           ←   FieldTarget: id, aria-*, data-field-target
-              button[fiboFieldTarget           ←   (Select, DatePicker)
+              input[fiboFieldInput]            ←   FieldInput: id, aria-*, class="fibo-field-input"
+              button[fiboFieldButton           ←   (Select) — FieldButton: tabindex, keyboard activation
                      fiboFieldOverlay]         ←   FieldOverlay: open/close, aria-expanded
+              div[fiboFieldButton              ←   (MultiSelect) — composite activation-surface
+                  fiboFieldOverlay]
             </ng-content>
           </div>
         </div>
@@ -121,7 +125,7 @@ FieldContainer [fiboFieldContainer]
   │  читає: disabled, readonly, pending, invalid, touched
   │  ставить: aria-disabled, data-invalid, data-readonly, data-pending
   ▼
-FieldTarget [fiboFieldTarget]
+FieldInput/FieldButton [fiboFieldTargetBase]
   │  inject(FieldShellHost) → ID система
   │  inject(FieldUiState)   → describedBy логіка
   ▼
@@ -186,13 +190,48 @@ DI-хаб і провайдер ID системи. `hostDirective` на `FieldSh
 
 ---
 
-### `FieldTarget` (`[fiboFieldTarget]`)
+### `FieldTarget` (base, `[fiboFieldTargetBase]` — internal)
 
-Маркує PRIMARY interactive element. Реєструє себе в `FieldShellHost`.
+Infrastructure база для primary interactive targets. Hostdirective-only — користувачі не пишуть селектор вручну.
 
-**Input `fieldTargetMode`**:
-- `'focus'` (default) — `<input>`, `<textarea>`: shell click → `focus()`
-- `'click'` — `<button>`, `<div tabindex>`: shell click → `focus()` + `click()`
+**Відповідальність**:
+- Генерує `id` через `FieldShellHost.idFor('control')`.
+- Ставить `aria-labelledby` / `aria-describedby` / `aria-invalid` / `aria-readonly` на host.
+- Ставить `data-field-target="true"` для click-delegation у `FieldContainer`.
+- Експонує `element()` getter.
+
+**НЕ реєструється** у `FieldShellHost` — це робить реалізатор (`FieldInput` або `FieldButton`).
+
+---
+
+### `FieldInput` (`[fiboFieldInput]`)
+
+Primary target для `<input>` / `<textarea>`. Focus-surface контракт.
+
+**Що робить**:
+- Ставить `class="fibo-field-input"` на host (замість ручного class у шаблоні).
+- Реєструє себе в `FieldShellHost` як `FieldTargetRef`.
+- Інжектить `FieldOverlay` з `{ self: true }` — якщо поруч є overlay, `activateFromShell()` відкриває його.
+
+**Shell click behavior**:
+- Без overlay — `focus()`.
+- З overlay на тому ж елементі (DatePicker) — `focus() + overlay.open()`.
+- Click всередині input тексту — native browser caret placement, overlay не тригериться.
+
+---
+
+### `FieldButton` (`[fiboFieldButton]`)
+
+Primary target для `<button>` / `<div>` / `<a>`. Activation-surface контракт.
+
+**Що робить**:
+- Ставить `class="fibo-field-button"` на host (invisible focus, inherits alignment).
+- Керує `tabindex` — `0` або `-1` за `disabled`.
+- Мапить `keydown.enter` / `keydown.space` на `element.click()` для не-button хостів (native button обробляє сам).
+- Реєструє себе в `FieldShellHost` як `FieldTargetRef`.
+
+**Shell click behavior**:
+- `activateFromShell()` → `focus() + element.click()` → `FieldOverlay.onHostClick` детектить `FieldButton` → `toggle()`.
 
 ---
 
@@ -211,10 +250,10 @@ DI-хаб і провайдер ID системи. `hostDirective` на `FieldSh
 
 ### `FieldOverlay` (`[fiboFieldOverlay]`)
 
-Управляє lifecycle overlay (Select, DatePicker). Потребує `FieldTarget` на тому ж елементі.
+Управляє lifecycle overlay (Select, DatePicker). Потребує `FieldButton` або `FieldInput` на тому ж елементі.
 
 ```html
-<button fiboFieldTarget fieldTargetMode="click" [fiboFieldOverlay]="dropdownTpl">
+<button fiboFieldButton [fiboFieldOverlay]="dropdownTpl">
 ```
 
 `open()`/`toggle()` перевіряють `disabled`/`readonly` перед відкриттям.
@@ -223,13 +262,13 @@ DI-хаб і провайдер ID системи. `hostDirective` на `FieldSh
 
 ## Споживачі
 
-| Компонент | FieldUiState | FieldShell | FieldTarget | FieldOverlay | FieldAuxiliary |
+| Компонент | FieldUiState | FieldShell | Target | Overlay | FieldAuxiliary |
 |---|---|---|---|---|---|
-| `TextField` | hostDirective | ✅ | input (focus) | — | — |
-| `DatePickerField` | hostDirective | ✅ | button (click) | ✅ | — |
-| `Select` | hostDirective | ✅ | button (click) | ✅ | — |
-| `MultiSelect` | hostDirective | ✅ | div[tabindex] (click) | ✅ | chip-remove |
-| `Combobox` | hostDirective | ✅ | input (focus) | ✅ | — |
+| `TextField` | hostDirective | ✅ | `<input fiboFieldInput>` | — | — |
+| `DatePickerField` | hostDirective | ✅ | `<input fiboFieldInput>` | ✅ (auto-open на shell click) | — |
+| `Select` | hostDirective | ✅ | `<button fiboFieldButton>` | ✅ | — |
+| `MultiSelect` | hostDirective | ✅ | `<div fiboFieldButton>` | ✅ | chip-remove |
+| `Combobox` | hostDirective | ✅ | `<input fiboFieldInput>` | ✅ (власний createOverlay) | — |
 | `Checkbox` | власні inputs | — | — | — | — |
 | `Switch` | власні inputs | — | — | — | — |
 
@@ -243,13 +282,7 @@ DI-хаб і провайдер ID системи. `hostDirective` на `FieldSh
 
 Наступний крок: підключити решту tokens, як це вже зроблено в `button.css` через `--btn-bg`, `--btn-text` тощо. Тоді dark mode оверрайди теж підуть через tokens, а не через дублювання selectors.
 
-### 2. `fibo-field-input` — перенести в директиву?
-
-`fibo-field-input` застосовується в шаблонах `TextField`, `DatePickerField`, `Combobox` вручну (`class="fibo-field-input"`). `FieldTarget` не може нести цей клас у host, бо він використовується і для `<button>` (Select), де стиль input'а не потрібен.
-
-Варіант: окрема директива `[fiboFieldInput]` для `<input>` / `<textarea>` — маркер що комбінує `fiboFieldTarget fieldTargetMode="focus"` і додає `host: { class: 'fibo-field-input' }`. Прибрало б дублювання між компонентами.
-
-### 3. Content projection для іконок
+### 2. Content projection для іконок
 
 `iconStart` / `iconEnd` зараз є string inputs → Lucide icon name. Це жорстке обмеження: не можна передати кастомну SVG або компонент.
 

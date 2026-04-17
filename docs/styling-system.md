@@ -209,19 +209,13 @@ projects/fibo-ui/components/src/
 
 Наступний крок: wire up tokens так само як це зроблено в `button.css` через `--btn-*`. Тоді dark mode оверрайди теж підуть через tokens, а не дублювання selector-ів.
 
-### 2. Директива `[fiboFieldInput]` для `<input>` / `<textarea>`
-
-`fibo-field-input` зараз ставиться вручну в шаблонах `TextField`, `DatePickerField`, `Combobox`. `FieldTarget` не може нести цей клас у host, бо він використовується і для `<button>` (Select), якому стиль input'а не потрібен.
-
-Рішення: `[fiboFieldInput]` — комбінований маркер для полів введення, `host: { class: 'fibo-field-input' }` + `fieldTargetMode='focus'` за замовчуванням.
-
-### 3. Content projection для іконок
+### 2. Content projection для іконок
 
 `iconStart` / `iconEnd` — string inputs → Lucide icon name. Жорстке обмеження: не можна передати кастомну SVG або компонент.
 
 Варіант: `@ContentChild` з маркерами `[fiboFieldIconStart]` / `[fiboFieldIconEnd]` за аналогією з `MatPrefix`/`MatSuffix`. `FieldShell` залишається backward-compatible через збереження string inputs як fallback.
 
-### 4. Публічний theming contract
+### 3. Публічний theming contract
 
 Зафіксувати, які CSS variables є публічним API для споживачів бібліотеки, а які є внутрішніми деталями імплементації.
 
