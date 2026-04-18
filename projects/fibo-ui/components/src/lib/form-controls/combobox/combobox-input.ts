@@ -21,6 +21,7 @@ import { injectComboboxInternal } from './combobox-internal-token';
     '[attr.aria-required]': 'formControl.required?.() ?? false',
     '[attr.aria-invalid]': 'formControl.invalid?.() ?? false',
     '[attr.aria-expanded]': 'combobox.expanded()',
+    '[attr.data-overlay-open]': 'combobox.expanded() || null',
     '[attr.aria-controls]': 'combobox.expanded() ? comboboxInternal.listboxId() : null',
     '[attr.aria-activedescendant]': 'combobox.expanded() ? comboboxInternal.activeDescendantId() : null',
     '(input)': 'onInput($event)',

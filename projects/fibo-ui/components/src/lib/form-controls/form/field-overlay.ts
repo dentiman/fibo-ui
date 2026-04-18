@@ -11,6 +11,7 @@ import { FieldUiState } from './field-ui-state';
   host: {
     '[attr.aria-expanded]': 'isOpen()',
     '[attr.aria-controls]': 'panelId()',
+    '[attr.data-overlay-open]': 'isOpen() || null',
     '(click)': 'onHostClick($event)',
   },
 })
