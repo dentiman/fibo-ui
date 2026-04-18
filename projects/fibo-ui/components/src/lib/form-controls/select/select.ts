@@ -11,6 +11,7 @@ import { FieldButton } from '../form/field-button';
 import { FieldOverlay } from '../form/field-overlay';
 import { FieldContext, FIELD_CONTEXT_INPUTS } from '../form/field-context';
 import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
+import { Size } from '../../primitives/size';
 
 export interface SelectItem {
   label: string;
@@ -29,6 +30,7 @@ export interface SelectItem {
       directive: FieldContext,
       inputs: [...FIELD_CONTEXT_INPUTS],
     },
+    { directive: Size, inputs: ['fiboSize'] },
   ],
   imports: [
     FieldShell,

@@ -11,6 +11,7 @@ import { FieldInput } from '../form/field-input';
 import { FieldOverlay } from '../form/field-overlay';
 import { FieldContext, FIELD_CONTEXT_INPUTS } from '../form/field-context';
 import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
+import { Size } from '../../primitives/size';
 
 @Component({
   selector: 'fibo-datepicker, fibo-datepicker-field',
@@ -23,6 +24,7 @@ import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
       directive: FieldContext,
       inputs: [...FIELD_CONTEXT_INPUTS],
     },
+    { directive: Size, inputs: ['fiboSize'] },
   ],
   imports: [FieldShell, FieldInput, FieldOverlay, Calendar, SelectDate, OverlayPanel],
   host: {

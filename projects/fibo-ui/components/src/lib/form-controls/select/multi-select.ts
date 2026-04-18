@@ -13,6 +13,7 @@ import { FieldButton } from '../form/field-button';
 import { FieldOverlay } from '../form/field-overlay';
 import { FieldContext, FIELD_CONTEXT_INPUTS } from '../form/field-context';
 import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
+import { Size } from '../../primitives/size';
 import { Checkbox } from '../checkbox/checkbox';
 import { SelectItem } from './select';
 
@@ -27,6 +28,7 @@ import { SelectItem } from './select';
       directive: FieldContext,
       inputs: [...FIELD_CONTEXT_INPUTS],
     },
+    { directive: Size, inputs: ['fiboSize'] },
   ],
   imports: [
     DataList,

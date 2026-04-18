@@ -141,7 +141,7 @@ Clicking anywhere on the shell chrome routes through `FieldShellHost.activatePri
 `FieldContext` sits on an outer wrapper and caps or overrides two CSS hooks across every descendant field:
 
 ```html
-<form fiboFieldContext density="compact" labelLayout="inline">
+<form fiboFieldContext fiboSize="sm" labelLayout="inline">
   <fibo-text-field label="Name" />
   <fibo-select label="Role" [items]="roles" />
 </form>
@@ -149,10 +149,10 @@ Clicking anywhere on the shell chrome routes through `FieldShellHost.activatePri
 
 | Input | Type | CSS effect |
 | --- | --- | --- |
-| `density` | `'default' \| 'compact'` | Sets `--ff-control-min-height` on descendant `.fibo-field-container` |
+| `fiboSize` | `'sm' \| 'md' \| 'lg'` | Sets `--ff-control-min-height` on descendant `.fibo-field-container` via the shared `Size` hostDirective (same primitive used by `Button`) |
 | `labelLayout` | `'stacked' \| 'inline'` | Switches `--ff-body-direction` (label above vs. left of control) |
 
-`FieldContext` is also applied as a `hostDirective` on every public field component so consumers can set `[density]` / `[labelLayout]` directly on `<fibo-text-field>`.
+`FieldContext` is also applied as a `hostDirective` on every public field component so consumers can set `[fiboSize]` / `[labelLayout]` directly on `<fibo-text-field>`.
 
 ## `FieldShellHost` — DI Hub
 

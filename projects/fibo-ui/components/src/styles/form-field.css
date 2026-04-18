@@ -147,10 +147,22 @@
     --ff-label-white-space: nowrap;
   }
 
-  [data-density="compact"] .fibo-field-container {
+  [data-size="sm"] .fibo-field-container {
     --ff-control-min-height: 2rem;
     --ff-control-padding-x: 0.625rem;
     --ff-control-padding-y: 0.125rem;
+  }
+
+  [data-size="md"] .fibo-field-container {
+    --ff-control-min-height: 2.25rem;
+    --ff-control-padding-x: 0.75rem;
+    --ff-control-padding-y: 0.25rem;
+  }
+
+  [data-size="lg"] .fibo-field-container {
+    --ff-control-min-height: 2.75rem;
+    --ff-control-padding-x: 1rem;
+    --ff-control-padding-y: 0.5rem;
   }
 
   /* ── Input ──────────────────────────────────────────────── */

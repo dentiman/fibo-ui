@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormField, form } from '@angular/forms/signals';
-import { DatePickerField, FieldContext, Select, type SelectItem, TextField } from '@fibo-ui/components';
+import { DatePickerField, FieldContext, Select, type SelectItem, Size, TextField } from '@fibo-ui/components';
 import { citiesChoices, usersChoices } from '../../../common/form-data-example';
 import { FormExample } from './examples/form-example';
 
@@ -14,30 +14,41 @@ interface FilterToolbarModel {
 
 @Component({
   selector: 'app-form-examples-page',
-  imports: [FormField, FormExample, TextField, Select, DatePickerField, FieldContext],
+  imports: [FormField, FormExample, TextField, Select, DatePickerField, FieldContext, Size],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="max-w-7xl mx-auto p-6 space-y-10">
       <div class="space-y-1">
         <h1 class="text-2xl font-bold text-foreground">Form Examples</h1>
         <p class="text-sm text-foreground-secondary">
-          Registration forms and filter toolbars rendered with different density and layout contexts.
+          Registration forms and filter toolbars rendered across all size × label-layout combinations.
         </p>
       </div>
 
       <section class="space-y-4">
         <div class="space-y-1">
-          <h2 class="text-xl font-semibold text-foreground">Registration Form Variants</h2>
+          <h2 class="text-xl font-semibold text-foreground">Stacked Label Layout</h2>
           <p class="text-sm text-foreground-secondary">
-            The same registration form with stacked and inline label layouts.
+            Three sizes with the default stacked label. Driven by <code class="font-mono">fiboSize</code>.
           </p>
         </div>
 
-        <div class="grid gap-6 xl:grid-cols-2">
+        <div class="grid gap-6 xl:grid-cols-3">
           <section class="fibo-card min-w-0 overflow-hidden p-4 space-y-4">
             <div class="space-y-1">
-              <h3 class="text-lg font-semibold text-foreground">Default</h3>
-              <div class="text-xs font-mono text-foreground-secondary">no extra classes</div>
+              <h3 class="text-lg font-semibold text-foreground">Small</h3>
+              <div class="text-xs font-mono text-foreground-secondary">fiboSize="sm"</div>
+            </div>
+
+            <div class="min-w-0" fiboFieldContext fiboSize="sm">
+              <form-example [showHeader]="false" />
+            </div>
+          </section>
+
+          <section class="fibo-card min-w-0 overflow-hidden p-4 space-y-4">
+            <div class="space-y-1">
+              <h3 class="text-lg font-semibold text-foreground">Medium (default)</h3>
+              <div class="text-xs font-mono text-foreground-secondary">no extra attributes</div>
             </div>
 
             <form-example [showHeader]="false" />
@@ -45,18 +56,43 @@ interface FilterToolbarModel {
 
           <section class="fibo-card min-w-0 overflow-hidden p-4 space-y-4">
             <div class="space-y-1">
-              <h3 class="text-lg font-semibold text-foreground">Stacked Compact</h3>
-              <div class="text-xs font-mono text-foreground-secondary">density="compact"</div>
+              <h3 class="text-lg font-semibold text-foreground">Large</h3>
+              <div class="text-xs font-mono text-foreground-secondary">fiboSize="lg"</div>
             </div>
 
-            <div class="min-w-0" fiboFieldContext density="compact">
+            <div class="min-w-0" fiboFieldContext fiboSize="lg">
+              <form-example [showHeader]="false" />
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="space-y-4">
+        <div class="space-y-1">
+          <h2 class="text-xl font-semibold text-foreground">Inline Label Layout</h2>
+          <p class="text-sm text-foreground-secondary">
+            Same three sizes, but labels render to the left of the control via
+            <code class="font-mono">labelLayout="inline"</code>.
+          </p>
+        </div>
+
+        <div class="grid gap-6 xl:grid-cols-3">
+          <section class="fibo-card min-w-0 overflow-hidden p-4 space-y-4">
+            <div class="space-y-1">
+              <h3 class="text-lg font-semibold text-foreground">Small</h3>
+              <div class="text-xs font-mono text-foreground-secondary">
+                labelLayout="inline" fiboSize="sm"
+              </div>
+            </div>
+
+            <div class="min-w-0" fiboFieldContext labelLayout="inline" fiboSize="sm">
               <form-example [showHeader]="false" />
             </div>
           </section>
 
           <section class="fibo-card min-w-0 overflow-hidden p-4 space-y-4">
             <div class="space-y-1">
-              <h3 class="text-lg font-semibold text-foreground">Inline Comfy</h3>
+              <h3 class="text-lg font-semibold text-foreground">Medium (default)</h3>
               <div class="text-xs font-mono text-foreground-secondary">labelLayout="inline"</div>
             </div>
 
@@ -67,13 +103,13 @@ interface FilterToolbarModel {
 
           <section class="fibo-card min-w-0 overflow-hidden p-4 space-y-4">
             <div class="space-y-1">
-              <h3 class="text-lg font-semibold text-foreground">Inline Compact</h3>
+              <h3 class="text-lg font-semibold text-foreground">Large</h3>
               <div class="text-xs font-mono text-foreground-secondary">
-                labelLayout="inline" density="compact"
+                labelLayout="inline" fiboSize="lg"
               </div>
             </div>
 
-            <div class="min-w-0" fiboFieldContext labelLayout="inline" density="compact">
+            <div class="min-w-0" fiboFieldContext labelLayout="inline" fiboSize="lg">
               <form-example [showHeader]="false" />
             </div>
           </section>
@@ -82,46 +118,49 @@ interface FilterToolbarModel {
 
       <section class="space-y-4">
         <div class="space-y-1">
-          <h2 class="text-xl font-semibold text-foreground">Filter Toolbar Variants</h2>
+          <h2 class="text-xl font-semibold text-foreground">Filter Toolbar — Inline Label</h2>
           <p class="text-sm text-foreground-secondary">
-            The same filter fields rendered as toolbar controls with different combinations of
-            layout and density contexts.
+            Toolbar filter row across the three size variants. All use
+            <code class="font-mono">labelLayout="inline"</code>.
           </p>
         </div>
 
         <section class="fibo-card p-4 space-y-4">
           <div class="space-y-1">
-            <h3 class="text-lg font-semibold text-foreground">Stacked Comfy</h3>
+            <h3 class="text-lg font-semibold text-foreground">Small</h3>
+            <div class="text-xs font-mono text-foreground-secondary">
+              labelLayout="inline" fiboSize="sm"
+            </div>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2">
+          <div class="flex flex-wrap items-center gap-2" fiboFieldContext labelLayout="inline" fiboSize="sm">
             <fibo-text-field
-              [formField]="stackedFilterForm.query"
+              [formField]="filterFormSm.query"
               label="Search"
               iconStart="search"
               placeholder="Issue title or ID"
             />
             <fibo-select
-              [formField]="stackedFilterForm.status"
+              [formField]="filterFormSm.status"
               label="Status"
               placeholder="Any"
               [items]="statusItems"
               [clearValue]="null"
             />
             <fibo-select
-              [formField]="stackedFilterForm.assignee"
+              [formField]="filterFormSm.assignee"
               label="Owner"
               placeholder="Anyone"
               [items]="assigneeItems"
               [clearValue]="null"
             />
             <fibo-datepicker
-              [formField]="stackedFilterForm.updatedAfter"
+              [formField]="filterFormSm.updatedAfter"
               label="Updated"
               placeholder="After"
             />
             <fibo-select
-              [formField]="stackedFilterForm.city"
+              [formField]="filterFormSm.city"
               label="City"
               placeholder="Any city"
               [items]="cityItems"
@@ -132,37 +171,38 @@ interface FilterToolbarModel {
 
         <section class="fibo-card p-4 space-y-4">
           <div class="space-y-1">
-            <h3 class="text-lg font-semibold text-foreground">Inline Comfy</h3>
+            <h3 class="text-lg font-semibold text-foreground">Medium (default)</h3>
+            <div class="text-xs font-mono text-foreground-secondary">labelLayout="inline"</div>
           </div>
 
           <div class="flex flex-wrap items-center gap-2" fiboFieldContext labelLayout="inline">
             <fibo-text-field
-              [formField]="inlineFilterForm.query"
+              [formField]="filterFormMd.query"
               label="Search"
               iconStart="search"
               placeholder="Issue title or ID"
             />
             <fibo-select
-              [formField]="inlineFilterForm.status"
+              [formField]="filterFormMd.status"
               label="Status"
               placeholder="Any"
               [items]="statusItems"
               [clearValue]="null"
             />
             <fibo-select
-              [formField]="inlineFilterForm.assignee"
+              [formField]="filterFormMd.assignee"
               label="Owner"
               placeholder="Anyone"
               [items]="assigneeItems"
               [clearValue]="null"
             />
             <fibo-datepicker
-              [formField]="inlineFilterForm.updatedAfter"
+              [formField]="filterFormMd.updatedAfter"
               label="Updated"
               placeholder="After"
             />
             <fibo-select
-              [formField]="inlineFilterForm.city"
+              [formField]="filterFormMd.city"
               label="City"
               placeholder="Any city"
               [items]="cityItems"
@@ -173,37 +213,40 @@ interface FilterToolbarModel {
 
         <section class="fibo-card p-4 space-y-4">
           <div class="space-y-1">
-            <h3 class="text-lg font-semibold text-foreground">Inline Compact</h3>
+            <h3 class="text-lg font-semibold text-foreground">Large</h3>
+            <div class="text-xs font-mono text-foreground-secondary">
+              labelLayout="inline" fiboSize="lg"
+            </div>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2" fiboFieldContext labelLayout="inline" density="compact">
+          <div class="flex flex-wrap items-center gap-2" fiboFieldContext labelLayout="inline" fiboSize="lg">
             <fibo-text-field
-              [formField]="inlineCompactFilterForm.query"
+              [formField]="filterFormLg.query"
               label="Search"
               iconStart="search"
               placeholder="Issue title or ID"
             />
             <fibo-select
-              [formField]="inlineCompactFilterForm.status"
+              [formField]="filterFormLg.status"
               label="Status"
               placeholder="Any"
               [items]="statusItems"
               [clearValue]="null"
             />
             <fibo-select
-              [formField]="inlineCompactFilterForm.assignee"
+              [formField]="filterFormLg.assignee"
               label="Owner"
               placeholder="Anyone"
               [items]="assigneeItems"
               [clearValue]="null"
             />
             <fibo-datepicker
-              [formField]="inlineCompactFilterForm.updatedAfter"
+              [formField]="filterFormLg.updatedAfter"
               label="Updated"
               placeholder="After"
             />
             <fibo-select
-              [formField]="inlineCompactFilterForm.city"
+              [formField]="filterFormLg.city"
               label="City"
               placeholder="Any city"
               [items]="cityItems"
@@ -230,7 +273,7 @@ export class FormExamplesPageComponent {
 
   readonly cityItems: SelectItem[] = citiesChoices.slice(0, 10);
 
-  readonly stackedFilterModel = signal<FilterToolbarModel>({
+  readonly filterModelSm = signal<FilterToolbarModel>({
     query: '',
     status: null,
     assignee: null,
@@ -238,7 +281,7 @@ export class FormExamplesPageComponent {
     city: null,
   });
 
-  readonly inlineFilterModel = signal<FilterToolbarModel>({
+  readonly filterModelMd = signal<FilterToolbarModel>({
     query: '',
     status: null,
     assignee: null,
@@ -246,7 +289,7 @@ export class FormExamplesPageComponent {
     city: null,
   });
 
-  readonly inlineCompactFilterModel = signal<FilterToolbarModel>({
+  readonly filterModelLg = signal<FilterToolbarModel>({
     query: '',
     status: null,
     assignee: null,
@@ -254,7 +297,7 @@ export class FormExamplesPageComponent {
     city: null,
   });
 
-  readonly stackedFilterForm = form(this.stackedFilterModel, () => {});
-  readonly inlineFilterForm = form(this.inlineFilterModel, () => {});
-  readonly inlineCompactFilterForm = form(this.inlineCompactFilterModel, () => {});
+  readonly filterFormSm = form(this.filterModelSm, () => {});
+  readonly filterFormMd = form(this.filterModelMd, () => {});
+  readonly filterFormLg = form(this.filterModelLg, () => {});
 }

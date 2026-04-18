@@ -24,6 +24,7 @@ import { FieldShellHost } from '../form/field-shell-host';
 import { FieldInput } from '../form/field-input';
 import { FieldContext, FIELD_CONTEXT_INPUTS } from '../form/field-context';
 import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
+import { Size } from '../../primitives/size';
 
 @Component({
   selector: 'fibo-combobox',
@@ -36,6 +37,7 @@ import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
       directive: FieldContext,
       inputs: [...FIELD_CONTEXT_INPUTS],
     },
+    { directive: Size, inputs: ['fiboSize'] },
   ],
   imports: [
     FieldShell,

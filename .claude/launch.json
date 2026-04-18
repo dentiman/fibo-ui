@@ -4,8 +4,8 @@
     {
       "name": "fibo-ui-dev",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["ng", "serve"],
-      "port": 4200
+      "runtimeArgs": ["ng", "serve", "--port", "4300"],
+      "port": 4300
     }
   ],
   "autoVerify": true
