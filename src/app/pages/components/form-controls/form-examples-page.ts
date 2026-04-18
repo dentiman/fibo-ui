@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FieldContext, Size } from '@fibo-ui/components';
+import { LabelLayout, Size } from '@fibo-ui/components';
 import { FormExample } from './examples/form-example';
 
 @Component({
   selector: 'app-form-examples-page',
-  imports: [FormExample, FieldContext, Size],
+  imports: [FormExample, LabelLayout, Size],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="max-w-7xl mx-auto p-6 space-y-10">
@@ -31,7 +31,7 @@ import { FormExample } from './examples/form-example';
               <div class="text-xs font-mono text-foreground-secondary">fiboSize="sm"</div>
             </div>
 
-            <div class="min-w-0" fiboFieldContext fiboSize="sm">
+            <div class="min-w-0" fiboSize="sm">
               <div class="grid gap-4 mx-auto w-full max-w-[26rem] min-w-0 p-2">
                 <form-example [showHeader]="false" />
               </div>
@@ -55,7 +55,7 @@ import { FormExample } from './examples/form-example';
               <div class="text-xs font-mono text-foreground-secondary">fiboSize="lg"</div>
             </div>
 
-            <div class="min-w-0" fiboFieldContext fiboSize="lg">
+            <div class="min-w-0" fiboSize="lg">
               <div class="grid gap-4 mx-auto w-full max-w-[26rem] min-w-0 p-2">
                 <form-example [showHeader]="false" />
               </div>
@@ -84,7 +84,7 @@ import { FormExample } from './examples/form-example';
               </div>
             </div>
 
-            <div class="min-w-0" fiboFieldContext labelLayout="inline" fiboSize="sm">
+            <div class="min-w-0" labelLayout="inline" fiboSize="sm">
               <div class="grid gap-4 mx-auto w-full max-w-[26rem] min-w-0 p-2">
                 <form-example [showHeader]="false" />
               </div>
@@ -97,7 +97,7 @@ import { FormExample } from './examples/form-example';
               <div class="text-xs font-mono text-foreground-secondary">labelLayout="inline"</div>
             </div>
 
-            <div class="min-w-0" fiboFieldContext labelLayout="inline">
+            <div class="min-w-0" labelLayout="inline">
               <div class="grid gap-4 mx-auto w-full max-w-[26rem] min-w-0 p-2">
                 <form-example [showHeader]="false" />
               </div>
@@ -112,7 +112,7 @@ import { FormExample } from './examples/form-example';
               </div>
             </div>
 
-            <div class="min-w-0" fiboFieldContext labelLayout="inline" fiboSize="lg">
+            <div class="min-w-0" labelLayout="inline" fiboSize="lg">
               <div class="grid gap-4 mx-auto w-full max-w-[26rem] min-w-0 p-2">
                 <form-example [showHeader]="false" />
               </div>
@@ -143,7 +143,7 @@ import { FormExample } from './examples/form-example';
             </div>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2" fiboFieldContext labelLayout="inline" fiboSize="sm">
+          <div class="flex flex-wrap items-center gap-2" labelLayout="inline" fiboSize="sm">
             <form-example [showHeader]="false" />
           </div>
         </section>
@@ -154,7 +154,7 @@ import { FormExample } from './examples/form-example';
             <div class="text-xs font-mono text-foreground-secondary">labelLayout="inline"</div>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2" fiboFieldContext labelLayout="inline">
+          <div class="flex flex-wrap items-center gap-2" labelLayout="inline">
             <form-example [showHeader]="false" />
           </div>
         </section>
@@ -167,7 +167,7 @@ import { FormExample } from './examples/form-example';
             </div>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2" fiboFieldContext labelLayout="inline" fiboSize="lg">
+          <div class="flex flex-wrap items-center gap-2" labelLayout="inline" fiboSize="lg">
             <form-example [showHeader]="false" />
           </div>
         </section>

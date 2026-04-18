@@ -9,7 +9,8 @@ The system separates concerns that are often collapsed into one primitive: **for
 | Primitive | Selector | Responsibility |
 | --- | --- | --- |
 | `FieldUiState` | `[fiboFieldUiState]` *(hostDirective)* | Bridge between Angular Signal Forms and the UI layer: `disabled`, `readonly`, `required`, `invalid`, `pending`, `touched`, `errors`, `errorMessage` |
-| `FieldContext` | `[fiboFieldContext]` | Cascade `density` and `labelLayout` down to any number of fields via CSS data-attributes |
+| `Size` | `[fiboSize]` | Cascade size tokens down to descendant field containers via `data-size` |
+| `LabelLayout` | `[labelLayout]` | Cascade label position down to descendant field containers via `data-label-layout` |
 | `FieldShell` | `fibo-field-shell` | Visual chrome: label, leading/trailing icons, clear button, hint/error text |
 | `FieldShellHost` | `[fiboFieldShellHost]` *(hostDirective on `FieldShell`)* | DI hub: generates IDs, stores refs, activates the primary target |
 | `FieldContainer` | `[fiboFieldContainer]` | Inner visual wrapper — binds `data-invalid / -readonly / -pending`, `aria-disabled`; click-delegation to `activatePrimary()` |
@@ -26,7 +27,7 @@ The system separates concerns that are often collapsed into one primitive: **for
 ### Text-input field (`<input>` as primary target)
 
 ```text
-<host> [hostDirectives: FieldUiState, FieldContext]
+<host> [hostDirectives: FieldUiState, LabelLayout]
   fibo-field-shell  [hostDirective: FieldShellHost]
     div[fiboFieldContainer]           ← visual wrapper, state attributes
       label[fiboFieldLabel]           ← wires for / id
@@ -36,7 +37,7 @@ The system separates concerns that are often collapsed into one primitive: **for
 ### Overlay trigger field (`<button>` or `<div>` as primary target)
 
 ```text
-<host> [hostDirectives: FieldUiState, FieldContext]
+<host> [hostDirectives: FieldUiState, LabelLayout]
   fibo-field-shell  [hostDirective: FieldShellHost]
     div[fiboFieldContainer]
       label[fiboFieldLabel]
@@ -46,7 +47,7 @@ The system separates concerns that are often collapsed into one primitive: **for
 ### Text-input field with overlay (DatePicker pattern)
 
 ```text
-<host> [hostDirectives: FieldUiState, FieldContext]
+<host> [hostDirectives: FieldUiState, LabelLayout]
   fibo-field-shell  [hostDirective: FieldShellHost]
     div[fiboFieldContainer]
       label[fiboFieldLabel]
@@ -136,12 +137,12 @@ Clicking anywhere on the shell chrome routes through `FieldShellHost.activatePri
 
 `FieldInput` detects a co-located `FieldOverlay` via `inject(FieldOverlay, { self: true })`. Shell-chrome click → `focus() + overlay.open()`. Click **inside** the input text places the native caret without toggling the overlay — `FieldOverlay.onHostClick` early-returns when the injected `FieldButton` is absent.
 
-## `FieldContext` — cascading field settings
+## `LabelLayout` — cascading label layout
 
-`FieldContext` sits on an outer wrapper and caps or overrides two CSS hooks across every descendant field:
+`LabelLayout` sits on an outer wrapper and sets the shared `data-label-layout` hook for every descendant field. `Size` works alongside it as a separate primitive:
 
 ```html
-<form fiboFieldContext fiboSize="sm" labelLayout="inline">
+<form fiboSize="sm" labelLayout="inline">
   <fibo-text-field label="Name" />
   <fibo-select label="Role" [items]="roles" />
 </form>
@@ -152,7 +153,7 @@ Clicking anywhere on the shell chrome routes through `FieldShellHost.activatePri
 | `fiboSize` | `'sm' \| 'md' \| 'lg'` | Sets `--ff-control-min-height` on descendant `.fibo-field-container` via the shared `Size` hostDirective (same primitive used by `Button`) |
 | `labelLayout` | `'stacked' \| 'inline'` | Switches `--ff-body-direction` (label above vs. left of control) |
 
-`FieldContext` is also applied as a `hostDirective` on every public field component so consumers can set `[fiboSize]` / `[labelLayout]` directly on `<fibo-text-field>`.
+`LabelLayout` is also applied as a `hostDirective` on every public field component so consumers can set `[labelLayout]` directly on `<fibo-text-field>`. `Size` remains a separate `hostDirective`, so `[fiboSize]` works the same way.
 
 ## `FieldShellHost` — DI Hub
 

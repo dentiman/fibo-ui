@@ -1,14 +1,12 @@
 import { Directive, input } from '@angular/core';
 
-export const FIELD_CONTEXT_INPUTS = ['labelLayout'] as const;
-
 @Directive({
-  selector: '[fiboFieldContext]',
+  selector: '[labelLayout]',
   standalone: true,
   host: {
     '[attr.data-label-layout]': 'labelLayout() || null',
   },
 })
-export class FieldContext {
+export class LabelLayout {
   readonly labelLayout = input<'stacked' | 'inline' | null>(null);
 }

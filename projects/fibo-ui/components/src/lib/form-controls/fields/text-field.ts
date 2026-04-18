@@ -3,8 +3,8 @@ import { FormValueControl } from '@angular/forms/signals';
 import { provideFormValueControl } from '@fibo-ui/cdk';
 import { FieldShell } from '../form/field-shell';
 import { FieldInput } from '../form/field-input';
-import { FieldContext, FIELD_CONTEXT_INPUTS } from '../form/field-context';
 import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
+import { LabelLayout } from '../form/label-layout';
 import { Size } from '../../primitives/size';
 
 @Component({
@@ -16,8 +16,8 @@ import { Size } from '../../primitives/size';
       inputs: [...FIELD_UI_STATE_INPUTS],
     },
     {
-      directive: FieldContext,
-      inputs: [...FIELD_CONTEXT_INPUTS],
+      directive: LabelLayout,
+      inputs: ['labelLayout'],
     },
     { directive: Size, inputs: ['fiboSize'] },
   ],

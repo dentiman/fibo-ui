@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FieldShell, FieldInput, FieldContext, Size } from '@fibo-ui/components';
+import { FieldShell, FieldInput, LabelLayout, Size } from '@fibo-ui/components';
 
 @Component({
   selector: 'form-field-control-basic-example',
-  imports: [FieldShell, FieldInput, FieldContext, Size],
+  imports: [FieldShell, FieldInput, LabelLayout, Size],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mx-auto w-90 p-8 space-y-4">
@@ -19,7 +19,7 @@ import { FieldShell, FieldInput, FieldContext, Size } from '@fibo-ui/components'
         <input fiboFieldInput type="text" placeholder="Search..." />
       </fibo-field-shell>
 
-      <div fiboFieldContext labelLayout="inline" fiboSize="sm">
+      <div labelLayout="inline" fiboSize="sm">
         <fibo-field-shell label="Role" iconEnd="chevron-down">
           <div class="text-sm fibo-field-placeholder">Select role</div>
         </fibo-field-shell>
