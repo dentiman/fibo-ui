@@ -88,6 +88,97 @@ fibo-field-shell                              ← FieldShell component
 
 ---
 
+## Ієрархія директив на прикладі `Select`
+
+Select — один компонент, який архітектурно складається з п'яти шарів. Рух **зовні всередину**: від зовнішнього Forms-контракту до інтерактивного ядра. Кожен шар — одна відповідальність; директиви в шарі забезпечують саме її.
+
+```mermaid
+flowchart TB
+    subgraph selectEl["&lt;fibo-select&gt;"]
+        direction TB
+
+        subgraph L1["⟨ L1 · Forms Bridge ⟩"]
+            direction TB
+            d1["FieldUiState<br/>FieldContext"]:::dir
+
+            subgraph L2["⟨ L2 · Visual Shell ⟩"]
+                direction TB
+                d2["FieldShellHost"]:::dir
+
+                subgraph L3["⟨ L3 · State Surface ⟩"]
+                    direction TB
+                    d3["FieldContainer"]:::dir
+
+                    subgraph L4["⟨ L4 · Layout ⟩"]
+                        direction TB
+                        d4["FieldLabel"]:::dir
+
+                        subgraph L5["⟨ L5 · Interactive Core ⟩"]
+                            direction TB
+                            d5a["FieldButton"]:::dir
+                            d5b["FieldTarget (base)"]:::dir
+                            d5c["FieldOverlay"]:::dir
+                            d5a -. "hostDirective" .-> d5b
+                        end
+                    end
+
+                    d3aux["FieldAuxiliary"]:::dir
+                end
+            end
+        end
+    end
+
+    classDef dir fill:#ffffff,stroke:#424242,color:#212121,font-weight:bold
+    classDef lEl fill:#fafafa,stroke:#757575,stroke-width:1px,stroke-dasharray:5 3,color:#424242
+    classDef lOuter fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1
+    classDef lShell fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#4a148c
+    classDef lState fill:#fff8e1,stroke:#ef6c00,stroke-width:2px,color:#e65100
+    classDef lLayout fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20
+    classDef lCore fill:#ffebee,stroke:#c62828,stroke-width:3px,color:#b71c1c
+
+    class selectEl lEl
+    class L1 lOuter
+    class L2 lShell
+    class L3 lState
+    class L4 lLayout
+    class L5 lCore
+```
+
+### Що робить кожен шар
+
+| Шар | Відповідальність | Директиви |
+|---|---|---|
+| **L1 · Forms Bridge** | міст між Angular Signal Forms і UI; прийом зовнішніх налаштувань density / layout | `FieldUiState`, `FieldContext` |
+| **L2 · Visual Shell** | візуальний chrome: label, ікони, кнопка clear, hint/error; DI-хаб для ID і ref-реєстрацій | `FieldShellHost` |
+| **L3 · State Surface** | `aria-disabled`, `data-invalid/readonly/pending` на обгортці; click-делегація на primary target; скіп `FieldAuxiliary` | `FieldContainer`, `FieldAuxiliary` |
+| **L4 · Layout** | стос label ↔ control (stacked/inline), hint/error placement; `for` / `id` wiring | `FieldLabel` |
+| **L5 · Interactive Core** | справжня точка взаємодії: focus/activation surface, ARIA-контракт, overlay lifecycle | `FieldButton`, `FieldTarget (base)`, `FieldOverlay` |
+
+### Як читати
+
+- **Зовні → всередину.** L1 — що споживач бачить як публічну API Select. L5 — де реально відбувається взаємодія з користувачем. Кожен внутрішній шар робить свою частину того, що ззовні виглядає як цілісний компонент.
+- **Відповідальність не перетікає між шарами.** L3 нічого не знає про overlay чи focus; L5 нічого не знає про label чи layout. Це робить композицію передбачуваною й дозволяє замінити будь-який шар окремо.
+- **`FieldAuxiliary` — на рівні L3 поряд з `FieldContainer`.** Він живе на state-поверхні бо відповідає за click-делегацію в межах контейнера, а не за primary interaction (тому не в L5).
+- **Пунктир `hostDirective`** між `FieldButton` і `FieldTarget (base)` — композиція директив на одному елементі, не DOM-вкладення. `FieldButton` застосовує `FieldTarget` через `hostDirectives: [FieldTarget]`.
+
+---
+
+### Варіації за споживачами
+
+Шари L1–L4 **однакові для всіх** FormField-споживачів. Змінюється тільки **L5 · Interactive Core** — конкретний target-елемент і директива на ньому:
+
+| Споживач | L5 Interactive Core | Overlay? | Aux (clear) |
+|---|---|---|---|
+| `TextField` | `<input fiboFieldInput>` | — | ✅ |
+| `DatePickerField` | `<input fiboFieldInput>` + `[fiboFieldOverlay]` | ✅ (auto-open) | ✅ |
+| `Select` *(ця діаграма)* | `<button fiboFieldButton>` + `[fiboFieldOverlay]` | ✅ | — |
+| `MultiSelect` | `<div fiboFieldButton>` + `[fiboFieldOverlay]` | ✅ | chip-remove |
+| `Combobox` | `<input fiboFieldInput>` + власний overlay | ✅ | ✅ |
+
+Щоб отримати діаграму для будь-якого іншого споживача — замініть вміст L5 на відповідну директиву з цієї таблиці. Верхні чотири шари залишаються ідентичними.
+
+---
+
 ## Конвенція стилізації
 
 Єдиний патерн: директива сама несе CSS-ідентифікатор через `host: { class }`.
