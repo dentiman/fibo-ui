@@ -8,21 +8,12 @@ import {
   SelectItem,
   TextField,
 } from '@fibo-ui/components';
-import { citiesChoices, usersChoices } from '../../../../common/form-data-example';
 
 interface RegistrationData {
   name: string;
   position: string | null;
   birthDate: string;
   skills: string[];
-}
-
-interface FilterToolbarData {
-  query: string;
-  status: string | null;
-  assignee: number | null;
-  updatedAfter: string;
-  city: string | null;
 }
 
 @Component({
@@ -40,91 +31,47 @@ interface FilterToolbarData {
       </div>
     }
 
-    @switch (variant()) {
-      @case ('toolbar') {
-        <fibo-text-field
-          [formField]="filterForm.query"
-          label="Search"
-          iconStart="search"
-          placeholder="Issue title or ID"
-        />
+    <fibo-text-field
+      [formField]="registrationForm.name"
+      label="Name"
+      iconEnd="user"
+      placeholder="Enter full name"
+    />
 
-        <fibo-select
-          [formField]="filterForm.status"
-          label="Status"
-          placeholder="Any"
-          [items]="statusItems"
-          [clearValue]="null"
-        />
+    <fibo-select
+      [formField]="registrationForm.position"
+      label="Position"
+      placeholder="Select position"
+      [items]="positions"
+    />
 
-        <fibo-select
-          [formField]="filterForm.assignee"
-          label="Owner"
-          placeholder="Anyone"
-          [items]="assigneeItems"
-          [clearValue]="null"
-        />
+    <fibo-datepicker
+      [formField]="registrationForm.birthDate"
+      label="Birth Date"
+      placeholder="YYYY-MM-DD"
+    />
 
-        <fibo-datepicker
-          [formField]="filterForm.updatedAfter"
-          label="Updated"
-          placeholder="After"
-        />
+    <fibo-multi-select
+      [formField]="registrationForm.skills"
+      label="Skills"
+      placeholder="Select skills"
+      [items]="skillItems"
+    />
 
-        <fibo-select
-          [formField]="filterForm.city"
-          label="City"
-          placeholder="Any city"
-          [items]="cityItems"
-          [clearValue]="null"
-        />
-      }
-
-      @default {
-        <fibo-text-field
-          [formField]="registrationForm.name"
-          label="Name"
-          iconEnd="user"
-          placeholder="Enter full name"
-        />
-
-        <fibo-select
-          [formField]="registrationForm.position"
-          label="Position"
-          placeholder="Select position"
-          [items]="positions"
-        />
-
-        <fibo-datepicker
-          [formField]="registrationForm.birthDate"
-          label="Birth Date"
-          placeholder="YYYY-MM-DD"
-        />
-
-        <fibo-multi-select
-          [formField]="registrationForm.skills"
-          label="Skills"
-          placeholder="Select skills"
-          [items]="skillItems"
-        />
-
-        <button
-          type="button"
-          fiboButton fiboAppearance="primary" class="w-full"
-          [disabled]="!registrationForm().valid()"
-          (click)="onSubmit()"
-        >
-          Register
-        </button>
-      }
-    }
+    <button
+      type="button"
+      fiboButton fiboAppearance="primary" class="w-full"
+      [disabled]="!registrationForm().valid()"
+      (click)="onSubmit()"
+    >
+      Register
+    </button>
   `,
 })
 export class FormExample {
   readonly title = input('Form Example');
   readonly description = input('Registration form demo built from fibo form controls.');
   readonly showHeader = input(true);
-  readonly variant = input<'registration' | 'toolbar'>('registration');
 
   readonly positions: SelectItem[] = [
     { label: 'Developer', value: 'developer' },
@@ -146,20 +93,6 @@ export class FormExample {
     { label: 'Git', value: 'git' },
   ];
 
-  readonly statusItems: SelectItem[] = [
-    { label: 'Open', value: 'open' },
-    { label: 'In Progress', value: 'in_progress' },
-    { label: 'Blocked', value: 'blocked' },
-    { label: 'Done', value: 'done' },
-  ];
-
-  readonly assigneeItems: SelectItem[] = usersChoices.slice(0, 8).map((user) => ({
-    label: user.label,
-    value: user.id,
-  }));
-
-  readonly cityItems: SelectItem[] = citiesChoices.slice(0, 10);
-
   readonly model = signal<RegistrationData>({
     name: '',
     position: null,
@@ -167,21 +100,11 @@ export class FormExample {
     skills: [],
   });
 
-  readonly filterModel = signal<FilterToolbarData>({
-    query: '',
-    status: null,
-    assignee: null,
-    updatedAfter: '',
-    city: null,
-  });
-
   readonly registrationForm = form(this.model, schema => {
     required(schema.name, { message: 'Name is required' });
     required(schema.position, { message: 'Position is required' });
     required(schema.birthDate, { message: 'Birth date is required' });
   });
-
-  readonly filterForm = form(this.filterModel, () => {});
 
   onSubmit() {
     console.log('Registration data:', this.model());

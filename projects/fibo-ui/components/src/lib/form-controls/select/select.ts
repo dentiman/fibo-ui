@@ -64,7 +64,10 @@ export interface SelectItem {
         aria-haspopup="listbox"
         (blur)="uiState.touched.set(true)"
       >
-        <div class="text-sm" [class.fibo-field-placeholder]="!selectedLabel()">
+        <div
+          class="min-w-0 overflow-hidden whitespace-nowrap text-sm"
+          [class.fibo-field-placeholder]="!selectedLabel()"
+        >
           {{ selectedLabel() || placeholder() }}
         </div>
       </button>

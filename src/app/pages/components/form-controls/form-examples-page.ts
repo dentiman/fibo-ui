@@ -129,7 +129,9 @@ import { FormExample } from './examples/form-example';
             the wrapper:
             <code class="font-mono">flex flex-wrap items-center gap-2</code>.
             No <code class="font-mono">w-full</code> or <code class="font-mono">flex-1</code>
-            utilities are applied to the field items.
+            utilities are applied to the field items. The same reusable
+            <code class="font-mono">form-example</code> is rendered here to show how the layout
+            context alone changes sizing.
           </p>
         </div>
 
@@ -142,7 +144,7 @@ import { FormExample } from './examples/form-example';
           </div>
 
           <div class="flex flex-wrap items-center gap-2" fiboFieldContext labelLayout="inline" fiboSize="sm">
-            <form-example [showHeader]="false" variant="toolbar" />
+            <form-example [showHeader]="false" />
           </div>
         </section>
 
@@ -153,20 +155,20 @@ import { FormExample } from './examples/form-example';
           </div>
 
           <div class="flex flex-wrap items-center gap-2" fiboFieldContext labelLayout="inline">
-            <form-example [showHeader]="false" variant="toolbar" />
+            <form-example [showHeader]="false" />
           </div>
         </section>
 
         <section class="fibo-card p-4 space-y-4">
           <div class="space-y-1">
-            <h3 class="text-lg font-semibold text-foreground">Large</h3>
+            <h3 class="text-lg font-semibold text-foreground">Large 2</h3>
             <div class="text-xs font-mono text-foreground-secondary">
               labelLayout="inline" fiboSize="lg"
             </div>
           </div>
 
           <div class="flex flex-wrap items-center gap-2" fiboFieldContext labelLayout="inline" fiboSize="lg">
-            <form-example [showHeader]="false" variant="toolbar" />
+            <form-example [showHeader]="false" />
           </div>
         </section>
       </section>
