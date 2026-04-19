@@ -12,7 +12,6 @@ import { FieldShell } from '../form/field-shell';
 import { FieldButton } from '../form/field-button';
 import { FieldOverlay } from '../form/field-overlay';
 import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
-import { LabelLayout } from '../form/label-layout';
 import { Size } from '../../primitives/size';
 import { Checkbox } from '../checkbox/checkbox';
 import { SelectItem } from './select';
@@ -23,10 +22,6 @@ import { SelectItem } from './select';
     {
       directive: FieldUiState,
       inputs: [...FIELD_UI_STATE_INPUTS],
-    },
-    {
-      directive: LabelLayout,
-      inputs: ['labelLayout'],
     },
     { directive: Size, inputs: ['fiboSize'] },
   ],

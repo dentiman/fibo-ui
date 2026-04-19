@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FieldShell, FieldInput, LabelLayout, Size } from '@fibo-ui/components';
 
 @Component({
-  selector: 'form-field-control-basic-example',
+  selector: 'field-control-basic-example',
   imports: [FieldShell, FieldInput, LabelLayout, Size],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -27,4 +27,4 @@ import { FieldShell, FieldInput, LabelLayout, Size } from '@fibo-ui/components';
     </div>
   `,
 })
-export class FormFieldControlBasicExample {}
+export class FieldControlBasicExample {}

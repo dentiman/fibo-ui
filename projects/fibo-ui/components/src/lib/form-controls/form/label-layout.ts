@@ -1,5 +1,7 @@
 import { Directive, input } from '@angular/core';
 
+export type LabelLayoutValue = 'stacked' | 'inline' | null;
+
 @Directive({
   selector: '[labelLayout]',
   standalone: true,
@@ -8,5 +10,5 @@ import { Directive, input } from '@angular/core';
   },
 })
 export class LabelLayout {
-  readonly labelLayout = input<'stacked' | 'inline' | null>(null);
+  readonly labelLayout = input<LabelLayoutValue>(null);
 }

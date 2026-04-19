@@ -1,4 +1,4 @@
-# Form Field Control
+# Field Control
 
 Architecture for building styled form controls in `@fibo-ui/components`.
 
@@ -10,11 +10,12 @@ The system separates concerns that are often collapsed into one primitive: **for
 | --- | --- | --- |
 | `FieldUiState` | `[fiboFieldUiState]` *(hostDirective)* | Bridge between Angular Signal Forms and the UI layer: `disabled`, `readonly`, `required`, `invalid`, `pending`, `touched`, `errors`, `errorMessage` |
 | `Size` | `[fiboSize]` | Cascade size tokens down to descendant field containers via `data-size` |
-| `LabelLayout` | `[labelLayout]` | Cascade label position down to descendant field containers via `data-label-layout` |
-| `FieldShell` | `fibo-field-shell` | Visual chrome: label, leading/trailing icons, clear button, hint/error text |
+| `LabelLayout` | `[labelLayout]` | Cascade internal label position to descendant field containers via `data-label-layout` (`'stacked'` \| `'inline'`) |
+| `FormLayout` | `[formLayout]` | Set external label layout for descendant `FieldShell` instances via DI (`'vertical'` \| `'horizontal'`) |
+| `FieldShell` | `fibo-field-shell` | Visual chrome: external or internal label, leading/trailing icons, clear button, hint/error text |
 | `FieldShellHost` | `[fiboFieldShellHost]` *(hostDirective on `FieldShell`)* | DI hub: generates IDs, stores refs, activates the primary target |
 | `FieldContainer` | `[fiboFieldContainer]` | Inner visual wrapper — binds `data-invalid / -readonly / -pending`, `aria-disabled`; click-delegation to `activatePrimary()` |
-| `FieldLabel` | `[fiboFieldLabel]` | Marks `<label>`; auto-wires `for` / `id` and signals presence for `aria-labelledby` |
+| `FieldLabel` | `[fiboFieldLabel]` | Marks `<label>`; auto-wires `for` / `id` for internal labels |
 | `FieldInput` | `[fiboFieldInput]` | **Focus-surface** primary target for `<input>` / `<textarea>` |
 | `FieldButton` | `[fiboFieldButton]` | **Activation-surface** primary target for `<button>` / `<div>` / `<a>` — owns `tabindex`, Enter/Space → click |
 | `FieldOverlay` | `[fiboFieldOverlay]` | Encapsulates `createOverlay()` lifecycle; owns `aria-expanded`, `aria-controls` |
@@ -22,22 +23,70 @@ The system separates concerns that are often collapsed into one primitive: **for
 
 `FieldInput` and `FieldButton` both compose a shared internal base (`FieldTarget`, `hostDirective`-only) that owns the ARIA contract: `id`, `aria-labelledby`, `aria-describedby`, `aria-invalid`, `aria-readonly`, and the `data-field-target` click-delegation marker.
 
+## `FormLayout` — external label layout
+
+`FormLayout` is placed on a wrapper element and configures **all descendant `FieldShell` instances** via Angular DI. When active, `FieldShell` renders the label **outside** the field container and turns its host into a CSS grid.
+
+```html
+<div formLayout="horizontal">
+  <fibo-text-field label="Name" />
+  <fibo-select label="Role" [items]="roles" />
+</div>
+```
+
+| Value | Grid layout |
+| --- | --- |
+| `'vertical'` | `1fr` — label above the field |
+| `'horizontal'` | `1fr 1fr` — label to the left of the field |
+
+Customise column widths via the CSS custom property:
+
+```html
+<div formLayout="horizontal" style="--fibo-field-shell-cols: 30% 70%">
+```
+
+| CSS variable | Default | Description |
+| --- | --- | --- |
+| `--fibo-field-shell-cols` | `1fr 1fr` | Full `grid-template-columns` for horizontal layout |
+| `--fibo-field-shell-column-gap` | `1rem` | Gap between label and field columns |
+| `--fibo-field-shell-gap` | `0.5rem` | Gap between rows in vertical layout |
+
+**External label semantics:** the label element does not carry a `for` attribute to avoid triggering browser activation (click → open overlay) on overlay-based controls. Instead, the field container receives `aria-labelledby` pointing to the label's stable ID.
+
+## `LabelLayout` — internal label position
+
+`LabelLayout` sits on an outer wrapper and sets the shared `data-label-layout` hook for every descendant field container. It controls how the label is positioned **inside** the field chrome.
+
+```html
+<div labelLayout="inline" fiboSize="sm">
+  <fibo-text-field label="Name" />
+  <fibo-select label="Role" [items]="roles" />
+</div>
+```
+
+| Value | Effect |
+| --- | --- |
+| `'stacked'` | Label above the value (default) |
+| `'inline'` | Label inline with the value, `--ff-body-direction: row` |
+
+`Size` works alongside `LabelLayout` as a separate primitive — `[fiboSize]` cascades size tokens independently.
+
 ## Composition
 
 ### Text-input field (`<input>` as primary target)
 
 ```text
-<host> [hostDirectives: FieldUiState, LabelLayout]
+<host> [hostDirectives: FieldUiState, Size]
   fibo-field-shell  [hostDirective: FieldShellHost]
     div[fiboFieldContainer]           ← visual wrapper, state attributes
-      label[fiboFieldLabel]           ← wires for / id
+      label[fiboFieldLabel]           ← wires for / id (internal label)
       input[fiboFieldInput]           ← primary control, ARIA auto-wired
 ```
 
 ### Overlay trigger field (`<button>` or `<div>` as primary target)
 
 ```text
-<host> [hostDirectives: FieldUiState, LabelLayout]
+<host> [hostDirectives: FieldUiState, Size]
   fibo-field-shell  [hostDirective: FieldShellHost]
     div[fiboFieldContainer]
       label[fiboFieldLabel]
@@ -47,7 +96,7 @@ The system separates concerns that are often collapsed into one primitive: **for
 ### Text-input field with overlay (DatePicker pattern)
 
 ```text
-<host> [hostDirectives: FieldUiState, LabelLayout]
+<host> [hostDirectives: FieldUiState, Size]
   fibo-field-shell  [hostDirective: FieldShellHost]
     div[fiboFieldContainer]
       label[fiboFieldLabel]
@@ -137,24 +186,6 @@ Clicking anywhere on the shell chrome routes through `FieldShellHost.activatePri
 
 `FieldInput` detects a co-located `FieldOverlay` via `inject(FieldOverlay, { self: true })`. Shell-chrome click → `focus() + overlay.open()`. Click **inside** the input text places the native caret without toggling the overlay — `FieldOverlay.onHostClick` early-returns when the injected `FieldButton` is absent.
 
-## `LabelLayout` — cascading label layout
-
-`LabelLayout` sits on an outer wrapper and sets the shared `data-label-layout` hook for every descendant field. `Size` works alongside it as a separate primitive:
-
-```html
-<form fiboSize="sm" labelLayout="inline">
-  <fibo-text-field label="Name" />
-  <fibo-select label="Role" [items]="roles" />
-</form>
-```
-
-| Input | Type | CSS effect |
-| --- | --- | --- |
-| `fiboSize` | `'sm' \| 'md' \| 'lg'` | Sets `--ff-control-min-height` on descendant `.fibo-field-container` via the shared `Size` hostDirective (same primitive used by `Button`) |
-| `labelLayout` | `'stacked' \| 'inline'` | Switches `--ff-body-direction` (label above vs. left of control) |
-
-`LabelLayout` is also applied as a `hostDirective` on every public field component so consumers can set `[labelLayout]` directly on `<fibo-text-field>`. `Size` remains a separate `hostDirective`, so `[fiboSize]` works the same way.
-
 ## `FieldShellHost` — DI Hub
 
 Applied as a `hostDirective` on `fibo-field-shell`. Lives on the host element — the same DI scope projected content (`fiboFieldInput`, `fiboFieldButton`, `fiboFieldOverlay`) reaches via `inject()`.
@@ -163,7 +194,7 @@ Registration pattern replaces `contentChild` queries, which cannot cross the Ang
 
 - `FieldContainer` → `registerContainerElement(el)` — provides overlay reference element
 - `FieldInput` / `FieldButton` → `registerInteractive(ref)` — provides focus + activation target
-- `FieldLabel` → `setHasLabel(true/false)` via `DestroyRef` — drives `aria-labelledby`
+- `FieldLabel` → `setHasLabel(true/false)` via `DestroyRef`
 
 Methods consumers typically rely on:
 - `idFor(suffix)` → stable IDs (`field-N-label`, `field-N-control`, …)
@@ -259,6 +290,7 @@ Automatic (no manual binding needed):
 - `data-field-target="true"` on the primary target (click delegation marker)
 - `aria-expanded`, `aria-controls` on overlay triggers
 - `aria-disabled`, `data-invalid`, `data-readonly`, `data-pending` on the container
+- `aria-labelledby` on the field container when `FormLayout` external label is active (replaces `for` to prevent unintended overlay activation on label click)
 
 Consumer responsibility:
 - `role="combobox"`, `aria-haspopup` on the primary target where applicable

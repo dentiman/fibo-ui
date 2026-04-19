@@ -23,7 +23,6 @@ import { FieldShell } from '../form/field-shell';
 import { FieldShellHost } from '../form/field-shell-host';
 import { FieldInput } from '../form/field-input';
 import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
-import { LabelLayout } from '../form/label-layout';
 import { Size } from '../../primitives/size';
 
 @Component({
@@ -32,10 +31,6 @@ import { Size } from '../../primitives/size';
     {
       directive: FieldUiState,
       inputs: [...FIELD_UI_STATE_INPUTS],
-    },
-    {
-      directive: LabelLayout,
-      inputs: ['labelLayout'],
     },
     { directive: Size, inputs: ['fiboSize'] },
   ],

@@ -138,6 +138,47 @@
 
   /* ── Layout modifiers ───────────────────────────────────── */
 
+  /* External label layouts — fibo-field-shell becomes a grid */
+
+  .fibo-field-shell {
+    --fibo-field-shell-label-width: 50%;
+    --fibo-field-shell-gap: 0.5rem;
+    --fibo-field-shell-column-gap: 1rem;
+
+    display: contents;
+  }
+
+  .fibo-field-shell[data-layout="vertical"] {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+
+  .fibo-field-shell[data-layout="horizontal"] {
+    display: grid;
+    grid-template-columns: var(--fibo-field-shell-cols, 1fr 1fr);
+    align-items: center;
+    column-gap: var(--fibo-field-shell-column-gap);
+    row-gap: 0;
+  }
+
+  .fibo-field-shell-label {
+    font-size: 0.875rem;
+    color: var(--foreground-secondary);
+  }
+
+  /* Label aligns with text inside the container (matches container padding-x) */
+  .fibo-field-shell[data-layout="vertical"] .fibo-field-shell-label {
+    margin-left: var(--ff-control-padding-x, 0.75rem);
+  }
+
+  /* Error and hint align under the field container, not under the label */
+  .fibo-field-shell[data-layout="horizontal"] .fibo-field-error,
+  .fibo-field-shell[data-layout="horizontal"] .fibo-field-hint {
+    grid-column: 2;
+  }
+
   [data-label-layout="inline"] .fibo-field-container {
     --ff-body-direction: row;
     --ff-body-align: center;

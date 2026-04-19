@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TextField } from '@fibo-ui/components';
 
 @Component({
-  selector: 'form-field-control-clearable-example',
+  selector: 'field-control-clearable-example',
   imports: [TextField],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -18,6 +18,6 @@ import { TextField } from '@fibo-ui/components';
     </div>
   `,
 })
-export class FormFieldControlClearableExample {
+export class FieldControlClearableExample {
   readonly username = signal('John Doe');
 }

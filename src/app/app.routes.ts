@@ -29,9 +29,14 @@ export const routes: Routes = [
       },
       {
         path: 'form-field-control',
+        pathMatch: 'full',
+        redirectTo: 'field-control',
+      },
+      {
+        path: 'field-control',
         loadComponent: () =>
-          import('./pages/components/form-controls/form-field-control-page').then(
-            (m) => m.FormFieldControlPageComponent,
+          import('./pages/components/form-controls/field-control-page').then(
+            (m) => m.FieldControlPageComponent,
           ),
       },
       {
@@ -112,6 +117,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/components/form-controls/form-examples-page').then(
             (m) => m.FormExamplesPageComponent,
+          ),
+      },
+      {
+        path: 'field-shell-examples',
+        loadComponent: () =>
+          import('./pages/components/form-controls/field-shell-examples-page').then(
+            (m) => m.FieldShellExamplesPageComponent,
           ),
       },
       {

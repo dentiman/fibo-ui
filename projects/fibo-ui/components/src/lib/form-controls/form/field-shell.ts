@@ -5,6 +5,7 @@ import { FieldContainer } from './field-container';
 import { FieldLabel } from './field-label';
 import { FieldShellHost } from './field-shell-host';
 import { FieldUiState } from './field-ui-state';
+import { FormLayout } from './form-layout';
 
 @Component({
   selector: 'fibo-field-shell',
@@ -12,16 +13,24 @@ import { FieldUiState } from './field-ui-state';
   hostDirectives: [FieldShellHost],
   imports: [LucideAngularModule, FieldAuxiliary, FieldLabel, FieldContainer],
   host: {
-    class: 'block',
+    class: 'fibo-field-shell',
+    '[attr.data-layout]': 'externalLayout()',
   },
   template: `
-    <div fiboFieldContainer [attr.data-has-clear]="canClear() || null">
+    @if (externalLayout()) {
+      <label [id]="idFor('label')" class="fibo-field-shell-label">{{ label() }}</label>
+    }
+
+    <div fiboFieldContainer
+      [attr.data-has-clear]="canClear() || null"
+      [attr.aria-labelledby]="externalLayout() ? idFor('label') : null"
+    >
       @if (iconStart()) {
         <lucide-icon [name]="iconStart()" size="16" class="fibo-field-icon shrink-0"></lucide-icon>
       }
 
       <div class="fibo-field-body">
-        @if (label()) {
+        @if (!externalLayout() && label()) {
           <label fiboFieldLabel>{{ label() }}</label>
         }
 
@@ -62,6 +71,7 @@ import { FieldUiState } from './field-ui-state';
 export class FieldShell {
   private readonly host = inject(FieldShellHost);
   private readonly formUiState = inject(FieldUiState, { optional: true });
+  private readonly formLayout = inject(FormLayout, { optional: true });
 
   readonly label = input('');
   readonly hint = input('');
@@ -70,6 +80,8 @@ export class FieldShell {
   readonly canClear = input(false);
 
   readonly clearRequested = output<void>();
+
+  readonly externalLayout = computed(() => this.formLayout?.formLayout() ?? null);
 
   readonly errorMessage = computed(() => this.formUiState?.errorMessage() ?? null);
 

@@ -51,6 +51,7 @@ export * from './lib/form-controls/fields/datepicker-field';
 export * from './lib/form-controls/form/form-error';
 export * from './lib/form-controls/form/field-ui-state';
 export * from './lib/form-controls/form/label-layout';
+export * from './lib/form-controls/form/form-layout';
 export * from './lib/form-controls/form/field-shell-host';
 export * from './lib/form-controls/form/field-container';
 export * from './lib/form-controls/form/field-target';
