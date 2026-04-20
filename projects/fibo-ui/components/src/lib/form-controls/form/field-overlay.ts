@@ -55,7 +55,6 @@ export class FieldOverlay {
   }
 
   onHostClick(event: MouseEvent): void {
-    if (!this.button) return;
     if ((event.target as HTMLElement).closest('[data-field-auxiliary]')) return;
     this.toggle();
   }
