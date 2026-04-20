@@ -7,9 +7,6 @@ import { FieldOverlay } from './field-overlay';
   selector: '[fiboFieldInput]',
   standalone: true,
   hostDirectives: [FieldTarget],
-  host: {
-    class: 'fibo-field-input',
-  },
 })
 export class FieldInput implements FieldTargetRef {
   private readonly elementRef = inject(ElementRef<HTMLElement>);

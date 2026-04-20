@@ -22,6 +22,7 @@ import { FormLayout } from './form-layout';
     }
 
     <div fiboFieldContainer
+      class="fibo-field-container"
       [attr.data-has-clear]="canClear() || null"
       [attr.aria-labelledby]="externalLayout() ? idFor('label') : null"
     >
@@ -31,7 +32,7 @@ import { FormLayout } from './form-layout';
 
       <div class="fibo-field-body">
         @if (!externalLayout() && label()) {
-          <label fiboFieldLabel>{{ label() }}</label>
+          <label fiboFieldLabel class="fibo-field-label">{{ label() }}</label>
         }
 
         <div class="fibo-field-content">

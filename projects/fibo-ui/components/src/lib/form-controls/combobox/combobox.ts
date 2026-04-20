@@ -62,6 +62,7 @@ import { Size } from '../../primitives/size';
     >
       <input
         fiboFieldInput
+        class="fibo-field-input"
         #inputElement
         [placeholder]="placeholder()"
         (blur)="uiState.touched.set(true)"

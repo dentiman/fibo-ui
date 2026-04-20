@@ -7,7 +7,6 @@ import { FieldUiState } from './field-ui-state';
   standalone: true,
   exportAs: 'FieldContainer',
   host: {
-    class: 'fibo-field-container',
     '[attr.aria-disabled]': 'disabled() || null',
     '[attr.data-invalid]': 'hasError() || null',
     '[attr.data-readonly]': 'readonly() || null',

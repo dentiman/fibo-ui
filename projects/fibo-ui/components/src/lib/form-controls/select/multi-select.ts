@@ -54,7 +54,7 @@ import { SelectItem } from './select';
         role="combobox"
         aria-haspopup="listbox"
         [attr.aria-disabled]="uiState.disabled() || null"
-        class="flex flex-wrap gap-x-1 gap-y-1 -mx-1"
+        class="fibo-field-button flex flex-wrap gap-x-1 gap-y-1 -mx-1"
         (focus)="onFocus()"
         (blur)="onBlur()"
         (keydown.arrowdown)="openFromKeyboard($event)"

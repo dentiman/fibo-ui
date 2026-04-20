@@ -50,6 +50,7 @@ export interface SelectItem {
     >
       <button
         fiboFieldButton
+        class="fibo-field-button"
         [fiboFieldOverlay]="selectTpl"
         [matchWidth]="true"
         #triggerButton

@@ -37,6 +37,7 @@ import { Size } from '../../primitives/size';
     >
       <input
         fiboFieldInput
+        class="fibo-field-input"
         [fiboFieldOverlay]="calendarTpl"
         #inputElement
         aria-haspopup="dialog"

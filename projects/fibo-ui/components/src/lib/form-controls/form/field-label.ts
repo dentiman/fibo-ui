@@ -7,7 +7,6 @@ let nextFieldLabelId = 0;
   selector: '[fiboFieldLabel]',
   standalone: true,
   host: {
-    class: 'fibo-field-label',
     '[id]': 'labelId()',
     '[attr.for]': 'controlId()',
   },

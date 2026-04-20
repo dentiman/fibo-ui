@@ -32,6 +32,7 @@ import { Size } from '../../primitives/size';
     >
       <input
         fiboFieldInput
+        class="fibo-field-input"
         #inputElement
         [type]="type()"
         [value]="value()"

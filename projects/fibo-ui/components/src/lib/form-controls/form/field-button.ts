@@ -8,7 +8,6 @@ import { FieldUiState } from './field-ui-state';
   standalone: true,
   hostDirectives: [FieldTarget],
   host: {
-    class: 'fibo-field-button',
     '[attr.tabindex]': 'tabindex()',
     '(keydown.enter)': 'activate($event)',
     '(keydown.space)': 'activate($event)',
