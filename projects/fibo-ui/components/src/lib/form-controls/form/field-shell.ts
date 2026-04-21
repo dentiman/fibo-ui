@@ -1,10 +1,6 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
-import { FieldAuxiliary } from './field-auxiliary';
-import { FieldContainer } from './field-container';
-import { FieldLabel } from './field-label';
-import { FieldShellHost } from './field-shell-host';
-import { FieldUiState } from './field-ui-state';
+import { FieldAuxiliary, FieldContainer, FieldLabel, FieldShellHost, FieldUiState } from '@fibo-ui/cdk';
 import { FormLayout } from './form-layout';
 
 @Component({

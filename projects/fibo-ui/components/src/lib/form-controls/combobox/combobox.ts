@@ -12,6 +12,10 @@ import { FormValueControl } from '@angular/forms/signals';
 import {
   DataList,
   DataListItem,
+  FieldInput,
+  FieldShellHost,
+  FIELD_UI_STATE_INPUTS,
+  FieldUiState,
   SelectOne,
   createOverlay,
   provideFormValueControl,
@@ -20,9 +24,6 @@ import { type ComboboxControl, provideComboboxControl } from './combobox-control
 import { ComboboxInput } from './combobox-input';
 import { ComboboxList } from './combobox-list';
 import { FieldShell } from '../form/field-shell';
-import { FieldShellHost } from '../form/field-shell-host';
-import { FieldInput } from '../form/field-input';
-import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
 import { Size } from '../../primitives/size';
 
 @Component({

@@ -3,15 +3,16 @@ import { FormValueControl } from '@angular/forms/signals';
 import {
   DataList,
   DataListItem,
+  FieldAuxiliary,
+  FieldButton,
+  FieldOverlay,
+  FIELD_UI_STATE_INPUTS,
+  FieldUiState,
   SelectMulti,
   provideFormValueControl,
 } from '@fibo-ui/cdk';
 import { LucideAngularModule } from 'lucide-angular';
-import { FieldAuxiliary } from '../form/field-auxiliary';
 import { FieldShell } from '../form/field-shell';
-import { FieldButton } from '../form/field-button';
-import { FieldOverlay } from '../form/field-overlay';
-import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
 import { Size } from '../../primitives/size';
 import { Checkbox } from '../checkbox/checkbox';
 import { SelectItem } from './select';

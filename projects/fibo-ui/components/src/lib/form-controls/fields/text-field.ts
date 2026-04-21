@@ -1,9 +1,7 @@
 import { Component, ElementRef, inject, input, model, viewChild } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
-import { provideFormValueControl } from '@fibo-ui/cdk';
+import { FieldInput, FIELD_UI_STATE_INPUTS, FieldUiState, provideFormValueControl } from '@fibo-ui/cdk';
 import { FieldShell } from '../form/field-shell';
-import { FieldInput } from '../form/field-input';
-import { FIELD_UI_STATE_INPUTS, FieldUiState } from '../form/field-ui-state';
 import { Size } from '../../primitives/size';
 
 @Component({
