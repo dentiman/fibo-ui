@@ -48,7 +48,6 @@ export * from './lib/form-controls/select/select';
 export * from './lib/form-controls/select/multi-select';
 export * from './lib/form-controls/fields/text-field';
 export * from './lib/form-controls/fields/datepicker-field';
-export * from './lib/form-controls/form/form-error';
 export * from './lib/form-controls/form/label-layout';
 export * from './lib/form-controls/form/form-layout';
 export * from './lib/form-controls/form/field-shell';
