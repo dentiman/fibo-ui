@@ -2,9 +2,10 @@ import { computed, Directive, ElementRef, inject } from '@angular/core';
 import { FieldTarget } from './field-target';
 import { FieldShellHost, type FieldTargetRef } from './field-shell-host';
 import { FieldUiState } from './field-ui-state';
+import { FieldOverlay } from './field-overlay';
 
 @Directive({
-  selector: '[fiboFieldButton]',
+  selector: '[fiboFieldInteractive]',
   standalone: true,
   hostDirectives: [FieldTarget],
   host: {
@@ -13,10 +14,11 @@ import { FieldUiState } from './field-ui-state';
     '(keydown.space)': 'activate($event)',
   },
 })
-export class FieldButton implements FieldTargetRef {
+export class FieldInteractive implements FieldTargetRef {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly host = inject(FieldShellHost, { optional: true });
   private readonly fieldUiState = inject(FieldUiState, { optional: true });
+  private readonly overlay = inject(FieldOverlay, { optional: true, self: true });
 
   readonly tabindex = computed(() => (this.fieldUiState?.disabled() ? -1 : 0));
 
@@ -38,12 +40,12 @@ export class FieldButton implements FieldTargetRef {
 
   activateFromShell(): void {
     this.focus();
-    this.element().click();
+    this.overlay?.open();
   }
 
   activate(event: Event): void {
     if (this.element() instanceof HTMLButtonElement) return;
     event.preventDefault();
-    this.element().click();
+    this.overlay?.toggle();
   }
 }

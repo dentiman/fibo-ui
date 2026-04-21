@@ -1,6 +1,5 @@
 import { computed, Directive, ElementRef, inject, input, signal, TemplateRef } from '@angular/core';
 import { createOverlay } from '../overlay/public-overlay';
-import { FieldButton } from './field-button';
 import { FieldShellHost } from './field-shell-host';
 import { FieldUiState } from './field-ui-state';
 
@@ -18,7 +17,6 @@ import { FieldUiState } from './field-ui-state';
 export class FieldOverlay {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private readonly host = inject(FieldShellHost, { optional: true });
-  private readonly button = inject(FieldButton, { optional: true });
   private readonly fieldUiState = inject(FieldUiState, { optional: true });
 
   readonly overlayContent = input.required<TemplateRef<unknown>>({ alias: 'fiboFieldOverlay' });

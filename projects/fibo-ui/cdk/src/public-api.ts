@@ -14,7 +14,7 @@ export * from './lib/form/field-auxiliary';
 export * from './lib/form/field-label';
 export * from './lib/form/field-container';
 export * from './lib/form/field-target';
-export * from './lib/form/field-button';
+export * from './lib/form/field-interactive';
 export * from './lib/form/field-input';
 export * from './lib/form/field-overlay';
 

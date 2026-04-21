@@ -4,7 +4,7 @@ import {
   DataList,
   DataListItem,
   FieldAuxiliary,
-  FieldButton,
+  FieldInteractive,
   FieldOverlay,
   FIELD_UI_STATE_INPUTS,
   FieldUiState,
@@ -32,7 +32,7 @@ import { SelectItem } from './select';
     LucideAngularModule,
     DataListItem,
     FieldShell,
-    FieldButton,
+    FieldInteractive,
     FieldOverlay,
     FieldAuxiliary,
     Checkbox,
@@ -48,7 +48,7 @@ import { SelectItem } from './select';
       iconEnd="chevron-down"
     >
       <div
-        fiboFieldButton
+        fiboFieldInteractive
         [fiboFieldOverlay]="multiSelectTpl"
         [matchWidth]="true"
         #triggerSurface

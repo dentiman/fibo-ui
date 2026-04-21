@@ -3,7 +3,7 @@ import { FormValueControl } from '@angular/forms/signals';
 import {
   DataList,
   DataListItem,
-  FieldButton,
+  FieldInteractive,
   FieldOverlay,
   FIELD_UI_STATE_INPUTS,
   FieldUiState,
@@ -30,7 +30,7 @@ export interface SelectItem {
   ],
   imports: [
     FieldShell,
-    FieldButton,
+    FieldInteractive,
     FieldOverlay,
     DataList,
     SelectOne,
@@ -50,7 +50,7 @@ export interface SelectItem {
       (clearRequested)="clear()"
     >
       <button
-        fiboFieldButton
+        fiboFieldInteractive
         class="fibo-field-button"
         [fiboFieldOverlay]="selectTpl"
         [matchWidth]="true"
