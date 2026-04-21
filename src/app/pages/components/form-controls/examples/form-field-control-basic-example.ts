@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FieldShell, FieldInput, LabelLayout, Size } from '@fibo-ui/components';
+import { FieldInput } from '@fibo-ui/cdk';
+import { FieldShell, LabelLayout, Size } from '@fibo-ui/components';
 
 @Component({
   selector: 'field-control-basic-example',
