@@ -391,6 +391,26 @@
     display: none;
   }
 
+  /* ── Password toggle button ─────────────────────────────── */
+
+  .fibo-field-toggle {
+    cursor: pointer;
+    border-radius: 9999px;
+    flex-shrink: 0;
+    color: var(--foreground-tertiary);
+    transition-property: color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+
+    &:hover {
+      color: var(--foreground);
+    }
+  }
+
+  .fibo-field-container[aria-disabled="true"] .fibo-field-toggle {
+    cursor: not-allowed;
+  }
+
   /* ── Placeholder text (Select, MultiSelect) ─────────────── */
 
   .fibo-field-placeholder {

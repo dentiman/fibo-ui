@@ -1,13 +1,14 @@
 import { Component, signal, ChangeDetectionStrategy, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormField, form, required, disabled } from '@angular/forms/signals';
-import { TextField, Select, MultiSelect, DatePickerField, Button } from '@fibo-ui/components';
+import { TextField, Select, MultiSelect, DatePickerField, Button, PasswordField } from '@fibo-ui/components';
 import { citiesChoices } from '../../../common/form-data-example';
 
 interface UserProfile {
   firstName: string;
   lastName: string;
   email: string;
+  password: string;
   phone: string;
   roles: string[] | null;
   city: string | null;
@@ -25,6 +26,7 @@ interface UserProfile {
     FormField,
     DatePickerField,
     Button,
+    PasswordField,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -52,6 +54,13 @@ interface UserProfile {
           placeholder="example@mail.com"
           [formField]="userProfileForm.email">
         </fibo-text-field>
+
+        <fibo-password-field
+          iconStart="lock"
+          label="Password"
+          placeholder="Enter password"
+          [formField]="userProfileForm.password">
+        </fibo-password-field>
 
         <fibo-text-field
           iconStart="chevron-right"
@@ -99,6 +108,7 @@ export class ComponentsFieldsFormComponent {
     firstName: '',
     lastName: '',
     email: '',
+    password: '',
     phone: '',
     roles: [],
     city: null,
@@ -117,6 +127,7 @@ export class ComponentsFieldsFormComponent {
     required(patch.firstName, { message: 'First Name is required' });
     required(patch.lastName, { message: 'Last Name is required' });
     required(patch.email, { message: 'Email is required' });
+    required(patch.password, { message: 'Password is required' });
     required(patch.phone, { message: 'Phone is required' });
     required(patch.roles, { message: 'Roles are required' });
     required(patch.city, { message: 'City is required' });

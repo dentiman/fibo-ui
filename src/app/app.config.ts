@@ -76,6 +76,8 @@ import {
   Info,
   Network,
   Package,
+  Eye,
+  EyeOff,
 } from 'lucide-angular';
 
 const icons = {
@@ -143,6 +145,8 @@ const icons = {
   Info,
   Network,
   Package,
+  Eye,
+  EyeOff,
 };
 
 export const appConfig: ApplicationConfig = {

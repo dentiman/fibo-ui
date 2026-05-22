@@ -49,6 +49,8 @@ import { FormLayout } from './form-layout';
         </button>
       }
 
+      <ng-content select="[fiboFieldEnd]"></ng-content>
+
       @if (iconEnd()) {
         <lucide-icon
           [name]="iconEnd()"
