@@ -273,7 +273,7 @@ Trimmed набір: `primary`, `secondary`, `danger`, `inverse`, `chip`, `text`.
 - [`projects/fibo-ui/components/src/styles/button.css`](../projects/fibo-ui/components/src/styles/button.css)
 - [`projects/fibo-ui/components/src/styles/form-field.css`](../projects/fibo-ui/components/src/styles/form-field.css)
 
-**Референсні бібліотеки (`/Users/dentiman/dev/projects/fibo-stack/`):**
+**Референсні бібліотеки (`<local ref-libs>/`):**
 - `taiga-ui-5/` — найкорисніший референс по шаровій моделі стилів
 - `components/` — Angular Material, CDK patterns
 - `spartan/` — Angular headless, signal-based

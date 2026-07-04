@@ -1,15 +1,24 @@
 # Fibo UI
 
-Angular UI component library monorepo — two publishable packages and a demo application.
+[![CI](https://github.com/dentiman/fibo-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/dentiman/fibo-ui/actions/workflows/ci.yml)
+[![npm @fibo-ui/cdk](https://img.shields.io/npm/v/%40fibo-ui%2Fcdk?label=%40fibo-ui%2Fcdk)](https://www.npmjs.com/package/@fibo-ui/cdk)
+[![npm @fibo-ui/components](https://img.shields.io/npm/v/%40fibo-ui%2Fcomponents?label=%40fibo-ui%2Fcomponents)](https://www.npmjs.com/package/@fibo-ui/components)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+
+Signal-native Angular UI library monorepo — two publishable packages and a demo application.
 
 Built with **Angular 21**, **Tailwind CSS 4**, **TypeScript 5.9** (strict mode), and **zoneless change detection**.
 
-## Packages
+> **Status: beta.** APIs may change between minor versions until 1.0.
 
-| Package | Version | Description |
-|---|---|---|
-| [`@fibo-ui/cdk`](./projects/fibo-ui/cdk) | 0.0.9 | Core Development Kit — low-level directives, utilities, and base controls (popover, portal, data-list, form-field, selection models) |
-| [`@fibo-ui/components`](./projects/fibo-ui/components) | 0.1.11 | UI Components — built on top of CDK (form fields, select, menu, dialog, table, calendar, notification, tooltip, and more) |
+## Philosophy
+
+> "The CDK does the hard part. A component is a simple blueprint. Developers use it as-is — or compose their own."
+
+- **[`@fibo-ui/cdk`](./projects/fibo-ui/cdk)** — headless behavior primitives: overlays, keyboard navigation, selection models, form field composition, a11y. No styles.
+- **[`@fibo-ui/components`](./projects/fibo-ui/components)** — ready-to-use styled components (Select, Combobox, DatePicker, Menu, Dialog, Table…) that double as readable blueprints, most under 100 lines.
+
+Three levels of usage: use components directly, compose them, or build your own business components from the same CDK blocks. See [docs/philosophy.md](./docs/philosophy.md).
 
 **Build dependency chain:** `@fibo-ui/cdk` → `@fibo-ui/components` → demo app.
 
@@ -26,12 +35,11 @@ npm start          # Dev server at http://localhost:4200
 |---|---|
 | `npm start` | Start dev server (http://localhost:4200) |
 | `npm run build` | Build all projects (CDK → Components → App) |
+| `npm run build:libs` | Build both libraries |
 | `npm run build:prod` | Production build |
 | `npm test` | Run app unit tests (Karma + Jasmine) |
 | `ng test @fibo-ui/cdk` | Run CDK library tests |
 | `ng test @fibo-ui/components` | Run Components library tests |
-| `ng build @fibo-ui/cdk` | Build CDK library only |
-| `ng build @fibo-ui/components` | Build Components library only |
 
 ## Project Structure
 
@@ -44,72 +52,75 @@ npm start          # Dev server at http://localhost:4200
 │   └── styles.css                    # Global styles + library CSS imports
 │
 ├── projects/fibo-ui/
-│   ├── cdk/                          # @fibo-ui/cdk
+│   ├── cdk/                          # @fibo-ui/cdk — headless primitives
 │   │   └── src/lib/
-│   │       ├── popover/              # Popover + PopoverTrigger (Floating UI)
-│   │       ├── portal/              # OverlayRegistry, PortalContent, OverlayOutlet
-│   │       ├── data-list/           # DataList, DataListItem, SelectOne, SelectMulti
-│   │       ├── form/                # FormFieldDirective, FiboInput
-│   │       ├── common/              # IsEmpty, RandomId
-│   │       └── utils/               # Property utilities
+│   │       ├── overlay/              # createOverlay, triggers, shells, positioning
+│   │       ├── data-list/            # DataList, SelectOne/SelectMulti selection models
+│   │       ├── form/                 # Field composition stack (container, label, input…)
+│   │       ├── menu/                 # Expandable, submenu triggers, route expansion
+│   │       ├── table/                # Column and row primitives
+│   │       ├── date/                 # DateAdapter, date/date-range selection
+│   │       └── common/               # IsEmpty, RandomId, utilities
 │   │
-│   └── components/                   # @fibo-ui/components
+│   └── components/                   # @fibo-ui/components — styled components
 │       └── src/
 │           ├── lib/
-│           │   ├── form/            # TextField, DatePickerField, FormFieldControl
-│           │   ├── select/          # Select, MultiSelect
-│           │   ├── calendar/        # Calendar, DateSelectionModel, DateRangeSelectionModel
-│           │   ├── menu/            # Menu, TreeMenu, MenuItem, MenuPanel
-│           │   ├── dialog/          # FiboDialog, DialogTrigger, DialogService
-│           │   ├── notification/    # Notification, Notifier service
-│           │   ├── confirmation/    # Confirmation, ConfirmationTrigger, ConfirmationService
-│           │   ├── tooltip/         # Tooltip directive, TooltipService
-│           │   ├── table/           # Table, FiboColumn, FiboTableRow
-│           │   ├── data-list/       # Listbox
-│           │   ├── checkbox/        # Checkbox
-│           │   ├── switch/          # Switch
-│           │   └── loading-spin/    # LoadingSpin
-│           ├── theme.css            # CSS custom properties (light + dark)
-│           ├── buttons.css          # Button classes
-│           ├── components.css       # Component utility classes
-│           └── form-fields.css      # Form field classes
+│           │   ├── form-controls/    # TextField, PasswordField, DatePicker, Select,
+│           │   │                     # MultiSelect, Combobox, Calendar, Checkbox, Switch
+│           │   ├── overlay/          # Shells, Tooltip, Confirmation, Notification
+│           │   ├── menu/             # Menu, TreeMenu, SideMenu
+│           │   ├── data-list/        # Listbox
+│           │   ├── table/            # Table
+│           │   ├── buttons/          # Button directive
+│           │   └── primitives/       # Appearance, Size styling directives
+│           ├── theme.css             # CSS custom properties (light + dark)
+│           └── styles/               # Per-subsystem CSS (form-field, overlay, button…)
+│
+├── public/documentation/             # User-facing docs rendered by the demo app
+└── docs/                             # Internal architecture notes and deep dives
 ```
 
 ## Architecture
 
 ### CDK Layer (`@fibo-ui/cdk`)
 
-Behavior-only primitives with no styling. Components library builds on these.
+Behavior-only primitives with no styling. The components library builds on these.
 
-- **Popover system** — `PopoverTrigger` (click/toggle variants) manages open state, `Popover` handles positioning via `@floating-ui/dom` and click-outside dismissal, `PopoverPosition` computes placement
-- **Portal system** — `PortalContent` directive marks template content, `OverlayOutlet` renders it at a different DOM location, `OverlayRegistry` connects them. Used by all floating UI (menus, selects, dialogs)
-- **DataList + Selection** — `DataList` manages a list of `DataListItem` directives with keyboard navigation (arrow keys, active state tracking). `SelectOne` and `SelectMulti` are selection model directives that plug into any DataList. Used by Select, Menu, Table, Listbox
-- **Form field directives** — `FormFieldDirective` tracks form state (touched, invalid, dirty, errors) via content projection
+- **Overlay system** — a single `createOverlay(factory)` API powers every floating surface. Overlay *sessions* manage open state, focus restore, and stacking; *shells* (modal, drawer, connected, plain) define presentation; `DialogTrigger`, `DrawerTrigger`, and `PopoverTrigger` are thin directives on top. Positioning via `@floating-ui/dom`
+- **DataList + selection** — `DataList` manages a list of `DataListItem` directives with keyboard navigation. `SelectOne` / `SelectMulti` selection models plug into any DataList. Used by Select, Menu, Table, Listbox
+- **Field stack** — composition primitives for form fields: `FieldContainer`, `FieldLabel`, `FieldInput`, `FieldInteractive`, `FieldOverlay`, with shared UI state (`FieldUiState`) and focus targeting (`FieldTarget`)
+- **Menu primitives** — `Expandable`, `SubmenuTrigger`, expand-on-route/selection behaviors
+- **Date primitives** — `DateAdapter`, `SelectDate`, `SelectDateRange` models
 
 ### Components Layer (`@fibo-ui/components`)
 
 Styled components composed from CDK primitives.
 
-- **Form components** implement `FormValueControl<T>` interface — `value`, `required`, `disabled`, `touched`, `invalid`, `dirty`, `errors` signals. Integrates with `@angular/forms/signals` via `[formField]` binding
-- **Menu system** — `Menu` uses CDK's DataList + Popover for floating menus with nested submenus. `TreeMenu` renders hierarchical collapsible navigation with active URL detection
-- **Dialog** — `DialogTrigger` directive opens modal/drawer via `DialogService`. Supports `'dialog'` and `'drawer'` modes
-- **Notification** — `Notifier` service manages a signal-based stack of toasts with auto-dismiss timers
+- **Form components** implement the `FormValueControl<T>` interface — `value`, `required`, `disabled`, `touched`, `invalid`, `dirty`, `errors` signals. Integrate with `@angular/forms/signals` via the `[formField]` binding
+- **Overlay shells** — `provideOverlays()` registers default shells; `withShell(TOKEN, Component)` overrides any of them
+- **Menu system** — `Menu` builds on CDK DataList + overlay triggers; `TreeMenu` renders hierarchical navigation with active-URL detection
+- **Notifier** — signal-based toast stack with auto-dismiss
 
 ### Styling
 
-Components ship CSS files as package exports:
+The components package ships plain CSS as package exports:
 
 ```css
-@import '@fibo-ui/components/theme';        /* CSS custom properties */
-@import '@fibo-ui/components/buttons';       /* .btn, .btn-primary, etc. */
-@import '@fibo-ui/components/components';    /* .datalist-item, .fibo-card, etc. */
+@import '@fibo-ui/components/theme' layer(theme);   /* CSS custom properties */
+@import '@fibo-ui/components/styles/appearance';
+@import '@fibo-ui/components/styles/form-field';
+@import '@fibo-ui/components/styles/datalist';
+@import '@fibo-ui/components/styles/overlay';
+@import '@fibo-ui/components/styles/checkbox';
+@import '@fibo-ui/components/styles/switch';
+@import '@fibo-ui/components/styles/button';
 ```
 
-Dark mode uses `data-theme="dark"` attribute on `<html>`. All CSS custom properties switch automatically.
+Dark mode uses the `data-theme="dark"` attribute on `<html>` — all CSS custom properties switch automatically.
 
 Icons: [Lucide Angular](https://lucide.dev/guide/packages/lucide-angular) — tree-shakeable, registered in `app.config.ts`.
 
-## Component Usage Examples
+## Usage Examples
 
 ### Form Fields with Signal Forms
 
@@ -124,19 +135,18 @@ userForm = form(this.userModel, (path) => {
 ```
 
 ```html
-<fibo-text-field [formField]="userForm.username" label="Username" />
+<fibo-text-field [formField]="userForm.username" label="Username" iconStart="user" />
 <fibo-datepicker [formField]="userForm.birthDate" label="Birth Date" />
 ```
 
-### Dialog
+### Dialog and Drawer
 
 ```html
-<button [fiboDialogTrigger]="content">Open Dialog</button>
-<button [fiboDialogTrigger]="content" [fiboDialogConfig]="{ mode: 'drawer' }">Open Drawer</button>
+<button fiboButton fiboDialogTrigger [content]="dialogTpl">Open Dialog</button>
+<button fiboButton fiboDrawerTrigger [content]="drawerTpl">Open Drawer</button>
 
-<ng-template #content>
-  <div>Dialog body here</div>
-</ng-template>
+<ng-template #dialogTpl>Dialog body here</ng-template>
+<ng-template #drawerTpl>Drawer body here</ng-template>
 ```
 
 ### Table with Sort and Selection
@@ -159,7 +169,7 @@ private notifier = inject(Notifier);
 
 this.notifier.success('Saved!');
 this.notifier.error('Failed.', 0);       // 0 = no auto-dismiss
-this.notifier.warning('Warning!', 8);     // 8 seconds
+this.notifier.warning('Warning!', 8);     // seconds
 ```
 
 ### Tooltip
@@ -168,16 +178,16 @@ this.notifier.warning('Warning!', 8);     // 8 seconds
 <button [fiboTooltip]="'Save changes'" placement="top">Save</button>
 ```
 
-For complete API reference and all component examples, see the [`@fibo-ui/components` README](./projects/fibo-ui/components/README.md).
+For the complete API reference, run the demo app (`npm start`) — it serves the docs from [public/documentation](./public/documentation).
 
 ## Publishing
 
 ```bash
-ng build @fibo-ui/cdk && ng build @fibo-ui/components
-cd dist/fibo-ui/cdk && npm publish
-cd dist/fibo-ui/components && npm publish
+npm run build:libs
+cd dist/fibo-ui/cdk && npm publish --access public
+cd ../components && npm publish --access public
 ```
 
 ## License
 
-MIT
+[MIT](./LICENSE) © Denys Timanovskiy

@@ -1,6 +1,10 @@
 # @fibo-ui/cdk
 
-Core development kit for Fibo UI components. This library provides essential directives, form controls, utilities, and building blocks for creating Angular UI components.
+Signal-native **headless behavior primitives** for Angular. No styles, no markup opinions — just the hard parts: overlays, keyboard navigation, selection models, form field composition, and accessibility.
+
+`@fibo-ui/cdk` is the foundation of [`@fibo-ui/components`](https://www.npmjs.com/package/@fibo-ui/components), but it is designed to be used on its own to build custom design systems.
+
+> **Status: beta.** APIs may change between minor versions until 1.0.
 
 ## Installation
 
@@ -8,159 +12,70 @@ Core development kit for Fibo UI components. This library provides essential dir
 npm install @fibo-ui/cdk
 ```
 
-## Features
+Peer dependencies: `@angular/common`, `@angular/core`, `@angular/forms`, `@angular/router` (v21+), `@floating-ui/dom`, `date-fns`, `rxjs`.
 
-### Common Directives
-- **AutoFocus**: Automatically focuses elements when they become visible
-- **DataActive**: Manages active state for interactive elements
-- **IsEmpty**: Utility directive for checking empty states
-- **PrimitiveValueAccessor**: Base class for form controls
-- **RandomId**: Generates unique IDs for elements
+## What's inside
 
-### Form Components & Services
-- **Form Field Control**: Base interface for form field controls
-- **Form Field Content**: Manages form field content structure
-- **Form Field Errors**: Error handling and display utilities
-- **Form Error Service**: Centralized error management
-- **Control Status**: Form control state management
-- **Form Field Popover Trigger**: Popover integration for form fields
+### Overlay system
 
-### Data List Directives
-- **Data List**: Base directive for list components
-- **List Item**: Individual list item management
-- **Selection Models**: Various selection strategies for lists
+A single `createOverlay(factory)` API powers every floating surface — dialogs, drawers, popovers, tooltips, notifications.
 
-### Popover Directives
-- **Popover Trigger**: Triggers popover display
-- **Popover Position**: Manages popover positioning
-- **Popover Arrow**: Arrow indicator for popovers
-- **Popover**: Core popover functionality
-
-### Utility Functions
-- **Property Utils**: Common property manipulation utilities
-
-## Usage
-
-### Basic Import
+- **Sessions** manage open state, focus restore, and the overlay stack
+- **Shells** define presentation (modal, drawer, connected, plain) and are swappable via injection tokens (`MODAL_SHELL_TOKEN`, `DRAWER_SHELL_TOKEN`, …)
+- **Triggers** — `DialogTrigger` (`[fiboDialogTrigger]`), `DrawerTrigger` (`[fiboDrawerTrigger]`), `PopoverTrigger` (`[fiboPopoverTrigger]`) are thin directives on top of `createOverlay`
+- **Positioning** — `OverlayPosition`, `OverlayArrow`, `OverlayPanel` wrap `@floating-ui/dom` for connected placement
 
 ```typescript
-import { AutoFocusDirective, FormFieldControl } from '@fibo-ui/cdk';
-```
+export class MyTrigger {
+  isOpen = model(false);
+  content = input.required<TemplateRef<unknown>>();
 
-### Using Directives
-
-```typescript
-import { Component } from '@angular/core';
-import { AutoFocusDirective } from '@fibo-ui/cdk';
-
-@Component({
-  selector: 'app-example',
-  template: `
-    <input autoFocus placeholder="This input will be focused automatically" />
-  `,
-  imports: [AutoFocusDirective]
-})
-export class ExampleComponent {}
-```
-
-### Form Field Control
-
-```typescript
-import { Component, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { FormFieldControl } from '@fibo-ui/cdk';
-
-@Component({
-  selector: 'app-custom-input',
-  template: `
-    <input 
-      [value]="value"
-      (input)="onInput($event)"
-      (blur)="onBlur()"
-    />
-  `,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => CustomInputComponent),
-      multi: true
-    },
-    {
-      provide: FormFieldControl,
-      useExisting: CustomInputComponent
-    }
-  ]
-})
-export class CustomInputComponent implements ControlValueAccessor, FormFieldControl {
-  value = '';
-  onChange = (value: string) => {};
-  onTouched = () => {};
-
-  writeValue(value: string): void {
-    this.value = value;
-  }
-
-  registerOnChange(fn: (value: string) => void): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
-  }
-
-  onInput(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.value = target.value;
-    this.onChange(this.value);
-  }
-
-  onBlur(): void {
-    this.onTouched();
-  }
+  overlay = createOverlay(() => ({
+    state: this.isOpen,
+    content: this.content(),
+  }));
 }
 ```
 
-## Requirements
+### DataList + selection models
 
-- Angular 20.1.0 or higher
-- TypeScript 5.8.2 or higher
+`DataList` (`[fiboDataList]`) manages a collection of `DataListItem` directives with keyboard navigation and active-item tracking. Selection behavior is composed by attaching a model directive:
 
-## Peer Dependencies
+- `SelectOne` (`[fiboSelectOne]`) — single selection
+- `SelectMulti` (`[fiboSelectMulti]`) — multi selection
+- `RouterSelectOne` (`[fiboRouterSelectOne]`) — selection driven by the active route
 
-- `@angular/common`: ^20.1.0
-- `@angular/core`: ^20.1.0
+The same primitives power Select, Combobox, Menu, Listbox, and Table in `@fibo-ui/components`.
 
-## Development
+### Field stack
 
-### Building the Library
+Composition primitives for building form fields that integrate with `@angular/forms/signals`:
 
-```bash
-ng build @fibo-ui/cdk --configuration=production
-```
+- `FieldContainer`, `FieldLabel`, `FieldInput`, `FieldInteractive`, `FieldOverlay`, `FieldAuxiliary`
+- `FieldUiState` — shared reactive UI state (focus, hover, filled, disabled, invalid)
+- `FieldTarget` — focus delegation between the container and its interactive parts
+- `FormValueControl<T>` token — bridge to signal forms (`value`, `required`, `disabled`, `touched`, `invalid`, `dirty`, `errors`)
 
-### Running Tests
+### Menu primitives
 
-```bash
-ng test @fibo-ui/cdk
-```
+`Expandable`, `SubmenuTrigger`, `MenuPanel`, plus `ExpandOnRoute` / `ExpandOnSelection` behaviors for tree navigation.
 
-### Publishing
+### Date primitives
 
-```bash
-cd dist/fibo-ui/cdk
-npm publish
-```
+`DateAdapter` abstraction (backed by `date-fns`), `SelectDate` and `SelectDateRange` selection models for building calendars and date pickers.
+
+### Table primitives
+
+`Column` (`*fiboColumn`), `ColumnHeader`, and `TableRow` structural building blocks.
+
+### Utilities
+
+`IsEmpty`, `RandomId`, and property helpers.
+
+## Documentation
+
+Full guides with live examples are served by the [demo app](https://github.com/dentiman/fibo-ui) (`npm start` → CDK section).
 
 ## License
 
-MIT
-
-## Contributing
-
-Please read our [contributing guidelines](https://github.com/your-org/fibo-ui/blob/main/CONTRIBUTING.md) before submitting pull requests.
-
-## Support
-
-- [Documentation](https://github.com/your-org/fibo-ui#readme)
-- [Issues](https://github.com/your-org/fibo-ui/issues)
-- [Discussions](https://github.com/your-org/fibo-ui/discussions)
+[MIT](https://github.com/dentiman/fibo-ui/blob/main/LICENSE) © Denys Timanovskiy

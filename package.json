@@ -1,6 +1,13 @@
 {
   "name": "fibo-ui",
   "version": "0.0.0",
+  "description": "Signal-native Angular UI library monorepo: @fibo-ui/cdk (headless primitives), @fibo-ui/components (styled components), and a demo app",
+  "author": "Denys Timanovskiy <den.timanovskiy@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dentiman/fibo-ui.git"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -40,7 +47,6 @@
     "@tailwindcss/typography": "^0.5.19",
     "date-fns": "^4.1.0",
     "lucide-angular": "^0.577.0",
-    "ngxtension": "^5.1.0",
     "postcss": "^8.5.6",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.1.12",

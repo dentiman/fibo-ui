@@ -6,7 +6,6 @@
   },
   "assets": [
     "src/theme.css",
-    "src/buttons.css",
     "src/styles/**"
   ]
 }

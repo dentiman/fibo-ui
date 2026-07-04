@@ -1,14 +1,37 @@
 {
   "name": "@fibo-ui/cdk",
   "version": "0.0.11",
-  "description": "Core development kit for Fibo UI components - provides common directives, form controls, and utilities",
-  "keywords": ["angular", "ui", "components", "cdk", "form", "directives"],
-  "author": "Fibo UI Team",
+  "description": "Signal-native headless behavior primitives for Angular: overlays, data lists, selection models, form field composition, menus, and date primitives",
+  "keywords": [
+    "angular",
+    "cdk",
+    "headless",
+    "signals",
+    "overlay",
+    "popover",
+    "selection",
+    "form",
+    "a11y"
+  ],
+  "author": "Denys Timanovskiy <den.timanovskiy@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dentiman/fibo-ui.git",
+    "directory": "projects/fibo-ui/cdk"
+  },
+  "bugs": {
+    "url": "https://github.com/dentiman/fibo-ui/issues"
+  },
+  "homepage": "https://github.com/dentiman/fibo-ui#readme",
   "peerDependencies": {
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0",
-    "date-fns": "^4.1.0"
+    "@angular/forms": "^21.0.0",
+    "@angular/router": "^21.0.0",
+    "@floating-ui/dom": "^1.6.0",
+    "date-fns": "^4.1.0",
+    "rxjs": "^7.8.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"

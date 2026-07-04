@@ -1,54 +1,47 @@
 {
   "name": "@fibo-ui/components",
   "version": "0.1.13",
-  "description": "A comprehensive Angular UI component library with modern design and accessibility features",
+  "description": "Signal-native Angular UI components built on @fibo-ui/cdk: fields, select, combobox, datepicker, menu, dialog, table, notifications, and more. Styled with Tailwind CSS 4",
   "keywords": [
     "angular",
     "ui",
     "components",
-    "library",
-    "typescript",
+    "signals",
+    "zoneless",
     "tailwindcss",
-    "accessibility"
+    "accessibility",
+    "design-system"
   ],
-  "author": "Fibo UI Team",
+  "author": "Denys Timanovskiy <den.timanovskiy@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-org/fibo-ui.git",
+    "url": "https://github.com/dentiman/fibo-ui.git",
     "directory": "projects/fibo-ui/components"
   },
   "bugs": {
-    "url": "https://github.com/your-org/fibo-ui/issues"
+    "url": "https://github.com/dentiman/fibo-ui/issues"
   },
-  "homepage": "https://github.com/your-org/fibo-ui#readme",
-  "main": "fesm2022/fibo-ui-components.mjs",
-  "module": "fesm2022/fibo-ui-components.mjs",
-  "types": "index.d.ts",
+  "homepage": "https://github.com/dentiman/fibo-ui#readme",
   "exports": {
-    ".": {
-      "import": "./fesm2022/fibo-ui-components.mjs"
-    },
     "./theme": {
       "default": "./src/theme.css"
     },
-    "./buttons": {
-      "default": "./src/buttons.css"
+    "./styles/*": {
+      "default": "./src/styles/*.css"
     }
   },
   "peerDependencies": {
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0",
     "@angular/forms": "^21.0.0",
-    "@angular/platform-browser": "^21.0.0",
     "@angular/router": "^21.0.0",
     "@fibo-ui/cdk": "^0.0.11",
-    "@floating-ui/dom": "^1.7.3",
+    "@floating-ui/dom": "^1.6.0",
     "date-fns": "^4.1.0",
-    "lucide-angular": "^0.539.0",
-    "ngxtension": "^5.1.0",
-    "rxjs": "~7.8.0",
-    "tailwindcss": "^4.1.12"
+    "lucide-angular": ">=0.539.0 <1.0.0",
+    "rxjs": "^7.8.0",
+    "tailwindcss": "^4.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"

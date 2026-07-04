@@ -12,9 +12,9 @@
 
 Исследование основано на локальном коде из `ref-libs`:
 
-- `/Users/dentiman/dev/projects/fibo-stack/taiga-ui-5/projects/styles`
-- `/Users/dentiman/dev/projects/fibo-stack/taiga-ui-5/projects/core`
-- `/Users/dentiman/dev/projects/fibo-stack/taiga-ui-5/projects/kit`
+- `<local ref-libs>/taiga-ui-5/projects/styles`
+- `<local ref-libs>/taiga-ui-5/projects/core`
+- `<local ref-libs>/taiga-ui-5/projects/kit`
 
 ---
 
