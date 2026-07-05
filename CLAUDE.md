@@ -47,6 +47,28 @@ Two separate documentation directories with different purposes:
 - `docs/form-field-stack.md`, `docs/styling-system.md` — subsystem deep dives
 - Rules: Detailed, can reference internal code paths, intended for team and AI context.
 
+## Deployment (GitHub Pages)
+
+The demo app is deployed to **GitHub Pages** at **https://dentiman.github.io/fibo-ui/** (a sub-path, not the domain root). Deployment is **fully automatic**: `.github/workflows/deploy.yml` runs on every push to `main` — it builds the libraries, builds the app with `--base-href /fibo-ui/`, adds a SPA fallback, and deploys. There is no manual build or upload step.
+
+### Updating the docs
+
+Public docs live in `public/documentation/**/*.md` and are **static assets copied verbatim into the build** — the app fetches them at runtime, it does not compile them. So to change documentation:
+
+1. Edit the `.md` file under `public/documentation/`.
+2. Commit and push to `main`.
+3. The deploy workflow rebuilds and publishes automatically (~2–3 min). Nothing else is required — no code changes, no manual deploy.
+
+To verify a docs change is live, fetch the raw file: `curl -s https://dentiman.github.io/fibo-ui/documentation/<path>.md`.
+
+### Gotchas (do not regress these)
+
+- **CI/deploy must run on Node 24.** The lockfile is generated with npm 11 (Node 24). Node 22 (npm 10) computes a different dependency tree and fails `npm ci` with a phantom "Missing chokidar@5.0.0 / readdirp@5.0.0". Both `ci.yml` and `deploy.yml` pin `node-version: 24`.
+- **Doc URLs must resolve against `<base href>`.** Pages use root-relative `docUrl="/documentation/..."`, which would 404 under the `/fibo-ui/` sub-path. This is handled centrally by `resolveAssetUrl()` in `src/app/common/shiki-highlighter.service.ts` (`new URL(path, document.baseURI)`), applied in both `createMarkdownResource` and `createDocResource`. Keep new doc pages using the `/documentation/...` form — the service normalizes them; do not hardcode `/fibo-ui/`.
+- **SPA fallback.** The workflow copies `index.html` → `404.html`, so deep links work. Deep links return HTTP 404 *status* but serve the Angular shell (cosmetic only).
+- **Transient deploy failures.** The `build` job can succeed while the `deploy` step fails with "Deployment failed, try again later" (a GitHub Pages API hiccup). Re-run just the failed job: `gh run rerun <run-id> --failed`. Do not re-push.
+- **`github-pages` environment** must allow deploys from `main` (deployment branch policy). Already configured.
+
 ## Local Machine Context
 
 Machine-specific notes (reference library checkouts, local paths) live in `CLAUDE.local.md`, which is gitignored. See it for the **ref-libs** setup if present.
