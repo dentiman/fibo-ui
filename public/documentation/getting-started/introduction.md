@@ -30,6 +30,17 @@ FormUiState           — signal-form UI state
 
 Every layer is replaceable independently. Swap `SelectOne` for `SelectMulti` to get a multi-select. Swap the inner list for a `Calendar` and you have a date picker. Change the `FieldTarget` mode from `focus` to `click` and the same shell now behaves like a trigger instead of a plain text field.
 
+### One primitive, no duplicated logic
+
+Because behaviour lives in the primitives, it is written once and reused everywhere — never copy-pasted from one component into the next. `Select` and `Menu` make this concrete. Both are keyboard-driven lists — arrow keys, `Home`/`End`, `Enter`, active-item tracking — and that navigation is defined a *single* time, in `DataList`:
+
+```
+Select = DataList + SelectOne + FieldShell   → produces a form value
+Menu   = DataList + MenuPanel + actions      → runs a command
+```
+
+They share `DataList` and `DataListItem` verbatim; only the composition wrapped around them differs. `Select` adds a selection model and the field shell; `Menu` wraps the same `DataList` in a `MenuPanel` for submenu timing, and its items run actions instead of storing a value. Fix or improve the navigation in `DataList` once and both — along with `Table` and the date picker — inherit it immediately. This is why the components stay small: they add only what is unique to them.
+
 ### Signals-first, zoneless
 
 Every piece of state is a `signal()`, `model()`, or `computed()`. All components use `ChangeDetectionStrategy.OnPush`. There is no `zone.js` dependency. Form integration targets `@angular/forms/signals` — the new signal-based forms API — rather than the classic `ControlValueAccessor`.
@@ -43,6 +54,16 @@ ARIA is built into the CDK primitives, not bolted on at the component layer. `Da
 The `SELECTION_MODEL` injection token decouples *what is selectable* from *how selection works*. The same `[fiboDataListItem]` directive operates inside a dropdown, a calendar, a table, a sidebar menu — because it only ever calls `selectionModel.select(value)` and never cares about the semantics behind it.
 
 > Provide a custom class that implements `SelectionModel<T>` and any `DataList` + `DataListItem` tree immediately gains your selection behaviour.
+
+## Three Ways to Use It
+
+fibo-ui is deliberately not an either/or between "use our widgets" and "build everything from scratch." The same building blocks support a spectrum:
+
+1. **Use** — drop in `<fibo-select>` and it works. Most common scenarios are covered out of the box.
+2. **Compose** — combine components with CDK directives to assemble richer patterns: add `DataList` to your own layout, or plug a `SelectionModel` into an existing list.
+3. **Build** — take a component as a blueprint (most are under 100 lines), keep the CDK primitives, and swap in your own types, template, and business logic. A `UserSelect`, `BookingDatePicker`, or `CommandPalette` becomes a small file of *your* code — keyboard navigation, ARIA, and overlay behaviour keep working automatically.
+
+You are never forced to choose between convenience and control. Start with a ready-made component, and drop down a level only where your product actually needs it.
 
 ## Who Is It For
 
