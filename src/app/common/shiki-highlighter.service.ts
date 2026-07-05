@@ -40,8 +40,19 @@ export class ShikiHighlighterService {
     .use(extractExamplesPlugin)
     .use(headingAnchorPlugin);
 
+  /**
+   * Resolves a doc/asset URL against the app's <base href> so fetching works
+   * both locally (base "/") and when served from a sub-path such as GitHub
+   * Pages ("/fibo-ui/"). Root-relative URLs ("/documentation/...") would
+   * otherwise ignore the base href and 404 on a sub-path deployment.
+   */
+  private resolveAssetUrl(url: string | undefined): string | undefined {
+    if (!url) return url;
+    return new URL(url.replace(/^\//, ''), document.baseURI).toString();
+  }
+
   createMarkdownResource(url: Signal<string | undefined>) {
-    const content = httpResource.text(() => url());
+    const content = httpResource.text(() => this.resolveAssetUrl(url()));
 
     return resource({
       params: content.value,
@@ -54,7 +65,7 @@ export class ShikiHighlighterService {
   }
 
   createDocResource(url: Signal<string | undefined>) {
-    const content = httpResource.text(() => url());
+    const content = httpResource.text(() => this.resolveAssetUrl(url()));
 
     return resource({
       params: content.value,

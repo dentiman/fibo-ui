@@ -1,0 +1,66 @@
+name: Deploy to GitHub Pages
+
+on:
+  # Deploy on every push to main…
+  push:
+    branches: [main]
+  # …and allow manual runs from the Actions tab.
+  workflow_dispatch:
+
+# Grant the token the permissions Pages deployment needs.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; cancel in-progress runs for the same ref.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # CDK → Components must be built before the app (dependsOn chain).
+      - name: Build libraries
+        run: npm run build:libs
+
+      # Served from https://dentiman.github.io/fibo-ui/ → base-href must match.
+      - name: Build demo app
+        run: npx ng build --base-href /fibo-ui/
+
+      # SPA fallback: Pages serves 404.html for unknown paths; making it a copy
+      # of index.html lets the Angular router handle deep links and refreshes.
+      - name: Add SPA fallback
+        run: cp dist/app/browser/index.html dist/app/browser/404.html
+
+      # Stop GitHub Pages from running Jekyll over the build output.
+      - name: Disable Jekyll
+        run: touch dist/app/browser/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/app/browser
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
