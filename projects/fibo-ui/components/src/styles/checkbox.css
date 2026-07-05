@@ -3,6 +3,12 @@
    ============================================================ */
 @layer components {
 
+  /* Host: inline-flex гарантує стабільну висоту рядка — inline-хост
+     міняв baseline залежно від наявності SVG-галочки (±1px). */
+  fibo-checkbox {
+    display: inline-flex;
+  }
+
   .checkbox-label {
     display: inline-flex;
     align-items: center;

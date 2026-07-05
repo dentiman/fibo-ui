@@ -4,7 +4,6 @@ import { DataList, DataListItem, SelectOne } from '@fibo-ui/cdk';
 interface DataListDocItem {
   value: string;
   label: string;
-  hint: string;
   disabled?: boolean;
 }
 
@@ -32,10 +31,9 @@ interface DataListDocItem {
             type="button"
             [value]="item.value"
             [disabled]="!!item.disabled"
-            class="datalist-item w-full text-left flex flex-col gap-0.5"
+            class="datalist-item w-full text-left"
           >
             <span>{{ item.label }}</span>
-            <span class="text-xs text-foreground-secondary">{{ item.hint }}</span>
           </button>
         }
       </div>
@@ -49,16 +47,11 @@ interface DataListDocItem {
 })
 export class CdkDataListItemsBasicExample {
   readonly items: DataListDocItem[] = [
-    { value: 'registration', label: 'Registration', hint: 'Items register in ngOnInit' },
-    { value: 'active', label: 'Active State', hint: 'Mouseenter sets data-active=true' },
-    { value: 'keyboard', label: 'Keyboard Navigation', hint: 'Arrow keys navigate through items' },
-    {
-      value: 'disabled',
-      label: 'Disabled Item',
-      hint: 'Disabled options are skipped by keyboard navigation',
-      disabled: true,
-    },
-    { value: 'selection', label: 'Selection', hint: 'Enter or click triggers selection model' },
+    { value: 'registration', label: 'Registration' },
+    { value: 'active', label: 'Active State' },
+    { value: 'keyboard', label: 'Keyboard Navigation' },
+    { value: 'disabled', label: 'Disabled Item', disabled: true },
+    { value: 'selection', label: 'Selection' },
   ];
 
   readonly selectedValue = signal<string>('registration');

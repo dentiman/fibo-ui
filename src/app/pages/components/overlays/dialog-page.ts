@@ -14,7 +14,7 @@ import { FormField, form } from '@angular/forms/signals';
         Open Dialog
       </button>
       <ng-template #dialogTpl let-overlay>
-        <div class="p-6 w-96">
+        <div class="p-6 ">
           <h2 class="text-lg font-semibold mb-4">Dialog with Select</h2>
           <fibo-select
             [fiboTooltip]="'Some text'"
@@ -34,9 +34,9 @@ import { FormField, form } from '@angular/forms/signals';
         Dialog with Form
       </button>
       <ng-template #formDialogTpl let-overlay>
-        <div class="overflow-hidden overflow-y-auto">
+        <div class="grid gap-4 p-4 overflow-hidden overflow-y-auto">
           <form-example/>
-          <div class="p-4 pt-0 flex justify-end">
+          <div class="flex justify-end">
             <button fiboButton (click)="overlay.close()">Close</button>
           </div>
         </div>

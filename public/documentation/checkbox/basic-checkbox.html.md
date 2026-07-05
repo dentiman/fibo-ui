@@ -1,5 +1,5 @@
 ```html
-<div class="space-y-4">
+<div class="grid gap-4">
   <fibo-checkbox [checked]="false">
     Unchecked
   </fibo-checkbox>

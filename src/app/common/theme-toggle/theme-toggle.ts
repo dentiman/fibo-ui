@@ -11,7 +11,7 @@ import { Button } from '@fibo-ui/components';
     <div class="flex items-center gap-2 ">
       <button
         type="button"
-        fiboButton class="rounded-full p-1.5"
+        fiboButton class="rounded-full size-8 p-0"
         [fiboAppearance]="theme() === 'light' ? 'chip' : 'text'"
         (click)="setTheme('light')"
         title="Light theme"
@@ -23,7 +23,7 @@ import { Button } from '@fibo-ui/components';
 
       <button
         type="button"
-        fiboButton class="rounded-full p-1.5"
+        fiboButton class="rounded-full size-8 p-0"
         [fiboAppearance]="theme() === 'dark' ? 'chip' : 'text'"
         (click)="setTheme('dark')"
         title="Dark theme"
@@ -35,7 +35,7 @@ import { Button } from '@fibo-ui/components';
 
       <button
         type="button"
-        fiboButton class="rounded-full p-1.5"
+        fiboButton class="rounded-full size-8 p-0"
         [fiboAppearance]="theme() === 'system' ? 'chip' : 'text'"
         (click)="setTheme('system')"
         title="System theme"

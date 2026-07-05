@@ -14,7 +14,7 @@ import { Button } from '@fibo-ui/components';
       <div class="">
         <ng-content></ng-content>
       </div>
-      <div class="px-3 py-1 flex space-x-1">
+      <div class="px-3 py-1 flex space-x-2">
          @for (block of codeBlocks(); track block.path) {
            <button fiboButton fiboSize="sm" class="rounded-full" [fiboAppearance]="block.path === activeCodeBlockPath() ? 'inverse' : null" (click)="activeCodeBlockPath.set(block.path)">{{ block.name }}</button>
          }

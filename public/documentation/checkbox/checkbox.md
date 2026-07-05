@@ -7,7 +7,7 @@ Accessible checkbox component with support for indeterminate state and Signal Fo
 :::example checkbox-basic
 
 ```html {example="checkbox-basic"}
-<div class="space-y-4">
+<div class="grid gap-4">
   <fibo-checkbox [checked]="false">Unchecked</fibo-checkbox>
   <fibo-checkbox [checked]="true">Checked</fibo-checkbox>
   <fibo-checkbox [indeterminate]="true">Indeterminate</fibo-checkbox>

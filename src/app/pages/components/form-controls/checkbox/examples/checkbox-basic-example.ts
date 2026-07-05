@@ -6,7 +6,7 @@ import { Checkbox } from '@fibo-ui/components';
   imports: [Checkbox],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="mx-auto w-70 space-y-4 p-8">
+    <div class="mx-auto w-70 grid gap-4 p-8">
       <fibo-checkbox [checked]="false">Unchecked</fibo-checkbox>
       <fibo-checkbox [checked]="true">Checked</fibo-checkbox>
       <fibo-checkbox [indeterminate]="true">Indeterminate</fibo-checkbox>

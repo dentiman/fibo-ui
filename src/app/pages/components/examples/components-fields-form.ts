@@ -35,7 +35,6 @@ interface UserProfile {
       <form class="space-y-2">
 
         <fibo-text-field
-          iconStart="chevron-right"
           iconEnd="chevron-right"
           label="First Name"
           placeholder="Name"
@@ -43,27 +42,23 @@ interface UserProfile {
         </fibo-text-field>
 
         <fibo-text-field
-          iconStart="chevron-right"
           label="Last Name"
           placeholder="Surname"
           [formField]="userProfileForm.lastName">
         </fibo-text-field>
 
         <fibo-text-field
-          iconStart="chevron-right"
           placeholder="example@mail.com"
           [formField]="userProfileForm.email">
         </fibo-text-field>
 
         <fibo-password-field
-          iconStart="lock"
           label="Password"
           placeholder="Enter password"
           [formField]="userProfileForm.password">
         </fibo-password-field>
 
         <fibo-text-field
-          iconStart="chevron-right"
           label="Phone"
           placeholder="+1 234 567 890"
           [formField]="userProfileForm.phone"

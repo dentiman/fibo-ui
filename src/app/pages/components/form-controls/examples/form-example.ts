@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
-import { FormField, form, required } from '@angular/forms/signals';
+import { FormField, form } from '@angular/forms/signals';
 import {
   Button,
   DatePickerField,
@@ -61,7 +61,6 @@ interface RegistrationData {
     <button
       type="button"
       fiboButton fiboAppearance="primary" class="w-full"
-      [disabled]="!registrationForm().valid()"
       (click)="onSubmit()"
     >
       Register
@@ -100,11 +99,7 @@ export class FormExample {
     skills: [],
   });
 
-  readonly registrationForm = form(this.model, schema => {
-    required(schema.name, { message: 'Name is required' });
-    required(schema.position, { message: 'Position is required' });
-    required(schema.birthDate, { message: 'Birth date is required' });
-  });
+  readonly registrationForm = form(this.model);
 
   onSubmit() {
     console.log('Registration data:', this.model());

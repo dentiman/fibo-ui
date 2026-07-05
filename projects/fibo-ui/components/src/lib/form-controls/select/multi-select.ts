@@ -61,12 +61,12 @@ import { SelectItem } from './select';
         (keydown.arrowdown)="openFromKeyboard($event)"
       >
         @for (item of selectedItems(); track item.value) {
-          <div class="flex items-center gap-1 btn btn-sm h-6 px-1.5 min-w-0 ">
+          <div class="fibo-chip">
             <span class="truncate flex-1 text-xs font-medium">{{ item.label }}</span>
             <button
               type="button"
               fiboFieldAuxiliary
-              class="rounded-full cursor-pointer flex-shrink-0 btn-text p-0.5 hover:bg-black/5 dark:hover:bg-white/5"
+              class="rounded-full cursor-pointer flex-shrink-0 p-0.5 hover:bg-black/5 dark:hover:bg-white/5"
               (click)="removeItem(item.value); $event.stopPropagation()"
               (keydown)="$event.stopPropagation()"
             >

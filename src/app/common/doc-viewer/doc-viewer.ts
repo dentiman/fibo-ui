@@ -106,7 +106,7 @@ export class DocViewer {
       // Code tabs
       if (codeBlocks?.length) {
         const tabBar = document.createElement('div');
-        tabBar.className = 'px-3 py-1 flex space-x-1';
+        tabBar.className = 'px-3 py-1 flex space-x-2';
 
         const codeContainer = document.createElement('div');
         codeContainer.className =

@@ -7,7 +7,7 @@ import { TextField } from '@fibo-ui/components';
   imports: [FormField, TextField],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="mx-auto w-70 p-8">
+    <div class="mx-auto w-70 p-8 space-y-4">
       <fibo-text-field
         [formField]="userForm.username"
         label="Username"

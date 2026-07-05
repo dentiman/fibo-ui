@@ -14,7 +14,7 @@ import {Listbox} from '@fibo-ui/components';
     SelectMulti,
   ],
   template: `
-<div class="p-6">
+<div class="py-6">
   <h1 class="text-2xl font-bold mb-6">Listbox Component Demo</h1>
 
   <div class="space-y-8">
@@ -25,7 +25,7 @@ import {Listbox} from '@fibo-ui/components';
       <div class="grid grid-cols-1 gap-6">
         <div>
           <label class="block text-sm font-medium mb-2">Single Selection</label>
-          <div class="fibo-card">
+          <div class="fibo-card p-2">
             <fibo-listbox
               [items]="users"
               [valueProp]="valueProp"
@@ -46,7 +46,7 @@ import {Listbox} from '@fibo-ui/components';
       <div class="grid grid-cols-1 gap-6">
         <div>
           <label class="block text-sm font-medium mb-2">Multiple Selection</label>
-          <div class="fibo-card">
+          <div class="fibo-card p-2">
             <fibo-listbox
               [items]="users"
               [valueProp]="valueProp"
@@ -77,7 +77,7 @@ import {Listbox} from '@fibo-ui/components';
       <div class="grid grid-cols-1 gap-6">
         <div>
           <label class="block text-sm font-medium mb-2">Disabled State</label>
-          <div class="fibo-card">
+          <div class="fibo-card p-2">
             <fibo-listbox
               [items]="users"
               [valueProp]="valueProp"
