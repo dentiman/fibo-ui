@@ -1,11 +1,14 @@
 # Fibo UI
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-fibo--ui-6366f1?logo=githubpages&logoColor=white)](https://dentiman.github.io/fibo-ui/)
 [![CI](https://github.com/dentiman/fibo-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/dentiman/fibo-ui/actions/workflows/ci.yml)
 [![npm @fibo-ui/cdk](https://img.shields.io/npm/v/%40fibo-ui%2Fcdk?label=%40fibo-ui%2Fcdk)](https://www.npmjs.com/package/@fibo-ui/cdk)
 [![npm @fibo-ui/components](https://img.shields.io/npm/v/%40fibo-ui%2Fcomponents?label=%40fibo-ui%2Fcomponents)](https://www.npmjs.com/package/@fibo-ui/components)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
 Signal-native Angular UI library monorepo — two publishable packages and a demo application.
+
+**🔗 Live demo & documentation → [dentiman.github.io/fibo-ui](https://dentiman.github.io/fibo-ui/)**
 
 Built with **Angular 21**, **Tailwind CSS 4**, **TypeScript 5.9** (strict mode), and **zoneless change detection**.
 

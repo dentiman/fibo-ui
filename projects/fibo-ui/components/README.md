@@ -2,6 +2,8 @@
 
 Signal-native **Angular UI components** built on [`@fibo-ui/cdk`](https://www.npmjs.com/package/@fibo-ui/cdk) and styled with **Tailwind CSS 4** design tokens. Zoneless-ready, accessible, and intentionally readable — most components are under 100 lines, so they double as blueprints for your own.
 
+**🔗 Live demo & docs → [dentiman.github.io/fibo-ui](https://dentiman.github.io/fibo-ui/)**
+
 > **Status: beta.** APIs may change between minor versions until 1.0.
 
 ## Components

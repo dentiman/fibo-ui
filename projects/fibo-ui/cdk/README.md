@@ -4,6 +4,8 @@ Signal-native **headless behavior primitives** for Angular. No styles, no markup
 
 `@fibo-ui/cdk` is the foundation of [`@fibo-ui/components`](https://www.npmjs.com/package/@fibo-ui/components), but it is designed to be used on its own to build custom design systems.
 
+**🔗 Live demo & docs → [dentiman.github.io/fibo-ui](https://dentiman.github.io/fibo-ui/)**
+
 > **Status: beta.** APIs may change between minor versions until 1.0.
 
 ## Installation
