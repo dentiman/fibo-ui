@@ -83,41 +83,6 @@ Import the theme and the styles for the components you use (in your global style
 
 Dark mode is driven by a `data-theme="dark"` attribute on `<html>` — every token switches automatically. Icons come from [Lucide](https://lucide.dev/).
 
-## Quick start
-
-**Form fields with signal forms**
-
-```typescript
-userModel = signal({ username: '', birthDate: '' });
-userForm = form(this.userModel, (path) => {
-  required(path.username, { message: 'Username is required' });
-});
-```
-
-```html
-<fibo-text-field [formField]="userForm.username" label="Username" iconStart="user" />
-<fibo-datepicker [formField]="userForm.birthDate" label="Birth Date" />
-```
-
-**Dialogs and drawers from any trigger**
-
-```html
-<button fiboButton fiboDialogTrigger [content]="dialogTpl">Open Dialog</button>
-<button fiboButton fiboDrawerTrigger [content]="drawerTpl">Open Drawer</button>
-
-<ng-template #dialogTpl>Dialog body here</ng-template>
-<ng-template #drawerTpl>Drawer body here</ng-template>
-```
-
-**Notifications**
-
-```typescript
-private notifier = inject(Notifier);
-
-this.notifier.success('Saved!');
-this.notifier.error('Something went wrong.', 0);   // 0 = stays until dismissed
-```
-
 ## Two packages, three ways to use them
 
 > "The CDK does the hard part. A component is a simple blueprint. Developers use it as-is — or compose their own."
@@ -132,14 +97,6 @@ That gives you three levels: **use** a component directly, **compose** component
 - **[Live docs & examples](https://dentiman.github.io/fibo-ui/)** — the primary, user-facing reference
 - **[docs/](./docs)** — architecture notes and subsystem deep dives for contributors
 
-## Development
-
-```bash
-npm install
-npm start              # dev server at http://localhost:4200
-npm run build:libs     # build both libraries (CDK → Components)
-npm test               # run unit tests
-```
 
 Contributions are welcome — the codebase is intentionally small and readable.
 
