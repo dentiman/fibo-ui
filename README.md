@@ -90,7 +90,11 @@ Dark mode is driven by a `data-theme="dark"` attribute on `<html>` — every tok
 - **[`@fibo-ui/components`](https://www.npmjs.com/package/@fibo-ui/components)** — the ready-to-use, styled components above.
 - **[`@fibo-ui/cdk`](https://www.npmjs.com/package/@fibo-ui/cdk)** — the headless behavior primitives underneath them (overlays, keyboard navigation, selection models, form-field composition, accessibility). No styles, so you can build a design system of your own.
 
-That gives you three levels: **use** a component directly, **compose** components together, or **build** your own from the same CDK blocks. More on the thinking behind it in [docs/philosophy.md](./docs/philosophy.md).
+That gives you three levels: **use** a component directly, **compose** components together, or **build** your own from the same CDK blocks.
+
+The components stay tiny because they share the *same* primitives — behaviour is defined once and swapped in wherever it's needed, so there's no business logic copy-pasted from one component to the next. Need something the library doesn't ship? Recombine those primitives (and the components already built from them) into your own — no forking, no fighting the framework.
+
+More on the thinking behind it in [docs/philosophy.md](./docs/philosophy.md).
 
 ## Documentation
 
