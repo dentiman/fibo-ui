@@ -142,6 +142,21 @@
   --datalist-item-bg-selected: var(--color-primary-500);
   --datalist-item-text-selected: oklch(0.98 0 0);
   --datalist-item-bg-selected-disabled: var(--color-blue-500);
+  /* Soft primary tint for selected rows in MULTI-select (checkbox already
+     signals selection, so the solid primary fill would clash / hurt contrast). */
+  --datalist-item-bg-selected-multiple: var(--color-primary-50);
+
+  /* Side Menu Item Variables - Light Theme
+     Navigation selection: soft primary tint + primary text/icon.
+     (Distinct from --datalist-item-* which is the SOLID selected row
+      used inside Select / Listbox dropdowns.) */
+  --sidemenu-item-text: var(--foreground-secondary);
+  --sidemenu-item-text-hover: var(--foreground);
+  --sidemenu-item-bg-hover: --alpha(var(--color-black) / 4%);
+  --sidemenu-item-bg-selected: var(--color-primary-50);
+  --sidemenu-item-text-selected: var(--color-primary-600);
+  --sidemenu-item-icon: var(--foreground-tertiary);
+  --sidemenu-item-icon-selected: var(--color-primary-600);
 }
 
 /* ========================================
@@ -235,6 +250,15 @@
   --datalist-item-bg-selected: var(--color-primary-500);
   --datalist-item-text-selected: oklch(0.98 0 0);
   --datalist-item-bg-selected-disabled: --alpha(var(--color-foreground) / 5%);
+  /* Soft primary tint for selected rows in MULTI-select (see light theme note). */
+  --datalist-item-bg-selected-multiple: --alpha(var(--color-primary-500) / 15%);
 
-
+  /* Side Menu Item Variables - Dark Theme */
+  --sidemenu-item-text: var(--foreground-secondary);
+  --sidemenu-item-text-hover: var(--foreground);
+  --sidemenu-item-bg-hover: --alpha(var(--color-white) / 5%);
+  --sidemenu-item-bg-selected: --alpha(var(--color-primary-500) / 15%);
+  --sidemenu-item-text-selected: var(--color-primary-400);
+  --sidemenu-item-icon: var(--foreground-tertiary);
+  --sidemenu-item-icon-selected: var(--color-primary-400);
 }

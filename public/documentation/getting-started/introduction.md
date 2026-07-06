@@ -1,72 +1,76 @@
 # Introduction
 
-**fibo-ui** is an Angular 21 UI library built around one idea: a component library should be a collection of composable behaviours, not a bag of monolithic widgets.
+**fibo-ui is a signal-native Angular 21 component library — accessible, themeable, and pleasantly small.** Ready-made components when you want to move fast; headless CDK primitives when you want to build your own. The same behaviour underneath.
 
-## Two Packages, One System
+> **Status: beta** · [npm](https://www.npmjs.com/package/@fibo-ui/components) · [GitHub](https://github.com/dentiman/fibo-ui) · [Live demo](https://dentiman.github.io/fibo-ui/)
 
-The library ships as two independent npm packages with a clear build dependency.
+The core idea: a component library should be a collection of **composable behaviours**, not a bag of monolithic widgets.
+
+
+Keyboard navigation, ARIA, focus management, and overlay positioning are already handled — you wrote none of it.
+
+## Two packages, one system
+
+Two independent npm packages with a clear build dependency.
 
 | Package | Purpose |
 | --- | --- |
 | `@fibo-ui/cdk` | Headless, behaviour-only directives — keyboard navigation, selection models, floating positioning, portal system. No templates. No styles. |
-| `@fibo-ui/components` | Styled, production-ready components built on top of the CDK — Select, TextField, Table, Menu, Dialog, and more. |
+| `@fibo-ui/components` | Styled, production-ready components built on the CDK — Select, TextField, Table, Menu, Dialog, and more. |
 
-Use `@fibo-ui/components` when the default design fits your product. Drop down to `@fibo-ui/cdk` when you need full control over markup and styling — keyboard navigation, ARIA, and selection logic come for free.
+Use `@fibo-ui/components` when the default design fits. Drop down to `@fibo-ui/cdk` when you need full control over markup and styling — the behaviour comes for free either way.
 
-## Core Principles
+## Core principles
 
 ### Composition over monoliths
 
-A `Select` in fibo-ui is not one component. It is a stack of small, single-responsibility layers:
+A `Select` is not one component. It is a stack of small, single-responsibility layers:
 
-```
-FormUiState           — signal-form UI state
-└─ FieldShell         — visual shell: label, icons, clear action, focus-within state
-   └─ FieldTarget     — real focusable trigger inside the shell
-      └─ createOverlay() + Popover  — floating positioning via @floating-ui/dom
-         └─ DataList  — keyboard navigation, active-item tracking
-            └─ SelectOne + DataListItem × N  — selection model
-```
+![The fibo-ui Select composition — six nested, independently replaceable layers, from FormUiState down to the SelectOne selection model](/documentation/getting-started/select-composition.png)
 
-Every layer is replaceable independently. Swap `SelectOne` for `SelectMulti` to get a multi-select. Swap the inner list for a `Calendar` and you have a date picker. Change the `FieldTarget` mode from `focus` to `click` and the same shell now behaves like a trigger instead of a plain text field.
+Every layer is replaceable on its own. Swap `SelectOne` for `SelectMulti` to get a multi-select. Swap the inner list for a `Calendar` and you have a date picker. Flip `FieldTarget` from `focus` to `click` and the same shell becomes a trigger instead of a text field.
 
 ### One primitive, no duplicated logic
 
-Because behaviour lives in the primitives, it is written once and reused everywhere — never copy-pasted from one component into the next. `Select` and `Menu` make this concrete. Both are keyboard-driven lists — arrow keys, `Home`/`End`, `Enter`, active-item tracking — and that navigation is defined a *single* time, in `DataList`:
+Behaviour lives in the primitives, so it is written once and reused everywhere. `Select` and `Menu` are both keyboard-driven lists — arrow keys, `Home`/`End`, `Enter`, active-item tracking — and that navigation is defined a *single* time, in `DataList`:
 
 ```
 Select = DataList + SelectOne + FieldShell   → produces a form value
 Menu   = DataList + MenuPanel + actions      → runs a command
 ```
 
-They share `DataList` and `DataListItem` verbatim; only the composition wrapped around them differs. `Select` adds a selection model and the field shell; `Menu` wraps the same `DataList` in a `MenuPanel` for submenu timing, and its items run actions instead of storing a value. Fix or improve the navigation in `DataList` once and both — along with `Table` and the date picker — inherit it immediately. This is why the components stay small: they add only what is unique to them.
+Improve the navigation in `DataList` once and `Select`, `Menu`, `Table`, and the date picker all inherit it. That is why the components stay small — they add only what is unique to them.
 
 ### Signals-first, zoneless
 
-Every piece of state is a `signal()`, `model()`, or `computed()`. All components use `ChangeDetectionStrategy.OnPush`. There is no `zone.js` dependency. Form integration targets `@angular/forms/signals` — the new signal-based forms API — rather than the classic `ControlValueAccessor`.
+Every piece of state is a `signal()`, `model()`, or `computed()`, and every component is `OnPush`. No `zone.js`. Forms target `@angular/forms/signals` — the new signal-based API — not the classic `ControlValueAccessor`.
 
 ### Accessibility by default
 
-ARIA is built into the CDK primitives, not bolted on at the component layer. `DataList` manages `aria-activedescendant` and keyboard navigation. `DataListItem` sets `aria-selected` and `aria-disabled`. Field semantics stay on the real inner `input` or `button`, while `FieldShell` remains visual-only. Every styled component inherits correct behaviour automatically because it is built on these primitives.
+ARIA is built into the CDK, not bolted on later. `DataList` manages `aria-activedescendant`; `DataListItem` sets `aria-selected` and `aria-disabled`; field semantics stay on the real `input`/`button` while `FieldShell` stays visual-only. Every styled component inherits this for free.
 
-### Polymorphic selection via dependency injection
+### Polymorphic selection
 
-The `SELECTION_MODEL` injection token decouples *what is selectable* from *how selection works*. The same `[fiboDataListItem]` directive operates inside a dropdown, a calendar, a table, a sidebar menu — because it only ever calls `selectionModel.select(value)` and never cares about the semantics behind it.
+The `SELECTION_MODEL` token decouples *what* is selectable from *how* selection works. The same `[fiboDataListItem]` runs inside a dropdown, a calendar, a table, or a sidebar — it only ever calls `selectionModel.select(value)`.
 
-> Provide a custom class that implements `SelectionModel<T>` and any `DataList` + `DataListItem` tree immediately gains your selection behaviour.
+> Provide a class implementing `SelectionModel<T>` and any `DataList` tree instantly gains your selection behaviour.
 
-## Three Ways to Use It
+## Three ways to use it
 
-fibo-ui is deliberately not an either/or between "use our widgets" and "build everything from scratch." The same building blocks support a spectrum:
+fibo-ui is not an either/or between "use our widgets" and "build everything yourself." The same blocks support a spectrum:
 
-1. **Use** — drop in `<fibo-select>` and it works. Most common scenarios are covered out of the box.
-2. **Compose** — combine components with CDK directives to assemble richer patterns: add `DataList` to your own layout, or plug a `SelectionModel` into an existing list.
-3. **Build** — take a component as a blueprint (most are under 100 lines), keep the CDK primitives, and swap in your own types, template, and business logic. A `UserSelect`, `BookingDatePicker`, or `CommandPalette` becomes a small file of *your* code — keyboard navigation, ARIA, and overlay behaviour keep working automatically.
+1. **Use** — drop in `<fibo-select>` and it works. Most scenarios are covered out of the box.
+2. **Compose** — combine components with CDK directives: add `DataList` to your own layout, or plug a `SelectionModel` into an existing list.
+3. **Build** — take a component as a blueprint (most are under 100 lines), keep the CDK primitives, swap in your own types and template. A `UserSelect`, `BookingDatePicker`, or `CommandPalette` becomes a small file of *your* code — navigation, ARIA, and overlays keep working.
 
-You are never forced to choose between convenience and control. Start with a ready-made component, and drop down a level only where your product actually needs it.
+You never choose between convenience and control. Start ready-made; drop a level only where your product needs it.
 
-## Who Is It For
+## Who is it for
 
 - **Application teams** who want production-ready Angular components that work with signal forms out of the box.
-- **Design system teams** who need headless CDK primitives to build fully custom-styled components without reinventing keyboard navigation or ARIA patterns.
-- **Angular 21+ projects** that use signals, zoneless change detection, or the new `@angular/forms/signals` API.
+- **Design-system teams** who need headless primitives to build custom-styled components without reinventing keyboard navigation or ARIA.
+- **Angular 21+ projects** on signals, zoneless change detection, or `@angular/forms/signals`.
+
+---
+
+**Next:** [Installation →](/getting-started/installation) — add fibo-ui to your project and import the theme.

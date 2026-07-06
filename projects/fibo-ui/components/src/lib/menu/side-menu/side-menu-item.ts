@@ -25,9 +25,11 @@ import { DataListItem } from '@fibo-ui/cdk';
       #opt="DataListItem"
       [attr.aria-selected]="opt.isSelected() || null"
       [class.relative]="isNested()"
-      class="group flex items-center gap-x-3 rounded-md py-1 px-2 text-sm cursor-pointer
-        text-foreground-secondary hover:bg-black/3 dark:hover:bg-white/4 hover:text-foreground
-        aria-selected:bg-black/6 dark:aria-selected:bg-white/8 aria-selected:text-foreground"
+      class="group flex items-center gap-x-3 rounded-md py-1 px-2 text-sm cursor-pointer transition-colors
+        text-[var(--sidemenu-item-text)]
+        hover:bg-[var(--sidemenu-item-bg-hover)] hover:text-[var(--sidemenu-item-text-hover)]
+        aria-selected:bg-[var(--sidemenu-item-bg-selected)] aria-selected:text-[var(--sidemenu-item-text-selected)]
+        aria-selected:font-medium"
     >
       @if (isNested()) {
         <div class="absolute top-0 left-2 flex w-4 justify-center h-full">
@@ -46,8 +48,9 @@ import { DataListItem } from '@fibo-ui/cdk';
         </div>
       }
       @if (icon()) {
-        <lucide-icon [name]="icon()" class="size-4 shrink-0  text-foreground-tertiary
-         group-aria-selected:text-foreground" />
+        <lucide-icon [name]="icon()" class="size-4 shrink-0
+         text-[var(--sidemenu-item-icon)]
+         group-aria-selected:text-[var(--sidemenu-item-icon-selected)]" />
       }
       <span class="flex-auto">
         <ng-content />

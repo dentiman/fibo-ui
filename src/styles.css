@@ -28,46 +28,72 @@
     @apply h-full overflow-hidden bg-gray-100 dark:bg-background text-foreground font-roboto;
   }
 
-  /* Scrollbar styles - Light theme */
+  /* ============================================================
+     Scrollbars — GLOBAL (not per-component). Every scrolling area
+     (sidebar, main, listbox `overflow-y-auto`, overlay.css popovers,
+     drawer) inherits these rules. Thin, rounded, with a padding-box
+     gutter so the thumb floats inside the track.
+     ============================================================ */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
 
   ::-webkit-scrollbar-track {
     background: transparent;
-    border-radius: var(--radius-sm);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
   }
 
   html:not([data-theme="dark"]) ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: var(--radius-sm);
+    background-color: rgba(0, 0, 0, 0.18);
+    background-clip: padding-box;
   }
 
   html:not([data-theme="dark"]) ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: var(--radius-sm);
+    background-color: rgba(0, 0, 0, 0.30);
+    background-clip: padding-box;
   }
 
   [data-theme="dark"] ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: var(--radius-sm);
+    background-color: rgba(255, 255, 255, 0.16);
+    background-clip: padding-box;
   }
 
   [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: var(--radius-sm);
+    background-color: rgba(255, 255, 255, 0.28);
+    background-clip: padding-box;
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
+  }
+
+  [data-theme="dark"] * {
+    scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
   }
 
   /* Global headings — scoped to NOT override .prose (prose manages its own typography) */
+  /* FIX: was `color: white`, which rendered white headings on the light canvas.
+     Use the foreground token so headings work in BOTH themes. */
   :not(.prose) > h1,
   :not(.prose) > h2,
   :not(.prose) > h3,
   :not(.prose) > h4,
   :not(.prose) > h5,
   :not(.prose) > h6 {
-    color: white;
-    @apply font-semibold;
+    color: var(--foreground);
+    @apply font-semibold tracking-tight;
   }
 
   :not(.prose) > h1 { @apply text-3xl; }

@@ -30,6 +30,12 @@
     color: var(--datalist-item-text-selected);
   }
 
+  /* Multi-select: soft tint instead of the solid fill — the checkbox already
+     carries the selected signal, and the tint keeps its contrast intact. */
+  .datalist-item[data-multiple="true"][aria-selected="true"] {
+    background-color: var(--datalist-item-bg-selected-multiple);
+  }
+
   .datalist-item[aria-selected="true"][aria-disabled="true"] {
     background-color: var(--datalist-item-bg-selected);
     color: var(--datalist-item-text-selected);
