@@ -1,19 +1,19 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DocViewer } from '../../../common/doc-viewer/doc-viewer';
 import { EXAMPLE_REGISTRY } from '../../../common/doc-viewer/example-registry';
-import { ComboboxComponentExample } from './examples/combobox-component-example';
-import { ComboboxRecipeExample } from './examples/combobox-recipe-example';
+import { FieldShellExample } from './examples/field-shell-example';
+import { FieldShellRecipeExample } from './examples/field-shell-recipe-example';
 
 const EXAMPLES = new Map<string, any>([
-  ['combobox', ComboboxComponentExample],
-  ['recipe', ComboboxRecipeExample],
+  ['field-shell', FieldShellExample],
+  ['recipe', FieldShellRecipeExample],
 ]);
 
 @Component({
-  selector: 'app-combobox-page',
+  selector: 'app-field-shell-page',
   imports: [DocViewer],
   providers: [{ provide: EXAMPLE_REGISTRY, useValue: EXAMPLES }],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<doc-viewer docUrl="/documentation/combobox/combobox.md" />`,
+  template: `<doc-viewer docUrl="/documentation/field-shell/field-shell.md" />`,
 })
-export class ComboboxPageComponent {}
+export class FieldShellPageComponent {}

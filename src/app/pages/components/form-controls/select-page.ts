@@ -2,9 +2,11 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { DocViewer } from '../../../common/doc-viewer/doc-viewer';
 import { EXAMPLE_REGISTRY } from '../../../common/doc-viewer/example-registry';
 import { SelectComponentExample } from './examples/select-component-example';
+import { SelectRecipeExample } from './examples/select-recipe-example';
 
 const EXAMPLES = new Map<string, any>([
   ['select', SelectComponentExample],
+  ['recipe', SelectRecipeExample],
 ]);
 
 @Component({

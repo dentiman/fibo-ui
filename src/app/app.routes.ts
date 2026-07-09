@@ -108,6 +108,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'field-shell',
+        loadComponent: () =>
+          import('./pages/components/form-controls/field-shell-page').then(
+            (m) => m.FieldShellPageComponent,
+          ),
+      },
+      {
         path: 'form-example',
         pathMatch: 'full',
         redirectTo: 'form-examples',
