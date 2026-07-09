@@ -33,12 +33,14 @@ export class ShikiHighlighterService {
     defaultColor: 'light-dark()',
   });
 
-  private md = MarkdownItAsync().use(this.shikiPlugin);
+  private md = this.withBaseHrefImages(MarkdownItAsync().use(this.shikiPlugin));
 
-  private mdDoc = MarkdownItAsync()
-    .use(this.shikiPlugin)
-    .use(extractExamplesPlugin)
-    .use(headingAnchorPlugin);
+  private mdDoc = this.withBaseHrefImages(
+    MarkdownItAsync()
+      .use(this.shikiPlugin)
+      .use(extractExamplesPlugin)
+      .use(headingAnchorPlugin)
+  );
 
   /**
    * Resolves a doc/asset URL against the app's <base href> so fetching works
@@ -49,6 +51,30 @@ export class ShikiHighlighterService {
   private resolveAssetUrl(url: string | undefined): string | undefined {
     if (!url) return url;
     return new URL(url.replace(/^\//, ''), document.baseURI).toString();
+  }
+
+  /**
+   * Image srcs inside rendered markdown are resolved by the browser, not by
+   * httpResource, so they need the same base-href normalization as the doc
+   * fetch itself — otherwise "/documentation/x.png" 404s on a sub-path deploy.
+   */
+  private withBaseHrefImages<T extends ReturnType<typeof MarkdownItAsync>>(
+    md: T
+  ): T {
+    const defaultRender =
+      md.renderer.rules.image ??
+      ((tokens, idx, options, _env, self) =>
+        self.renderToken(tokens, idx, options));
+
+    md.renderer.rules.image = (tokens, idx, options, env, self) => {
+      const src = tokens[idx].attrGet('src');
+      if (src) {
+        tokens[idx].attrSet('src', this.resolveAssetUrl(src)!);
+      }
+      return defaultRender(tokens, idx, options, env, self);
+    };
+
+    return md;
   }
 
   createMarkdownResource(url: Signal<string | undefined>) {
