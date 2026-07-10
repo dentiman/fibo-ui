@@ -10,6 +10,17 @@ fibo-ui requires **Angular 21** and is designed for projects using **zoneless ch
 | Tailwind CSS | `^4.1.0` |
 | Node.js | `^18.19.0` or `^20.9.0` |
 
+## Two packages, one system
+
+Two independent npm packages with a clear build dependency.
+
+| Package | Purpose |
+| --- | --- |
+| `@fibo-ui/cdk` | Headless, behaviour-only directives — keyboard navigation, selection models, floating positioning, portal system. No templates. No styles. |
+| `@fibo-ui/components` | Styled, production-ready components built on the CDK — Select, TextField, Table, Menu, Dialog, and more. |
+
+Use `@fibo-ui/components` when the default design fits. Drop down to `@fibo-ui/cdk` when you need full control over markup and styling — the behaviour comes for free either way.
+
 ## Install Packages
 
 ### Full install — components + CDK
