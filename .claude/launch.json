@@ -6,6 +6,18 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["ng", "serve", "--port", "4300"],
       "port": 4300
+    },
+    {
+      "name": "fibo-ui-dev-4302",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["ng", "serve", "--port", "4302"],
+      "port": 4302
+    },
+    {
+      "name": "fibo-ui-dev-4304",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["ng", "serve", "--port", "4304"],
+      "port": 4304
     }
   ],
   "autoVerify": true

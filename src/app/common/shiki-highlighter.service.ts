@@ -13,6 +13,7 @@ import {
   headingAnchorPlugin,
   TocEntry,
 } from './doc-viewer/heading-anchor-plugin';
+import { calloutPlugin } from './doc-viewer/callout-plugin';
 
 export type DocRenderResult = {
   html: SafeHtml;
@@ -33,13 +34,16 @@ export class ShikiHighlighterService {
     defaultColor: 'light-dark()',
   });
 
-  private md = this.withBaseHrefImages(MarkdownItAsync().use(this.shikiPlugin));
+  private md = this.withBaseHrefImages(
+    MarkdownItAsync().use(this.shikiPlugin).use(calloutPlugin)
+  );
 
   private mdDoc = this.withBaseHrefImages(
     MarkdownItAsync()
       .use(this.shikiPlugin)
       .use(extractExamplesPlugin)
       .use(headingAnchorPlugin)
+      .use(calloutPlugin)
   );
 
   /**

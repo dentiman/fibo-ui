@@ -2,23 +2,10 @@
 
 **fibo-ui is a signal-native Angular 21 component library — accessible, themeable, and pleasantly small.** Ready-made components when you want to move fast; headless CDK primitives when you want to build your own. The same behaviour underneath.
 
-> **Status: beta** · [npm](https://www.npmjs.com/package/@fibo-ui/components) · [GitHub](https://github.com/dentiman/fibo-ui) · [Live demo](https://dentiman.github.io/fibo-ui/)
-
 The core idea: a component library should be a collection of **composable behaviours**, not a bag of monolithic widgets.
 
 
 Keyboard navigation, ARIA, focus management, and overlay positioning are already handled — you wrote none of it.
-
-## Two packages, one system
-
-Two independent npm packages with a clear build dependency.
-
-| Package | Purpose |
-| --- | --- |
-| `@fibo-ui/cdk` | Headless, behaviour-only directives — keyboard navigation, selection models, floating positioning, portal system. No templates. No styles. |
-| `@fibo-ui/components` | Styled, production-ready components built on the CDK — Select, TextField, Table, Menu, Dialog, and more. |
-
-Use `@fibo-ui/components` when the default design fits. Drop down to `@fibo-ui/cdk` when you need full control over markup and styling — the behaviour comes for free either way.
 
 ## Core principles
 

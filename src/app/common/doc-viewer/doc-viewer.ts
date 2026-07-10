@@ -110,7 +110,7 @@ export class DocViewer {
 
         const codeContainer = document.createElement('div');
         codeContainer.className =
-          'px-3 py-1 pb-3 prose dark:prose-invert max-w-none font-normal ' +
+          'doc-example-code px-3 py-1 pb-3 prose dark:prose-invert max-w-none font-normal ' +
           'text-[14px] overflow-x-auto overflow-y-auto';
 
         const showBlock = (index: number) => {
@@ -120,13 +120,18 @@ export class DocViewer {
           codeContainer.appendChild(div);
 
           tabBar.querySelectorAll('button').forEach((btn, i) => {
-            btn.classList.toggle('btn-inverse', i === index);
+            if (i === index) {
+              btn.dataset['appearance'] = 'inverse';
+            } else {
+              delete btn.dataset['appearance'];
+            }
           });
         };
 
         codeBlocks.forEach((block, i) => {
           const btn = document.createElement('button');
-          btn.className = 'btn btn-sm rounded-full';
+          btn.className = 'fibo-btn rounded-full';
+          btn.dataset['size'] = 'sm';
           btn.textContent = block.title || block.lang;
           btn.addEventListener('click', () => showBlock(i));
           tabBar.appendChild(btn);

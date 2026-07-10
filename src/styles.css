@@ -107,7 +107,13 @@
 
 
 
-@layer components {
+/* Prose overrides live in the `utilities` layer on purpose: the
+   @tailwindcss/typography plugin emits its .prose rules into `utilities`,
+   and layer order beats selector specificity — overrides from an earlier
+   layer (e.g. `components`) silently lose to it. Within the same layer our
+   selectors win because the plugin wraps everything in zero-specificity
+   :where(). */
+@layer utilities {
   /* =============================================
      Prose — mapped to fibo-ui design tokens
      @tailwindcss/typography CSS custom properties
@@ -160,13 +166,19 @@
     border-color: var(--border-primary);
   }
 
+  /* Code inside example tabs — the example wrapper already draws the outline */
+  .doc-example-code pre {
+    border: none;
+  }
+
   /* Inline code — softer background pill */
   .prose :not(pre) > code {
     background-color: var(--color-gray-100);
     border: 1px solid var(--color-gray-200);
     border-radius: var(--radius-sm, 4px);
-    padding: 0.125em 0.35em;
+    padding: 0.15em 0.4em;
     font-size: 0.875em;
+    font-weight: 500;
   }
 
   .prose :not(pre) > code::before,
@@ -198,6 +210,50 @@
     border-left-color: var(--color-primary-dark-400);
   }
 
+  /* =============================================
+     Callouts — GitHub-style alerts ([!NOTE] etc.)
+     rendered by callout-plugin.ts
+     ============================================= */
+  .prose .doc-callout {
+    border-left: 3px solid var(--callout-accent);
+    background-color: color-mix(in oklch, var(--callout-accent) 6%, transparent);
+    border-radius: 0 var(--radius-sm, 4px) var(--radius-sm, 4px) 0;
+    padding: 0.75em 1.25em;
+    margin-block: 1.25em;
+  }
+
+  .prose .doc-callout > :last-child {
+    margin-bottom: 0;
+  }
+
+  .prose .doc-callout-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin: 0 0 0.35em;
+    font-size: 0.875em;
+    font-weight: 600;
+    color: var(--callout-accent);
+  }
+
+  .prose .doc-callout-title svg {
+    flex-shrink: 0;
+  }
+
+  /* Accents match GitHub's alert palette (oklch of blue/green/violet/amber/red 500) */
+  .prose .doc-callout[data-type="note"]      { --callout-accent: oklch(0.62 0.19 259.8); }
+  .prose .doc-callout[data-type="tip"]       { --callout-accent: oklch(0.63 0.17 149.2); }
+  .prose .doc-callout[data-type="important"] { --callout-accent: oklch(0.61 0.22 292.7); }
+  .prose .doc-callout[data-type="warning"]   { --callout-accent: oklch(0.67 0.16 58.3); }
+  .prose .doc-callout[data-type="caution"]   { --callout-accent: oklch(0.64 0.21 25.3); }
+
+  /* Lighter accents on dark background (≈ 400 shades) */
+  [data-theme="dark"] .prose .doc-callout[data-type="note"]      { --callout-accent: oklch(0.71 0.14 254.6); }
+  [data-theme="dark"] .prose .doc-callout[data-type="tip"]       { --callout-accent: oklch(0.72 0.19 149.6); }
+  [data-theme="dark"] .prose .doc-callout[data-type="important"] { --callout-accent: oklch(0.71 0.16 293.5); }
+  [data-theme="dark"] .prose .doc-callout[data-type="warning"]   { --callout-accent: oklch(0.77 0.16 70.1); }
+  [data-theme="dark"] .prose .doc-callout[data-type="caution"]   { --callout-accent: oklch(0.71 0.17 22.2); }
+
   /* Table — clean borders using design tokens */
   .prose table {
     width: 100%;
@@ -217,7 +273,7 @@
   .shiki {
     background: transparent !important;
     margin: 0;
-    padding: 0;
+    padding: 0.75rem 1rem;
   }
 
   /* Light theme styles for Shiki */
